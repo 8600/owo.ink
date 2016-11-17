@@ -915,7 +915,7 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
             if (this.get('scheduledWillPublish')) {
                 return this.get('willPublish') || this.get('willSchedule') ? 'Update ' + this.get('postOrPage') : 'Publish Now';
             } else {
-                return this.get('isPublished') ? 'Update ' + this.get('postOrPage') : 'Publish Now';
+                return this.get('isPublished') ? 'Update ' + this.get('postOrPage') : '立即发布';
             }
         }),
 
@@ -923,7 +923,7 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
             if (this.get('scheduledWillPublish')) {
                 return !this.get('willPublish') || !this.get('willSchedule') ? 'Unpublish' : 'Save Draft';
             } else {
-                return this.get('isPublished') ? 'Unpublish' : 'Save Draft';
+                return this.get('isPublished') ? 'Unpublish' : '保存草稿';
             }
         }),
 
@@ -3234,7 +3234,7 @@ define('ghost-admin/components/gh-tag-settings-form', ['exports', 'ember-compone
             if (this.get('tag.isNew')) {
                 return 'New Tag';
             } else {
-                return 'Tag Settings';
+                return '标签设置';
             }
         }),
 
@@ -6076,7 +6076,7 @@ define('ghost-admin/controllers/settings/labs', ['exports', 'jquery', 'rsvp', 'e
 
     var Promise = _rsvp['default'].Promise;
     exports['default'] = _emberController['default'].extend({
-        uploadButtonText: 'Import',
+        uploadButtonText: '导入',
         importErrors: '',
         submitting: false,
         showDeleteAllModal: false,
@@ -12739,7 +12739,7 @@ define('ghost-admin/routes/editor/index', ['exports', 'ember-route'], function (
 });
 define('ghost-admin/routes/editor/new', ['exports', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/editor-base-route'], function (exports, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsEditorBaseRoute) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsEditorBaseRoute['default'], {
-        titleToken: 'Editor',
+        titleToken: '新建博客',
 
         model: function model() {
             var _this = this;
@@ -13092,7 +13092,7 @@ define('ghost-admin/routes/reset', ['exports', 'ember-route', 'ember-service/inj
 });
 define('ghost-admin/routes/settings/apps', ['exports', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/current-user-settings', 'ghost-admin/mixins/style-body'], function (exports, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsCurrentUserSettings, _ghostAdminMixinsStyleBody) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsStyleBody['default'], _ghostAdminMixinsCurrentUserSettings['default'], {
-        titleToken: 'Settings - Apps',
+        titleToken: '应用设置',
 
         classNames: ['settings-view-apps'],
 
@@ -13125,7 +13125,7 @@ define('ghost-admin/routes/settings/apps/slack', ['exports', 'ghost-admin/routes
 });
 define('ghost-admin/routes/settings/code-injection', ['exports', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/current-user-settings', 'ghost-admin/mixins/style-body'], function (exports, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsCurrentUserSettings, _ghostAdminMixinsStyleBody) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsStyleBody['default'], _ghostAdminMixinsCurrentUserSettings['default'], {
-        titleToken: 'Settings - Code Injection',
+        titleToken: '插入代码',
         classNames: ['settings-view-code'],
 
         beforeModel: function beforeModel() {
@@ -13148,7 +13148,7 @@ define('ghost-admin/routes/settings/code-injection', ['exports', 'ghost-admin/ro
 });
 define('ghost-admin/routes/settings/general', ['exports', 'rsvp', 'ember-service/inject', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/current-user-settings', 'ghost-admin/mixins/style-body'], function (exports, _rsvp, _emberServiceInject, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsCurrentUserSettings, _ghostAdminMixinsStyleBody) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsStyleBody['default'], _ghostAdminMixinsCurrentUserSettings['default'], {
-        titleToken: 'Settings - General',
+        titleToken: '常规设置',
 
         classNames: ['settings-view-general'],
 
@@ -13211,7 +13211,7 @@ define('ghost-admin/routes/settings/general/uploadtheme', ['exports', 'ghost-adm
 });
 define('ghost-admin/routes/settings/labs', ['exports', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/style-body', 'ghost-admin/mixins/current-user-settings'], function (exports, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsStyleBody, _ghostAdminMixinsCurrentUserSettings) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsStyleBody['default'], _ghostAdminMixinsCurrentUserSettings['default'], {
-        titleToken: 'Settings - Labs',
+        titleToken: '导入导出',
 
         classNames: ['settings'],
 
@@ -13229,7 +13229,7 @@ define('ghost-admin/routes/settings/labs', ['exports', 'ghost-admin/routes/authe
 });
 define('ghost-admin/routes/settings/navigation', ['exports', 'jquery', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/current-user-settings', 'ghost-admin/mixins/style-body'], function (exports, _jquery, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsCurrentUserSettings, _ghostAdminMixinsStyleBody) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsStyleBody['default'], _ghostAdminMixinsCurrentUserSettings['default'], {
-        titleToken: 'Settings - Navigation',
+        titleToken: '导航设置',
 
         classNames: ['settings-view-navigation'],
 
@@ -13269,7 +13269,7 @@ define('ghost-admin/routes/settings/navigation', ['exports', 'jquery', 'ghost-ad
 });
 define('ghost-admin/routes/settings/tags', ['exports', 'jquery', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/current-user-settings', 'ghost-admin/mixins/shortcuts-route', 'ghost-admin/mixins/pagination'], function (exports, _jquery, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsCurrentUserSettings, _ghostAdminMixinsShortcutsRoute, _ghostAdminMixinsPagination) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsCurrentUserSettings['default'], _ghostAdminMixinsPagination['default'], _ghostAdminMixinsShortcutsRoute['default'], {
-        titleToken: 'Settings - Tags',
+        titleToken: '标签设置',
 
         paginationModel: 'tag',
         paginationSettings: {
@@ -14952,17 +14952,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/kirrg001");
         dom.setAttribute(el2, "title", "kirrg001");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "kirrg001");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -14971,17 +14971,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/ErisDS");
         dom.setAttribute(el2, "title", "ErisDS");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "ErisDS");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -14990,17 +14990,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/kevinansfield");
         dom.setAttribute(el2, "title", "kevinansfield");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "kevinansfield");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15009,17 +15009,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/AileenCGN");
         dom.setAttribute(el2, "title", "AileenCGN");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "AileenCGN");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15028,17 +15028,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/acburdine");
         dom.setAttribute(el2, "title", "acburdine");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "acburdine");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15047,17 +15047,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/disordinary");
         dom.setAttribute(el2, "title", "disordinary");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "disordinary");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15066,17 +15066,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/JohnONolan");
         dom.setAttribute(el2, "title", "JohnONolan");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "JohnONolan");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15085,17 +15085,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/dbalders");
         dom.setAttribute(el2, "title", "dbalders");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "dbalders");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15104,17 +15104,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/sebgie");
         dom.setAttribute(el2, "title", "sebgie");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "sebgie");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15123,17 +15123,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/KennethAshley");
         dom.setAttribute(el2, "title", "KennethAshley");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "KennethAshley");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15142,17 +15142,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/vitaliemaldur");
         dom.setAttribute(el2, "title", "vitaliemaldur");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "vitaliemaldur");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15161,17 +15161,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/cezarykluczynski");
         dom.setAttribute(el2, "title", "cezarykluczynski");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "cezarykluczynski");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15180,17 +15180,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/cobbspur");
         dom.setAttribute(el2, "title", "cobbspur");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "cobbspur");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15199,17 +15199,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/jessedijkstra");
         dom.setAttribute(el2, "title", "jessedijkstra");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "jessedijkstra");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15218,17 +15218,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/mwakerman");
         dom.setAttribute(el2, "title", "mwakerman");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "mwakerman");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15237,17 +15237,17 @@ define("ghost-admin/templates/-contributors", ["exports"], function (exports) {
         var el1 = dom.createTextNode("\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("article");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "https://github.com/twalling");
         dom.setAttribute(el2, "title", "twalling");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("img");
         dom.setAttribute(el3, "alt", "twalling");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -15324,7 +15324,7 @@ define("ghost-admin/templates/-import-errors", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("    ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("tr");
             var el2 = dom.createElement("td");
@@ -15462,7 +15462,7 @@ define("ghost-admin/templates/-user-list-item", ["exports"], function (exports) 
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("span");
             var el2 = dom.createComment("");
@@ -15551,7 +15551,7 @@ define("ghost-admin/templates/-user-list-item", ["exports"], function (exports) 
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("span");
         dom.setAttribute(el1, "class", "user-list-item-figure");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("span");
         dom.setAttribute(el2, "class", "hidden");
@@ -15567,22 +15567,22 @@ define("ghost-admin/templates/-user-list-item", ["exports"], function (exports) 
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "user-list-item-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("span");
         dom.setAttribute(el2, "class", "name");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("br");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("span");
         dom.setAttribute(el2, "class", "description");
@@ -15767,47 +15767,47 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view js-settings-content");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("header");
         dom.setAttribute(el3, "class", "gh-about-header");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("img");
         dom.setAttribute(el4, "class", "gh-logo");
         dom.setAttribute(el4, "alt", "Ghost");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "gh-env-details");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("ul");
         dom.setAttribute(el4, "class", "gh-env-list");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5, "class", "gh-env-list-version");
@@ -15815,24 +15815,24 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el7 = dom.createTextNode("Version");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode(" ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         var el6 = dom.createElement("strong");
         var el7 = dom.createTextNode("Environment");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode(" ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5, "class", "gh-env-list-database-type");
@@ -15840,31 +15840,31 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el7 = dom.createTextNode("Database");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode(" ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         var el6 = dom.createElement("strong");
         var el7 = dom.createTextNode("Mail");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode(" ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "gh-env-help");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("a");
         dom.setAttribute(el5, "href", "http://support.ghost.org");
@@ -15873,7 +15873,7 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el6 = dom.createTextNode("User Documentation");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("a");
         dom.setAttribute(el5, "href", "https://ghost.org/slack/");
@@ -15882,40 +15882,40 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el6 = dom.createTextNode("Get Help With Ghost");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "gh-credits");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("h2");
         var el5 = dom.createTextNode("The People Who Made it Possible");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("section");
         dom.setAttribute(el4, "class", "gh-contributors");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("p");
         var el5 = dom.createTextNode("Ghost is built by an incredible group of contributors from all over the world. Here are just a few of the people who helped create the version you’re using right now.");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "href", "https://ghost.org/about/contribute/");
@@ -15923,10 +15923,10 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el5 = dom.createTextNode("Find out how you can get involved");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n        ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("footer");
         dom.setAttribute(el3, "class", "gh-copyright-info");
@@ -15941,11 +15941,11 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el5 = dom.createTextNode("MIT license");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode(".\n            ");
+        var el4 = dom.createTextNode(".\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("br");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "href", "https://ghost.org/");
@@ -15959,10 +15959,10 @@ define("ghost-admin/templates/about", ["exports"], function (exports) {
         var el5 = dom.createTextNode("Ghost Foundation");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode(".\n        ");
+        var el4 = dom.createTextNode(".\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -16058,7 +16058,7 @@ define("ghost-admin/templates/application", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -16100,7 +16100,7 @@ define("ghost-admin/templates/application", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -16144,15 +16144,15 @@ define("ghost-admin/templates/application", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n\n    ");
+          var el1 = dom.createTextNode("\n\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n\n    ");
+          var el1 = dom.createTextNode("\n\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           var el2 = dom.createTextNode("\n");
@@ -16163,19 +16163,19 @@ define("ghost-admin/templates/application", ["exports"], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n\n        ");
+          var el2 = dom.createTextNode("\n\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n\n        ");
+          var el2 = dom.createTextNode("\n\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n\n        ");
+          var el2 = dom.createTextNode("\n\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -16195,7 +16195,7 @@ define("ghost-admin/templates/application", ["exports"], function (exports) {
           morphs[7] = dom.createMorphAt(element0, 9, 9);
           return morphs;
         },
-        statements: [["block", "gh-skip-link", [], ["anchor", ".gh-main"], 0, null, ["loc", [null, [2, 4], [2, 76]]]], ["inline", "gh-alerts", [], ["notify", "topNotificationChange"], ["loc", [null, [4, 4], [4, 48]]]], ["attribute", "class", ["concat", ["gh-viewport ", ["subexpr", "if", [["get", "autoNav", ["loc", [null, [6, 33], [6, 40]]]], "gh-autonav"], [], ["loc", [null, [6, 28], [6, 55]]]], " ", ["subexpr", "if", [["get", "showSettingsMenu", ["loc", [null, [6, 61], [6, 77]]]], "settings-menu-expanded"], [], ["loc", [null, [6, 56], [6, 104]]]], " ", ["subexpr", "if", [["get", "showMobileMenu", ["loc", [null, [6, 110], [6, 124]]]], "mobile-menu-expanded"], [], ["loc", [null, [6, 105], [6, 149]]]]]]], ["block", "if", [["get", "showNavMenu", ["loc", [null, [7, 14], [7, 25]]]]], [], 1, null, ["loc", [null, [7, 8], [9, 15]]]], ["block", "gh-main", [], ["onMouseEnter", "closeAutoNav", "data-notification-count", ["subexpr", "@mut", [["get", "topNotificationCount", ["loc", [null, [11, 71], [11, 91]]]]], [], []]], 2, null, ["loc", [null, [11, 8], [13, 20]]]], ["content", "gh-notifications", ["loc", [null, [16, 8], [16, 28]]]], ["inline", "gh-content-cover", [], ["onClick", "closeMenus", "onMouseEnter", "closeAutoNav"], ["loc", [null, [18, 8], [18, 77]]]], ["inline", "outlet", ["settings-menu"], [], ["loc", [null, [20, 8], [20, 34]]]]],
+        statements: [["block", "gh-skip-link", [], ["anchor", ".gh-main"], 0, null, ["loc", [null, [2, 4], [2, 76]]]], ["inline", "gh-alerts", [], ["notify", "topNotificationChange"], ["loc", [null, [4, 4], [4, 48]]]], ["attribute", "class", ["concat", ["gh-viewport ", ["subexpr", "if", [["get", "autoNav", ["loc", [null, [6, 33], [6, 40]]]], "gh-autonav"], [], ["loc", [null, [6, 28], [6, 55]]]], "", ["subexpr", "if", [["get", "showSettingsMenu", ["loc", [null, [6, 61], [6, 77]]]], "settings-menu-expanded"], [], ["loc", [null, [6, 56], [6, 104]]]], "", ["subexpr", "if", [["get", "showMobileMenu", ["loc", [null, [6, 110], [6, 124]]]], "mobile-menu-expanded"], [], ["loc", [null, [6, 105], [6, 149]]]]]]], ["block", "if", [["get", "showNavMenu", ["loc", [null, [7, 14], [7, 25]]]]], [], 1, null, ["loc", [null, [7, 8], [9, 15]]]], ["block", "gh-main", [], ["onMouseEnter", "closeAutoNav", "data-notification-count", ["subexpr", "@mut", [["get", "topNotificationCount", ["loc", [null, [11, 71], [11, 91]]]]], [], []]], 2, null, ["loc", [null, [11, 8], [13, 20]]]], ["content", "gh-notifications", ["loc", [null, [16, 8], [16, 28]]]], ["inline", "gh-content-cover", [], ["onClick", "closeMenus", "onMouseEnter", "closeAutoNav"], ["loc", [null, [18, 8], [18, 77]]]], ["inline", "outlet", ["settings-menu"], [], ["loc", [null, [20, 8], [20, 34]]]]],
         locals: [],
         templates: [child0, child1, child2]
       };
@@ -16224,7 +16224,7 @@ define("ghost-admin/templates/application", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -16376,7 +16376,7 @@ define("ghost-admin/templates/components/gh-activating-list-item", ["exports"], 
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
-      statements: [["block", "link-to", [["get", "route", ["loc", [null, [1, 11], [1, 16]]]]], ["alternateActive", ["subexpr", "action", ["setActive"], [], ["loc", [null, [1, 33], [1, 53]]]], "class", ["subexpr", "concat", [["subexpr", "if", [["get", "linkClasses", []], ["subexpr", "-normalize-class", ["linkClasses", ["get", "linkClasses", []]], [], []]], [], []], " "], [], []]], 0, null, ["loc", [null, [1, 0], [1, 117]]]]],
+      statements: [["block", "link-to", [["get", "route", ["loc", [null, [1, 11], [1, 16]]]]], ["alternateActive", ["subexpr", "action", ["setActive"], [], ["loc", [null, [1, 33], [1, 53]]]], "class", ["subexpr", "concat", [["subexpr", "if", [["get", "linkClasses", []], ["subexpr", "-normalize-class", ["linkClasses", ["get", "linkClasses", []]], [], []]], [], []], ""], [], []]], 0, null, ["loc", [null, [1, 0], [1, 117]]]]],
       locals: [],
       templates: [child0]
     };
@@ -16412,7 +16412,7 @@ define("ghost-admin/templates/components/gh-alert", ["exports"], function (expor
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-alert-content");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -16473,7 +16473,7 @@ define("ghost-admin/templates/components/gh-alerts", ["exports"], function (expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -16790,7 +16790,7 @@ define("ghost-admin/templates/components/gh-ed-preview", ["exports"], function (
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -16971,7 +16971,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "gh-spin-button", [], ["type", "button", "action", "save", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [2, 142], [2, 152]]]]], [], []], "class", ["subexpr", "concat", ["btn", " ", "btn-sm", " ", "js-publish-button", " ", ["subexpr", "if", [["get", "isDangerous", []], "btn-red", "btn-blue"], [], []], " "], [], []]], 0, null, ["loc", [null, [2, 4], [4, 23]]]]],
+        statements: [["block", "gh-spin-button", [], ["type", "button", "action", "save", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [2, 142], [2, 152]]]]], [], []], "class", ["subexpr", "concat", ["btn", "", "btn-sm", "", "js-publish-button", "", ["subexpr", "if", [["get", "isDangerous", []], "btn-red", "btn-blue"], [], []], ""], [], []]], 0, null, ["loc", [null, [2, 4], [4, 23]]]]],
         locals: [],
         templates: [child0]
       };
@@ -17002,7 +17002,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
@@ -17044,7 +17044,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
@@ -17135,7 +17135,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "gh-spin-button", [], ["type", "button", "action", "save", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [6, 142], [6, 152]]]]], [], []], "class", ["subexpr", "concat", ["btn", " ", "btn-sm", " ", "js-publish-button", " ", ["subexpr", "if", [["get", "isDangerous", []], "btn-red", "btn-blue"], [], []], " "], [], []]], 0, null, ["loc", [null, [6, 4], [12, 23]]]]],
+        statements: [["block", "gh-spin-button", [], ["type", "button", "action", "save", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [6, 142], [6, 152]]]]], [], []], "class", ["subexpr", "concat", ["btn", "", "btn-sm", "", "js-publish-button", "", ["subexpr", "if", [["get", "isDangerous", []], "btn-red", "btn-blue"], [], []], ""], [], []]], 0, null, ["loc", [null, [6, 4], [12, 23]]]]],
         locals: [],
         templates: [child0]
       };
@@ -17165,12 +17165,12 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "options icon-arrow2");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("span");
             dom.setAttribute(el1, "class", "sr-only");
@@ -17214,30 +17214,30 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
-              var el2 = dom.createTextNode("\n                    ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("a");
               dom.setAttribute(el2, "href", "#");
               var el3 = dom.createComment("");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n                ");
+              var el1 = dom.createTextNode("\n");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
-              var el2 = dom.createTextNode("\n                    ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("a");
               dom.setAttribute(el2, "href", "#");
               var el3 = dom.createComment("");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -17288,30 +17288,30 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                    ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
-                var el2 = dom.createTextNode("\n                        ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("a");
                 dom.setAttribute(el2, "href", "#");
                 var el3 = dom.createComment("");
                 dom.appendChild(el2, el3);
                 dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                    ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                    ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
-                var el2 = dom.createTextNode("\n                        ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("a");
                 dom.setAttribute(el2, "href", "#");
                 var el3 = dom.createComment("");
                 dom.appendChild(el2, el3);
                 dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                    ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
                 var el1 = dom.createTextNode("\n");
@@ -17361,30 +17361,30 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                    ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
-                var el2 = dom.createTextNode("\n                        ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("a");
                 dom.setAttribute(el2, "href", "#");
                 var el3 = dom.createComment("");
                 dom.appendChild(el2, el3);
                 dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                    ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                    ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
-                var el2 = dom.createTextNode("\n                        ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("a");
                 dom.setAttribute(el2, "href", "#");
                 var el3 = dom.createComment("");
                 dom.appendChild(el2, el3);
                 dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                    ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
                 var el1 = dom.createTextNode("\n");
@@ -17473,23 +17473,23 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
               dom.setAttribute(el1, "class", "divider delete");
               dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n                ");
+              var el1 = dom.createTextNode("\n");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
               dom.setAttribute(el1, "class", "delete");
-              var el2 = dom.createTextNode("\n                    ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("a");
               dom.setAttribute(el2, "href", "#");
               var el3 = dom.createComment("");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -17531,7 +17531,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("ul");
             dom.setAttribute(el1, "class", "dropdown-menu dropdown-triangle-bottom-right");
@@ -17543,7 +17543,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("        ");
+            var el2 = dom.createTextNode("");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -17599,7 +17599,7 @@ define("ghost-admin/templates/components/gh-editor-save-button", ["exports"], fu
           dom.insertBoundary(fragment, null);
           return morphs;
         },
-        statements: [["block", "gh-dropdown-button", [], ["dropdownName", "post-save-menu", "class", ["subexpr", "concat", ["btn", " ", "btn-sm", " ", ["subexpr", "if", [["get", "isDangerous", []], "btn-red", "btn-blue"], [], []], " ", ["subexpr", "if", [["get", "btnopen", []], "active"], [], []], " ", "dropdown-toggle", " ", "up", " "], [], []]], 0, null, ["loc", [null, [16, 4], [19, 27]]]], ["block", "gh-dropdown", [], ["name", "post-save-menu", "closeOnClick", "true", "classNames", "editor-options"], 1, null, ["loc", [null, [20, 4], [54, 20]]]]],
+        statements: [["block", "gh-dropdown-button", [], ["dropdownName", "post-save-menu", "class", ["subexpr", "concat", ["btn", "", "btn-sm", "", ["subexpr", "if", [["get", "isDangerous", []], "btn-red", "btn-blue"], [], []], "", ["subexpr", "if", [["get", "btnopen", []], "active"], [], []], "", "dropdown-toggle", "", "up", ""], [], []]], 0, null, ["loc", [null, [16, 4], [19, 27]]]], ["block", "gh-dropdown", [], ["name", "post-save-menu", "closeOnClick", "true", "classNames", "editor-options"], 1, null, ["loc", [null, [20, 4], [54, 20]]]]],
         locals: [],
         templates: [child0, child1]
       };
@@ -17678,7 +17678,7 @@ define("ghost-admin/templates/components/gh-editor", ["exports"], function (expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -17723,11 +17723,11 @@ define("ghost-admin/templates/components/gh-editor", ["exports"], function (expo
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "floatingheader");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("span");
         dom.setAttribute(el3, "class", "desktop-tabs");
@@ -17739,28 +17739,28 @@ define("ghost-admin/templates/components/gh-editor", ["exports"], function (expo
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("span");
         dom.setAttribute(el3, "class", "mobile-tabs");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "href", "#");
         var el5 = dom.createTextNode("Markdown");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "href", "#");
-        var el5 = dom.createTextNode("Preview");
+        var el5 = dom.createTextNode("预览");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("a");
         dom.setAttribute(el3, "class", "markdown-help-icon");
@@ -17770,19 +17770,19 @@ define("ghost-admin/templates/components/gh-editor", ["exports"], function (expo
         dom.setAttribute(el4, "class", "icon-markdown");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "id", "entry-markdown-content");
         dom.setAttribute(el2, "class", "entry-markdown-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -17791,60 +17791,60 @@ define("ghost-admin/templates/components/gh-editor", ["exports"], function (expo
         var el1 = dom.createTextNode("\n\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("section");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "floatingheader");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("span");
         dom.setAttribute(el3, "class", "desktop-tabs");
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "target", "_blank");
-        var el5 = dom.createTextNode("Preview");
+        var el5 = dom.createTextNode("预览");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("span");
         dom.setAttribute(el3, "class", "mobile-tabs");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "href", "#");
         var el5 = dom.createTextNode("Markdown");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("a");
         dom.setAttribute(el4, "href", "#");
-        var el5 = dom.createTextNode("Preview");
+        var el5 = dom.createTextNode("预览");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("span");
         dom.setAttribute(el3, "class", "entry-word-count");
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "entry-preview-content js-entry-preview-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -18041,7 +18041,7 @@ define("ghost-admin/templates/components/gh-file-upload", ["exports"], function 
         dom.setAttribute(el1, "type", "submit");
         dom.setAttribute(el1, "class", "btn btn-green btn-block");
         dom.setAttribute(el1, "id", "startupload");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -18095,7 +18095,7 @@ define("ghost-admin/templates/components/gh-file-uploader", ["exports"], functio
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("div");
             dom.setAttribute(el1, "class", "failed");
@@ -18140,7 +18140,7 @@ define("ghost-admin/templates/components/gh-file-uploader", ["exports"], functio
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
             dom.setAttribute(el1, "class", "btn btn-green");
@@ -18190,22 +18190,22 @@ define("ghost-admin/templates/components/gh-file-uploader", ["exports"], functio
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "progress-container");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "progress");
-          var el3 = dom.createTextNode("\n            ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("div");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -18255,7 +18255,7 @@ define("ghost-admin/templates/components/gh-file-uploader", ["exports"], functio
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("div");
             dom.setAttribute(el1, "class", "description");
@@ -18299,7 +18299,7 @@ define("ghost-admin/templates/components/gh-file-uploader", ["exports"], functio
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "upload-form");
@@ -18307,7 +18307,7 @@ define("ghost-admin/templates/components/gh-file-uploader", ["exports"], functio
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("    ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -18393,7 +18393,7 @@ define("ghost-admin/templates/components/gh-fullscreen-modal", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("      ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -18435,7 +18435,7 @@ define("ghost-admin/templates/components/gh-fullscreen-modal", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("      ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -18503,7 +18503,7 @@ define("ghost-admin/templates/components/gh-fullscreen-modal", ["exports"], func
         morphs[3] = dom.createMorphAt(element1, 1, 1);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", ["liquid-tether-overlay ", ["get", "overlayClass", ["loc", [null, [1, 36], [1, 48]]]], " ", ["subexpr", "if", [["get", "on-overlay-click", ["loc", [null, [1, 56], [1, 72]]]], "clickable"], [], ["loc", [null, [1, 51], [1, 86]]]]]]], ["element", "action", ["clickOverlay"], [], ["loc", [null, [1, 88], [1, 113]]]], ["attribute", "class", ["concat", ["liquid-tether ", ["get", "tetherClass", ["loc", [null, [2, 28], [2, 39]]]]]]], ["block", "if", [["get", "hasBlock", ["loc", [null, [3, 10], [3, 18]]]]], [], 0, 1, ["loc", [null, [3, 4], [10, 11]]]]],
+      statements: [["attribute", "class", ["concat", ["liquid-tether-overlay ", ["get", "overlayClass", ["loc", [null, [1, 36], [1, 48]]]], "", ["subexpr", "if", [["get", "on-overlay-click", ["loc", [null, [1, 56], [1, 72]]]], "clickable"], [], ["loc", [null, [1, 51], [1, 86]]]]]]], ["element", "action", ["clickOverlay"], [], ["loc", [null, [1, 88], [1, 113]]]], ["attribute", "class", ["concat", ["liquid-tether ", ["get", "tetherClass", ["loc", [null, [2, 28], [2, 39]]]]]]], ["block", "if", [["get", "hasBlock", ["loc", [null, [3, 10], [3, 18]]]]], [], 0, 1, ["loc", [null, [3, 4], [10, 11]]]]],
       locals: [],
       templates: [child0, child1]
     };
@@ -18537,32 +18537,32 @@ define("ghost-admin/templates/components/gh-image-uploader-with-preview", ["expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "gh-image-uploader -with-image");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           var el3 = dom.createElement("img");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("a");
           dom.setAttribute(el2, "class", "image-cancel icon-trash");
           dom.setAttribute(el2, "title", "Delete");
-          var el3 = dom.createTextNode("\n            ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("span");
           dom.setAttribute(el3, "class", "hidden");
-          var el4 = dom.createTextNode("Delete");
+          var el4 = dom.createTextNode("删除");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -18607,7 +18607,7 @@ define("ghost-admin/templates/components/gh-image-uploader-with-preview", ["expo
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -18695,7 +18695,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("div");
             dom.setAttribute(el1, "class", "failed");
@@ -18740,7 +18740,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
             dom.setAttribute(el1, "class", "btn btn-green");
@@ -18790,22 +18790,22 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "progress-container");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "progress");
-          var el3 = dom.createTextNode("\n            ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("div");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -18856,7 +18856,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("div");
               dom.setAttribute(el1, "class", "description");
@@ -18900,7 +18900,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("div");
             dom.setAttribute(el1, "class", "upload-form");
@@ -18908,14 +18908,14 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("        ");
+            var el2 = dom.createTextNode("");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n\n        ");
+            var el1 = dom.createTextNode("\n\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("a");
             dom.setAttribute(el1, "class", "image-url");
-            var el2 = dom.createTextNode("\n            ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
             dom.setAttribute(el2, "class", "icon-link");
@@ -18925,7 +18925,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n        ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -18969,11 +18969,11 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("button");
               dom.setAttribute(el1, "class", "btn btn-blue gh-input");
-              var el2 = dom.createTextNode("Save");
+              var el2 = dom.createTextNode("保存");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -19015,7 +19015,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("div");
               dom.setAttribute(el1, "class", "description");
@@ -19060,19 +19060,19 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("            ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("a");
               dom.setAttribute(el1, "class", "image-upload icon-photos");
               dom.setAttribute(el1, "title", "Add image");
-              var el2 = dom.createTextNode("\n                ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("span");
               dom.setAttribute(el2, "class", "hidden");
               var el3 = dom.createTextNode("Upload");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n            ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -19113,11 +19113,11 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("form");
             dom.setAttribute(el1, "class", "url-form");
-            var el2 = dom.createTextNode("\n            ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
@@ -19125,7 +19125,7 @@ define("ghost-admin/templates/components/gh-image-uploader", ["exports"], functi
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("        ");
+            var el2 = dom.createTextNode("");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n\n");
@@ -19438,13 +19438,13 @@ define("ghost-admin/templates/components/gh-modal-dialog", ["exports"], function
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("footer");
           dom.setAttribute(el1, "class", "modal-footer");
           var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("                ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
           dom.setAttribute(el2, "type", "button");
@@ -19456,7 +19456,7 @@ define("ghost-admin/templates/components/gh-modal-dialog", ["exports"], function
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -19509,40 +19509,40 @@ define("ghost-admin/templates/components/gh-modal-dialog", ["exports"], function
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-container js-modal-container");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("article");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "modal-content");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("section");
         dom.setAttribute(el4, "class", "modal-body");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -19606,33 +19606,33 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "gh-nav-menu-icon");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "gh-nav-menu-details");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "gh-nav-menu-details-blog");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "gh-nav-menu-details-user");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-arrow");
@@ -19796,39 +19796,39 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("ul");
           dom.setAttribute(el1, "class", "dropdown-menu dropdown-triangle-top js-user-menu-dropdown-menu");
           dom.setAttribute(el1, "role", "menu");
           dom.setAttribute(el1, "style", "right:-20px;left:auto;");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "class", "divider");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -19875,7 +19875,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-pen");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("New Post");
+          var el1 = dom.createTextNode("新建博客");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -19914,7 +19914,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-content");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("Content");
+          var el1 = dom.createTextNode("内容管理");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -19953,7 +19953,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-team");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("Team");
+          var el1 = dom.createTextNode("成员管理");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -20029,7 +20029,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("li");
             var el2 = dom.createComment("");
@@ -20116,7 +20116,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-settings");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("General");
+            var el1 = dom.createTextNode("常规设置");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -20155,7 +20155,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-compass");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("Navigation");
+            var el1 = dom.createTextNode("导航设置");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -20194,7 +20194,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-tag");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("Tags");
+            var el1 = dom.createTextNode("标签管理");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -20233,7 +20233,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-code");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("Code Injection");
+            var el1 = dom.createTextNode("插入代码");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -20272,7 +20272,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-box");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("Apps");
+            var el1 = dom.createTextNode("应用列表");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -20311,7 +20311,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-labs");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("Labs");
+            var el1 = dom.createTextNode("导入导出");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -20346,18 +20346,18 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("ul");
           dom.setAttribute(el1, "class", "gh-nav-list gh-nav-settings");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "class", "gh-nav-list-h");
-          var el3 = dom.createTextNode("Settings");
+          var el3 = dom.createTextNode("设置");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           var el3 = dom.createComment("");
@@ -20365,37 +20365,37 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("            ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -20442,11 +20442,11 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "gh-help-button");
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
           dom.setAttribute(el2, "class", "icon-question");
@@ -20456,7 +20456,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -20495,12 +20495,12 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("ul");
           dom.setAttribute(el1, "class", "dropdown-menu dropdown-triangle-bottom");
           dom.setAttribute(el1, "role", "menu");
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
@@ -20517,7 +20517,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
@@ -20535,12 +20535,12 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "class", "divider");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
@@ -20557,7 +20557,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
@@ -20573,12 +20573,12 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "class", "divider");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("li");
           dom.setAttribute(el2, "role", "presentation");
@@ -20595,7 +20595,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -20645,30 +20645,24 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-nav-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "gh-nav-search");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("ul");
         dom.setAttribute(el2, "class", "gh-nav-list gh-nav-main");
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("        ");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("li");
-        var el4 = dom.createComment("");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("li");
         var el4 = dom.createComment("");
@@ -20676,7 +20670,13 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("        ");
+        var el3 = dom.createElement("li");
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("\n");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("li");
         var el4 = dom.createComment("");
@@ -20686,7 +20686,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -20698,19 +20698,19 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("footer");
         dom.setAttribute(el1, "class", "gh-nav-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "class", "gh-nav-footer-sitelink");
         dom.setAttribute(el2, "target", "_blank");
-        var el3 = dom.createTextNode("View blog");
+        var el3 = dom.createTextNode("预览博客");;
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "gh-help-menu");
@@ -20720,7 +20720,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -20839,18 +20839,18 @@ define("ghost-admin/templates/components/gh-navitem", ["exports"], function (exp
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "gh-blognav-grab icon-grab");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("span");
           dom.setAttribute(el2, "class", "sr-only");
           var el3 = dom.createTextNode("Reorder");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -20889,11 +20889,11 @@ define("ghost-admin/templates/components/gh-navitem", ["exports"], function (exp
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -20936,11 +20936,11 @@ define("ghost-admin/templates/components/gh-navitem", ["exports"], function (exp
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -20983,12 +20983,12 @@ define("ghost-admin/templates/components/gh-navitem", ["exports"], function (exp
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "type", "button");
           dom.setAttribute(el1, "class", "gh-blognav-add");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
           dom.setAttribute(el2, "class", "icon-add2");
@@ -20998,7 +20998,7 @@ define("ghost-admin/templates/components/gh-navitem", ["exports"], function (exp
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -21040,22 +21040,22 @@ define("ghost-admin/templates/components/gh-navitem", ["exports"], function (exp
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "type", "button");
           dom.setAttribute(el1, "class", "gh-blognav-delete");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
           dom.setAttribute(el2, "class", "icon-trash");
           var el3 = dom.createElement("span");
           dom.setAttribute(el3, "class", "sr-only");
-          var el4 = dom.createTextNode("Delete");
+          var el4 = dom.createTextNode("删除");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -21165,7 +21165,7 @@ define("ghost-admin/templates/components/gh-notification", ["exports"], function
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-notification-content");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -21226,7 +21226,7 @@ define("ghost-admin/templates/components/gh-notifications", ["exports"], functio
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -21359,24 +21359,24 @@ define("ghost-admin/templates/components/gh-profile-image", ["exports"], functio
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "placeholder-img");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "id", "account-image");
           dom.setAttribute(el1, "class", "gravatar-img");
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("span");
           dom.setAttribute(el2, "class", "sr-only");
           var el3 = dom.createTextNode("User image");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -21466,33 +21466,33 @@ define("ghost-admin/templates/components/gh-profile-image", ["exports"], functio
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "js-img-preview");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("span");
         dom.setAttribute(el2, "class", "edit-account-image js-img-dropzone");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("i");
         dom.setAttribute(el3, "class", "icon-photos");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("span");
         dom.setAttribute(el4, "class", "sr-only");
         var el5 = dom.createTextNode("Upload an image");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -21545,7 +21545,7 @@ define("ghost-admin/templates/components/gh-search-input", ["exports"], function
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -21600,7 +21600,7 @@ define("ghost-admin/templates/components/gh-search-input", ["exports"], function
         dom.insertBoundary(fragment, null);
         return morphs;
       },
-      statements: [["block", "power-select", [], ["search", ["subexpr", "action", ["search"], [], ["loc", [null, [2, 11], [2, 28]]]], "onchange", ["subexpr", "action", ["openSelected"], [], ["loc", [null, [3, 13], [3, 36]]]], "placeholder", "Search", "onopen", ["subexpr", "action", ["onFocus"], [], ["loc", [null, [5, 11], [5, 29]]]], "onclose", ["subexpr", "action", ["onBlur"], [], ["loc", [null, [6, 12], [6, 29]]]], "searchEnabled", false, "triggerComponent", "gh-search-input/trigger", "renderInPlace", true, "loadingMessage", "Loading"], 0, null, ["loc", [null, [1, 0], [13, 17]]]]],
+      statements: [["block", "power-select", [], ["search", ["subexpr", "action", ["search"], [], ["loc", [null, [2, 11], [2, 28]]]], "onchange", ["subexpr", "action", ["openSelected"], [], ["loc", [null, [3, 13], [3, 36]]]], "placeholder", "搜索", "onopen", ["subexpr", "action", ["onFocus"], [], ["loc", [null, [5, 11], [5, 29]]]], "onclose", ["subexpr", "action", ["onBlur"], [], ["loc", [null, [6, 12], [6, 29]]]], "searchEnabled", false, "triggerComponent", "gh-search-input/trigger", "renderInPlace", true, "loadingMessage", "Loading"], 0, null, ["loc", [null, [1, 0], [13, 17]]]]],
       locals: [],
       templates: [child0]
     };
@@ -21635,7 +21635,7 @@ define("ghost-admin/templates/components/gh-search-input/trigger", ["exports"], 
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "ember-power-select-search");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("input");
         dom.setAttribute(el2, "type", "search");
@@ -21645,7 +21645,7 @@ define("ghost-admin/templates/components/gh-search-input/trigger", ["exports"], 
         dom.setAttribute(el2, "spellcheck", "false");
         dom.setAttribute(el2, "role", "combobox");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "gh-nav-search-button");
@@ -21712,7 +21712,7 @@ define("ghost-admin/templates/components/gh-select-native", ["exports"], functio
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("option");
           dom.setAttribute(el1, "disabled", "");
@@ -21720,7 +21720,7 @@ define("ghost-admin/templates/components/gh-select-native", ["exports"], functio
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -21763,14 +21763,14 @@ define("ghost-admin/templates/components/gh-select-native", ["exports"], functio
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("option");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -21872,7 +21872,7 @@ define("ghost-admin/templates/components/gh-spin-button", ["exports"], function 
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "spinner");
@@ -21914,7 +21914,7 @@ define("ghost-admin/templates/components/gh-spin-button", ["exports"], function 
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -21956,7 +21956,7 @@ define("ghost-admin/templates/components/gh-spin-button", ["exports"], function 
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -22367,7 +22367,7 @@ define("ghost-admin/templates/components/gh-subscribers-table", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -22497,17 +22497,17 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("h4");
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "style", "width:23px;");
@@ -22551,7 +22551,7 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("h4");
           var el2 = dom.createComment("");
@@ -22595,18 +22595,18 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "tag-name");
-          var el2 = dom.createTextNode("Name");
+          var el2 = dom.createTextNode("标签名称");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -22649,22 +22649,22 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "tag-slug");
-          var el2 = dom.createTextNode("URL");
+          var el2 = dom.createTextNode("标签地址");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -22708,22 +22708,22 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "tag-description");
-          var el2 = dom.createTextNode("Description");
+          var el2 = dom.createTextNode("标签描述");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Maximum: ");
@@ -22777,7 +22777,7 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "type", "button");
@@ -22785,7 +22785,7 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
           var el2 = dom.createElement("i");
           dom.setAttribute(el2, "class", "icon-trash");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode(" Delete Tag");
+          var el2 = dom.createTextNode("删除标签");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -22827,22 +22827,22 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "meta-title");
           var el2 = dom.createTextNode("Meta Title");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Recommended: ");
@@ -22896,22 +22896,22 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "meta-description");
           var el2 = dom.createTextNode("Meta Description");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Recommended: ");
@@ -22968,25 +22968,25 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "settings-menu-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         var el4 = dom.createTextNode("\n");
@@ -23001,53 +23001,53 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("ul");
         dom.setAttribute(el4, "class", "nav-list nav-list-block");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5, "class", "nav-list-item");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("button");
         dom.setAttribute(el6, "type", "button");
         dom.setAttribute(el6, "class", "meta-data-button");
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("b");
-        var el8 = dom.createTextNode("Meta Data");
+        var el8 = dom.createTextNode("目标数据");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("span");
-        var el8 = dom.createTextNode("Extra content for SEO and social media.");
+        var el8 = dom.createTextNode("搜索引擎优化和社交媒体的内容。");;
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                    ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("i");
         dom.setAttribute(el6, "class", "icon-arrow-right");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -23056,11 +23056,11 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         var el1 = dom.createTextNode("\n\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "settings-menu-header subview");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("button");
         dom.setAttribute(el3, "class", "back icon-arrow-left settings-menu-header-action");
@@ -23070,25 +23070,25 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("h4");
-        var el4 = dom.createTextNode("Meta Data");
+        var el4 = dom.createTextNode("目标数据");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3, "style", "width:23px;");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "settings-menu-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         var el4 = dom.createTextNode("\n");
@@ -23099,51 +23099,51 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "form-group");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("label");
         var el6 = dom.createTextNode("Search Engine Result Preview");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "seo-preview");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6, "class", "seo-preview-title");
         var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6, "class", "seo-preview-link");
         var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6, "class", "seo-preview-description");
         var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -23182,7 +23182,7 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
         morphs[15] = dom.createMorphAt(dom.childAt(element9, [5]), 0, 0);
         return morphs;
       },
-      statements: [["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [1, 17], [1, 33]]]], "settings-menu-pane-out-left", "settings-menu-pane-in"], [], ["loc", [null, [1, 12], [1, 89]]]], " settings-menu settings-menu-pane tag-settings-pane"]]], ["attribute", "class", ["concat", ["settings-menu-header ", ["subexpr", "if", [["get", "isMobile", ["loc", [null, [2, 42], [2, 50]]]], "subview"], [], ["loc", [null, [2, 37], [2, 62]]]]]]], ["block", "if", [["get", "isMobile", ["loc", [null, [3, 14], [3, 22]]]]], [], 0, 1, ["loc", [null, [3, 8], [9, 15]]]], ["inline", "gh-image-uploader-with-preview", [], ["image", ["subexpr", "@mut", [["get", "tag.image", ["loc", [null, [13, 18], [13, 27]]]]], [], []], "text", "Add tag image", "update", ["subexpr", "action", ["setCoverImage"], [], ["loc", [null, [15, 19], [15, 43]]]], "remove", ["subexpr", "action", ["clearCoverImage"], [], ["loc", [null, [16, 19], [16, 45]]]]], ["loc", [null, [12, 8], [16, 47]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [18, 36], [18, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [18, 60], [18, 76]]]]], [], []], "property", "name"], 2, null, ["loc", [null, [18, 12], [22, 30]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [24, 36], [24, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [24, 60], [24, 76]]]]], [], []], "property", "slug"], 3, null, ["loc", [null, [24, 12], [29, 30]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [31, 36], [31, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [31, 60], [31, 76]]]]], [], []], "property", "description"], 4, null, ["loc", [null, [31, 12], [36, 30]]]], ["element", "action", ["openMeta"], [], ["loc", [null, [39, 42], [39, 63]]]], ["block", "unless", [["get", "tag.isNew", ["loc", [null, [48, 22], [48, 31]]]]], [], 5, null, ["loc", [null, [48, 12], [50, 23]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [55, 17], [55, 33]]]], "settings-menu-pane-in", "settings-menu-pane-out-right"], [], ["loc", [null, [55, 12], [55, 90]]]], " settings-menu settings-menu-pane tag-meta-settings-pane"]]], ["element", "action", ["closeMeta"], [], ["loc", [null, [57, 16], [57, 38]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [64, 36], [64, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [64, 60], [64, 76]]]]], [], []], "property", "metaTitle"], 6, null, ["loc", [null, [64, 12], [69, 30]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [71, 36], [71, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [71, 60], [71, 76]]]]], [], []], "property", "metaDescription"], 7, null, ["loc", [null, [71, 12], [76, 30]]]], ["content", "seoTitle", ["loc", [null, [81, 51], [81, 63]]]], ["content", "seoURL", ["loc", [null, [82, 50], [82, 60]]]], ["content", "seoDescription", ["loc", [null, [83, 57], [83, 75]]]]],
+      statements: [["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [1, 17], [1, 33]]]], "settings-menu-pane-out-left", "settings-menu-pane-in"], [], ["loc", [null, [1, 12], [1, 89]]]], " settings-menu settings-menu-pane tag-settings-pane"]]], ["attribute", "class", ["concat", ["settings-menu-header ", ["subexpr", "if", [["get", "isMobile", ["loc", [null, [2, 42], [2, 50]]]], "subview"], [], ["loc", [null, [2, 37], [2, 62]]]]]]], ["block", "if", [["get", "isMobile", ["loc", [null, [3, 14], [3, 22]]]]], [], 0, 1, ["loc", [null, [3, 8], [9, 15]]]], ["inline", "gh-image-uploader-with-preview", [], ["image", ["subexpr", "@mut", [["get", "tag.image", ["loc", [null, [13, 18], [13, 27]]]]], [], []], "text", "添加标签图片", "update", ["subexpr", "action", ["setCoverImage"], [], ["loc", [null, [15, 19], [15, 43]]]], "remove", ["subexpr", "action", ["clearCoverImage"], [], ["loc", [null, [16, 19], [16, 45]]]]], ["loc", [null, [12, 8], [16, 47]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [18, 36], [18, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [18, 60], [18, 76]]]]], [], []], "property", "name"], 2, null, ["loc", [null, [18, 12], [22, 30]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [24, 36], [24, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [24, 60], [24, 76]]]]], [], []], "property", "slug"], 3, null, ["loc", [null, [24, 12], [29, 30]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [31, 36], [31, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [31, 60], [31, 76]]]]], [], []], "property", "description"], 4, null, ["loc", [null, [31, 12], [36, 30]]]], ["element", "action", ["openMeta"], [], ["loc", [null, [39, 42], [39, 63]]]], ["block", "unless", [["get", "tag.isNew", ["loc", [null, [48, 22], [48, 31]]]]], [], 5, null, ["loc", [null, [48, 12], [50, 23]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [55, 17], [55, 33]]]], "settings-menu-pane-in", "settings-menu-pane-out-right"], [], ["loc", [null, [55, 12], [55, 90]]]], " settings-menu settings-menu-pane tag-meta-settings-pane"]]], ["element", "action", ["closeMeta"], [], ["loc", [null, [57, 16], [57, 38]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [64, 36], [64, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [64, 60], [64, 76]]]]], [], []], "property", "metaTitle"], 6, null, ["loc", [null, [64, 12], [69, 30]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "tag.errors", ["loc", [null, [71, 36], [71, 46]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "tag.hasValidated", ["loc", [null, [71, 60], [71, 76]]]]], [], []], "property", "metaDescription"], 7, null, ["loc", [null, [71, 12], [76, 30]]]], ["content", "seoTitle", ["loc", [null, [81, 51], [81, 63]]]], ["content", "seoURL", ["loc", [null, [82, 50], [82, 60]]]], ["content", "seoDescription", ["loc", [null, [83, 57], [83, 75]]]]],
       locals: [],
       templates: [child0, child1, child2, child3, child4, child5, child6, child7]
     };
@@ -23216,7 +23216,7 @@ define("ghost-admin/templates/components/gh-tag", ["exports"], function (exports
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("span");
               dom.setAttribute(el1, "class", "label label-blue");
@@ -23297,14 +23297,14 @@ define("ghost-admin/templates/components/gh-tag", ["exports"], function (exports
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "tag-title");
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "label label-default");
@@ -23317,14 +23317,14 @@ define("ghost-admin/templates/components/gh-tag", ["exports"], function (exports
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           dom.setAttribute(el1, "class", "tag-description");
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "tags-count");
@@ -23470,12 +23470,12 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("a");
               dom.setAttribute(el1, "href", "#");
               dom.setAttribute(el1, "class", "theme-list-action");
-              var el2 = dom.createTextNode("\n                            Delete\n                        ");
+              var el2 = dom.createTextNode("\n        Delete\n                        ");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -23518,7 +23518,7 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("span");
               dom.setAttribute(el1, "class", "theme-list-action theme-list-action-activate");
@@ -23561,12 +23561,12 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("a");
               dom.setAttribute(el1, "href", "#");
               dom.setAttribute(el1, "class", "theme-list-action theme-list-action-activate");
-              var el2 = dom.createTextNode("\n                            Activate\n                        ");
+              var el2 = dom.createTextNode("\n        Activate\n                        ");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -23607,24 +23607,24 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("div");
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("div");
             dom.setAttribute(el2, "class", "theme-list-item-body");
-            var el3 = dom.createTextNode("\n                    ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("span");
             dom.setAttribute(el3, "class", "name");
             var el4 = dom.createComment("");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("\n                ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("div");
             dom.setAttribute(el2, "class", "theme-list-item-aside");
@@ -23632,22 +23632,22 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
             dom.appendChild(el2, el3);
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("\n                    ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("a");
             dom.setAttribute(el3, "href", "#");
             dom.setAttribute(el3, "class", "theme-list-action");
-            var el4 = dom.createTextNode("\n                        Download\n                    ");
+            var el4 = dom.createTextNode("\n    Download\n                    ");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
             var el3 = dom.createTextNode("\n\n");
             dom.appendChild(el2, el3);
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("                ");
+            var el3 = dom.createTextNode("");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n            ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -23696,7 +23696,7 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "theme-list");
@@ -23704,7 +23704,7 @@ define("ghost-admin/templates/components/gh-theme-table", ["exports"], function 
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("    ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -23826,7 +23826,7 @@ define("ghost-admin/templates/components/gh-timezone-select", ["exports"], funct
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Your timezone has been automatically set to ");
@@ -23886,7 +23886,7 @@ define("ghost-admin/templates/components/gh-timezone-select", ["exports"], funct
         var el1 = dom.createElement("span");
         dom.setAttribute(el1, "class", "gh-select");
         dom.setAttribute(el1, "tabindex", "0");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -23948,7 +23948,7 @@ define("ghost-admin/templates/components/gh-upgrade-notification", ["exports"], 
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           var el2 = dom.createComment("");
@@ -24240,7 +24240,7 @@ define("ghost-admin/templates/components/modals/copy-html", ["exports"], functio
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Generated HTML");
@@ -24265,7 +24265,7 @@ define("ghost-admin/templates/components/modals/copy-html", ["exports"], functio
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -24315,7 +24315,7 @@ define("ghost-admin/templates/components/modals/delete-all", ["exports"], functi
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Delete");
+          var el1 = dom.createTextNode("删除");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -24355,7 +24355,7 @@ define("ghost-admin/templates/components/modals/delete-all", ["exports"], functi
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Would you really like to delete all content from your blog?");
@@ -24380,7 +24380,7 @@ define("ghost-admin/templates/components/modals/delete-all", ["exports"], functi
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("This is permanent! No backups, no restores, no magic undo button. ");
@@ -24397,14 +24397,14 @@ define("ghost-admin/templates/components/modals/delete-all", ["exports"], functi
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -24457,7 +24457,7 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Delete");
+          var el1 = dom.createTextNode("删除");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -24497,7 +24497,7 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Are you sure you want to delete this post?");
@@ -24522,7 +24522,7 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("\n        You're about to delete \"");
@@ -24549,14 +24549,14 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -24610,7 +24610,7 @@ define("ghost-admin/templates/components/modals/delete-subscriber", ["exports"],
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Delete");
+          var el1 = dom.createTextNode("删除");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -24650,7 +24650,7 @@ define("ghost-admin/templates/components/modals/delete-subscriber", ["exports"],
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Are you sure?");
@@ -24675,7 +24675,7 @@ define("ghost-admin/templates/components/modals/delete-subscriber", ["exports"],
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("strong");
         var el3 = dom.createTextNode("WARNING:");
@@ -24688,14 +24688,14 @@ define("ghost-admin/templates/components/modals/delete-subscriber", ["exports"],
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -24748,7 +24748,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "red");
@@ -24756,7 +24756,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode(" ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
@@ -24803,7 +24803,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Delete");
+          var el1 = dom.createTextNode("删除");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -24843,7 +24843,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Are you sure you want to delete this tag?");
@@ -24868,7 +24868,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("strong");
         var el3 = dom.createTextNode("WARNING:");
@@ -24891,14 +24891,14 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -24954,7 +24954,7 @@ define("ghost-admin/templates/components/modals/delete-theme", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Delete");
+          var el1 = dom.createTextNode("删除");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -24994,7 +24994,7 @@ define("ghost-admin/templates/components/modals/delete-theme", ["exports"], func
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Are you sure you want to delete this theme?");
@@ -25019,7 +25019,7 @@ define("ghost-admin/templates/components/modals/delete-theme", ["exports"], func
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("strong");
         var el3 = dom.createTextNode("WARNING:");
@@ -25035,17 +25035,17 @@ define("ghost-admin/templates/components/modals/delete-theme", ["exports"], func
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("br");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("br");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("strong");
         var el3 = dom.createTextNode("RECOMMENDED:");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("a");
         dom.setAttribute(el2, "href", "#");
@@ -25059,14 +25059,14 @@ define("ghost-admin/templates/components/modals/delete-theme", ["exports"], func
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -25123,13 +25123,13 @@ define("ghost-admin/templates/components/modals/delete-user", ["exports"], funct
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("strong");
           var el2 = dom.createTextNode("WARNING:");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "red");
@@ -25178,7 +25178,7 @@ define("ghost-admin/templates/components/modals/delete-user", ["exports"], funct
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("strong");
           var el2 = dom.createTextNode("WARNING:");
@@ -25220,7 +25220,7 @@ define("ghost-admin/templates/components/modals/delete-user", ["exports"], funct
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Delete");
+          var el1 = dom.createTextNode("删除");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -25260,7 +25260,7 @@ define("ghost-admin/templates/components/modals/delete-user", ["exports"], funct
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Are you sure you want to delete this user?");
@@ -25294,14 +25294,14 @@ define("ghost-admin/templates/components/modals/delete-user", ["exports"], funct
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -25428,23 +25428,23 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("tr");
-            var el2 = dom.createTextNode("\n                    ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             var el3 = dom.createTextNode("Duplicates:");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                    ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             dom.setAttribute(el2, "align", "left");
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -25485,23 +25485,23 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("tr");
-            var el2 = dom.createTextNode("\n                    ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             var el3 = dom.createTextNode("Invalid:");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                    ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("td");
             dom.setAttribute(el2, "align", "left");
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -25541,27 +25541,27 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("table");
           dom.setAttribute(el1, "class", "subscribers-import-results");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("tr");
-          var el3 = dom.createTextNode("\n                ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("td");
           var el4 = dom.createTextNode("Imported:");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("td");
           dom.setAttribute(el3, "align", "left");
           var el4 = dom.createComment("");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n            ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
@@ -25570,7 +25570,7 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("        ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -25614,7 +25614,7 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -25732,14 +25732,14 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -25770,15 +25770,15 @@ define("ghost-admin/templates/components/modals/import-subscribers", ["exports"]
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -25832,18 +25832,18 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "new-user-email");
           var el2 = dom.createTextNode("Email Address");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -25926,7 +25926,7 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Invite a New User");
@@ -25951,40 +25951,40 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("fieldset");
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3, "class", "form-group for-select");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("label");
         dom.setAttribute(el4, "for", "new-user-role");
         var el5 = dom.createTextNode("Role");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("span");
         dom.setAttribute(el4, "class", "gh-select");
         dom.setAttribute(el4, "tabindex", "0");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -25994,7 +25994,7 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -26051,7 +26051,7 @@ define("ghost-admin/templates/components/modals/leave-editor", ["exports"], func
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Are you sure you want to leave this page?");
@@ -26076,13 +26076,13 @@ define("ghost-admin/templates/components/modals/leave-editor", ["exports"], func
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("\n        Hey there! It looks like you're in the middle of writing something and\n        you haven't saved all of your content.\n    ");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("Save before you go!");
@@ -26095,14 +26095,14 @@ define("ghost-admin/templates/components/modals/leave-editor", ["exports"], func
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Stay");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-red");
@@ -26163,7 +26163,7 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Markdown Help");
@@ -26188,57 +26188,57 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "markdown-help-container");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("table");
         dom.setAttribute(el3, "class", "modal-markdown-help-table");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("thead");
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("th");
         var el7 = dom.createTextNode("Markdown");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("th");
         var el7 = dom.createTextNode("Result");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("th");
         var el7 = dom.createTextNode("Shortcut");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("tbody");
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("**text**");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createElement("strong");
@@ -26246,25 +26246,25 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + B ");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("*text*");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createElement("em");
@@ -26272,25 +26272,25 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + I");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("~~text~~");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createElement("del");
@@ -26298,25 +26298,25 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl + Alt + U");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("[title](http://)");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createElement("a");
@@ -26325,25 +26325,25 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + K");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("`code`");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createElement("code");
@@ -26351,97 +26351,97 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + Shift + K");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("![alt](http://)");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Image");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + Shift + I");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("* item");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("List");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl + L");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("> quote");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Blockquote");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl + Q");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("==Highlight==");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createElement("mark");
@@ -26449,87 +26449,87 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("# Heading");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("H1");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("## Heading");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("H2");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + H");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("tr");
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("### Heading");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("H3");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("td");
         var el7 = dom.createTextNode("Ctrl/⌘ + H (x2)");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n            ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createTextNode("\n        For further Markdown syntax reference: ");
@@ -26540,7 +26540,7 @@ define("ghost-admin/templates/components/modals/markdown-help", ["exports"], fun
         var el4 = dom.createTextNode("Markdown Documentation");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -26588,14 +26588,14 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "new-subscriber-email");
           var el2 = dom.createTextNode("Email Address");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("input");
           dom.setAttribute(el1, "type", "email");
@@ -26607,7 +26607,7 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
           dom.setAttribute(el1, "autocapitalize", "off");
           dom.setAttribute(el1, "autocorrect", "off");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -26692,7 +26692,7 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Add a Subscriber");
@@ -26717,14 +26717,14 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("fieldset");
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -26734,14 +26734,14 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -26795,7 +26795,7 @@ define("ghost-admin/templates/components/modals/re-authenticate", ["exports"], f
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -26873,7 +26873,7 @@ define("ghost-admin/templates/components/modals/re-authenticate", ["exports"], f
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("     ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           dom.setAttribute(el1, "class", "response");
@@ -26922,7 +26922,7 @@ define("ghost-admin/templates/components/modals/re-authenticate", ["exports"], f
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Please re-authenticate");
@@ -26946,7 +26946,7 @@ define("ghost-admin/templates/components/modals/re-authenticate", ["exports"], f
         var el1 = dom.createTextNode("\n\n");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("form");
         dom.setAttribute(el2, "id", "login");
@@ -26957,7 +26957,7 @@ define("ghost-admin/templates/components/modals/re-authenticate", ["exports"], f
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("        ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
@@ -27058,7 +27058,7 @@ define("ghost-admin/templates/components/modals/transfer-owner", ["exports"], fu
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Transfer Ownership");
@@ -27083,7 +27083,7 @@ define("ghost-admin/templates/components/modals/transfer-owner", ["exports"], fu
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-body");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("\n        Are you sure you want to transfer the ownership of this blog?\n        You will not be able to undo this action.\n    ");
@@ -27096,14 +27096,14 @@ define("ghost-admin/templates/components/modals/transfer-owner", ["exports"], fu
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -27156,32 +27156,32 @@ define("ghost-admin/templates/components/modals/upload-image", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "gh-image-uploader -with-image");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           var el3 = dom.createElement("img");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("a");
           dom.setAttribute(el2, "class", "image-cancel icon-trash");
           dom.setAttribute(el2, "title", "Delete");
-          var el3 = dom.createTextNode("\n                ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("span");
           dom.setAttribute(el3, "class", "hidden");
-          var el4 = dom.createTextNode("Delete");
+          var el4 = dom.createTextNode("删除");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n            ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -27226,7 +27226,7 @@ define("ghost-admin/templates/components/modals/upload-image", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -27268,7 +27268,7 @@ define("ghost-admin/templates/components/modals/upload-image", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Save");
+          var el1 = dom.createTextNode("保存");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -27317,14 +27317,14 @@ define("ghost-admin/templates/components/modals/upload-image", ["exports"], func
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
         var el3 = dom.createTextNode("Cancel");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -27525,7 +27525,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            Upload a theme\n        ");
+            var el1 = dom.createTextNode("            更新主题\n");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -27603,7 +27603,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                            ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
@@ -27645,7 +27645,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                            ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
@@ -27728,7 +27728,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                                ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
                 var el2 = dom.createElement("code");
@@ -27777,24 +27777,24 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                    ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
               var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createComment("");
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                        ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("ul");
               var el3 = dom.createTextNode("\n");
               dom.appendChild(el2, el3);
               var el3 = dom.createComment("");
               dom.appendChild(el2, el3);
-              var el3 = dom.createTextNode("                        ");
+              var el3 = dom.createTextNode("");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n                    ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -27836,31 +27836,31 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("ul");
             dom.setAttribute(el1, "class", "theme-validation-errors");
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("li");
-            var el3 = dom.createTextNode("\n                    ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("p");
-            var el4 = dom.createTextNode("\n                        \"");
+            var el4 = dom.createTextNode("\n    \"");
             dom.appendChild(el3, el4);
             var el4 = dom.createComment("");
             dom.appendChild(el3, el4);
             var el4 = dom.createTextNode("\" uploaded successfully but some warnings were generated...\n                    ");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("\n                ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
             var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("            ");
+            var el2 = dom.createTextNode("");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -27939,7 +27939,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("p");
             var el2 = dom.createTextNode("\n                \"");
@@ -27950,7 +27950,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n            ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -28033,14 +28033,14 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("p");
             var el2 = dom.createTextNode("\n            \"");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\" will overwrite an existing theme of the same name. Are you sure?\n        ");
+            var el2 = dom.createTextNode("\" will overwrite an existing theme of the same name. Are you sure?\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -28084,7 +28084,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
                 hasRendered: false,
                 buildFragment: function buildFragment(dom) {
                   var el0 = dom.createDocumentFragment();
-                  var el1 = dom.createTextNode("                        ");
+                  var el1 = dom.createTextNode("");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createComment("");
                   dom.appendChild(el0, el1);
@@ -28126,7 +28126,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
                 hasRendered: false,
                 buildFragment: function buildFragment(dom) {
                   var el0 = dom.createDocumentFragment();
-                  var el1 = dom.createTextNode("                        ");
+                  var el1 = dom.createTextNode("");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createComment("");
                   dom.appendChild(el0, el1);
@@ -28209,7 +28209,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
                 hasRendered: false,
                 buildFragment: function buildFragment(dom) {
                   var el0 = dom.createDocumentFragment();
-                  var el1 = dom.createTextNode("                            ");
+                  var el1 = dom.createTextNode("");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createElement("li");
                   var el2 = dom.createElement("code");
@@ -28258,24 +28258,24 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
                 var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createComment("");
                 dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                    ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 var el2 = dom.createElement("ul");
                 var el3 = dom.createTextNode("\n");
                 dom.appendChild(el2, el3);
                 var el3 = dom.createComment("");
                 dom.appendChild(el2, el3);
-                var el3 = dom.createTextNode("                    ");
+                var el3 = dom.createTextNode("");
                 dom.appendChild(el2, el3);
                 dom.appendChild(el1, el2);
-                var el2 = dom.createTextNode("\n                ");
+                var el2 = dom.createTextNode("\n");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
                 var el1 = dom.createTextNode("\n");
@@ -28317,7 +28317,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("ul");
               dom.setAttribute(el1, "class", "theme-validation-errors");
@@ -28325,7 +28325,7 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
               dom.appendChild(el1, el2);
               var el2 = dom.createComment("");
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("        ");
+              var el2 = dom.createTextNode("");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -28366,11 +28366,11 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n    ");
+              var el1 = dom.createTextNode("\n");
               dom.appendChild(el0, el1);
               return el0;
             },
@@ -28558,11 +28558,11 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "class", "btn btn-red");
-          var el2 = dom.createTextNode("\n            Overwrite\n        ");
+          var el2 = dom.createTextNode("\n            Overwrite\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -28604,11 +28604,11 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "class", "btn btn-green");
-          var el2 = dom.createTextNode("\n            Try Again\n        ");
+          var el2 = dom.createTextNode("\n            Try Again\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -28650,11 +28650,11 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "class", "btn btn-green");
-          var el2 = dom.createTextNode("\n            Activate Now\n        ");
+          var el2 = dom.createTextNode("\n            Activate Now\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -28700,14 +28700,14 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "modal-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -28738,15 +28738,15 @@ define("ghost-admin/templates/components/modals/upload-theme", ["exports"], func
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "modal-footer");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -28810,7 +28810,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -28823,7 +28823,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "gh-trim-focus-input", [["get", "model.titleScratch", ["loc", [null, [4, 34], [4, 52]]]]], ["type", "text", "id", "entry-title", "placeholder", "Your Post Title", "tabindex", "1", "shouldFocus", ["subexpr", "@mut", [["get", "shouldFocusTitle", ["loc", [null, [4, 137], [4, 153]]]]], [], []], "focus-out", "updateTitle", "update", ["subexpr", "action", [["subexpr", "perform", [["get", "updateTitle", ["loc", [null, [4, 202], [4, 213]]]]], [], ["loc", [null, [4, 193], [4, 214]]]]], [], ["loc", [null, [4, 185], [4, 215]]]]], ["loc", [null, [4, 12], [4, 217]]]]],
+        statements: [["inline", "gh-trim-focus-input", [["get", "model.titleScratch", ["loc", [null, [4, 34], [4, 52]]]]], ["type", "text", "id", "entry-title", "placeholder", "文章标题", "tabindex", "1", "shouldFocus", ["subexpr", "@mut", [["get", "shouldFocusTitle", ["loc", [null, [4, 137], [4, 153]]]]], [], []], "focus-out", "updateTitle", "update", ["subexpr", "action", [["subexpr", "perform", [["get", "updateTitle", ["loc", [null, [4, 202], [4, 213]]]]], [], ["loc", [null, [4, 193], [4, 214]]]]], [], ["loc", [null, [4, 185], [4, 215]]]]], ["loc", [null, [4, 12], [4, 217]]]]],
         locals: [],
         templates: []
       };
@@ -28852,7 +28852,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("time");
           dom.setAttribute(el1, "class", "gh-notification gh-notification-schedule");
@@ -28860,7 +28860,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode(".\n            ");
+          var el2 = dom.createTextNode(".\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -28903,7 +28903,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -28945,7 +28945,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -28987,7 +28987,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -29033,7 +29033,7 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
@@ -29043,35 +29043,35 @@ define("ghost-admin/templates/editor/edit", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("        ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "view-actions");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("button");
         dom.setAttribute(el4, "type", "button");
         dom.setAttribute(el4, "class", "post-settings");
         dom.setAttribute(el4, "title", "Post Settings");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("i");
         dom.setAttribute(el5, "class", "icon-settings");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -29183,14 +29183,14 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                    ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("li");
-            var el2 = dom.createTextNode("\n                        at\n                        ");
+            var el2 = dom.createTextNode("\n    at\n                        ");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                        ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("span");
             dom.setAttribute(el2, "class", "error-stack-file");
@@ -29201,7 +29201,7 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
             var el3 = dom.createTextNode(")");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                    ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -29243,17 +29243,17 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("section");
           dom.setAttribute(el1, "class", "error-stack");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("h3");
           var el3 = dom.createTextNode("Stack Trace");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("p");
           var el3 = dom.createElement("strong");
@@ -29261,7 +29261,7 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("ul");
           dom.setAttribute(el2, "class", "error-stack-list");
@@ -29269,10 +29269,10 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("            ");
+          var el3 = dom.createTextNode("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -29318,11 +29318,11 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "error-content error-404 js-error-container");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "error-details");
@@ -29352,10 +29352,10 @@ define("ghost-admin/templates/error", ["exports"], function (exports) {
         var el5 = dom.createTextNode("\n             ");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
@@ -29413,17 +29413,17 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("a");
             dom.setAttribute(el1, "class", "post-view-link");
             dom.setAttribute(el1, "target", "_blank");
-            var el2 = dom.createTextNode("\n                    View post ");
+            var el2 = dom.createTextNode("\nView post ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
             dom.setAttribute(el2, "class", "icon-external");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -29465,17 +29465,17 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("a");
             dom.setAttribute(el1, "class", "post-view-link");
             dom.setAttribute(el1, "target", "_blank");
-            var el2 = dom.createTextNode("\n                    Preview ");
+            var el2 = dom.createTextNode("\n预览 ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
             dom.setAttribute(el2, "class", "icon-external");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -29518,7 +29518,7 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                    ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("label");
               dom.setAttribute(el1, "for", "post-setting-date");
@@ -29561,11 +29561,11 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                    ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("label");
               dom.setAttribute(el1, "for", "post-setting-date");
-              var el2 = dom.createTextNode("Publish Date");
+              var el2 = dom.createTextNode("发布时间");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -29605,11 +29605,11 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
             var el0 = dom.createDocumentFragment();
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -29654,37 +29654,37 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("div");
             dom.setAttribute(el1, "class", "form-group for-select");
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("label");
             dom.setAttribute(el2, "for", "author-list");
-            var el3 = dom.createTextNode("Author");
+            var el3 = dom.createTextNode("作者");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("span");
             dom.setAttribute(el2, "class", "input-icon icon-user");
-            var el3 = dom.createTextNode("\n                    ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("span");
             dom.setAttribute(el3, "class", "gh-select");
             dom.setAttribute(el3, "tabindex", "0");
-            var el4 = dom.createTextNode("\n                    ");
+            var el4 = dom.createTextNode("\n");
             dom.appendChild(el3, el4);
             var el4 = dom.createComment("");
             dom.appendChild(el3, el4);
-            var el4 = dom.createTextNode("\n                    ");
+            var el4 = dom.createTextNode("\n");
             dom.appendChild(el3, el4);
             dom.appendChild(el2, el3);
-            var el3 = dom.createTextNode("\n                ");
+            var el3 = dom.createTextNode("\n");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n            ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -29725,26 +29725,26 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                    ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("button");
             dom.setAttribute(el1, "type", "button");
-            var el2 = dom.createTextNode("\n                        ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("b");
-            var el3 = dom.createTextNode("Meta Data");
+            var el3 = dom.createTextNode("目标数据");
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                        ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("span");
-            var el3 = dom.createTextNode("Extra content for SEO and social media.");
+            var el3 = dom.createTextNode("搜索引擎优化和社交媒体的内容。");;
             dom.appendChild(el2, el3);
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("\n                    ");
+            var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                    ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-arrow-right");
@@ -29787,18 +29787,18 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("label");
                 dom.setAttribute(el1, "for", "meta-title");
                 var el2 = dom.createTextNode("Meta Title");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("p");
                 var el2 = dom.createTextNode("Recommended: ");
@@ -29812,7 +29812,7 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
                 var el2 = dom.createComment("");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
@@ -29856,18 +29856,18 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("label");
                 dom.setAttribute(el1, "for", "meta-description");
                 var el2 = dom.createTextNode("Meta Description");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("p");
                 var el2 = dom.createTextNode("Recommended: ");
@@ -29881,7 +29881,7 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
                 var el2 = dom.createComment("");
                 dom.appendChild(el1, el2);
                 dom.appendChild(el0, el1);
-                var el1 = dom.createTextNode("\n                ");
+                var el1 = dom.createTextNode("\n");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
@@ -29924,11 +29924,11 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("        ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("div");
               dom.setAttribute(el1, "class", "settings-menu-header subview");
-              var el2 = dom.createTextNode("\n            ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("button");
               dom.setAttribute(el2, "class", "back icon-arrow-left settings-menu-header-action");
@@ -29938,25 +29938,25 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
               dom.appendChild(el3, el4);
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n            ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("h4");
-              var el3 = dom.createTextNode("Meta Data");
+              var el3 = dom.createTextNode("目标数据");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n            ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("div");
               dom.setAttribute(el2, "style", "width:23px;");
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n        ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n\n        ");
+              var el1 = dom.createTextNode("\n\n");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("div");
               dom.setAttribute(el1, "class", "settings-menu-content");
-              var el2 = dom.createTextNode("\n            ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("form");
               var el3 = dom.createTextNode("\n");
@@ -29967,51 +29967,51 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
               dom.appendChild(el2, el3);
               var el3 = dom.createComment("");
               dom.appendChild(el2, el3);
-              var el3 = dom.createTextNode("\n            ");
+              var el3 = dom.createTextNode("\n");
               dom.appendChild(el2, el3);
               var el3 = dom.createElement("div");
               dom.setAttribute(el3, "class", "form-group");
-              var el4 = dom.createTextNode("\n                ");
+              var el4 = dom.createTextNode("\n");
               dom.appendChild(el3, el4);
               var el4 = dom.createElement("label");
               var el5 = dom.createTextNode("Search Engine Result Preview");
               dom.appendChild(el4, el5);
               dom.appendChild(el3, el4);
-              var el4 = dom.createTextNode("\n                ");
+              var el4 = dom.createTextNode("\n");
               dom.appendChild(el3, el4);
               var el4 = dom.createElement("div");
               dom.setAttribute(el4, "class", "seo-preview");
-              var el5 = dom.createTextNode("\n                    ");
+              var el5 = dom.createTextNode("\n");
               dom.appendChild(el4, el5);
               var el5 = dom.createElement("div");
               dom.setAttribute(el5, "class", "seo-preview-title");
               var el6 = dom.createComment("");
               dom.appendChild(el5, el6);
               dom.appendChild(el4, el5);
-              var el5 = dom.createTextNode("\n                    ");
+              var el5 = dom.createTextNode("\n");
               dom.appendChild(el4, el5);
               var el5 = dom.createElement("div");
               dom.setAttribute(el5, "class", "seo-preview-link");
               var el6 = dom.createComment("");
               dom.appendChild(el5, el6);
               dom.appendChild(el4, el5);
-              var el5 = dom.createTextNode("\n                    ");
+              var el5 = dom.createTextNode("\n");
               dom.appendChild(el4, el5);
               var el5 = dom.createElement("div");
               dom.setAttribute(el5, "class", "seo-preview-description");
               var el6 = dom.createComment("");
               dom.appendChild(el5, el6);
               dom.appendChild(el4, el5);
-              var el5 = dom.createTextNode("\n                ");
+              var el5 = dom.createTextNode("\n");
               dom.appendChild(el4, el5);
               dom.appendChild(el3, el4);
-              var el4 = dom.createTextNode("\n            ");
+              var el4 = dom.createTextNode("\n");
               dom.appendChild(el3, el4);
               dom.appendChild(el2, el3);
-              var el3 = dom.createTextNode("\n            ");
+              var el3 = dom.createTextNode("\n");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("\n        ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -30103,20 +30103,20 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "id", "entry-controls");
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("div");
           dom.setAttribute(el3, "class", "settings-menu-header");
-          var el4 = dom.createTextNode("\n            ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("h4");
-          var el5 = dom.createTextNode("Post Settings");
+          var el5 = dom.createTextNode("文章设置");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n            ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("button");
           dom.setAttribute(el4, "class", "close icon-x settings-menu-header-action");
@@ -30126,80 +30126,80 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           dom.appendChild(el5, el6);
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n        ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("div");
           dom.setAttribute(el3, "class", "settings-menu-content");
-          var el4 = dom.createTextNode("\n            ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           var el4 = dom.createComment("");
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n            ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("form");
-          var el5 = dom.createTextNode("\n            ");
+          var el5 = dom.createTextNode("\n");
           dom.appendChild(el4, el5);
           var el5 = dom.createElement("div");
           dom.setAttribute(el5, "class", "form-group");
-          var el6 = dom.createTextNode("\n                ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createElement("label");
           dom.setAttribute(el6, "for", "url");
-          var el7 = dom.createTextNode("Post URL");
+          var el7 = dom.createTextNode("文章地址");
           dom.appendChild(el6, el7);
           dom.appendChild(el5, el6);
           var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createComment("");
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("\n                ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createElement("span");
           dom.setAttribute(el6, "class", "input-icon icon-link");
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createComment("");
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("\n                ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createComment("");
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("\n            ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           dom.appendChild(el4, el5);
           var el5 = dom.createTextNode("\n\n");
           dom.appendChild(el4, el5);
           var el5 = dom.createComment("");
           dom.appendChild(el4, el5);
-          var el5 = dom.createTextNode("\n            ");
+          var el5 = dom.createTextNode("\n");
           dom.appendChild(el4, el5);
           var el5 = dom.createElement("div");
           dom.setAttribute(el5, "class", "form-group");
-          var el6 = dom.createTextNode("\n                ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createElement("label");
           dom.setAttribute(el6, "for", "tag-input");
-          var el7 = dom.createTextNode("Tags");
+          var el7 = dom.createTextNode("标签管理");
           dom.appendChild(el6, el7);
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("\n                ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createComment("");
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("\n            ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           dom.appendChild(el4, el5);
           var el5 = dom.createTextNode("\n\n");
           dom.appendChild(el4, el5);
           var el5 = dom.createComment("");
           dom.appendChild(el4, el5);
-          var el5 = dom.createTextNode("\n            ");
+          var el5 = dom.createTextNode("\n");
           dom.appendChild(el4, el5);
           var el5 = dom.createElement("ul");
           dom.setAttribute(el5, "class", "nav-list nav-list-block");
@@ -30207,34 +30207,34 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           dom.appendChild(el5, el6);
           var el6 = dom.createComment("");
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("            ");
+          var el6 = dom.createTextNode("");
           dom.appendChild(el5, el6);
           dom.appendChild(el4, el5);
-          var el5 = dom.createTextNode("\n\n            ");
+          var el5 = dom.createTextNode("\n\n");
           dom.appendChild(el4, el5);
           var el5 = dom.createElement("div");
           dom.setAttribute(el5, "class", "form-group for-checkbox");
-          var el6 = dom.createTextNode("\n                ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           var el6 = dom.createElement("label");
           dom.setAttribute(el6, "class", "checkbox");
           dom.setAttribute(el6, "for", "static-page");
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createComment("");
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createElement("span");
           dom.setAttribute(el7, "class", "input-toggle-component");
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createElement("p");
-          var el8 = dom.createTextNode("Turn this post into a static page");
+          var el8 = dom.createTextNode("把这篇文章变成一个静态页面");;
           dom.appendChild(el7, el8);
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           dom.appendChild(el5, el6);
           var el6 = dom.createTextNode("\n\n                ");
@@ -30242,44 +30242,44 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           var el6 = dom.createElement("label");
           dom.setAttribute(el6, "class", "checkbox");
           dom.setAttribute(el6, "for", "featured");
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createComment("");
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createElement("span");
           dom.setAttribute(el7, "class", "input-toggle-component");
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                    ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           var el7 = dom.createElement("p");
-          var el8 = dom.createTextNode("Feature this post");
+          var el8 = dom.createTextNode("特色页面");;
           dom.appendChild(el7, el8);
           dom.appendChild(el6, el7);
-          var el7 = dom.createTextNode("\n                ");
+          var el7 = dom.createTextNode("\n");
           dom.appendChild(el6, el7);
           dom.appendChild(el5, el6);
-          var el6 = dom.createTextNode("\n            ");
+          var el6 = dom.createTextNode("\n");
           dom.appendChild(el5, el6);
           dom.appendChild(el4, el5);
-          var el5 = dom.createTextNode("\n\n            ");
+          var el5 = dom.createTextNode("\n\n");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n        ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n    ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n\n    ");
+          var el2 = dom.createTextNode("\n\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("    ");
+          var el3 = dom.createTextNode("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
@@ -30319,7 +30319,7 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
           morphs[15] = dom.createMorphAt(element14, 1, 1);
           return morphs;
         },
-        statements: [["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [3, 21], [3, 37]]]], "settings-menu-pane-out-left", "settings-menu-pane-in"], [], ["loc", [null, [3, 16], [3, 93]]]], " settings-menu settings-menu-pane"]]], ["element", "action", ["closeMenus"], [], ["loc", [null, [6, 69], [6, 92]]]], ["inline", "gh-image-uploader-with-preview", [], ["image", ["subexpr", "@mut", [["get", "model.image", ["loc", [null, [10, 22], [10, 33]]]]], [], []], "text", "Add post image", "update", ["subexpr", "action", ["setCoverImage"], [], ["loc", [null, [12, 23], [12, 47]]]], "remove", ["subexpr", "action", ["clearCoverImage"], [], ["loc", [null, [13, 23], [13, 49]]]]], ["loc", [null, [9, 12], [14, 14]]]], ["block", "if", [["get", "model.isPublished", ["loc", [null, [18, 22], [18, 39]]]]], [], 0, 1, ["loc", [null, [18, 16], [26, 23]]]], ["inline", "gh-input", [["get", "slugValue", ["loc", [null, [29, 31], [29, 40]]]]], ["class", "post-setting-slug", "id", "url", "name", "post-setting-slug", "focusOut", ["subexpr", "action", ["updateSlug", ["get", "slugValue", ["loc", [null, [29, 131], [29, 140]]]]], [], ["loc", [null, [29, 110], [29, 141]]]], "stopEnterKeyDownPropagation", "true", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "slugValue", ["loc", [null, [29, 197], [29, 206]]]]], [], ["loc", [null, [29, 192], [29, 207]]]]], [], ["loc", [null, [29, 184], [29, 208]]]]], ["loc", [null, [29, 20], [29, 210]]]], ["inline", "gh-url-preview", [], ["slug", ["subexpr", "@mut", [["get", "slugValue", ["loc", [null, [31, 38], [31, 47]]]]], [], []], "tagName", "p", "classNames", "description"], ["loc", [null, [31, 16], [31, 86]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "model.errors", ["loc", [null, [34, 36], [34, 48]]]]], [], []], "property", "post-setting-date"], 2, null, ["loc", [null, [34, 12], [48, 30]]]], ["inline", "gh-selectize", [], ["id", "tag-input", "multiple", true, "selection", ["subexpr", "@mut", [["get", "model.tags", ["loc", [null, [55, 30], [55, 40]]]]], [], []], "content", ["subexpr", "@mut", [["get", "availableTags", ["loc", [null, [56, 28], [56, 41]]]]], [], []], "optionValuePath", "content.uuid", "optionLabelPath", "content.name", "openOnFocus", false, "create-item", "addTag", "remove-item", "removeTag", "plugins", "remove_button, drag_drop"], ["loc", [null, [52, 16], [62, 56]]]], ["block", "unless", [["get", "session.user.isAuthor", ["loc", [null, [65, 22], [65, 43]]]]], [], 3, null, ["loc", [null, [65, 12], [82, 23]]]], ["block", "gh-tab", [], ["tagName", "li", "classNames", "nav-list-item"], 4, null, ["loc", [null, [85, 16], [91, 27]]]], ["element", "action", ["togglePage"], ["bubbles", "false"], ["loc", [null, [95, 58], [95, 97]]]], ["inline", "one-way-checkbox", [["get", "model.page", ["loc", [null, [96, 39], [96, 49]]]]], ["type", "checkbox", "name", "static-page", "id", "static-page", "class", "gh-input post-setting-static-page", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.page", ["loc", [null, [96, 164], [96, 174]]]]], [], ["loc", [null, [96, 159], [96, 175]]]]], [], ["loc", [null, [96, 151], [96, 176]]]]], ["loc", [null, [96, 20], [96, 178]]]], ["element", "action", ["toggleFeatured"], ["bubbles", "false"], ["loc", [null, [101, 55], [101, 98]]]], ["inline", "one-way-checkbox", [["get", "model.featured", ["loc", [null, [102, 39], [102, 53]]]]], ["type", "checkbox", "name", "featured", "id", "featured", "class", "gh-input post-setting-featured", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.featured", ["loc", [null, [102, 159], [102, 173]]]]], [], ["loc", [null, [102, 154], [102, 174]]]]], [], ["loc", [null, [102, 146], [102, 175]]]]], ["loc", [null, [102, 20], [102, 177]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [112, 21], [112, 37]]]], "settings-menu-pane-in", "settings-menu-pane-out-right"], [], ["loc", [null, [112, 16], [112, 94]]]], " settings-menu settings-menu-pane"]]], ["block", "gh-tab-pane", [], [], 5, null, ["loc", [null, [113, 4], [148, 20]]]]],
+        statements: [["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [3, 21], [3, 37]]]], "settings-menu-pane-out-left", "settings-menu-pane-in"], [], ["loc", [null, [3, 16], [3, 93]]]], " settings-menu settings-menu-pane"]]], ["element", "action", ["closeMenus"], [], ["loc", [null, [6, 69], [6, 92]]]], ["inline", "gh-image-uploader-with-preview", [], ["image", ["subexpr", "@mut", [["get", "model.image", ["loc", [null, [10, 22], [10, 33]]]]], [], []], "text", "添加图片", "update", ["subexpr", "action", ["setCoverImage"], [], ["loc", [null, [12, 23], [12, 47]]]], "remove", ["subexpr", "action", ["clearCoverImage"], [], ["loc", [null, [13, 23], [13, 49]]]]], ["loc", [null, [9, 12], [14, 14]]]], ["block", "if", [["get", "model.isPublished", ["loc", [null, [18, 22], [18, 39]]]]], [], 0, 1, ["loc", [null, [18, 16], [26, 23]]]], ["inline", "gh-input", [["get", "slugValue", ["loc", [null, [29, 31], [29, 40]]]]], ["class", "post-setting-slug", "id", "url", "name", "post-setting-slug", "focusOut", ["subexpr", "action", ["updateSlug", ["get", "slugValue", ["loc", [null, [29, 131], [29, 140]]]]], [], ["loc", [null, [29, 110], [29, 141]]]], "stopEnterKeyDownPropagation", "true", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "slugValue", ["loc", [null, [29, 197], [29, 206]]]]], [], ["loc", [null, [29, 192], [29, 207]]]]], [], ["loc", [null, [29, 184], [29, 208]]]]], ["loc", [null, [29, 20], [29, 210]]]], ["inline", "gh-url-preview", [], ["slug", ["subexpr", "@mut", [["get", "slugValue", ["loc", [null, [31, 38], [31, 47]]]]], [], []], "tagName", "p", "classNames", "description"], ["loc", [null, [31, 16], [31, 86]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "model.errors", ["loc", [null, [34, 36], [34, 48]]]]], [], []], "property", "post-setting-date"], 2, null, ["loc", [null, [34, 12], [48, 30]]]], ["inline", "gh-selectize", [], ["id", "tag-input", "multiple", true, "selection", ["subexpr", "@mut", [["get", "model.tags", ["loc", [null, [55, 30], [55, 40]]]]], [], []], "content", ["subexpr", "@mut", [["get", "availableTags", ["loc", [null, [56, 28], [56, 41]]]]], [], []], "optionValuePath", "content.uuid", "optionLabelPath", "content.name", "openOnFocus", false, "create-item", "addTag", "remove-item", "removeTag", "plugins", "remove_button, drag_drop"], ["loc", [null, [52, 16], [62, 56]]]], ["block", "unless", [["get", "session.user.isAuthor", ["loc", [null, [65, 22], [65, 43]]]]], [], 3, null, ["loc", [null, [65, 12], [82, 23]]]], ["block", "gh-tab", [], ["tagName", "li", "classNames", "nav-list-item"], 4, null, ["loc", [null, [85, 16], [91, 27]]]], ["element", "action", ["togglePage"], ["bubbles", "false"], ["loc", [null, [95, 58], [95, 97]]]], ["inline", "one-way-checkbox", [["get", "model.page", ["loc", [null, [96, 39], [96, 49]]]]], ["type", "checkbox", "name", "static-page", "id", "static-page", "class", "gh-input post-setting-static-page", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.page", ["loc", [null, [96, 164], [96, 174]]]]], [], ["loc", [null, [96, 159], [96, 175]]]]], [], ["loc", [null, [96, 151], [96, 176]]]]], ["loc", [null, [96, 20], [96, 178]]]], ["element", "action", ["toggleFeatured"], ["bubbles", "false"], ["loc", [null, [101, 55], [101, 98]]]], ["inline", "one-way-checkbox", [["get", "model.featured", ["loc", [null, [102, 39], [102, 53]]]]], ["type", "checkbox", "name", "featured", "id", "featured", "class", "gh-input post-setting-featured", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.featured", ["loc", [null, [102, 159], [102, 173]]]]], [], ["loc", [null, [102, 154], [102, 174]]]]], [], ["loc", [null, [102, 146], [102, 175]]]]], ["loc", [null, [102, 20], [102, 177]]]], ["attribute", "class", ["concat", [["subexpr", "if", [["get", "isViewingSubview", ["loc", [null, [112, 21], [112, 37]]]], "settings-menu-pane-in", "settings-menu-pane-out-right"], [], ["loc", [null, [112, 16], [112, 94]]]], " settings-menu settings-menu-pane"]]], ["block", "gh-tab-pane", [], [], 5, null, ["loc", [null, [113, 4], [148, 20]]]]],
         locals: [],
         templates: [child0, child1, child2, child3, child4, child5]
       };
@@ -30395,7 +30395,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
             var el1 = dom.createElement("span");
-            var el2 = dom.createTextNode("Content");
+            var el2 = dom.createTextNode("内容管理");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             return el0;
@@ -30432,7 +30432,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("New Post");
+            var el1 = dom.createTextNode("新建文章");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -30473,7 +30473,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                     hasRendered: false,
                     buildFragment: function buildFragment(dom) {
                       var el0 = dom.createDocumentFragment();
-                      var el1 = dom.createTextNode("                                            ");
+                      var el1 = dom.createTextNode("");
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("span");
                       dom.setAttribute(el1, "class", "page");
@@ -30516,15 +30516,15 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                     hasRendered: false,
                     buildFragment: function buildFragment(dom) {
                       var el0 = dom.createDocumentFragment();
-                      var el1 = dom.createTextNode("                                            ");
+                      var el1 = dom.createTextNode("");
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("time");
                       dom.setAttribute(el1, "class", "date published");
-                      var el2 = dom.createTextNode("\n                                                Published ");
+                      var el2 = dom.createTextNode("\n                            Published ");
                       dom.appendChild(el1, el2);
                       var el2 = dom.createComment("");
                       dom.appendChild(el1, el2);
-                      var el2 = dom.createTextNode("\n                                            ");
+                      var el2 = dom.createTextNode("\n                        ");
                       dom.appendChild(el1, el2);
                       dom.appendChild(el0, el1);
                       var el1 = dom.createTextNode("\n");
@@ -30614,21 +30614,21 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                       var el2 = dom.createTextNode("Scheduled");
                       dom.appendChild(el1, el2);
                       dom.appendChild(el0, el1);
-                      var el1 = dom.createTextNode("\n                                            ");
+                      var el1 = dom.createTextNode("\n                        ");
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("span");
                       var el2 = dom.createTextNode("–\n                                                ");
                       dom.appendChild(el1, el2);
                       var el2 = dom.createElement("time");
                       dom.setAttribute(el2, "class-", "date scheduled");
-                      var el3 = dom.createTextNode("\n                                                    ");
+                      var el3 = dom.createTextNode("\n                                ");
                       dom.appendChild(el2, el3);
                       var el3 = dom.createComment("");
                       dom.appendChild(el2, el3);
-                      var el3 = dom.createTextNode("\n                                                ");
+                      var el3 = dom.createTextNode("\n                            ");
                       dom.appendChild(el2, el3);
                       dom.appendChild(el1, el2);
-                      var el2 = dom.createTextNode("\n                                            ");
+                      var el2 = dom.createTextNode("\n                        ");
                       dom.appendChild(el1, el2);
                       dom.appendChild(el0, el1);
                       var el1 = dom.createTextNode("\n");
@@ -30671,7 +30671,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                     hasRendered: false,
                     buildFragment: function buildFragment(dom) {
                       var el0 = dom.createDocumentFragment();
-                      var el1 = dom.createTextNode("                                            ");
+                      var el1 = dom.createTextNode("");
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("span");
                       dom.setAttribute(el1, "class", "draft");
@@ -30754,7 +30754,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                     hasRendered: false,
                     buildFragment: function buildFragment(dom) {
                       var el0 = dom.createDocumentFragment();
-                      var el1 = dom.createTextNode("                                            ");
+                      var el1 = dom.createTextNode("");
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("span");
                       dom.setAttribute(el1, "class", "label label-default");
@@ -30798,7 +30798,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                   hasRendered: false,
                   buildFragment: function buildFragment(dom) {
                     var el0 = dom.createDocumentFragment();
-                    var el1 = dom.createTextNode("                                    ");
+                    var el1 = dom.createTextNode("");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("div");
                     dom.setAttribute(el1, "class", "internal-tags-list");
@@ -30806,7 +30806,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                     dom.appendChild(el1, el2);
                     var el2 = dom.createComment("");
                     dom.appendChild(el1, el2);
-                    var el2 = dom.createTextNode("                                    ");
+                    var el2 = dom.createTextNode("");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -30846,36 +30846,36 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                 hasRendered: false,
                 buildFragment: function buildFragment(dom) {
                   var el0 = dom.createDocumentFragment();
-                  var el1 = dom.createTextNode("                            ");
+                  var el1 = dom.createTextNode("");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createElement("h3");
                   dom.setAttribute(el1, "class", "entry-title");
                   var el2 = dom.createComment("");
                   dom.appendChild(el1, el2);
                   dom.appendChild(el0, el1);
-                  var el1 = dom.createTextNode("\n                            ");
+                  var el1 = dom.createTextNode("\n        ");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createElement("section");
                   dom.setAttribute(el1, "class", "entry-meta");
-                  var el2 = dom.createTextNode("\n                                ");
+                  var el2 = dom.createTextNode("\n            ");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createElement("span");
                   dom.setAttribute(el2, "class", "avatar");
-                  var el3 = dom.createTextNode("\n                                    ");
+                  var el3 = dom.createTextNode("\n                ");
                   dom.appendChild(el2, el3);
                   var el3 = dom.createElement("img");
                   dom.appendChild(el2, el3);
-                  var el3 = dom.createTextNode("\n                                ");
+                  var el3 = dom.createTextNode("\n            ");
                   dom.appendChild(el2, el3);
                   dom.appendChild(el1, el2);
-                  var el2 = dom.createTextNode("\n                                ");
+                  var el2 = dom.createTextNode("\n            ");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createElement("span");
                   dom.setAttribute(el2, "class", "author");
                   var el3 = dom.createComment("");
                   dom.appendChild(el2, el3);
                   dom.appendChild(el1, el2);
-                  var el2 = dom.createTextNode("\n                                ");
+                  var el2 = dom.createTextNode("\n            ");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createElement("span");
                   dom.setAttribute(el2, "class", "status");
@@ -30883,14 +30883,14 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                   dom.appendChild(el2, el3);
                   var el3 = dom.createComment("");
                   dom.appendChild(el2, el3);
-                  var el3 = dom.createTextNode("                                ");
+                  var el3 = dom.createTextNode("");
                   dom.appendChild(el2, el3);
                   dom.appendChild(el1, el2);
                   var el2 = dom.createTextNode("\n");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createComment("");
                   dom.appendChild(el1, el2);
-                  var el2 = dom.createTextNode("                            ");
+                  var el2 = dom.createTextNode("");
                   dom.appendChild(el1, el2);
                   dom.appendChild(el0, el1);
                   var el1 = dom.createTextNode("\n");
@@ -31017,7 +31017,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("ol");
             dom.setAttribute(el1, "class", "posts-list");
@@ -31025,7 +31025,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("            ");
+            var el2 = dom.createTextNode("");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -31070,19 +31070,19 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("header");
           dom.setAttribute(el1, "class", "view-header");
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("section");
           dom.setAttribute(el2, "class", "view-actions");
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n    ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
@@ -31092,24 +31092,24 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "view-container");
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("section");
           var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("    ");
+          var el3 = dom.createTextNode("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("section");
-          var el3 = dom.createTextNode("\n        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n    ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
@@ -31162,7 +31162,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -31295,21 +31295,21 @@ define("ghost-admin/templates/posts/index", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "no-posts");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("h3");
           var el3 = dom.createTextNode("You Haven't Written Any Posts Yet!");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -31437,7 +31437,7 @@ define("ghost-admin/templates/posts/post", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -31478,11 +31478,11 @@ define("ghost-admin/templates/posts/post", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "wrapper");
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("h1");
           dom.setAttribute(el2, "class", "content-preview-title");
@@ -31490,14 +31490,14 @@ define("ghost-admin/templates/posts/post", ["exports"], function (exports) {
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("        ");
+          var el3 = dom.createTextNode("");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -31544,7 +31544,7 @@ define("ghost-admin/templates/posts/post", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "post-controls");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -31596,7 +31596,7 @@ define("ghost-admin/templates/reset", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -31638,7 +31638,7 @@ define("ghost-admin/templates/reset", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -31719,15 +31719,15 @@ define("ghost-admin/templates/reset", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-flow");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "gh-flow-content-wrap");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "gh-flow-content fade-in");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("form");
         dom.setAttribute(el4, "id", "reset");
@@ -31740,24 +31740,24 @@ define("ghost-admin/templates/reset", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("p");
         dom.setAttribute(el4, "class", "main-error");
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -31813,7 +31813,7 @@ define("ghost-admin/templates/settings/apps", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -31863,7 +31863,7 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "style", "padding-left:1px");
-          var el2 = dom.createTextNode("Apps");
+          var el2 = dom.createTextNode("应用列表");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -31901,7 +31901,7 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("span");
             dom.setAttribute(el1, "class", "green");
@@ -31944,10 +31944,10 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("span");
-            var el2 = dom.createTextNode("Configure");
+            var el2 = dom.createTextNode("配置");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -31985,41 +31985,41 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("article");
           dom.setAttribute(el1, "class", "apps-card-app");
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "apps-card-content");
-          var el3 = dom.createTextNode("\n                        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("figure");
           dom.setAttribute(el3, "class", "apps-card-app-icon");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("div");
           dom.setAttribute(el3, "class", "apps-card-meta");
-          var el4 = dom.createTextNode("\n                            ");
+          var el4 = dom.createTextNode("\n        ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("h3");
           dom.setAttribute(el4, "class", "apps-card-app-title");
           var el5 = dom.createTextNode("Slack");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n                            ");
+          var el4 = dom.createTextNode("\n        ");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("p");
           dom.setAttribute(el4, "class", "apps-card-app-desc");
           var el5 = dom.createTextNode("A team communication tool");
           dom.appendChild(el4, el5);
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n                        ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createElement("div");
           dom.setAttribute(el3, "class", "apps-configured");
@@ -32027,18 +32027,18 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
           dom.appendChild(el3, el4);
           var el4 = dom.createComment("");
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("                            ");
+          var el4 = dom.createTextNode("");
           dom.appendChild(el3, el4);
           var el4 = dom.createElement("i");
           dom.setAttribute(el4, "class", "icon-arrow-right");
           dom.appendChild(el3, el4);
-          var el4 = dom.createTextNode("\n                        ");
+          var el4 = dom.createTextNode("\n");
           dom.appendChild(el3, el4);
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                    ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -32086,7 +32086,7 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "view-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -32097,22 +32097,22 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "view-container");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("span");
         dom.setAttribute(el3, "class", "apps-grid-title");
-        var el4 = dom.createTextNode("Available integrations");
+        var el4 = dom.createTextNode("已安装应用");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3, "class", "apps-grid");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "apps-grid-cell");
@@ -32120,20 +32120,20 @@ define("ghost-admin/templates/settings/apps/index", ["exports"], function (expor
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("p");
         dom.setAttribute(el3, "class", "apps-grid-note");
-        var el4 = dom.createTextNode("(More coming soon!)");
+        var el4 = dom.createTextNode("(更多应用即将上线!)");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -32182,7 +32182,7 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("Apps");
+            var el1 = dom.createTextNode("应用列表");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -32221,7 +32221,7 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
           dom.setAttribute(el1, "style", "padding-left:1px");
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode(" ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("i");
           dom.setAttribute(el2, "class", "icon-arrow-right");
@@ -32303,7 +32303,7 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                    ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("p");
             var el2 = dom.createTextNode("Set up a new incoming webhook ");
@@ -32353,7 +32353,7 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                    ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -32394,14 +32394,14 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "url");
           var el2 = dom.createTextNode("Webhook URL");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -32487,11 +32487,11 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
         dom.setAttribute(el1, "class", "view-header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-actions");
@@ -32499,7 +32499,7 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -32509,62 +32509,62 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "view-container");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "app-grid");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "app-cell");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("img");
         dom.setAttribute(el5, "class", "app-icon");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "app-cell");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("h3");
         var el6 = dom.createTextNode("Slack");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("p");
         var el6 = dom.createTextNode("A messaging app for teams");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "app-subtitle");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("p");
         var el5 = dom.createTextNode("Automatically send newly published posts to a channel in Slack.");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "class", "app-config-form");
@@ -32574,10 +32574,10 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "class", "app-config-form");
@@ -32585,10 +32585,10 @@ define("ghost-admin/templates/settings/apps/slack", ["exports"], function (expor
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -32645,7 +32645,7 @@ define("ghost-admin/templates/settings/code-injection", ["exports"], function (e
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("Code Injection");
+          var el2 = dom.createTextNode("插入代码");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -32682,7 +32682,7 @@ define("ghost-admin/templates/settings/code-injection", ["exports"], function (e
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Save");
+          var el1 = dom.createTextNode("保存");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -32721,58 +32721,58 @@ define("ghost-admin/templates/settings/code-injection", ["exports"], function (e
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "view-actions");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-code");
         dom.setAttribute(el3, "novalidate", "novalidate");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("p");
-        var el6 = dom.createTextNode("\n                    Ghost allows you to inject code into the top and bottom of your theme files without editing them. This allows for quick modifications to insert useful things like tracking codes and meta tags.\n                ");
+        var el6 = dom.createTextNode("\n系统允许你书写自定义代码来控制博客顶部和底部内容.\n                ");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n\n                ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group settings-code");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "for", "ghost-head");
         var el7 = dom.createTextNode("Blog Header");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
         var el7 = dom.createTextNode("Code here will be injected into the ");
@@ -32784,25 +32784,25 @@ define("ghost-admin/templates/settings/code-injection", ["exports"], function (e
         var el7 = dom.createTextNode(" tag on every page of your blog");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n\n                ");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group settings-code");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "for", "ghost-foot");
         var el7 = dom.createTextNode("Blog Footer");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
         var el7 = dom.createTextNode("Code here will be injected into the ");
@@ -32814,20 +32814,20 @@ define("ghost-admin/templates/settings/code-injection", ["exports"], function (e
         var el7 = dom.createTextNode(" tag on every page of your blog");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -32881,7 +32881,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("General");
+          var el2 = dom.createTextNode("常规设置");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -32918,7 +32918,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Save");
+          var el1 = dom.createTextNode("保存");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -32954,25 +32954,25 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "blog-title");
-          var el2 = dom.createTextNode("Blog Title");
+          var el2 = dom.createTextNode("博客标题");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("The name of your blog");
+          var el2 = dom.createTextNode("你的博客的标题");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -33014,29 +33014,29 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "blog-description");
-          var el2 = dom.createTextNode("Blog Description");
+          var el2 = dom.createTextNode("博客描述");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("\n                        Describe what your blog is about\n                        ");
+          var el2 = dom.createTextNode("\n说些和你博客有关的内容\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -33079,7 +33079,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("img");
           dom.setAttribute(el1, "class", "blog-logo");
@@ -33126,7 +33126,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "type", "button");
@@ -33173,7 +33173,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -33215,7 +33215,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("img");
           dom.setAttribute(el1, "class", "blog-cover");
@@ -33262,7 +33262,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("button");
           dom.setAttribute(el1, "type", "button");
@@ -33309,7 +33309,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -33351,14 +33351,14 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "facebook");
           var el2 = dom.createTextNode("Facebook Page");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("input");
           dom.setAttribute(el1, "type", "url");
@@ -33368,11 +33368,11 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
           dom.setAttribute(el1, "placeholder", "https://www.facebook.com/ghost");
           dom.setAttribute(el1, "autocorrect", "off");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("URL of your blog's Facebook Page");
@@ -33420,14 +33420,14 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "twitter");
           var el2 = dom.createTextNode("Twitter Profile");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("input");
           dom.setAttribute(el1, "type", "url");
@@ -33437,11 +33437,11 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
           dom.setAttribute(el1, "placeholder", "https://twitter.com/tryghost");
           dom.setAttribute(el1, "autocorrect", "off");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("URL of your blog's Twitter profile");
@@ -33490,15 +33490,15 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("p");
             var el2 = dom.createTextNode("This password will be needed to access your blog. All search engine optimization and social features are now disabled. This password is stored in plaintext.");
@@ -33582,7 +33582,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        Upload a theme\n");
+          var el1 = dom.createTextNode("Upload a theme\n");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -33618,7 +33618,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -33664,38 +33664,38 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "view-actions");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-content");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-general");
         dom.setAttribute(el3, "novalidate", "novalidate");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
         var el5 = dom.createTextNode("\n\n");
@@ -33706,14 +33706,14 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "form-group");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("label");
         var el6 = dom.createTextNode("Blog Logo");
@@ -33723,7 +33723,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("                ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("p");
         var el6 = dom.createTextNode("Display a logo for your publication");
@@ -33733,14 +33733,14 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "form-group");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("label");
         var el6 = dom.createTextNode("Blog Cover");
@@ -33750,7 +33750,7 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("                ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("p");
         var el6 = dom.createTextNode("Display a cover image on your site");
@@ -33760,17 +33760,17 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "for", "postsPerPage");
@@ -33779,57 +33779,57 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("                    ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
         var el7 = dom.createTextNode("How many posts should be displayed on each page");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group for-checkbox");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "for", "permalinks");
-        var el7 = dom.createTextNode("Dated Permalinks");
+        var el7 = dom.createTextNode("文章链接");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "class", "checkbox");
         dom.setAttribute(el6, "for", "permalinks");
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("span");
         dom.setAttribute(el7, "class", "input-toggle-component");
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("p");
-        var el8 = dom.createTextNode("Include the date in your post URLs");
+        var el8 = dom.createTextNode("文章链接包含发布时间");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                    ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
@@ -33837,10 +33837,10 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("                ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
@@ -33848,73 +33848,73 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("                ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group for-checkbox");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "for", "isPrivate");
         var el7 = dom.createTextNode("Make this blog private");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
         dom.setAttribute(el6, "class", "checkbox");
         dom.setAttribute(el6, "for", "isPrivate");
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createComment("");
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("span");
         dom.setAttribute(el7, "class", "input-toggle-component");
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                        ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("p");
         var el8 = dom.createTextNode("Enable password protection");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                    ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "settings-themes");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("h3");
         dom.setAttribute(el5, "id", "themes");
         var el6 = dom.createTextNode("Themes");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
@@ -33922,20 +33922,20 @@ define("ghost-admin/templates/settings/general", ["exports"], function (exports)
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("                ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -34059,7 +34059,7 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("Labs");
+          var el2 = dom.createTextNode("导入导出");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -34096,7 +34096,7 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Send");
+          var el1 = dom.createTextNode("发送");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -34132,7 +34132,7 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        Public API - For full instructions, read the ");
+          var el1 = dom.createTextNode("公开API-完整的指令,读取");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("a");
           dom.setAttribute(el1, "href", "http://support.ghost.org/public-api-beta/");
@@ -34175,7 +34175,7 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        Subscribers - Collect email addresses from your readers, more info in ");
+          var el1 = dom.createTextNode("从你的读者中收集更多信息");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("a");
           dom.setAttribute(el1, "href", "http://support.ghost.org/subscribers-beta/");
@@ -34218,7 +34218,7 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        Internal Tags - tags which don't show up in your theme, more info in ");
+          var el1 = dom.createTextNode("私密标签-标签不会出现在你的主题中");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("a");
           dom.setAttribute(el1, "href", "http://support.ghost.org/internal-tags-beta/");
@@ -34261,7 +34261,7 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -34307,22 +34307,22 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-content settings-debug");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("p");
         var el4 = dom.createElement("strong");
@@ -34332,181 +34332,181 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         var el4 = dom.createTextNode(" Labs is a testing ground for experimental features which aren't quite ready for primetime. They may change, break or inexplicably disappear at any time.");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-export");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
-        var el7 = dom.createTextNode("Export");
+        var el7 = dom.createTextNode("导出");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("button");
         dom.setAttribute(el6, "type", "button");
         dom.setAttribute(el6, "class", "btn btn-blue");
-        var el7 = dom.createTextNode("Export");
+        var el7 = dom.createTextNode("导出");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
-        var el7 = dom.createTextNode("Export the blog settings and data.");
+        var el7 = dom.createTextNode("导出博客中的帖子和数据.");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-import");
         dom.setAttribute(el3, "enctype", "multipart/form-data");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
-        var el7 = dom.createTextNode("Import");
+        var el7 = dom.createTextNode("导入");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
-        var el7 = dom.createTextNode("Import from another Ghost installation. If you import a user, this will replace the current user & log you out.");
+        var el7 = dom.createTextNode("从其他博客中导入数据，如果你导入一个用户,这将取代当前的用户和日志.");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-resetdb");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
-        var el7 = dom.createTextNode("Delete all Content");
+        var el7 = dom.createTextNode("删除所有内容");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("button");
         dom.setAttribute(el6, "type", "button");
         dom.setAttribute(el6, "class", "btn btn-red js-delete");
-        var el7 = dom.createTextNode("Delete");
+        var el7 = dom.createTextNode("删除");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
-        var el7 = dom.createTextNode("Delete all posts and tags from the database.");
+        var el7 = dom.createTextNode("清空数据库中的所有帖子！");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-testmail");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("label");
-        var el7 = dom.createTextNode("Send a test email");
+        var el7 = dom.createTextNode("发送测试邮件");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("p");
-        var el7 = dom.createTextNode("Sends a test email to your address.");
+        var el7 = dom.createTextNode("向你的邮箱发送一封测试邮件.");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("hr");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("div");
         dom.setAttribute(el5, "class", "form-group for-checkbox");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("h3");
-        var el7 = dom.createTextNode("Enable Beta Features");
+        var el7 = dom.createTextNode("启用待测试功能");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n");
@@ -34517,16 +34517,16 @@ define("ghost-admin/templates/settings/labs", ["exports"], function (exports) {
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("                ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -34592,7 +34592,7 @@ define("ghost-admin/templates/settings/navigation", ["exports"], function (expor
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("Navigation");
+          var el2 = dom.createTextNode("导航设置");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -34629,7 +34629,7 @@ define("ghost-admin/templates/settings/navigation", ["exports"], function (expor
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Save");
+          var el1 = dom.createTextNode("保存");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -34666,7 +34666,7 @@ define("ghost-admin/templates/settings/navigation", ["exports"], function (expor
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                    ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -34750,33 +34750,33 @@ define("ghost-admin/templates/settings/navigation", ["exports"], function (expor
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "view-actions");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-container");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "id", "settings-navigation");
@@ -34786,14 +34786,14 @@ define("ghost-admin/templates/settings/navigation", ["exports"], function (expor
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("            ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -34847,7 +34847,7 @@ define("ghost-admin/templates/settings/tags", ["exports"], function (exports) {
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("Tags");
+          var el2 = dom.createTextNode("标签管理");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -34922,7 +34922,7 @@ define("ghost-admin/templates/settings/tags", ["exports"], function (exports) {
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                    ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
@@ -34963,14 +34963,14 @@ define("ghost-admin/templates/settings/tags", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("            ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("section");
             var el2 = dom.createTextNode("\n");
             dom.appendChild(el1, el2);
             var el2 = dom.createComment("");
             dom.appendChild(el1, el2);
-            var el2 = dom.createTextNode("            ");
+            var el2 = dom.createTextNode("");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -35014,14 +35014,14 @@ define("ghost-admin/templates/settings/tags", ["exports"], function (exports) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("section");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -35037,7 +35037,7 @@ define("ghost-admin/templates/settings/tags", ["exports"], function (exports) {
           dom.insertBoundary(fragment, 0);
           return morphs;
         },
-        statements: [["block", "gh-infinite-scroll", [], ["fetch", "loadNextPage", "isLoading", ["subexpr", "@mut", [["get", "isLoading", ["loc", [null, [13, 22], [13, 31]]]]], [], []], "classNames", "tag-list"], 0, null, ["loc", [null, [11, 8], [22, 31]]]], ["attribute", "class", ["concat", ["settings-menu-container tag-settings ", ["subexpr", "if", [["get", "tagContentFocused", ["loc", [null, [23, 66], [23, 83]]]], "keyboard-focused"], [], ["loc", [null, [23, 61], [23, 104]]]], " ", ["subexpr", "if", [["get", "container.displaySettingsPane", ["loc", [null, [23, 110], [23, 139]]]], "tag-settings-in"], [], ["loc", [null, [23, 105], [23, 159]]]]]]], ["content", "outlet", ["loc", [null, [24, 12], [24, 22]]]]],
+        statements: [["block", "gh-infinite-scroll", [], ["fetch", "loadNextPage", "isLoading", ["subexpr", "@mut", [["get", "isLoading", ["loc", [null, [13, 22], [13, 31]]]]], [], []], "classNames", "tag-list"], 0, null, ["loc", [null, [11, 8], [22, 31]]]], ["attribute", "class", ["concat", ["settings-menu-container tag-settings ", ["subexpr", "if", [["get", "tagContentFocused", ["loc", [null, [23, 66], [23, 83]]]], "keyboard-focused"], [], ["loc", [null, [23, 61], [23, 104]]]], "", ["subexpr", "if", [["get", "container.displaySettingsPane", ["loc", [null, [23, 110], [23, 139]]]], "tag-settings-in"], [], ["loc", [null, [23, 105], [23, 159]]]]]]], ["content", "outlet", ["loc", [null, [24, 12], [24, 22]]]]],
         locals: ["container"],
         templates: [child0]
       };
@@ -35069,28 +35069,28 @@ define("ghost-admin/templates/settings/tags", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "view-actions");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
@@ -35187,21 +35187,21 @@ define("ghost-admin/templates/settings/tags/index", ["exports"], function (expor
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "no-posts-box");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "no-posts");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("h3");
         var el4 = dom.createTextNode("You haven't added any Tags yet!");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -35248,7 +35248,7 @@ define("ghost-admin/templates/settings/tags/tag", ["exports"], function (exports
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -35379,7 +35379,7 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -35421,7 +35421,7 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-check");
@@ -35467,7 +35467,7 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-check");
@@ -35513,7 +35513,7 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-check");
@@ -35562,11 +35562,11 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-flow");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "gh-flow-head");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("nav");
         dom.setAttribute(el3, "class", "gh-flow-nav");
@@ -35574,14 +35574,14 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("            ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("ol");
         var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("                ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5, "class", "divider");
@@ -35590,7 +35590,7 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("                ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("li");
         dom.setAttribute(el5, "class", "divider");
@@ -35599,31 +35599,31 @@ define("ghost-admin/templates/setup", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "gh-flow-content-wrap");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "gh-flow-content");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -35721,7 +35721,7 @@ define("ghost-admin/templates/setup/one", ["exports"], function (exports) {
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Welcome to ");
@@ -35733,7 +35733,7 @@ define("ghost-admin/templates/setup/one", ["exports"], function (exports) {
         var el3 = dom.createTextNode("!");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("All over the world, people have started ");
@@ -35752,7 +35752,7 @@ define("ghost-admin/templates/setup/one", ["exports"], function (exports) {
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("figure");
         dom.setAttribute(el1, "class", "gh-flow-screenshot");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("img");
         dom.setAttribute(el2, "alt", "Ghost screenshot");
@@ -35807,7 +35807,7 @@ define("ghost-admin/templates/setup/three", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "users");
@@ -35817,7 +35817,7 @@ define("ghost-admin/templates/setup/three", ["exports"], function (exports) {
           dom.setAttribute(el2, "class", "icon-mail");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -35902,13 +35902,13 @@ define("ghost-admin/templates/setup/three", ["exports"], function (exports) {
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Invite your team");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
         var el3 = dom.createTextNode("Ghost works best when shared with others. Collaborate, get feedback on your posts & work together on ideas.");
@@ -35933,7 +35933,7 @@ define("ghost-admin/templates/setup/three", ["exports"], function (exports) {
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -35962,7 +35962,7 @@ define("ghost-admin/templates/setup/three", ["exports"], function (exports) {
         morphs[3] = dom.createElementMorph(element2);
         return morphs;
       },
-      statements: [["attribute", "src", ["concat", [["subexpr", "gh-path", ["admin", "img/users.png"], [], ["loc", [null, [6, 37], [6, 72]]]]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "errors", ["loc", [null, [9, 28], [9, 34]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "hasValidated", ["loc", [null, [9, 48], [9, 60]]]]], [], []], "property", "users"], 0, null, ["loc", [null, [9, 4], [12, 22]]]], ["block", "gh-spin-button", [], ["type", "submit", "action", "invite", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [14, 132], [14, 142]]]]], [], []], "autoWidth", "false", "class", ["subexpr", "concat", ["btn", " ", "btn-default", " ", "btn-lg", " ", "btn-block", " ", ["subexpr", "if", [["get", "buttonClass", []], ["subexpr", "-normalize-class", ["buttonClass", ["get", "buttonClass", []]], [], []]], [], []], " "], [], []]], 1, null, ["loc", [null, [14, 4], [14, 195]]]], ["element", "action", ["skipInvite"], [], ["loc", [null, [17, 29], [17, 52]]]]],
+      statements: [["attribute", "src", ["concat", [["subexpr", "gh-path", ["admin", "img/users.png"], [], ["loc", [null, [6, 37], [6, 72]]]]]]], ["block", "gh-form-group", [], ["errors", ["subexpr", "@mut", [["get", "errors", ["loc", [null, [9, 28], [9, 34]]]]], [], []], "hasValidated", ["subexpr", "@mut", [["get", "hasValidated", ["loc", [null, [9, 48], [9, 60]]]]], [], []], "property", "users"], 0, null, ["loc", [null, [9, 4], [12, 22]]]], ["block", "gh-spin-button", [], ["type", "submit", "action", "invite", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [14, 132], [14, 142]]]]], [], []], "autoWidth", "false", "class", ["subexpr", "concat", ["btn", "", "btn-default", "", "btn-lg", "", "btn-block", "", ["subexpr", "if", [["get", "buttonClass", []], ["subexpr", "-normalize-class", ["buttonClass", ["get", "buttonClass", []]], [], []]], [], []], ""], [], []]], 1, null, ["loc", [null, [14, 4], [14, 195]]]], ["element", "action", ["skipInvite"], [], ["loc", [null, [17, 29], [17, 52]]]]],
       locals: [],
       templates: [child0, child1]
     };
@@ -35994,25 +35994,25 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "email-address");
           var el2 = dom.createTextNode("Email address");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-mail");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -36055,25 +36055,25 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "full-name");
           var el2 = dom.createTextNode("Full name");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-user");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -36116,25 +36116,25 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "password");
           var el2 = dom.createTextNode("Password");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-lock");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -36177,25 +36177,25 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "blog-title");
           var el2 = dom.createTextNode("Blog title");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-content");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -36282,7 +36282,7 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("header");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
         var el3 = dom.createTextNode("Create your account");
@@ -36298,21 +36298,21 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
         dom.setAttribute(el1, "class", "gh-flow-create");
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("    ");
+        var el2 = dom.createTextNode("");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("input");
         dom.setAttribute(el2, "style", "display:none;");
         dom.setAttribute(el2, "type", "text");
         dom.setAttribute(el2, "name", "fakeusernameremembered");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("input");
         dom.setAttribute(el2, "style", "display:none;");
         dom.setAttribute(el2, "type", "password");
         dom.setAttribute(el2, "name", "fakepasswordremembered");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
@@ -36384,15 +36384,15 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-mail");
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -36469,19 +36469,19 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-lock forgotten-wrap");
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -36563,15 +36563,15 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-flow");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "gh-flow-content-wrap");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "gh-flow-content");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("form");
         dom.setAttribute(el4, "id", "login");
@@ -36584,24 +36584,24 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("                ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("p");
         dom.setAttribute(el4, "class", "main-error");
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -36653,22 +36653,22 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "email-address");
           var el2 = dom.createTextNode("Email address");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-mail");
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -36709,25 +36709,25 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "full-name");
           var el2 = dom.createTextNode("Full name");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-user");
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -36770,25 +36770,25 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "password");
           var el2 = dom.createTextNode("Password");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "input-icon icon-lock");
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -36870,27 +36870,27 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
         dom.setAttribute(el1, "class", "gh-flow");
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "gh-flow-content-wrap");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "gh-flow-content");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("header");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("h1");
         var el6 = dom.createTextNode("Create your account");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("form");
         dom.setAttribute(el4, "id", "signup");
@@ -36899,21 +36899,21 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
         dom.setAttribute(el4, "novalidate", "novalidate");
         var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("                ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("input");
         dom.setAttribute(el5, "style", "display:none;");
         dom.setAttribute(el5, "type", "text");
         dom.setAttribute(el5, "name", "fakeusernameremembered");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("input");
         dom.setAttribute(el5, "style", "display:none;");
         dom.setAttribute(el5, "type", "password");
         dom.setAttribute(el5, "name", "fakepasswordremembered");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n                ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
@@ -36929,24 +36929,24 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("            ");
+        var el5 = dom.createTextNode("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("p");
         dom.setAttribute(el4, "class", "main-error");
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
@@ -37110,7 +37110,7 @@ define("ghost-admin/templates/subscribers", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -37156,114 +37156,114 @@ define("ghost-admin/templates/subscribers", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view view-subscribers");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3, "class", "view-actions");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("section");
         dom.setAttribute(el2, "class", "view-container");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("div");
         dom.setAttribute(el3, "class", "subscribers-sidebar");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "settings-menu-header");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("h4");
         var el6 = dom.createTextNode("Import Subscribers");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "settings-menu-content subscribers-import-buttons");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("a");
         dom.setAttribute(el5, "class", "btn");
         var el6 = dom.createTextNode("Export CSV");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "settings-menu-header");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("h4");
         var el6 = dom.createTextNode("Quick Stats");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("div");
         dom.setAttribute(el4, "class", "settings-menu-content");
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("ul");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("li");
-        var el7 = dom.createTextNode("\n                        Total Subscribers:\n                        ");
+        var el7 = dom.createTextNode("\nTotal Subscribers:\n");
         dom.appendChild(el6, el7);
         var el7 = dom.createElement("span");
         dom.setAttribute(el7, "id", "total-subscribers");
         var el8 = dom.createComment("");
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
-        var el7 = dom.createTextNode("\n                    ");
+        var el7 = dom.createTextNode("\n");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -37424,7 +37424,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("Team");
+          var el2 = dom.createTextNode("成员管理");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -37462,7 +37462,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -37503,18 +37503,18 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("section");
           dom.setAttribute(el1, "class", "view-actions");
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("button");
           dom.setAttribute(el2, "class", "btn btn-green");
-          var el3 = dom.createTextNode("Invite People");
+          var el3 = dom.createTextNode("邀请朋友");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n\n");
@@ -37565,11 +37565,11 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                   hasRendered: false,
                   buildFragment: function buildFragment(dom) {
                     var el0 = dom.createDocumentFragment();
-                    var el1 = dom.createTextNode("                                        ");
+                    var el1 = dom.createTextNode("");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("span");
                     dom.setAttribute(el1, "class", "description-error");
-                    var el2 = dom.createTextNode("\n                                            Invitation not sent - please try again\n                                        ");
+                    var el2 = dom.createTextNode("\nInvitation not sent - please try again\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -37608,15 +37608,15 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                   hasRendered: false,
                   buildFragment: function buildFragment(dom) {
                     var el0 = dom.createDocumentFragment();
-                    var el1 = dom.createTextNode("                                        ");
+                    var el1 = dom.createTextNode("");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("span");
                     dom.setAttribute(el1, "class", "description");
-                    var el2 = dom.createTextNode("\n                                            Invitation sent: ");
+                    var el2 = dom.createTextNode("\n                        Invitation sent: ");
                     dom.appendChild(el1, el2);
                     var el2 = dom.createComment("");
                     dom.appendChild(el1, el2);
-                    var el2 = dom.createTextNode("\n                                        ");
+                    var el2 = dom.createTextNode("\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -37657,7 +37657,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                   hasRendered: false,
                   buildFragment: function buildFragment(dom) {
                     var el0 = dom.createDocumentFragment();
-                    var el1 = dom.createTextNode("                                        ");
+                    var el1 = dom.createTextNode("");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("span");
                     var el2 = dom.createTextNode("Sending Invite...");
@@ -37700,7 +37700,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                     hasRendered: false,
                     buildFragment: function buildFragment(dom) {
                       var el0 = dom.createDocumentFragment();
-                      var el1 = dom.createTextNode("                                            ");
+                      var el1 = dom.createTextNode("");
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("span");
                       var el2 = dom.createComment("");
@@ -37745,20 +37745,20 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                   hasRendered: false,
                   buildFragment: function buildFragment(dom) {
                     var el0 = dom.createDocumentFragment();
-                    var el1 = dom.createTextNode("                                        ");
+                    var el1 = dom.createTextNode("");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("a");
                     dom.setAttribute(el1, "class", "user-list-action");
                     dom.setAttribute(el1, "href", "#");
-                    var el2 = dom.createTextNode("\n                                            Revoke\n                                        ");
+                    var el2 = dom.createTextNode("\nRevoke\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
-                    var el1 = dom.createTextNode("\n                                        ");
+                    var el1 = dom.createTextNode("\n");
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("a");
                     dom.setAttribute(el1, "class", "user-list-action");
                     dom.setAttribute(el1, "href", "#");
-                    var el2 = dom.createTextNode("\n                                            Resend\n                                        ");
+                    var el2 = dom.createTextNode("\nResend\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -37805,22 +37805,22 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                 hasRendered: false,
                 buildFragment: function buildFragment(dom) {
                   var el0 = dom.createDocumentFragment();
-                  var el1 = dom.createTextNode("                            ");
+                  var el1 = dom.createTextNode("");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createElement("div");
                   dom.setAttribute(el1, "class", "user-list-item");
-                  var el2 = dom.createTextNode("\n                                ");
+                  var el2 = dom.createTextNode("\n            ");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createElement("span");
                   dom.setAttribute(el2, "class", "user-list-item-icon icon-mail");
                   var el3 = dom.createTextNode("ic");
                   dom.appendChild(el2, el3);
                   dom.appendChild(el1, el2);
-                  var el2 = dom.createTextNode("\n                                ");
+                  var el2 = dom.createTextNode("\n            ");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createElement("div");
                   dom.setAttribute(el2, "class", "user-list-item-body");
-                  var el3 = dom.createTextNode("\n                                    ");
+                  var el3 = dom.createTextNode("\n                ");
                   dom.appendChild(el2, el3);
                   var el3 = dom.createElement("span");
                   dom.setAttribute(el3, "class", "name");
@@ -37833,10 +37833,10 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                   dom.appendChild(el2, el3);
                   var el3 = dom.createComment("");
                   dom.appendChild(el2, el3);
-                  var el3 = dom.createTextNode("                                ");
+                  var el3 = dom.createTextNode("");
                   dom.appendChild(el2, el3);
                   dom.appendChild(el1, el2);
-                  var el2 = dom.createTextNode("\n                                ");
+                  var el2 = dom.createTextNode("\n            ");
                   dom.appendChild(el1, el2);
                   var el2 = dom.createElement("aside");
                   dom.setAttribute(el2, "class", "user-list-item-aside");
@@ -37844,10 +37844,10 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                   dom.appendChild(el2, el3);
                   var el3 = dom.createComment("");
                   dom.appendChild(el2, el3);
-                  var el3 = dom.createTextNode("                                ");
+                  var el3 = dom.createTextNode("");
                   dom.appendChild(el2, el3);
                   dom.appendChild(el1, el2);
-                  var el2 = dom.createTextNode("\n                            ");
+                  var el2 = dom.createTextNode("\n        ");
                   dom.appendChild(el1, el2);
                   dom.appendChild(el0, el1);
                   var el1 = dom.createTextNode("\n");
@@ -37930,11 +37930,11 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("section");
               dom.setAttribute(el1, "class", "user-list invited-users");
-              var el2 = dom.createTextNode("\n                    ");
+              var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("h4");
               dom.setAttribute(el2, "class", "user-list-title");
@@ -37945,7 +37945,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
               dom.appendChild(el1, el2);
               var el2 = dom.createComment("");
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("                ");
+              var el2 = dom.createTextNode("");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -38028,7 +38028,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                 hasRendered: false,
                 buildFragment: function buildFragment(dom) {
                   var el0 = dom.createDocumentFragment();
-                  var el1 = dom.createTextNode("                            ");
+                  var el1 = dom.createTextNode("");
                   dom.appendChild(el0, el1);
                   var el1 = dom.createComment("");
                   dom.appendChild(el0, el1);
@@ -38149,7 +38149,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                        ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createElement("li");
                 dom.setAttribute(el1, "class", "ember-view active user-list-item");
@@ -38273,11 +38273,11 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n        ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("section");
           dom.setAttribute(el1, "class", "user-list active-users");
-          var el2 = dom.createTextNode("\n            ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("h4");
           dom.setAttribute(el2, "class", "user-list-title");
@@ -38288,7 +38288,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("        ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -38334,11 +38334,11 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
@@ -38346,7 +38346,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("    ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n\n");
@@ -38400,7 +38400,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("Team");
+            var el1 = dom.createTextNode("成员管理");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -38435,16 +38435,16 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("            ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n            ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("i");
           dom.setAttribute(el1, "class", "icon-arrow-right");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode(" ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           var el2 = dom.createComment("");
@@ -38490,12 +38490,12 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-settings");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("span");
             dom.setAttribute(el1, "class", "hidden");
@@ -38540,7 +38540,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                                    ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
@@ -38581,20 +38581,20 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                            ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
-              var el2 = dom.createTextNode("\n                                ");
+              var el2 = dom.createTextNode("\n            ");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("button");
-              var el3 = dom.createTextNode("\n                                    Make Owner\n                                ");
+              var el3 = dom.createTextNode("\n                Make Owner\n                                ");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
               var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createComment("");
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("                            ");
+              var el2 = dom.createTextNode("");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -38639,7 +38639,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
               hasRendered: false,
               buildFragment: function buildFragment(dom) {
                 var el0 = dom.createDocumentFragment();
-                var el1 = dom.createTextNode("                                    ");
+                var el1 = dom.createTextNode("");
                 dom.appendChild(el0, el1);
                 var el1 = dom.createComment("");
                 dom.appendChild(el0, el1);
@@ -38680,21 +38680,21 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                            ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("li");
-              var el2 = dom.createTextNode("\n                                ");
+              var el2 = dom.createTextNode("\n            ");
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("button");
               dom.setAttribute(el2, "class", "delete");
-              var el3 = dom.createTextNode("\n                                    Delete User\n                                ");
+              var el3 = dom.createTextNode("\n                Delete User\n                                ");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
               var el2 = dom.createTextNode("\n");
               dom.appendChild(el1, el2);
               var el2 = dom.createComment("");
               dom.appendChild(el1, el2);
-              var el2 = dom.createTextNode("                            ");
+              var el2 = dom.createTextNode("");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n");
@@ -38779,7 +38779,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("span");
           dom.setAttribute(el1, "class", "dropdown");
@@ -38789,7 +38789,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("                ");
+          var el2 = dom.createTextNode("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -38832,7 +38832,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Save");
+          var el1 = dom.createTextNode("保存");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -38868,7 +38868,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -38910,7 +38910,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                        ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -38953,7 +38953,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -38995,7 +38995,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("p");
             var el2 = dom.createTextNode("Use your real name so people can recognise you");
@@ -39036,14 +39036,14 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-name");
           var el2 = dom.createTextNode("Full Name");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -39089,18 +39089,18 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-slug");
           var el2 = dom.createTextNode("Slug");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createComment("");
@@ -39110,7 +39110,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
@@ -39157,11 +39157,11 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -39204,7 +39204,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("span");
             var el2 = dom.createComment("");
@@ -39247,7 +39247,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-email");
@@ -39258,7 +39258,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Used for notifications");
@@ -39302,36 +39302,36 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("div");
           dom.setAttribute(el1, "class", "form-group");
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("label");
           dom.setAttribute(el2, "for", "user-role");
           var el3 = dom.createTextNode("Role");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("span");
           dom.setAttribute(el2, "class", "gh-select");
           dom.setAttribute(el2, "tabindex", "0");
-          var el3 = dom.createTextNode("\n                            ");
+          var el3 = dom.createTextNode("\n        ");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                        ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("p");
           var el3 = dom.createTextNode("What permissions should this user have?");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39372,22 +39372,22 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-location");
           var el2 = dom.createTextNode("Location");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Where in the world do you live?");
@@ -39432,22 +39432,22 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-website");
           var el2 = dom.createTextNode("Website");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("Have a website or blog other than this one? Link it!");
@@ -39492,14 +39492,14 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-facebook");
           var el2 = dom.createTextNode("Facebook Profile");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("input");
           dom.setAttribute(el1, "type", "url");
@@ -39509,11 +39509,11 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.setAttribute(el1, "placeholder", "https://www.facebook.com/username");
           dom.setAttribute(el1, "autocorrect", "off");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("URL of your personal Facebook Profile");
@@ -39561,14 +39561,14 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-twitter");
           var el2 = dom.createTextNode("Twitter Profile");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("input");
           dom.setAttribute(el1, "type", "url");
@@ -39578,11 +39578,11 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.setAttribute(el1, "placeholder", "https://twitter.com/username");
           dom.setAttribute(el1, "autocorrect", "off");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
           var el2 = dom.createTextNode("URL of your personal Twitter profile");
@@ -39630,29 +39630,29 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                    ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-bio");
           var el2 = dom.createTextNode("Bio");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
-          var el1 = dom.createTextNode("\n                    ");
+          var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("\n                        Write about you, in 200 characters or less.\n                        ");
+          var el2 = dom.createTextNode("\n    Write about you, in 200 characters or less.\n                        ");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39697,18 +39697,18 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             hasRendered: false,
             buildFragment: function buildFragment(dom) {
               var el0 = dom.createDocumentFragment();
-              var el1 = dom.createTextNode("                            ");
+              var el1 = dom.createTextNode("");
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("label");
               dom.setAttribute(el1, "for", "user-password-old");
               var el2 = dom.createTextNode("Old Password");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n                            ");
+              var el1 = dom.createTextNode("\n        ");
               dom.appendChild(el0, el1);
               var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
-              var el1 = dom.createTextNode("\n                            ");
+              var el1 = dom.createTextNode("\n        ");
               dom.appendChild(el0, el1);
               var el1 = dom.createComment("");
               dom.appendChild(el0, el1);
@@ -39790,18 +39790,18 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("label");
             dom.setAttribute(el1, "for", "user-password-new");
             var el2 = dom.createTextNode("New Password");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -39844,18 +39844,18 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("                        ");
+            var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("label");
             dom.setAttribute(el1, "for", "user-new-password-verification");
             var el2 = dom.createTextNode("Verify Password");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode("\n                        ");
+            var el1 = dom.createTextNode("\n");
             dom.appendChild(el0, el1);
             var el1 = dom.createComment("");
             dom.appendChild(el0, el1);
@@ -39933,7 +39933,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("                ");
+          var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("fieldset");
           var el2 = dom.createTextNode("\n");
@@ -39948,18 +39948,18 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                    ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("div");
           dom.setAttribute(el2, "class", "form-group");
-          var el3 = dom.createTextNode("\n                        ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           var el3 = dom.createComment("");
           dom.appendChild(el2, el3);
-          var el3 = dom.createTextNode("\n                    ");
+          var el3 = dom.createTextNode("\n");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode("\n                ");
+          var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -40007,7 +40007,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("section");
         dom.setAttribute(el1, "class", "gh-view");
-        var el2 = dom.createTextNode("\n    ");
+        var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("header");
         dom.setAttribute(el2, "class", "view-header");
@@ -40015,7 +40015,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("        ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("section");
         dom.setAttribute(el3, "class", "view-actions");
@@ -40023,25 +40023,25 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n        ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\n\n    ");
+        var el2 = dom.createTextNode("\n\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2, "class", "view-container settings-user");
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("figure");
         dom.setAttribute(el3, "class", "user-cover");
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("button");
         dom.setAttribute(el4, "class", "btn btn-default user-cover-edit");
@@ -40052,10 +40052,10 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n\n        ");
+        var el3 = dom.createTextNode("\n\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "class", "user-profile");
@@ -40063,21 +40063,21 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.setAttribute(el3, "autocomplete", "off");
         var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("            ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("input");
         dom.setAttribute(el4, "style", "display:none;");
         dom.setAttribute(el4, "type", "text");
         dom.setAttribute(el4, "name", "fakeusernameremembered");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n            ");
+        var el4 = dom.createTextNode("\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("input");
         dom.setAttribute(el4, "style", "display:none;");
         dom.setAttribute(el4, "type", "password");
         dom.setAttribute(el4, "name", "fakepasswordremembered");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
         dom.setAttribute(el4, "class", "user-details-top");
@@ -40085,7 +40085,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("figure");
         dom.setAttribute(el5, "class", "user-image");
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("div");
         dom.setAttribute(el6, "id", "user-image");
@@ -40098,7 +40098,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el7, el8);
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("\n                    ");
+        var el6 = dom.createTextNode("\n");
         dom.appendChild(el5, el6);
         var el6 = dom.createElement("button");
         dom.setAttribute(el6, "type", "button");
@@ -40110,17 +40110,17 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el5, el6);
         var el6 = dom.createComment("");
         dom.appendChild(el5, el6);
-        var el6 = dom.createTextNode("                ");
+        var el6 = dom.createTextNode("");
         dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n            ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n            ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("fieldset");
         dom.setAttribute(el4, "class", "user-details-bottom");
@@ -40156,19 +40156,19 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el4, el5);
         var el5 = dom.createComment("");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n                ");
+        var el5 = dom.createTextNode("\n");
         dom.appendChild(el4, el5);
         var el5 = dom.createElement("hr");
         dom.appendChild(el4, el5);
-        var el5 = dom.createTextNode("\n\n            ");
+        var el5 = dom.createTextNode("\n\n");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("\n\n        ");
+        var el4 = dom.createTextNode("\n\n");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode(" ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("form");
         dom.setAttribute(el3, "class", "user-profile");
@@ -40178,12 +40178,12 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
-        var el4 = dom.createTextNode("        ");
+        var el4 = dom.createTextNode("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode(" ");
+        var el3 = dom.createTextNode("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n    ");
+        var el3 = dom.createTextNode("\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
