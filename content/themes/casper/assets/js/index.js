@@ -10,8 +10,9 @@
 
     $document.ready(function () {
 
-        var $postContent = $(".post-content");
-        $postContent.fitVids();
+        //如果需要视频插件那就打开它
+        //var $postContent = $(".post-content");
+        //$postContent.fitVids();
 
         $(".scroll-down").arctic_scroll();
 

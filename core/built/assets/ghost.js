@@ -913,17 +913,17 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
         // Text for non-scheduled Posts
         publishText: (0, _emberComputed['default'])('isPublished', 'postOrPage', 'scheduledWillPublish', function () {
             if (this.get('scheduledWillPublish')) {
-                return this.get('willPublish') || this.get('willSchedule') ? 'Update ' + this.get('postOrPage') : 'Publish Now';
+                return this.get('willPublish') || this.get('willSchedule') ? '更新' + this.get('postOrPage') : '立即发布';
             } else {
-                return this.get('isPublished') ? 'Update ' + this.get('postOrPage') : '立即发布';
+                return this.get('isPublished') ? '更新' + this.get('postOrPage') : '立即发布';
             }
         }),
 
         draftText: (0, _emberComputed['default'])('isPublished', 'scheduledWillPublish', function () {
             if (this.get('scheduledWillPublish')) {
-                return !this.get('willPublish') || !this.get('willSchedule') ? 'Unpublish' : 'Save Draft';
+                return !this.get('willPublish') || !this.get('willSchedule') ? '取消发布' : '保存草稿';
             } else {
-                return this.get('isPublished') ? 'Unpublish' : '保存草稿';
+                return this.get('isPublished') ? '取消发布' : '保存草稿';
             }
         }),
 
@@ -932,9 +932,9 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
             // editor and didn't refresh yet. To do so, we use the 'scheduledWillPublish' CP helper
             if (this.get('scheduledWillPublish')) {
                 if (this.get('willSchedule') || this.get('willPublish')) {
-                    return 'Update ' + this.get('postOrPage');
+                    return '更新' + this.get('postOrPage');
                 } else {
-                    return 'Unpublish';
+                    return '取消发布';
                 }
             } else {
                 return this.get('willPublish') ? this.get('publishText') : this.get('draftText');
@@ -943,7 +943,7 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
 
         // Text for scheduled Posts
         scheduleText: (0, _emberComputed['default'])('isScheduled', 'postOrPage', function () {
-            return this.get('isScheduled') ? 'Update ' + this.get('postOrPage') : 'Schedule Post';
+            return this.get('isScheduled') ? '更新 ' + this.get('postOrPage') : 'Schedule Post';
         }),
 
         unscheduleText: (0, _emberComputed['default'])('isScheduled', function () {
@@ -955,7 +955,7 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
         }),
 
         deleteText: (0, _emberComputed['default'])('postOrPage', function () {
-            return 'Delete ' + this.get('postOrPage');
+            return '删除' + this.get('postOrPage');
         }),
 
         activeClass: (0, _emberComputed['default'])('willPublish', 'willSchedule', function () {
@@ -1625,7 +1625,7 @@ define('ghost-admin/components/gh-image-uploader', ['exports', 'ember-component'
         description: (0, _emberComputed['default'])('text', 'altText', function () {
             var altText = this.get('altText');
 
-            return this.get('text') || (altText ? 'Upload image of "' + altText + '"' : 'Upload an image');
+            return this.get('text') || (altText ? 'Upload image of "' + altText + '"' : '上传一张图片');
         }),
 
         progressStyle: (0, _emberComputed['default'])('uploadPercentage', function () {
@@ -7823,12 +7823,12 @@ define('ghost-admin/helpers/gh-count-words', ['exports', 'ember-helper', 'ghost-
         var markdown = params[0] || '';
 
         if (/^\s*$/.test(markdown)) {
-            return '0 words';
+            return '0 字';
         }
 
         var count = (0, _ghostAdminUtilsWordCount['default'])(markdown);
 
-        return count + (count === 1 ? ' word' : ' words');
+        return count + (count === 1 ? ' 字' : ' 字');
     });
 });
 define('ghost-admin/helpers/gh-format-html', ['exports', 'ember-helper', 'ember-string', 'ghost-admin/utils/caja-sanitizers'], function (exports, _emberHelper, _emberString, _ghostAdminUtilsCajaSanitizers) {
@@ -13793,7 +13793,7 @@ define('ghost-admin/routes/subscribers/new', ['exports', 'ember-route'], functio
 });
 define('ghost-admin/routes/team/index', ['exports', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/current-user-settings', 'ghost-admin/mixins/pagination', 'ghost-admin/mixins/style-body'], function (exports, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsCurrentUserSettings, _ghostAdminMixinsPagination, _ghostAdminMixinsStyleBody) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsStyleBody['default'], _ghostAdminMixinsCurrentUserSettings['default'], _ghostAdminMixinsPagination['default'], {
-        titleToken: 'Team',
+        titleToken: '成员管理',
 
         classNames: ['view-team'],
 
@@ -15586,7 +15586,7 @@ define("ghost-admin/templates/-user-list-item", ["exports"], function (exports) 
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("span");
         dom.setAttribute(el2, "class", "description");
-        var el3 = dom.createTextNode("Last seen: ");
+        var el3 = dom.createTextNode("最后登录: ");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
@@ -19722,7 +19722,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-user");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode(" Your Profile");
+            var el1 = dom.createTextNode("我的简介");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -19761,7 +19761,7 @@ define("ghost-admin/templates/components/gh-nav-menu", ["exports"], function (ex
             var el1 = dom.createElement("i");
             dom.setAttribute(el1, "class", "icon-signout");
             dom.appendChild(el0, el1);
-            var el1 = dom.createTextNode(" Sign Out");
+            var el1 = dom.createTextNode("退出登录");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -24387,7 +24387,7 @@ define("ghost-admin/templates/components/modals/delete-all", ["exports"], functi
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("br");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode(" We warned you, ok?");
+        var el3 = dom.createTextNode(" 如果想放弃操作请点击, 取消?");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -24401,7 +24401,7 @@ define("ghost-admin/templates/components/modals/delete-all", ["exports"], functi
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
-        var el3 = dom.createTextNode("Cancel");
+        var el3 = dom.createTextNode("取消");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -24500,7 +24500,7 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
-        var el3 = dom.createTextNode("Are you sure you want to delete this post?");
+        var el3 = dom.createTextNode("真的需要删除这篇文章吗?");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -24525,7 +24525,7 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
-        var el3 = dom.createTextNode("\n        You're about to delete \"");
+        var el3 = dom.createTextNode("\n你正在删除文章 \"");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("strong");
         var el4 = dom.createComment("");
@@ -24535,11 +24535,11 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("br");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        This is permanent! No backups, no restores, no magic undo button.");
+        var el3 = dom.createTextNode("\n这是永久性的！没有备份，不能恢复，没有撤消按钮。真的确定这样做吗？");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("br");
         dom.appendChild(el2, el3);
-        var el3 = dom.createTextNode("\n        We warned you, ok?\n    ");
+        var el3 = dom.createTextNode("\n如果想放弃操作请点击, 取消?\n");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -24553,7 +24553,7 @@ define("ghost-admin/templates/components/modals/delete-post", ["exports"], funct
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
-        var el3 = dom.createTextNode("Cancel");
+        var el3 = dom.createTextNode("取消");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -30520,7 +30520,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("time");
                       dom.setAttribute(el1, "class", "date published");
-                      var el2 = dom.createTextNode("\n                            Published ");
+                      var el2 = dom.createTextNode("\n发布于 ");
                       dom.appendChild(el1, el2);
                       var el2 = dom.createComment("");
                       dom.appendChild(el1, el2);
@@ -30675,7 +30675,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                       dom.appendChild(el0, el1);
                       var el1 = dom.createElement("span");
                       dom.setAttribute(el1, "class", "draft");
-                      var el2 = dom.createTextNode("Draft");
+                      var el2 = dom.createTextNode("草稿");
                       dom.appendChild(el1, el2);
                       dom.appendChild(el0, el1);
                       var el1 = dom.createTextNode("\n");
@@ -30950,7 +30950,7 @@ define("ghost-admin/templates/posts", ["exports"], function (exports) {
                 dom.insertBoundary(fragment, null);
                 return morphs;
               },
-              statements: [["block", "link-to", [["subexpr", "if", [["get", "previewIsHidden", ["loc", [null, [15, 39], [15, 54]]]], "editor.edit", "posts.post"], [], ["loc", [null, [15, 35], [15, 82]]]], ["get", "post.id", ["loc", [null, [15, 83], [15, 90]]]]], ["class", "permalink", "title", "Edit this post"], 0, null, ["loc", [null, [15, 24], [52, 36]]]]],
+              statements: [["block", "link-to", [["subexpr", "if", [["get", "previewIsHidden", ["loc", [null, [15, 39], [15, 54]]]], "editor.edit", "posts.post"], [], ["loc", [null, [15, 35], [15, 82]]]], ["get", "post.id", ["loc", [null, [15, 83], [15, 90]]]]], ["class", "permalink", "title", "编辑这篇文章"], 0, null, ["loc", [null, [15, 24], [52, 36]]]]],
               locals: ["component"],
               templates: [child0]
             };
@@ -38281,7 +38281,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("h4");
           dom.setAttribute(el2, "class", "user-list-title");
-          var el3 = dom.createTextNode("Active users");
+          var el3 = dom.createTextNode("注册成员");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
@@ -38998,7 +38998,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             var el1 = dom.createTextNode("");
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("p");
-            var el2 = dom.createTextNode("Use your real name so people can recognise you");
+            var el2 = dom.createTextNode("建议使用一个能让别人认出你的名字");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -39093,7 +39093,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-slug");
-          var el2 = dom.createTextNode("Slug");
+          var el2 = dom.createTextNode("个人主页");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39251,7 +39251,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-email");
-          var el2 = dom.createTextNode("Email");
+          var el2 = dom.createTextNode("邮箱地址");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39261,7 +39261,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           var el1 = dom.createTextNode("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("Used for notifications");
+          var el2 = dom.createTextNode("用于通知重要信息");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39376,7 +39376,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-location");
-          var el2 = dom.createTextNode("Location");
+          var el2 = dom.createTextNode("居住城市");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39390,7 +39390,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("Where in the world do you live?");
+          var el2 = dom.createTextNode("你现在身处何方?");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39436,7 +39436,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "user-website");
-          var el2 = dom.createTextNode("Website");
+          var el2 = dom.createTextNode("你的站点");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39450,7 +39450,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("Have a website or blog other than this one? Link it!");
+          var el2 = dom.createTextNode("你有自己的网站吗? 如果有告诉我吧!");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39648,7 +39648,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("\n    Write about you, in 200 characters or less.\n                        ");
+          var el2 = dom.createTextNode("\n简单介绍一下你自己，但是不能超过200字.\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
@@ -39701,7 +39701,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
               dom.appendChild(el0, el1);
               var el1 = dom.createElement("label");
               dom.setAttribute(el1, "for", "user-password-old");
-              var el2 = dom.createTextNode("Old Password");
+              var el2 = dom.createTextNode("旧的密码");
               dom.appendChild(el1, el2);
               dom.appendChild(el0, el1);
               var el1 = dom.createTextNode("\n        ");
@@ -39794,7 +39794,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("label");
             dom.setAttribute(el1, "for", "user-password-new");
-            var el2 = dom.createTextNode("New Password");
+            var el2 = dom.createTextNode("新的密码");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -39848,7 +39848,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             dom.appendChild(el0, el1);
             var el1 = dom.createElement("label");
             dom.setAttribute(el1, "for", "user-new-password-verification");
-            var el2 = dom.createTextNode("Verify Password");
+            var el2 = dom.createTextNode("验证密码");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             var el1 = dom.createTextNode("\n");
@@ -39898,7 +39898,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("Change Password");
+            var el1 = dom.createTextNode("更改密码");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -40045,7 +40045,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("button");
         dom.setAttribute(el4, "class", "btn btn-default user-cover-edit");
-        var el5 = dom.createTextNode("Change Cover");
+        var el5 = dom.createTextNode("更换封面");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n");
@@ -40103,7 +40103,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
         var el6 = dom.createElement("button");
         dom.setAttribute(el6, "type", "button");
         dom.setAttribute(el6, "class", "edit-user-image");
-        var el7 = dom.createTextNode("Edit Picture");
+        var el7 = dom.createTextNode("编辑头像");
         dom.appendChild(el6, el7);
         dom.appendChild(el5, el6);
         var el6 = dom.createTextNode("\n");
