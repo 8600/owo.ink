@@ -1,3 +1,4 @@
+"use strict";
 var downsize = require('downsize');
 
 function getExcerpt(html, truncateOptions) {

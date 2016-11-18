@@ -12666,7 +12666,7 @@ define('ghost-admin/routes/authenticated', ['exports', 'ember-route', 'ember-sim
 });
 define('ghost-admin/routes/editor/edit', ['exports', 'ghost-admin/routes/authenticated', 'ghost-admin/mixins/editor-base-route', 'ghost-admin/utils/isNumber', 'ghost-admin/utils/isFinite'], function (exports, _ghostAdminRoutesAuthenticated, _ghostAdminMixinsEditorBaseRoute, _ghostAdminUtilsIsNumber, _ghostAdminUtilsIsFinite) {
     exports['default'] = _ghostAdminRoutesAuthenticated['default'].extend(_ghostAdminMixinsEditorBaseRoute['default'], {
-        titleToken: 'Editor',
+        titleToken: '编辑文章',
 
         beforeModel: function beforeModel(transition) {
             this.set('_transitionedFromNew', transition.data.fromNew);
@@ -31259,7 +31259,7 @@ define("ghost-admin/templates/posts/index", ["exports"], function (exports) {
             dom.setAttribute(el1, "type", "button");
             dom.setAttribute(el1, "class", "btn btn-green btn-lg");
             dom.setAttribute(el1, "title", "New Post");
-            var el2 = dom.createTextNode("Write a new Post");
+            var el2 = dom.createTextNode("发布第一篇文章!");
             dom.appendChild(el1, el2);
             dom.appendChild(el0, el1);
             return el0;
@@ -31302,7 +31302,7 @@ define("ghost-admin/templates/posts/index", ["exports"], function (exports) {
           var el2 = dom.createTextNode("\n");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("h3");
-          var el3 = dom.createTextNode("You Haven't Written Any Posts Yet!");
+          var el3 = dom.createTextNode("你的博客里什么文章都没有!");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           var el2 = dom.createTextNode("\n");
