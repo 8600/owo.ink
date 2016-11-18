@@ -1,5 +1,5 @@
 "use strict";
-var downsize = require('downsize');
+const downsize = require('downsize');
 
 function getExcerpt(html, truncateOptions) {
     truncateOptions = truncateOptions || {};
@@ -8,13 +8,10 @@ function getExcerpt(html, truncateOptions) {
     excerpt = excerpt.replace(/<div class="footnotes"><ol>.*?<\/ol><\/div>/, '');
     // Strip other html
     excerpt = excerpt.replace(/<\/?[^>]+>/gi, '');
-    excerpt = excerpt.replace(/(\r\n|\n|\r)+/gm, ' ');
     /*jslint regexp:false */
-
     if (!truncateOptions.words && !truncateOptions.characters) {
         truncateOptions.words = 50;
     }
-
     return downsize(excerpt, truncateOptions);
 }
 

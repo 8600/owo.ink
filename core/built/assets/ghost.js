@@ -25836,7 +25836,7 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "new-user-email");
-          var el2 = dom.createTextNode("Email Address");
+          var el2 = dom.createTextNode("邮箱地址");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -26592,7 +26592,7 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "new-subscriber-email");
-          var el2 = dom.createTextNode("Email Address");
+          var el2 = dom.createTextNode("邮箱地址");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -26601,7 +26601,7 @@ define("ghost-admin/templates/components/modals/new-subscriber", ["exports"], fu
           dom.setAttribute(el1, "type", "email");
           dom.setAttribute(el1, "id", "new-subscriber-email");
           dom.setAttribute(el1, "class", "gh-input email");
-          dom.setAttribute(el1, "placeholder", "Email Address");
+          dom.setAttribute(el1, "placeholder", "邮箱地址");
           dom.setAttribute(el1, "name", "email");
           dom.setAttribute(el1, "autofocus", "autofocus");
           dom.setAttribute(el1, "autocapitalize", "off");
@@ -26808,7 +26808,7 @@ define("ghost-admin/templates/components/modals/re-authenticate", ["exports"], f
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "gh-input", [["get", "password", ["loc", [null, [9, 23], [9, 31]]]]], ["class", "password", "type", "password", "placeholder", "Password", "name", "password", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "password", ["loc", [null, [9, 124], [9, 132]]]]], [], ["loc", [null, [9, 119], [9, 133]]]]], [], ["loc", [null, [9, 111], [9, 134]]]]], ["loc", [null, [9, 12], [9, 136]]]]],
+        statements: [["inline", "gh-input", [["get", "password", ["loc", [null, [9, 23], [9, 31]]]]], ["class", "password", "type", "password", "placeholder", "博客密码", "name", "password", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "password", ["loc", [null, [9, 124], [9, 132]]]]], [], ["loc", [null, [9, 119], [9, 133]]]]], [], ["loc", [null, [9, 111], [9, 134]]]]], ["loc", [null, [9, 12], [9, 136]]]]],
         locals: [],
         templates: []
       };
@@ -31609,7 +31609,7 @@ define("ghost-admin/templates/reset", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
           return morphs;
         },
-        statements: [["inline", "gh-input", [["get", "newPassword", ["loc", [null, [6, 31], [6, 42]]]]], ["type", "password", "name", "newpassword", "placeholder", "Password", "class", "password", "autocorrect", "off", "autofocus", "autofocus", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "newPassword", ["loc", [null, [6, 178], [6, 189]]]]], [], ["loc", [null, [6, 173], [6, 190]]]]], [], ["loc", [null, [6, 165], [6, 191]]]]], ["loc", [null, [6, 20], [6, 193]]]]],
+        statements: [["inline", "gh-input", [["get", "newPassword", ["loc", [null, [6, 31], [6, 42]]]]], ["type", "password", "name", "newpassword", "placeholder", "博客密码", "class", "password", "autocorrect", "off", "autofocus", "autofocus", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "newPassword", ["loc", [null, [6, 178], [6, 189]]]]], [], ["loc", [null, [6, 173], [6, 190]]]]], [], ["loc", [null, [6, 165], [6, 191]]]]], ["loc", [null, [6, 20], [6, 193]]]]],
         locals: [],
         templates: []
       };
@@ -36120,7 +36120,7 @@ define("ghost-admin/templates/setup/two", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "password");
-          var el2 = dom.createTextNode("Password");
+          var el2 = dom.createTextNode("博客密码");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -36404,7 +36404,7 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
           morphs[0] = dom.createMorphAt(dom.childAt(fragment, [1]), 1, 1);
           return morphs;
         },
-        statements: [["inline", "gh-trim-focus-input", [["get", "model.identification", ["loc", [null, [7, 46], [7, 66]]]]], ["class", "email", "type", "email", "placeholder", "Email Address", "name", "identification", "autocapitalize", "off", "autocorrect", "off", "tabindex", "1", "focusOut", ["subexpr", "action", ["validate", "identification"], [], ["loc", [null, [7, 205], [7, 241]]]], "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.identification", ["loc", [null, [7, 262], [7, 282]]]]], [], ["loc", [null, [7, 257], [7, 283]]]]], [], ["loc", [null, [7, 249], [7, 284]]]]], ["loc", [null, [7, 24], [7, 286]]]]],
+        statements: [["inline", "gh-trim-focus-input", [["get", "model.identification", ["loc", [null, [7, 46], [7, 66]]]]], ["class", "email", "type", "email", "placeholder", "邮箱地址", "name", "identification", "autocapitalize", "off", "autocorrect", "off", "tabindex", "1", "focusOut", ["subexpr", "action", ["validate", "identification"], [], ["loc", [null, [7, 205], [7, 241]]]], "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.identification", ["loc", [null, [7, 262], [7, 282]]]]], [], ["loc", [null, [7, 257], [7, 283]]]]], [], ["loc", [null, [7, 249], [7, 284]]]]], ["loc", [null, [7, 24], [7, 286]]]]],
         locals: [],
         templates: []
       };
@@ -36434,7 +36434,7 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
           hasRendered: false,
           buildFragment: function buildFragment(dom) {
             var el0 = dom.createDocumentFragment();
-            var el1 = dom.createTextNode("Forgot?");
+            var el1 = dom.createTextNode("忘记密码?");
             dom.appendChild(el0, el1);
             return el0;
           },
@@ -36495,7 +36495,7 @@ define("ghost-admin/templates/signin", ["exports"], function (exports) {
           morphs[1] = dom.createMorphAt(element0, 3, 3);
           return morphs;
         },
-        statements: [["inline", "gh-input", [["get", "model.password", ["loc", [null, [12, 35], [12, 49]]]]], ["class", "password", "type", "password", "placeholder", "Password", "name", "password", "tabindex", "2", "autocorrect", "off", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.password", ["loc", [null, [12, 173], [12, 187]]]]], [], ["loc", [null, [12, 168], [12, 188]]]]], [], ["loc", [null, [12, 160], [12, 189]]]]], ["loc", [null, [12, 24], [12, 191]]]], ["block", "gh-spin-button", [], ["class", "forgotten-link btn btn-link", "type", "button", "action", "forgotten", "tabindex", "4", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [13, 135], [13, 145]]]]], [], []], "autoWidth", "true"], 0, null, ["loc", [null, [13, 24], [13, 190]]]]],
+        statements: [["inline", "gh-input", [["get", "model.password", ["loc", [null, [12, 35], [12, 49]]]]], ["class", "password", "type", "password", "placeholder", "博客密码", "name", "password", "tabindex", "2", "autocorrect", "off", "update", ["subexpr", "action", [["subexpr", "mut", [["get", "model.password", ["loc", [null, [12, 173], [12, 187]]]]], [], ["loc", [null, [12, 168], [12, 188]]]]], [], ["loc", [null, [12, 160], [12, 189]]]]], ["loc", [null, [12, 24], [12, 191]]]], ["block", "gh-spin-button", [], ["class", "forgotten-link btn btn-link", "type", "button", "action", "forgotten", "tabindex", "4", "submitting", ["subexpr", "@mut", [["get", "submitting", ["loc", [null, [13, 135], [13, 145]]]]], [], []], "autoWidth", "true"], 0, null, ["loc", [null, [13, 24], [13, 190]]]]],
         locals: [],
         templates: [child0]
       };
@@ -36774,7 +36774,7 @@ define("ghost-admin/templates/signup", ["exports"], function (exports) {
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
           dom.setAttribute(el1, "for", "password");
-          var el2 = dom.createTextNode("Password");
+          var el2 = dom.createTextNode("博客密码");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createTextNode("\n");
@@ -39175,7 +39175,7 @@ define("ghost-admin/templates/team/user", ["exports"], function (exports) {
             morphs[1] = dom.createMorphAt(fragment, 3, 3, contextualElement);
             return morphs;
           },
-          statements: [["inline", "gh-input", [["get", "user.email", ["loc", [null, [106, 35], [106, 45]]]]], ["type", "email", "id", "user-email", "name", "email", "placeholder", "Email Address", "autocapitalize", "off", "autocorrect", "off", "autocomplete", "off", "focusOut", ["subexpr", "action", ["validate", "email"], ["target", ["get", "user", ["loc", [null, [106, 217], [106, 221]]]]], ["loc", [null, [106, 183], [106, 222]]]], "update", ["subexpr", "action", [["subexpr", "mut", [["get", "user.email", ["loc", [null, [106, 243], [106, 253]]]]], [], ["loc", [null, [106, 238], [106, 254]]]]], [], ["loc", [null, [106, 230], [106, 255]]]]], ["loc", [null, [106, 24], [106, 257]]]], ["inline", "gh-error-message", [], ["errors", ["subexpr", "@mut", [["get", "user.errors", ["loc", [null, [107, 50], [107, 61]]]]], [], []], "property", "email"], ["loc", [null, [107, 24], [107, 80]]]]],
+          statements: [["inline", "gh-input", [["get", "user.email", ["loc", [null, [106, 35], [106, 45]]]]], ["type", "email", "id", "user-email", "name", "email", "placeholder", "邮箱地址", "autocapitalize", "off", "autocorrect", "off", "autocomplete", "off", "focusOut", ["subexpr", "action", ["validate", "email"], ["target", ["get", "user", ["loc", [null, [106, 217], [106, 221]]]]], ["loc", [null, [106, 183], [106, 222]]]], "update", ["subexpr", "action", [["subexpr", "mut", [["get", "user.email", ["loc", [null, [106, 243], [106, 253]]]]], [], ["loc", [null, [106, 238], [106, 254]]]]], [], ["loc", [null, [106, 230], [106, 255]]]]], ["loc", [null, [106, 24], [106, 257]]]], ["inline", "gh-error-message", [], ["errors", ["subexpr", "@mut", [["get", "user.errors", ["loc", [null, [107, 50], [107, 61]]]]], [], []], "property", "email"], ["loc", [null, [107, 24], [107, 80]]]]],
           locals: [],
           templates: []
         };
