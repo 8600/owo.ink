@@ -12,7 +12,7 @@ function getStructuredData(metaData) {
         'og:site_name': metaData.blog.title,
         'og:type': metaData.ogType,
         'og:title': metaData.metaTitle,
-        'og:description': metaData.metaDescription || metaData.excerpt,
+        'og:description': "metaData.metaDescription || metaData.excerpt",
         'og:url': metaData.canonicalUrl,
         'og:image': metaData.coverImage.url,
         'article:published_time': metaData.publishedDate,

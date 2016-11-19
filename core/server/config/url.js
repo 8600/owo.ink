@@ -101,7 +101,6 @@ function createUrl(urlPath, absolute, secure) {
  */
 function urlPathForPost(post) {
     const post_data = new Date(post.published_at);
-    console.log( new Date(post.published_at).getFullYear());
     var output = '',
         permalinks = ghostConfig.theme.permalinks,
         tags = {
