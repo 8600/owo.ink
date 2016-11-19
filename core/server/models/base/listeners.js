@@ -6,10 +6,10 @@ var config = require('../../config'),
     moment = require('moment-timezone');
 
 /**
- * WHEN access token is created we will update last_login for user.
+ * 当用户成功登陆时，标记下他的登陆时间.
  */
 events.on('token.added', function (tokenModel) {
-    models.User.edit({last_login: moment().toDate()}, {id: tokenModel.get('user_id')})
+    models.User.edit({last_login: Date.parse(new Date())}, {id: tokenModel.get('user_id')})
         .catch(function (err) {
             errors.logError(err);
         });
@@ -24,7 +24,7 @@ events.on('settings.activeTimezone.edited', function (settingModel) {
     var newTimezone = settingModel.attributes.value,
         previousTimezone = settingModel._updatedAttributes.value,
         timezoneOffsetDiff = moment.tz(newTimezone).utcOffset() - moment.tz(previousTimezone).utcOffset();
-
+        console.log(timezoneOffsetDiff);
     // CASE: TZ was updated, but did not change
     if (previousTimezone === newTimezone) {
         return;

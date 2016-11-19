@@ -1,9 +1,7 @@
 // Contains all path information to be used throughout
 // the codebase.
 
-var moment            = require('moment-timezone'),
-    _                 = require('lodash'),
-    ghostConfig = '',
+let _ = require('lodash'),ghostConfig = '',
     // @TODO: unify this with routes.apiBaseUrl
     apiPath = '/ghost/api/v0.1';
 
@@ -102,13 +100,14 @@ function createUrl(urlPath, absolute, secure) {
  * @returns {string}
  */
 function urlPathForPost(post) {
+    const post_data = new Date(post.published_at);
+    console.log( new Date(post.published_at).getFullYear());
     var output = '',
         permalinks = ghostConfig.theme.permalinks,
-        publishedAtMoment = moment.tz(post.published_at || Date.now(), ghostConfig.theme.timezone),
         tags = {
-            year:   function () { return publishedAtMoment.format('YYYY'); },
-            month:  function () { return publishedAtMoment.format('MM'); },
-            day:    function () { return publishedAtMoment.format('DD'); },
+            year:   function () { return post_data.getFullYear(); },
+            month:  function () { return post_data.getMonth(); },
+            day:    function () { return post_data.getDate(); },
             author: function () { return post.author.slug; },
             slug:   function () { return post.slug; },
             id:     function () { return post.id; }

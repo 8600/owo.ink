@@ -1,38 +1,30 @@
 // # Date Helper
-// Usage: `{{date format="DD MM, YYYY"}}`, `{{date updated_at format="DD MM, YYYY"}}`
-//
-// Formats a date using moment-timezone.js. Formats published_at by default but will also take a date as a parameter
+// 帖子发布时间函数
 
-var moment          = require('moment-timezone'),
-    date,
-    timezone;
+let date;
 
+function getDateDiff(nS){
+    let result; 
+    const diffValue =  new Date().getTime() - nS;
+    if(diffValue < 0){return;}
+    const monthC =diffValue/2592000000;
+    const weekC =diffValue/(7*86400000);
+    const dayC =diffValue/86400000;
+    const hourC =diffValue/3600000;
+    const minC =diffValue/60000;
+    if(monthC>=1){result="" + parseInt(monthC) + "月前";}
+    else if(weekC>=1){result="" + parseInt(weekC) + "周前";}
+    else if(dayC>=1){result=""+ parseInt(dayC) +"天前";}
+    else if(hourC>=1){result=""+ parseInt(hourC) +"小时前";}
+    else if(minC>=1){result=""+ parseInt(minC) +"分钟前";}
+    else result="刚刚";return result;
+}
 date = function (date, options) {
-    if (!options && date.hasOwnProperty('hash')) {
-        options = date;
-        date = undefined;
-        timezone = options.data.blog.timezone;
-
-        // set to published_at by default, if it's available
-        // otherwise, this will print the current date
-        if (this.published_at) {
-            date = moment(this.published_at).tz(timezone).format();
-        }
+    if (this.published_at) {
+        const timestamp = new Date(this.published_at).getTime();
+        date = getDateDiff(timestamp);
     }
-
-    // ensure that context is undefined, not null, as that can cause errors
-    date = date === null ? undefined : date;
-
-    var f = options.hash.format || 'MMM DD, YYYY',
-        timeago = options.hash.timeago,
-        timeNow = moment().tz(timezone);
-
-    if (timeago) {
-        date = timezone ?  moment(date).tz(timezone).from(timeNow) : moment(date).fromNow();
-    } else {
-        date = timezone ? moment(date).tz(timezone).format(f) : moment(date).format(f);
-    }
-
+    if(!date){date="时间未知";}
     return date;
 };
 
