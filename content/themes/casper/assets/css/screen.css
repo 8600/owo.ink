@@ -27,7 +27,7 @@
    ========================================================================== */
 
 html {
-    font-family: sans-serif;
+    font-family: "Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%
 }
@@ -59,12 +59,12 @@ sub, sup {
 }
 sup { top: -0.5em; }
 sub { bottom: -0.25em; }
-img { border: 0; }
+img { border: 0; max-width: 80%;}
 svg:not(:root) { overflow: hidden; }
 figure { margin: 1em 40px; }
 hr { box-sizing: content-box; height: 0; }
 pre { overflow: auto; }
-code, kbd, pre, samp { font-family: monospace, monospace; font-size: 1em; }
+code, kbd, pre, samp { font-size: 1em; }
 button, input, optgroup, select, textarea {
     color: inherit;
     font: inherit;
@@ -184,7 +184,7 @@ html {
 body {
     height: 100%;
     max-height: 100%;
-    font-family: "Merriweather", serif;
+    font-family: "Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
     letter-spacing: 0.01rem;
     font-size: 1.8rem;
     line-height: 1.75em;
@@ -211,7 +211,6 @@ h4, h5, h6 {
     color: #2E2E2E;
     line-height: 1.15em;
     margin: 0 0 0.4em 0;
-    font-family: "Open Sans", sans-serif;
     text-rendering: geometricPrecision;
 }
 
@@ -342,7 +341,6 @@ mark {
 
 code, tt {
     padding: 1px 3px;
-    font-family: Inconsolata, monospace, sans-serif;
     font-size: 0.85em;
     white-space: pre-wrap;
     border: #E3EDF3 1px solid;
@@ -360,7 +358,6 @@ pre {
     border: #E3EDF3 1px solid;
     width: 100%;
     padding: 10px;
-    font-family: Inconsolata, monospace, sans-serif;
     font-size: 0.9em;
     white-space: pre;
     overflow: auto;
@@ -451,7 +448,6 @@ textarea, select, input {
     padding: 6px 9px;
     margin: 0 0 5px 0;
     outline: 0;
-    font-family: 'Open Sans', sans-serif;
     font-size: 1.6rem;
     font-weight: 100;
     line-height: 1.4em;
@@ -505,7 +501,6 @@ button {
     outline: none;
     text-decoration: none;
     color: #fff;
-    font-family: 'Open Sans', sans-serif;
     font-size: 11px; /* Hacks targeting Firefox. */
     line-height: 13px; /* Hacks targeting Firefox. */
     font-weight: 300;
@@ -582,7 +577,7 @@ body.nav-opened .site-wrapper {
     position: relative;
     display: table;
     width: 100%;
-    height: 100vh;
+    height: 60vh;
     margin-bottom: 5rem;
     text-align: center;
     background: #222 no-repeat center center;
@@ -602,7 +597,6 @@ body.nav-opened .site-wrapper {
 
 .main-nav a {
     text-decoration: none;
-    font-family: 'Open Sans', sans-serif;
 }
 
 /* Navigation */
@@ -777,7 +771,6 @@ body.nav-opened .nav {
     color: #111 !important; /* Overides `.nav a:link, .nav a:visited` colour */
     text-align: center;
     font-size: 12px;
-    font-family: "Open Sans", sans-serif;
     text-transform: uppercase;
     text-decoration: none;
     line-height: 35px;
@@ -949,7 +942,6 @@ body.nav-opened .nav {
     font-size: 5rem;
     letter-spacing: -1px;
     font-weight: 700;
-    font-family: "Open Sans", sans-serif;
     color: #fff;
 }
 
@@ -958,14 +950,13 @@ body.nav-opened .nav {
     font-size: 2rem;
     line-height: 1.5em;
     font-weight: 400;
-    font-family: "Merriweather", serif;
     letter-spacing: 0.01rem;
     color: rgba(255,255,255,0.8);
 }
 
 .no-cover.main-header {
     min-height: 160px;
-    max-height: 40vh;
+    max-height: 30vh;
     background: #f5f8fa;
 }
 
@@ -997,31 +988,21 @@ body.nav-opened .nav {
     width: 80%;
     max-width: 1400px;
     margin: 4rem auto;
-    padding-bottom: 4rem;
-    border-bottom: #EBF2F6 1px solid;
     word-wrap: break-word;
+    box-shadow: 0px 5px 6px rgba(0,0,0,.2);
+    background: #fcfcfc;
+        padding: 10px 2% 2%;
 }
 
-/* Add a little circle in the middle of the border-bottom on our .post
-   just for the lolz and stylepoints. */
-.post:after {
-    display: block;
-    content: "";
-    width: 7px;
-    height: 7px;
-    border: #E7EEF2 1px solid;
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    margin-left: -5px;
-    background: #FFF;
-    border-radius: 100%;
-    box-shadow: #FFF 0 0 0 5px;
+.post section{
+    padding: 10px 5px;
 }
 
 body:not(.post-template) .post-title {
     font-size: 3.6rem;
     text-align: center;
+    border-bottom: 2px solid #ebeeef;
+    padding: 7px 0;
 }
 
 body.page-template .post-title {
@@ -1042,7 +1023,6 @@ body.page-template .post-title {
 .post-meta {
     display: block;
     margin: 1.75rem 0 0 0;
-    font-family: "Open Sans", sans-serif;
     font-size: 1.5rem;
     line-height: 2.2rem;
     color: #9EABB3;
@@ -1133,6 +1113,7 @@ body.page-template .post-title {
 .page-template .post-title {
     margin-bottom: 0;
     text-align: center;
+    border-bottom: 1px solid #EBF2F6;
 }
 
 .post-template .post-meta,
@@ -1146,7 +1127,7 @@ body.page-template .post-title {
     margin: 0;
     border: none;
     position: absolute;
-    right: 0px;
+    right: 35px;
     margin-top: 22px;
 }
 
@@ -1212,8 +1193,8 @@ body.page-template .post-title {
 /* The author credit area after the post */
 .post-footer {
     position: relative;
-    margin: 6rem 0 0 0;
-    padding: 3rem 0 0 0;
+    margin: 3rem 0 0 0;
+    padding: 1rem 0 0 0;
     border-top: #EBF2F6 1px solid;
 }
 
@@ -1403,7 +1384,6 @@ body.page-template .post-title {
 /* Location, website, and link */
 .author-profile .author-meta {
     margin: 2rem 0;
-    font-family: "Merriweather", serif;
     letter-spacing: 0.01rem;
     font-size: 1.7rem;
 }
@@ -1452,8 +1432,6 @@ body.page-template .post-title {
     text-decoration: none;
     position: relative;
     text-align: center;
-    color: #fff;
-    background: #222 no-repeat center center;
     background-size: cover;
     overflow: hidden;
 }
@@ -1480,8 +1458,8 @@ body.page-template .post-title {
 }
 
 .read-next-story .post {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
 }
 
 .read-next-story .post:before {
@@ -1489,7 +1467,6 @@ body.page-template .post-title {
     padding: 4px 10px 5px;
     text-transform: uppercase;
     font-size: 1.1rem;
-    font-family: "Open Sans", sans-serif;
     color: rgba(255,255,255,0.8);
     border: rgba(255,255,255,0.5) 1px solid;
     border-radius: 4px;
@@ -1510,10 +1487,6 @@ body.page-template .post-title {
 }
 
 /* Special styles for posts with no cover images */
-.read-next-story.no-cover {
-    background: #f5f8fa;
-}
-
 .read-next-story.no-cover:before {
     display: none;
 }
@@ -1581,10 +1554,9 @@ body.page-template .post-title {
     width: 80%;
     max-width: 710px;
     margin: 4rem auto;
-    font-family: "Open Sans", sans-serif;
-    font-size: 1.3rem;
     color: #9EABB3;
     text-align: center;
+    font-size: 1.8rem;
 }
 
 .pagination a {
@@ -1710,7 +1682,6 @@ body.page-template .post-title {
 }
 
 .gh-subscribe-rss {
-    font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
     line-height: 1.4em;
 }
@@ -1723,7 +1694,6 @@ body.page-template .post-title {
     position: relative;
     margin: 8rem 0 0 0;
     padding: 1rem 15px;
-    font-family: "Open Sans", sans-serif;
     font-size: 1rem;
     line-height: 1.75em;
     color: #BBC7CC;

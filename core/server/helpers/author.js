@@ -9,21 +9,14 @@
 //
 // Block helper: `{{#author}}{{/author}}`
 // This is the default handlebars behaviour of dropping into the author object scope
-
-var hbs             = require('express-hbs'),
-    _               = require('lodash'),
-    config          = require('../config'),
-    utils           = require('./utils'),
-    author;
-
-author = function (options) {
+"use strict";
+const hbs= require('express-hbs'),_= require('lodash'),config= require('../config'),utils= require('./utils');
+const author = function (options) {
+    console.log(options);
     if (options.fn) {
         return hbs.handlebars.helpers.with.call(this, this.author, options);
     }
-
-    var autolink = _.isString(options.hash.autolink) && options.hash.autolink === 'false' ? false : true,
-        output = '';
-
+    let autolink = _.isString(options.hash.autolink) && options.hash.autolink === 'false' ? false : true,output = '';
     if (this.author && this.author.name) {
         if (autolink) {
             output = utils.linkTemplate({

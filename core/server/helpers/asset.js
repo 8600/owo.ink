@@ -1,15 +1,11 @@
 // # Asset helper
 // Usage: `{{asset "css/screen.css"}}`, `{{asset "css/screen.css" ghost="true"}}`
-//
-// Returns the path to the specified asset. The ghost flag outputs the asset path for the Ghost admin
-
-var getAssetUrl = require('../data/meta/asset_url'),
-    hbs = require('express-hbs');
+// 返回资源存储的路径
+"use strict";
+const getAssetUrl = require('../data/meta/asset_url'),hbs = require('express-hbs');
 
 function asset(path, options) {
-    var isAdmin,
-        minify;
-
+    let [isAdmin,minify]=[false,false];
     if (options && options.hash) {
         isAdmin = options.hash.ghost;
         minify = options.hash.minifyInProduction;
