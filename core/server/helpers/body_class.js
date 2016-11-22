@@ -5,15 +5,12 @@
 //
 // We use the name body_class to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-
-var hbs             = require('express-hbs'),
-    _               = require('lodash'),
-    // @TODO Fix this
-    template        = require('../controllers/frontend/templates'),
-    body_class;
+"use strict";
+const hbs= require('express-hbs'),_= require('lodash'),template= require('../controllers/frontend/templates');
+let body_class;
 
 body_class = function (options) {
-    var classes = [],
+    let classes = [],
         context = options.data.root.context,
         post = this.post,
         tags = this.post && this.post.tags ? this.post.tags : this.tags || [],
