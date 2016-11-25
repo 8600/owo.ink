@@ -1,15 +1,10 @@
 // # Ghost Server
-// Handles the creation of an HTTP Server for Ghost
-var Promise = require('bluebird'),
-    chalk = require('chalk'),
-    fs = require('fs'),
-    errors = require('./errors'),
-    config = require('./config'),
-    i18n   = require('./i18n'),
-    moment = require('moment');
+// 创建一个HTTP服务器
+"use strict";
+const promise = require('bluebird'),chalk = require('chalk'),fs = require('fs'),errors = require('./errors'),config = require('./config'),i18n   = require('./i18n'),moment = require('moment');
 
 /**
- * ## GhostServer
+ * ## 博客服务器
  * @constructor
  * @param {Object} rootApp - parent express instance
  */
@@ -26,22 +21,18 @@ function GhostServer(rootApp) {
 /**
  * ## Public API methods
  *
- * ### Start
- * Starts the ghost server listening on the configured port.
- * Alternatively you can pass in your own express instance and let Ghost
- * start listening for you.
- * @param  {Object} externalApp - Optional express app instance.
- * @return {Promise} Resolves once Ghost has started
+ * ### 开始点
+ * 开始监听配置的端口.
+ * @param  {Object} externalApp - 可选的应用表达实例
+ * @return {promise} 博客已经运行过
  */
 GhostServer.prototype.start = function (externalApp) {
-    var self = this,
-        rootApp = externalApp ? externalApp : self.rootApp;
-
-    return new Promise(function (resolve) {
-        var socketConfig = config.getSocket();
-
+    const self = this,rootApp = externalApp ? externalApp : self.rootApp;
+    return new promise(function (resolve) {
+        const socketConfig = config.getSocket();
+        console.log(socketConfig);
         if (socketConfig) {
-            // Make sure the socket is gone before trying to create another
+            // 确保可以找到socketConfig文件
             try {
                 fs.unlinkSync(socketConfig.path);
             } catch (e) {
@@ -57,7 +48,7 @@ GhostServer.prototype.start = function (externalApp) {
                 config.server.host
             );
         }
-
+        //HTTP监听发生错误事件
         self.httpServer.on('error', function (error) {
             if (error.errno === 'EADDRINUSE') {
                 errors.logError(
@@ -83,15 +74,15 @@ GhostServer.prototype.start = function (externalApp) {
 };
 
 /**
- * ### Stop
+ * ### 结束
  * Returns a promise that will be fulfilled when the server stops. If the server has not been started,
  * the promise will be fulfilled immediately
- * @returns {Promise} Resolves once Ghost has stopped
+ * @returns {promise} Resolves once Ghost has stopped
  */
 GhostServer.prototype.stop = function () {
-    var self = this;
+    const self = this;
 
-    return new Promise(function (resolve) {
+    return new promise(function (resolve) {
         if (self.httpServer === null) {
             resolve(self);
         } else {
@@ -109,7 +100,7 @@ GhostServer.prototype.stop = function () {
 /**
  * ### Restart
  * Restarts the ghost application
- * @returns {Promise} Resolves once Ghost has restarted
+ * @returns {promise} Resolves once Ghost has restarted
  */
 GhostServer.prototype.restart = function () {
     return this.stop().then(this.start.bind(this));
@@ -122,7 +113,7 @@ GhostServer.prototype.restart = function () {
 GhostServer.prototype.hammertime = function () {
     console.log(chalk.green(i18n.t('notices.httpServer.cantTouchThis')));
 
-    return Promise.resolve(this);
+    return promise.resolve(this);
 };
 
 /**

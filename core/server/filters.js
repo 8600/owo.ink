@@ -1,16 +1,13 @@
-// # Filters
+// # 过滤
 // Filters are not yet properly used, this system is intended to allow Apps to extend Ghost in various ways.
-var Promise       = require('bluebird'),
-    pipeline      = require('./utils/pipeline'),
-    _             = require('lodash'),
-    defaults;
+"use strict";
+const promise= require('bluebird'),pipeline= require('./utils/pipeline'),_= require('lodash');
 
-// ## Default values
 /**
  * A hash of default values to use instead of 'magic' numbers/strings.
  * @type {Object}
  */
-defaults = {
+let defaults = {
     filterPriority: 5,
     maxPriority: 9
 };
@@ -18,7 +15,6 @@ defaults = {
 function Filters() {
     // Holds the filters
     this.filterCallbacks = [];
-
     // Holds the filter hooks (that are built in to Ghost Core)
     this.filters = [];
 }
@@ -64,7 +60,7 @@ Filters.prototype.doFilter = function (name, args, context) {
 
     // Bug out early if no callbacks by that name
     if (!callbacks) {
-        return Promise.resolve(args);
+        return promise.resolve(args);
     }
 
     // For each priorityLevel
@@ -75,7 +71,7 @@ Filters.prototype.doFilter = function (name, args, context) {
 
             // Bug out if no handlers on this priority
             if (!_.isArray(callbacks[priority])) {
-                return Promise.resolve(currentArgs);
+                return promise.resolve(currentArgs);
             }
 
             callables = _.map(callbacks[priority], function (callback) {
