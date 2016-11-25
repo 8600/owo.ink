@@ -1,28 +1,22 @@
 /* global Intl */
+"use strict";
 
-var supportedLocales    = ['en'],
-    _                   = require('lodash'),
-    fs                  = require('fs'),
-    chalk               = require('chalk'),
-    MessageFormat       = require('intl-messageformat'),
+const supportedLocales= ['en'],_= require('lodash'),fs= require('fs'),chalk= require('chalk'),MessageFormat= require('intl-messageformat');
 
-    // TODO: fetch this dynamically based on overall blog settings (`key = "defaultLang"` in the `settings` table
-    currentLocale       = 'en',
-    blos,
-    I18n;
+// TODO: fetch this dynamically based on overall blog settings (`key = "defaultLang"` in the `settings` table
+let currentLocale= 'en',blos,I18n;
 
 I18n = {
 
     /**
-     * Helper method to find and compile the given data context with a proper string resource.
+     * 返回本地化资源
      *
      * @param {string} path Path with in the JSON language file to desired string (ie: "errors.init.jsNotBuilt")
      * @param {object} [bindings]
      * @returns {string}
      */
     t: function t(path, bindings) {
-        var string = I18n.findString(path),
-            msg;
+        let string = I18n.findString(path),msg;
 
         // If the path returns an array (as in the case with anything that has multiple paragraphs such as emails), then
         // loop through them and return an array of translated/formatted strings. Otherwise, just return the normal
@@ -30,15 +24,13 @@ I18n = {
         if (_.isArray(string)) {
             msg = [];
             string.forEach(function (s) {
-                var m = new MessageFormat(s, currentLocale);
-
+                const m = new MessageFormat(s, currentLocale);
                 msg.push(m.format(bindings));
             });
         } else {
             msg = new MessageFormat(string, currentLocale);
             msg = msg.format(bindings);
         }
-
         return msg;
     },
 
@@ -49,7 +41,7 @@ I18n = {
      * @returns {string}
      */
     findString: function findString(msgPath) {
-        var matchingString, path;
+        let matchingString, path;
         // no path? no string
         if (_.isEmpty(msgPath) || !_.isString(msgPath)) {
             chalk.yellow('i18n:t() - received an empty path.');
@@ -84,23 +76,16 @@ I18n = {
     init: function init() {
         // read file for current locale and keep its content in memory
         blos = fs.readFileSync(__dirname + '/translations/' + currentLocale + '.json');
-
+        
         // if translation file is not valid, you will see an error
-        try {
-            blos = JSON.parse(blos);
-        } catch (err) {
-            blos = undefined;
-            throw err;
-        }
+        try {blos = JSON.parse(blos);} 
+        catch (err) {blos = undefined;throw err;}
 
         if (global.Intl) {
             // Determine if the built-in `Intl` has the locale data we need.
-            var hasBuiltInLocaleData,
-                IntlPolyfill;
-
+            let hasBuiltInLocaleData,IntlPolyfill;
             hasBuiltInLocaleData = supportedLocales.every(function (locale) {
-                return Intl.NumberFormat.supportedLocalesOf(locale)[0] === locale &&
-                    Intl.DateTimeFormat.supportedLocalesOf(locale)[0] === locale;
+                return Intl.NumberFormat.supportedLocalesOf(locale)[0] === locale &&Intl.DateTimeFormat.supportedLocalesOf(locale)[0] === locale;
             });
 
             if (!hasBuiltInLocaleData) {
