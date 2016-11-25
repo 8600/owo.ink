@@ -1,15 +1,12 @@
 // # Slug API
 // RESTful API for the Slug resource
-var dataProvider = require('../models'),
-    errors       = require('../errors'),
-    Promise      = require('bluebird'),
-    pipeline     = require('../utils/pipeline'),
-    utils        = require('./utils'),
-    i18n         = require('../i18n'),
-    docName      = 'slugs',
-
-    slugs,
-    allowedTypes;
+const dataProvider = require('../models'),
+      errors       = require('../errors'),
+      Promise      = require('bluebird'),
+      pipeline     = require('../utils/pipeline'),
+      utils        = require('./utils'),
+      i18n         = require('../i18n');
+let   docName = 'slugs',slugs,allowedTypes;
 
 /**
  * ## Slugs API Methods
@@ -26,10 +23,7 @@ slugs = {
      * @returns {Promise(String)} Unique string
      */
     generate: function (options) {
-        var opts = ['type'],
-            attrs = ['name'],
-            tasks;
-
+        let opts = ['type'],attrs = ['name'],tasks;
         // `allowedTypes` is used to define allowed slug types and map them against its model class counterpart
         allowedTypes = {
             post: dataProvider.Post,

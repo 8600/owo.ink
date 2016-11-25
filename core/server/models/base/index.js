@@ -463,6 +463,9 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
      * @return {Promise(String)} Resolves to a unique slug string
     */
     generateSlug: function generateSlug(Model, base, options) {
+        console.log("1."+Model);
+        console.log("2."+base);
+        console.log(options);
         var slug,
             slugTryCount = 1,
             baseName = Model.prototype.tableName.replace(/s$/, ''),
@@ -502,13 +505,13 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
                 }
 
                 slugToFind += slugTryCount;
-
                 return checkIfSlugExists(slugToFind);
             });
         };
 
         slug = utils.safeString(base, options);
-
+        console.log("4."+slug);
+        console.log("5."+baseName);
         // If it's a user, let's try to cut it down (unless this is a human request)
         if (baseName === 'user' && options && options.shortSlug && slugTryCount === 1 && slug !== 'ghost-owner') {
             longSlug = slug;
