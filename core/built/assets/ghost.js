@@ -910,7 +910,7 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
             }
         }),
 
-        // Text for non-scheduled Posts
+        // 更新/发布 文章按钮
         publishText: (0, _emberComputed['default'])('isPublished', 'postOrPage', 'scheduledWillPublish', function () {
             if (this.get('scheduledWillPublish')) {
                 return this.get('willPublish') || this.get('willSchedule') ? '更新' + this.get('postOrPage') : '立即发布';
@@ -926,10 +926,8 @@ define('ghost-admin/components/gh-editor-save-button', ['exports', 'ember-compon
                 return this.get('isPublished') ? '取消发布' : '保存草稿';
             }
         }),
-
+        //更新 文章/页面 按钮
         savePostText: (0, _emberComputed['default'])('willPublish', 'publishText', 'postOrPage', 'draftText', 'scheduledWillPublish', 'willSchedule', function () {
-            // we have to show the menu for a published post when a scheduled post gets published while the user is in the
-            // editor and didn't refresh yet. To do so, we use the 'scheduledWillPublish' CP helper
             if (this.get('scheduledWillPublish')) {
                 if (this.get('willSchedule') || this.get('willPublish')) {
                     return '更新' + this.get('postOrPage');
@@ -10637,9 +10635,9 @@ define('ghost-admin/mixins/editor-base-controller', ['exports', 'ember', 'ember-
         previousTagNames: null,
 
         tagNames: (0, _emberComputed.mapBy)('model.tags', 'name'),
-
+        //判断是 页面 还是 文章
         postOrPage: (0, _emberComputed['default'])('model.page', function () {
-            return this.get('model.page') ? 'Page' : 'Post';
+            return this.get('model.page') ? '页面' : '文章';
         }),
 
         // countdown timer to show the time left until publish time for a scheduled post

@@ -1,11 +1,10 @@
-var postScheduling = require(__dirname + '/post-scheduling');
+const postScheduling = require(__dirname + '/post-scheduling');
 
 /**
- * scheduling modules:
- *   - post scheduling: publish posts/pages when scheduled
+ * 定时发送模块:
+ * 在指定时刻发布文章
  */
 exports.init = function init(options) {
     options = options || {};
-
     return postScheduling.init(options);
 };
