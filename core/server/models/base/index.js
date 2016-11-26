@@ -1,28 +1,21 @@
-// # Base Model
-// This is the model from which all other Ghost models extend. The model is based on Bookshelf.Model, and provides
-// several basic behaviours such as UUIDs, as well as a set of Data methods for accessing information from the database.
-//
-// The models are internal to Ghost, only the API and some internal functions such as migration and import/export
-// accesses the models directly. All other parts of Ghost, including the blog frontend, admin UI, and apps are only
-// allowed to access data via the API.
-var _          = require('lodash'),
-    bookshelf  = require('bookshelf'),
-    moment     = require('moment'),
-    Promise    = require('bluebird'),
-    uuid       = require('node-uuid'),
-    config     = require('../../config'),
-    db         = require('../../data/db'),
-    errors     = require('../../errors'),
-    filters    = require('../../filters'),
-    schema     = require('../../data/schema'),
-    utils      = require('../../utils'),
-    labs       = require('../../utils/labs'),
-    validation = require('../../data/validation'),
-    plugins    = require('../plugins'),
-    i18n       = require('../../i18n'),
+// # 基础模块
 
-    ghostBookshelf,
-    proto;
+const   _          = require('lodash'),
+        bookshelf  = require('bookshelf'),
+        moment     = require('moment'),
+        Promise    = require('bluebird'),
+        uuid       = require('node-uuid'),
+        config     = require('../../config'),
+        db         = require('../../data/db'),
+        errors     = require('../../errors'),
+        filters    = require('../../filters'),
+        schema     = require('../../data/schema'),
+        utils      = require('../../utils'),
+        labs       = require('../../utils/labs'),
+        validation = require('../../data/validation'),
+        plugins    = require('../plugins'),
+        i18n       = require('../../i18n');
+let     ghostBookshelf  ,   proto;
 
 // ### ghostBookshelf
 // Initializes a new Bookshelf instance called ghostBookshelf, for reference elsewhere in Ghost.
@@ -456,31 +449,23 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
 
     /**
     * ### Generate Slug
-     * Create a string to act as the permalink for an object.
-     * @param {ghostBookshelf.Model} Model Model type to generate a slug for
-     * @param {String} base The string for which to generate a slug, usually a title or name
-     * @param {Object} options Options to pass to findOne
-     * @return {Promise(String)} Resolves to a unique slug string
+     * 返回一个作为文章固定链接的字符串.
+     * @param {ghostBookshelf.Model} Model 模型
+     * @param {String} base 文章的标题
+     * @param {Object} options 转换选项
+     * @return {Promise(String)} 解析为唯一字符串
     */
     generateSlug: function generateSlug(Model, base, options) {
-        console.log("1."+Model);
-        console.log("2."+base);
-        console.log(options);
-        var slug,
-            slugTryCount = 1,
-            baseName = Model.prototype.tableName.replace(/s$/, ''),
-            // Look for a matching slug, append an incrementing number if so
-            checkIfSlugExists, longSlug;
-
+        let slug,slugTryCount = 1,baseName = Model.prototype.tableName.replace(/s$/, ''),checkIfSlugExists, longSlug;
+        //检查是否含有同名文章标题
         checkIfSlugExists = function checkIfSlugExists(slugToFind) {
-            var args = {slug: slugToFind};
-            // status is needed for posts
+            let args = {slug: slugToFind};
+            // 检查是否options是否包含status字段
             if (options && options.status) {
                 args.status = options.status;
             }
             return Model.findOne(args, options).then(function then(found) {
-                var trimSpace;
-
+                let trimSpace;
                 if (!found) {
                     return slugToFind;
                 }
@@ -508,25 +493,19 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
                 return checkIfSlugExists(slugToFind);
             });
         };
-
+        //对文章固定链接进行处理
         slug = utils.safeString(base, options);
-        console.log("4."+slug);
-        console.log("5."+baseName);
         // If it's a user, let's try to cut it down (unless this is a human request)
         if (baseName === 'user' && options && options.shortSlug && slugTryCount === 1 && slug !== 'ghost-owner') {
             longSlug = slug;
             slug = (slug.indexOf('-') > -1) ? slug.substr(0, slug.indexOf('-')) : slug;
         }
-
         if (!_.has(options, 'importing') || !options.importing) {
-            // TODO: remove the labs requirement when internal tags is out of beta
-            // This checks if the first character of a tag name is a #. If it is, this
-            // is an internal tag, and as such we should add 'hash' to the beginning of the slug
+            // 帖子标题前面加上'hash-'
             if (labs.isSet('internalTags') && baseName === 'tag' && /^#/.test(base)) {
                 slug = 'hash-' + slug;
             }
         }
-
         // Check the filtered slug doesn't match any of the reserved keywords
         return filters.doFilter('slug.reservedSlugs', config.slugs.reserved).then(function then(slugList) {
             // Some keywords cannot be changed

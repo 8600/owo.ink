@@ -52,20 +52,12 @@ utils = {
     },
     safeString: function (string, options) {
         options = options || {};
-
-        // Handle the £ symbol separately, since it needs to be removed before the unicode conversion.
+        // 进行Unicode转换前要去掉£.
         string = string.replace(/£/g, '-');
-
-        // Remove non ascii characters
+        // 除去非ASCII字符
         string = unidecode(string);
-
-        // Replace URL reserved chars: `@:/?#[]!$&()*+,;=` as well as `\%<>|^~£"{}` and \`
-        string = string.replace(/(\s|\.|@|:|\/|\?|#|\[|\]|!|\$|&|\(|\)|\*|\+|,|;|=|\\|%|<|>|\||\^|~|"|\{|\}|`|–|—)/g, '-')
-            // Remove apostrophes
-            .replace(/'/g, '')
-            // Make the whole thing lowercase
-            .toLowerCase();
-
+        // 去掉: `@:/?#[]!$&()*+,;=` as well as `\%<>|^~£"{}` 和 \`去掉引号 并转为小写
+        string = string.replace(/(\s|\.|@|:|\/|\?|#|\[|\]|!|\$|&|\(|\)|\*|\+|,|;|=|\\|%|<|>|\||\^|~|"|\{|\}|`|–|—)/g, '-').replace(/'/g, '').toLowerCase();
         // We do not need to make the following changes when importing data
         if (!_.has(options, 'importing') || !options.importing) {
             // Convert 2 or more dashes into a single dash
@@ -75,10 +67,8 @@ utils = {
                 // Remove any dashes at the beginning
                 .replace(/^-/, '');
         }
-
-        // Handle whitespace at the beginning or end.
+        //去掉首尾空格
         string = string.trim();
-
         return string;
     },
     // The token is encoded URL safe by replacing '+' with '-', '\' with '_' and removing '='

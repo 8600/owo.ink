@@ -231,6 +231,7 @@ Post = ghostBookshelf.Model.extend({
 
         // If a title is set, not the same as the old title, a draft post, and has never been published
         if (prevTitle !== undefined && newTitle !== prevTitle && newStatus === 'draft' && !publishedAt) {
+            console.log("id"+this.get('id'));
             // Pass the new slug through the generator to strip illegal characters, detect duplicates
             return ghostBookshelf.Model.generateSlug(Post, this.get('title'),
                     {status: 'all', transacting: options.transacting, importing: options.importing})
@@ -248,6 +249,7 @@ Post = ghostBookshelf.Model.extend({
             // If any of the attributes above were false, set initial slug and check to see if slug was changed by the user
             if (this.hasChanged('slug') || !this.get('slug')) {
                 // Pass the new slug through the generator to strip illegal characters, detect duplicates
+                console.log(this);
                 return ghostBookshelf.Model.generateSlug(Post, this.get('slug') || this.get('title'),
                         {status: 'all', transacting: options.transacting, importing: options.importing})
                     .then(function then(slug) {

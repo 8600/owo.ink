@@ -47,11 +47,12 @@ slugs = {
 
         /**
          * ### Model Query
-         * Make the call to the Model layer
+         * 调用模块将检查帖子标题的合理性
          * @param {Object} options
          * @returns {Object} options
          */
         function modelQuery(options) {
+            console.log(options);
             return dataProvider.Base.Model.generateSlug(allowedTypes[options.type], options.data.name, {status: 'all'});
         }
 
