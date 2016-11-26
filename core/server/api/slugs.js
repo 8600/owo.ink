@@ -52,7 +52,6 @@ slugs = {
          * @returns {Object} options
          */
         function modelQuery(options) {
-            console.log(options);
             return dataProvider.Base.Model.generateSlug(allowedTypes[options.type], options.data.name, {status: 'all'});
         }
 

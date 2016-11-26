@@ -10811,17 +10811,17 @@ define('ghost-admin/mixins/editor-base-controller', ['exports', 'ember', 'ember-
             success: {
                 post: {
                     published: {
-                        published: 'Updated.',
+                        published: '更新成功.',
                         draft: 'Saved.',
                         scheduled: 'Scheduled.'
                     },
                     draft: {
-                        published: 'Published!',
+                        published: '已发布!',
                         draft: 'Saved.',
                         scheduled: 'Scheduled.'
                     },
                     scheduled: {
-                        scheduled: 'Updated.',
+                        scheduled: '更新成功.',
                         draft: 'Unscheduled.',
                         published: 'Published!'
                     }
@@ -10844,7 +10844,7 @@ define('ghost-admin/mixins/editor-base-controller', ['exports', 'ember', 'ember-
                 path = this.get('model.previewUrl');
             }
 
-            message += '&nbsp;<a href="' + path + '" target="_blank">View ' + type + '</a>';
+            message += '&nbsp;<a href="' + path + '" target="_blank">查看' + type + '</a>';
 
             notifications.showNotification(message.htmlSafe(), { delayed: delay });
         },
@@ -25884,7 +25884,7 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         hasRendered: false,
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createTextNode("Send invitation now");
+          var el1 = dom.createTextNode("发送邀请邮件");
           dom.appendChild(el0, el1);
           return el0;
         },
@@ -25927,7 +25927,7 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
-        var el3 = dom.createTextNode("Invite a New User");
+        var el3 = dom.createTextNode("邀请新用户");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -25964,7 +25964,7 @@ define("ghost-admin/templates/components/modals/invite-new-user", ["exports"], f
         dom.appendChild(el3, el4);
         var el4 = dom.createElement("label");
         dom.setAttribute(el4, "for", "new-user-role");
-        var el5 = dom.createTextNode("Role");
+        var el5 = dom.createTextNode("分类");
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         var el4 = dom.createTextNode("\n");
@@ -29416,7 +29416,7 @@ define("ghost-admin/templates/post-settings-menu", ["exports"], function (export
             var el1 = dom.createElement("a");
             dom.setAttribute(el1, "class", "post-view-link");
             dom.setAttribute(el1, "target", "_blank");
-            var el2 = dom.createTextNode("\nView post ");
+            var el2 = dom.createTextNode("\n预览文章 ");
             dom.appendChild(el1, el2);
             var el2 = dom.createElement("i");
             dom.setAttribute(el2, "class", "icon-external");
@@ -41175,10 +41175,10 @@ define('ghost-admin/validators/invite-user', ['exports', 'ghost-admin/validators
             var email = model.get('email');
 
             if (validator.empty(email)) {
-                model.get('errors').add('email', 'Please enter an email.');
+                model.get('errors').add('email', '请输入被邀请人邮箱地址.');
                 this.invalidate();
             } else if (!validator.isEmail(email)) {
-                model.get('errors').add('email', 'Invalid Email.');
+                model.get('errors').add('email', '错误的邮箱地址.');
                 this.invalidate();
             }
         }
