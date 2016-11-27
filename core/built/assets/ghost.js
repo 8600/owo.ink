@@ -3702,7 +3702,7 @@ define('ghost-admin/components/gh-user-invited', ['exports', 'ember-component', 
                     // If sending the invitation email fails, the API will still return a status of 201
                     // but the user's status in the response object will be 'invited-pending'.
                     if (result.users[0].status === 'invited-pending') {
-                        notifications.showAlert('Invitation email was not sent.  Please try resending.', { type: 'error', key: 'invite.resend.not-sent' });
+                        notifications.showAlert('邮件发送失败，请重试！.', { type: 'error', key: 'invite.resend.not-sent' });
                     } else {
                         user.set('status', result.users[0].status);
                         notifications.showNotification(notificationText, { key: 'invite.resend.success' });
@@ -22724,13 +22724,13 @@ define("ghost-admin/templates/components/gh-tag-settings-form", ["exports"], fun
           var el1 = dom.createTextNode("\n");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("Maximum: ");
+          var el2 = dom.createTextNode("最多输入: ");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("b");
           var el3 = dom.createTextNode("200");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createTextNode(" characters. You’ve used ");
+          var el2 = dom.createTextNode("字符");
           dom.appendChild(el1, el2);
           var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
@@ -24844,7 +24844,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("h1");
-        var el3 = dom.createTextNode("Are you sure you want to delete this tag?");
+        var el3 = dom.createTextNode("你真的确定要删除这个标签吗?");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -24869,20 +24869,20 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("strong");
-        var el3 = dom.createTextNode("WARNING:");
+        var el3 = dom.createTextNode("警告:");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("    You're about to delete \"");
+        var el2 = dom.createTextNode("你将会删除标签 \"");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("strong");
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        var el2 = dom.createTextNode("\". This is permanent! No backups, no restores, no magic undo button. We warned you, ok?\n");
+        var el2 = dom.createTextNode("\". 这是永久性的！没有备份，无法恢复，确定吗？\n");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createTextNode("\n\n");
@@ -24893,7 +24893,7 @@ define("ghost-admin/templates/components/modals/delete-tag", ["exports"], functi
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("button");
         dom.setAttribute(el2, "class", "btn btn-default btn-minor");
-        var el3 = dom.createTextNode("Cancel");
+        var el3 = dom.createTextNode("放弃");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createTextNode("\n");
@@ -37567,7 +37567,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                     dom.appendChild(el0, el1);
                     var el1 = dom.createElement("span");
                     dom.setAttribute(el1, "class", "description-error");
-                    var el2 = dom.createTextNode("\nInvitation not sent - please try again\n");
+                    var el2 = dom.createTextNode("\n邮件发送失败，请重试!\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -37748,7 +37748,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                     var el1 = dom.createElement("a");
                     dom.setAttribute(el1, "class", "user-list-action");
                     dom.setAttribute(el1, "href", "#");
-                    var el2 = dom.createTextNode("\nRevoke\n");
+                    var el2 = dom.createTextNode("\n撤销\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -37756,7 +37756,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
                     var el1 = dom.createElement("a");
                     dom.setAttribute(el1, "class", "user-list-action");
                     dom.setAttribute(el1, "href", "#");
-                    var el2 = dom.createTextNode("\nResend\n");
+                    var el2 = dom.createTextNode("\n重发\n");
                     dom.appendChild(el1, el2);
                     dom.appendChild(el0, el1);
                     var el1 = dom.createTextNode("\n");
@@ -37936,7 +37936,7 @@ define("ghost-admin/templates/team/index", ["exports"], function (exports) {
               dom.appendChild(el1, el2);
               var el2 = dom.createElement("h4");
               dom.setAttribute(el2, "class", "user-list-title");
-              var el3 = dom.createTextNode("Invited users");
+              var el3 = dom.createTextNode("邀请用户");
               dom.appendChild(el2, el3);
               dom.appendChild(el1, el2);
               var el2 = dom.createTextNode("\n");

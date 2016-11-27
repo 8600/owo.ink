@@ -11,7 +11,7 @@ config = {
     // When running Ghost in the wild, use the production environment.
     // Configure your URL and mail settings here
     production: {
-        url: '192.168.0.100:3100',
+        url: '127.0.0.1:3100',
         mail: {},
         database: {
             client: 'sqlite3',
@@ -31,7 +31,7 @@ config = {
     development: {
         // The url to use when providing links to the site, E.g. in RSS and email.
         // Change this to your Ghost blog's published URL.
-        url: 'http://localhost:3100',
+        url: 'http://owo.ink',
 
         // Example refferer policy
         // Visit https://www.w3.org/TR/referrer-policy/ for instructions
@@ -41,16 +41,16 @@ config = {
         // Example mail config
         // Visit http://support.ghost.org/mail for instructions
         // ```
-        //  mail: {
-        //      transport: 'SMTP',
-        //      options: {
-        //          service: 'Mailgun',
-        //          auth: {
-        //              user: '', // mailgun username
-        //              pass: ''  // mailgun password
-        //          }
-        //      }
-        //  },
+        mail: {
+              transport: 'SMTP',
+              options: {
+                  service: 'smtp.qq.com',
+                  auth: {
+                      user: '306613177@qq.com', // mailgun username
+                      pass: 'xfhpstrafbpgbgia'  // mailgun password
+                  }
+              }
+          },
         // ```
 
         // #### Database
@@ -66,7 +66,7 @@ config = {
         // Can be host & port (default), or socket
         server: {
             // Host to be passed to node's `net.Server#listen()`
-            host: '127.0.0.1',
+            host: '10.105.18.192',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
             port: '3100'
         },

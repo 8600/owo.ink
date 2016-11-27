@@ -60,10 +60,10 @@ checks = {
         config = configFile[mode];
 
         if (!config) {
-            console.error('\x1B[31mERROR: Cannot find the configuration for the current NODE_ENV: ' +
+            console.error('\x1B[31m错误: 找不到配置项NODE_ENV: ' +
                             process.env.NODE_ENV + '\033[0m\n');
-            console.error('\x1B[32mEnsure your config.js has a section for the current NODE_ENV value' +
-                            ' and is formatted properly.\033[0m');
+            console.error('\x1B[32m请确认你的config.js配置了NODE_ENV' +
+                            ' 并且格式正确.\033[0m');
 
             process.exit(exitCodes.NODE_ENV_CONFIG_MISSING);
         }
@@ -91,9 +91,9 @@ checks = {
 
         errors = errors.join('\n  ');
 
-        console.error('\x1B[31mERROR: Ghost is unable to start due to missing dependencies:\033[0m\n  ' + errors);
-        console.error('\x1B[32m\nPlease run `npm install --production` and try starting Ghost again.');
-        console.error('\x1B[32mHelp and documentation can be found at http://support.ghost.org.\033[0m\n');
+        console.error('\x1B[31m错误: 丢失关键性组件:\033[0m\n  ' + errors);
+        console.error('\x1B[32m\n请运行`npm install --production`安装组件后尝试再次运行.');
+        console.error('\x1B[32m或者查看帮助文档 http://support.ghost.org.\033[0m\n');
 
         process.exit(exitCodes.DEPENDENCIES_MISSING);
     },
@@ -225,8 +225,8 @@ checks = {
         }
 
         if (!config.mail || !config.mail.transport) {
-            console.error('\x1B[31mWARNING: Ghost is attempting to use a direct method to send email. \nIt is recommended that you explicitly configure an email service.\033[0m');
-            console.error('\x1B[32mHelp and documentation can be found at http://support.ghost.org/mail.\033[0m\n');
+            console.error('\x1B[31m警告: 你还没有为博客系统配置邮件系统. \n建议你配置一个邮件系统.\033[0m');
+            console.error('\x1B[32m你可以查阅帮助文档 http://support.ghost.org/mail.\033[0m\n');
         }
     },
 
