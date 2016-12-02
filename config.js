@@ -11,7 +11,7 @@ config = {
     // When running Ghost in the wild, use the production environment.
     // Configure your URL and mail settings here
     production: {
-        url: '127.0.0.1:3100',
+        url: '127.0.0.1:80',
         mail: {},
         database: {
             client: 'sqlite3',
@@ -68,7 +68,7 @@ config = {
             // Host to be passed to node's `net.Server#listen()`
             host: '10.105.18.192',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
-            port: '3100'
+            port: '80'
         },
         // #### Paths
         // Specify where your content directory lives

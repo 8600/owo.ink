@@ -188,10 +188,7 @@ body {
     letter-spacing: 0.01rem;
     font-size: 1.8rem;
     line-height: 1.75em;
-    color: #3A4145;
-    -webkit-font-feature-settings: 'kern' 1;
-    -moz-font-feature-settings: 'kern' 1;
-    -o-font-feature-settings: 'kern' 1;
+    color: #333;
     text-rendering: geometricPrecision;
 }
 
@@ -255,7 +252,7 @@ p, ul, ol, dl {
     -webkit-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -moz-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
     -o-font-feature-settings: 'liga' 1, 'onum' 1, 'kern' 1;
-    margin: 0 0 1.75em 0;
+    margin: 0.5em 0em;
     text-rendering: geometricPrecision;
 }
 
@@ -308,16 +305,20 @@ hr {
 }
 
 blockquote {
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
-    margin: 1.75em 0 1.75em -2.2em;
-    padding: 0 0 0 1.75em;
-    border-left: #4A4A4A 0.4em solid;
+    margin: 0.75em 2em 0.75em 2em;
+    border-left: #95de93 0.4em solid;
+    background-color: #e3ffd2;
 }
 
-blockquote p {
+.post-excerpt blockquote p {
     margin: 0.8em 0;
     font-style: italic;
+    text-indent: 0;
+}
+.post-excerpt img{
+    display: block;
+    margin: auto;
 }
 
 blockquote small {
@@ -340,29 +341,24 @@ mark {
 }
 
 code, tt {
-    padding: 1px 3px;
-    font-size: 1.2em;
+    padding: .2em .4em;
+    font-size: .85em;
     white-space: pre-wrap;
-    border: #E3EDF3 1px solid;
-    background: #e6e6e6;
+    background: #f8f8f8;
     border-radius: 2px;
-    -webkit-font-feature-settings: "liga" 0;
-    -moz-font-feature-settings: "liga" 0;
-    font-feature-settings: "liga" 0;
 }
 
 pre {
-    moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 10px;
     font-size: 0.9em;
     line-height: 1.4em;
     white-space: pre;
     overflow: auto;
-    background: #efefef;
+    background: #f8f8f8;
     border-radius: 3px;
     margin: 0 2em;
-    font-family: Inconsolata;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
 
 pre code, pre tt {
@@ -996,6 +992,8 @@ body.nav-opened .nav {
 
 .post section{
     padding: 10px 5px;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 body:not(.post-template) .post-title {
@@ -1014,7 +1012,7 @@ body.page-template .post-title {
 }
 
 .post-excerpt p {
-    margin: 0;
+    margin-bottom: 15px;
     font-size: 0.9em;
     line-height: 1.7em;
     text-indent: 2em;
@@ -1169,6 +1167,10 @@ body.page-template .post-title {
     -webkit-transform: translateX(-50%); /* for Safari and iOS */
     -ms-transform: translateX(-50%); /* for IE9 */
     transform: translateX(-50%);
+}
+
+.post-content p{
+    text-indent:2em
 }
 
 .footnotes {
