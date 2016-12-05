@@ -64,7 +64,7 @@ svg:not(:root) { overflow: hidden; }
 figure { margin: 1em 40px; }
 hr { box-sizing: content-box; height: 0; }
 pre { overflow: auto; }
-code, kbd, pre, samp { font-size: 1em; }
+code, kbd, pre, samp { font-size: 1.2em;line-height: 1.7em; }
 button, input, optgroup, select, textarea {
     color: inherit;
     font: inherit;
@@ -240,8 +240,8 @@ h6 {
 }
 
 a {
-    color: #4A4A4A;
     transition: color 0.3s ease;
+    color: #21759b;
 }
 
 a:hover {
@@ -341,11 +341,8 @@ mark {
 }
 
 code, tt {
-    padding: .2em .4em;
-    font-size: .85em;
     white-space: pre-wrap;
-    background: #f8f8f8;
-    border-radius: 2px;
+    background: #d5f1fd;
 }
 
 pre {
@@ -355,9 +352,8 @@ pre {
     line-height: 1.4em;
     white-space: pre;
     overflow: auto;
-    background: #f8f8f8;
+    background: #dbf9d7 ;
     border-radius: 3px;
-    margin: 0 2em;
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
 
@@ -1013,9 +1009,8 @@ body.page-template .post-title {
 
 .post-excerpt p {
     margin-bottom: 15px;
-    font-size: 0.9em;
+    font-size: 1.0em;
     line-height: 1.7em;
-    text-indent: 2em;
 }
 
 .post-meta {
