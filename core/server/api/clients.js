@@ -1,15 +1,15 @@
 // # Client API
 // RESTful API for the Client resource
-var Promise      = require('bluebird'),
-    _            = require('lodash'),
-    dataProvider = require('../models'),
-    errors       = require('../errors'),
-    utils        = require('./utils'),
-    pipeline     = require('../utils/pipeline'),
-    i18n         = require('../i18n'),
+"use strict";
+const Promise      = require('bluebird'),
+      _            = require('lodash'),
+      dataProvider = require('../models'),
+      errors       = require('../errors'),
+      utils        = require('./utils'),
+      pipeline     = require('../utils/pipeline'),
+      i18n         = require('../i18n');
 
-    docName      = 'clients',
-    clients;
+let   docName= 'clients',clients;
 
 /**
  * ### Clients API Methods
@@ -24,8 +24,7 @@ clients = {
      * @return {Promise<Client>} Client
      */
     read: function read(options) {
-        var attrs = ['id', 'slug'],
-            tasks;
+        var attrs = ['id', 'slug'],tasks;
 
         /**
          * ### Model Query

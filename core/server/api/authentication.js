@@ -1,20 +1,21 @@
-var _                = require('lodash'),
-    validator        = require('validator'),
-    pipeline         = require('../utils/pipeline'),
-    dataProvider     = require('../models'),
-    settings         = require('./settings'),
-    mail             = require('./../mail'),
-    apiMail          = require('./mail'),
-    globalUtils      = require('../utils'),
-    utils            = require('./utils'),
-    errors           = require('../errors'),
-    events           = require('../events'),
-    config           = require('../config'),
-    i18n             = require('../i18n'),
-    authentication;
+"use strict";
+const _                = require('lodash'),
+      validator        = require('validator'),
+      pipeline         = require('../utils/pipeline'),
+      dataProvider     = require('../models'),
+      settings         = require('./settings'),
+      mail             = require('./../mail'),
+      apiMail          = require('./mail'),
+      globalUtils      = require('../utils'),
+      utils            = require('./utils'),
+      errors           = require('../errors'),
+      events           = require('../events'),
+      config           = require('../config'),
+      i18n             = require('../i18n');
+let   authentication;
 
 /**
- * Returns setup status
+ * 返回设置状态
  *
  * @return {Promise<Boolean>}
  */
@@ -27,7 +28,7 @@ function checkSetup() {
 /**
  * Allows an assertion to be made about setup status.
  *
- * @param  {Boolean} status True: setup must be complete. False: setup must not be complete.
+ * @param  {Boolean} status True: 安装必须完成. False: 安装不是必须完成.
  * @return {Function} returns a "task ready" function
  */
 function assertSetupCompleted(status) {
@@ -123,14 +124,13 @@ function setupTasks(setupData) {
 }
 
 /**
- * ## Authentication API Methods
+ * ## 【认证】API接口
  *
  * **See:** [API Methods](index.js.html#api%20methods)
  */
 authentication = {
-
     /**
-     * @description generate a reset token for a given email address
+     * @description 为邮件生成一个Token
      * @param {Object} resetRequest
      * @returns {Promise<Object>} message
      */
@@ -215,7 +215,7 @@ authentication = {
     },
 
     /**
-     * ## Reset Password
+     * ## 重置密码
      * reset password if a valid token and password (2x) is passed
      * @param {Object} resetRequest
      * @returns {Promise<Object>} message
@@ -265,7 +265,7 @@ authentication = {
     },
 
     /**
-     * ### Accept Invitation
+     * ### 接受邀请
      * @param {Object} invitation an invitation object
      * @returns {Promise<Object>}
      */
@@ -318,7 +318,7 @@ authentication = {
     },
 
     /**
-     * ### Check for invitation
+     * ### 检查邀请
      * @param {Object} options
      * @returns {Promise<Object>} An invitation status
      */
@@ -504,7 +504,7 @@ authentication = {
     },
 
     /**
-     * Revokes a bearer token.
+     * 撤销承载的令牌。
      * @param {Object} tokenDetails
      * @param {Object} options
      * @return {Promise<Object>} an object containing the revoked token.

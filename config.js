@@ -3,15 +3,14 @@
 
 // Ghost runs in `development` mode by default. Full documentation can be found at http://support.ghost.org/config/
 
-var path = require('path'),
-    config;
+var path = require('path'),config;
 
 config = {
     // ### Production
     // When running Ghost in the wild, use the production environment.
     // Configure your URL and mail settings here
     production: {
-        url: '127.0.0.1:80',
+        url: '127.0.0.1:3000',
         mail: {},
         database: {
             client: 'sqlite3',
@@ -66,9 +65,9 @@ config = {
         // Can be host & port (default), or socket
         server: {
             // Host to be passed to node's `net.Server#listen()`
-            host: '10.105.18.192',
+            host: '127.0.0.1',
             // Port to be passed to node's `net.Server#listen()`, for iisnode set this to `process.env.PORT`
-            port: '80'
+            port: '3000'
         },
         // #### Paths
         // Specify where your content directory lives
