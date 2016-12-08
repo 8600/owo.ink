@@ -1,32 +1,25 @@
 /**
- * Main controller for Ghost frontend
+ * 前端页面控制函数
  */
+"use strict";
+const api         = require('../../api'),
+      config      = require('../../config'),
+      filters     = require('../../filters'),
+      templates   = require('./templates'),
+      handleError = require('./error'),
+      formatResponse = require('./format-response'),
+      postLookup     = require('./post-lookup'),
+      setResponseContext = require('./context'),
+      setRequestIsSecure = require('./secure');
 
-/*global require, module */
-
-var api         = require('../../api'),
-    config      = require('../../config'),
-    filters     = require('../../filters'),
-    templates   = require('./templates'),
-    handleError = require('./error'),
-    formatResponse = require('./format-response'),
-    postLookup     = require('./post-lookup'),
-    setResponseContext = require('./context'),
-    setRequestIsSecure = require('./secure'),
-
-    frontendControllers;
+let   frontendControllers;
 
 /*
-* Sets the response context around a post and renders it
-* with the current theme's post view. Used by post preview
-* and single post methods.
-* Returns a function that takes the post to be rendered.
+* 根据主题的设置显示文章排版
 */
 function renderPost(req, res) {
     return function renderPost(post) {
-        var view = templates.single(req.app.get('activeTheme'), post),
-            response = formatResponse.single(post);
-
+        const view = templates.single(req.app.get('activeTheme'), post),response = formatResponse.single(post);
         setResponseContext(req, res, response);
         res.render(view, response);
     };

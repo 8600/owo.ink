@@ -1,4 +1,5 @@
-var _   = require('lodash');
+"use strict";
+const _   = require('lodash');
 
 /**
  * formats variables for handlebars in multi-post contexts.
@@ -27,7 +28,7 @@ function formatPageResponse(result) {
 }
 
 /**
- * similar to formatPageResponse, but for single post pages
+ * 简单的把文章信息封装到一个JSON的post键里
  * @return {Object} containing page variables
  */
 function formatResponse(post) {
