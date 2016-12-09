@@ -1,10 +1,5 @@
 "use strict";
 
-/* jshint ignore:start */
-
-
-
-/* jshint ignore:end */
 
 define('ghost-admin/adapters/application', ['exports', 'ghost-admin/adapters/embedded-relation-adapter'], function (exports, _ghostAdminAdaptersEmbeddedRelationAdapter) {
     exports['default'] = _ghostAdminAdaptersEmbeddedRelationAdapter['default'].extend({
@@ -7659,19 +7654,9 @@ define('ghost-admin/controllers/team/user', ['exports', 'ember-controller', 'emb
     });
 });
 
-// If after getting the sanitized and unique slug back from the API
-// we end up with a slug that matches the existing slug, abort the change
-
-// Because the server transforms the candidate slug by stripping
-// certain characters and appending a number onto the end of slugs
-// to enforce uniqueness, there are cases where we can get back a
-// candidate slug that is a duplicate of the original except for
-// the trailing incrementor (e.g., this-is-a-slug and this-is-a-slug-2)
-
-// get the last token out of the slug candidate and see if it's a number
-
-// if the candidate slug is the same as the existing slug except
-// for the incrementor then the existing slug should be used
+// 我们把最后得到的slug和现有的slug匹配
+// 中止更改因为服务器在对候选的slug进行处理时会剥离其某些字符，然后在其末尾添加一个数字来增强其唯一性
+// 所以在（对其处理之后的）有些情况下获得的候选slug（除了后面添加的数字），其他和原始slug是一样的
 define('ghost-admin/helpers/and', ['exports', 'ember', 'ember-truth-helpers/helpers/and'], function (exports, _ember, _emberTruthHelpersHelpersAnd) {
 
   var forExport = null;
@@ -10213,42 +10198,36 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
         /**
          * Set Selection
          *
-         * Set the section of text in the textarea that should be selected by the cursor
+         * 设置文本区域中应由光标选择的文本部分
          *
          * @param {number} start
          * @param {number} end
          */
         setSelection: function setSelection(start, end) {
-            var $textarea = this.$();
-
+            const $textarea = this.$();
+            console.log("***Set Selection***");
             if (start === 'end') {
                 start = $textarea.val().length;
             }
-
             end = end || start;
-
             $textarea.setSelection(start, end);
         },
 
         /**
-         * Replace Selection
+         * 替换 Selection
          *
-         * @param {String} replacement - the string to replace with
-         * @param {number} replacementStart - where to start replacing
-         * @param {number} [replacementEnd] - when to stop replacing, defaults to replacementStart
-         * @param {String|boolean|Object} [cursorPosition]  - where to put the cursor after replacing
+         * @param {String} replacement - 替换的字符串
+         * @param {number} replacementStart - 从哪里开始替换
+         * @param {number} [replacementEnd] - 到哪里开始替换, 默认为开始位置
+         * @param {String|boolean|Object} [cursorPosition]  - 替换后把光标放在哪里
          *
-         * Cursor position after replacement defaults to the end of the replacement.
-         * Providing selectionStart only will cause the cursor to be placed there, or alternatively a range can be selected
-         * by providing selectionEnd.
          */
         replaceSelection: function replaceSelection(replacement, replacementStart, replacementEnd, cursorPosition) {
             _emberRunloop['default'].schedule('afterRender', this, function () {
-                var $textarea = this.$();
-
+                const $textarea = this.$();
+                console.log("***替换 Selection***");
                 cursorPosition = cursorPosition || 'collapseToEnd';
                 replacementEnd = replacementEnd || replacementStart;
-
                 $textarea.setSelection(replacementStart, replacementEnd);
 
                 if (['select', 'collapseToStart', 'collapseToEnd'].indexOf(cursorPosition) !== -1) {
@@ -10263,7 +10242,7 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
                 }
 
                 $textarea.focus();
-                // Tell the editor it has changed, as programmatic replacements won't trigger this automatically
+                // 告诉编辑器它已经改变，因为程序化替换不会自动触发
                 this._elementValueDidChange();
                 this.sendAction('onChange');
             });
@@ -10292,7 +10271,7 @@ define('ghost-admin/mixins/ed-editor-scroll', ['exports', 'ember-metal/mixin', '
         },
 
         /**
-         * 建立一个包含滚动状态的对象
+         * 建立一个当前滚动状态的对象
          */
         getScrollInfo: function getScrollInfo() {
             //得到文章编辑框元素
@@ -10309,16 +10288,15 @@ define('ghost-admin/mixins/ed-editor-scroll', ['exports', 'ember-metal/mixin', '
         },
 
         /**
-         * Calculate if we're within scrollInfo.padding of the end of the document, and scroll the rest of the way
+         * 计算是否在文章尾部，并改变滚动条
          */
         adjustScrollPosition: function adjustScrollPosition() {
-            // If we're receiving change events from the end of the document, i.e the user is typing-at-the-end, update the
-            // scroll position to ensure both panels stay in view and in sync
-            var scrollInfo = this.getScrollInfo();
-
+            // 如果我们从文档末尾接收到内容更改事件（即用户正在输入），就会更新滚动位置以确保两个窗口保持同步
+            const scrollInfo = this.getScrollInfo();
+            console.log(scrollInfo);
             if (scrollInfo.isCursorAtEnd && scrollInfo.diff >= scrollInfo.top && scrollInfo.diff < scrollInfo.top + scrollInfo.padding) {
                 scrollInfo.top += scrollInfo.padding;
-                // Scroll the left pane
+                // 滚动左窗格
                 this.$().scrollTop(scrollInfo.top);
             }
         },
