@@ -994,26 +994,18 @@ define('ghost-admin/components/gh-editor', ['exports', 'ember-component', 'ember
         markdownActive: (0, _emberComputed.equal)('activeTab', 'markdown'),
         previewActive: (0, _emberComputed.equal)('activeTab', 'preview'),
 
-        // HTML Preview listens to scrollPosition and updates its scrollTop value
-        // This property receives scrollInfo from the textEditor, and height from the preview pane, and will update the
-        // scrollPosition value such that when either scrolling or typing-at-the-end of the text editor the preview pane
-        // stays in sync
+        // 监听输入框 滚动位置 并更新其滚动条的值
+        // 此属性从文本编辑器获得滚动信息，并保证和输入框的同步更新。
         scrollPosition: (0, _emberComputed['default'])('editorScrollInfo', 'height', function () {
-            var scrollInfo = this.get('editorScrollInfo');
-            var $previewContent = this.$previewContent;
-            var $previewViewPort = this.$previewViewPort;
-
+            const scrollInfo = this.get('editorScrollInfo');
+            const $previewContent = this.$previewContent;//预览框外部框体
+            const $previewViewPort = this.$previewViewPort;//预览框内部框体
             if (!scrollInfo || !$previewContent || !$previewViewPort) {
                 return 0;
             }
-
-            var previewHeight = $previewContent.height() - $previewViewPort.height();
-            var previewPosition = undefined,
-                ratio = undefined;
-
-            ratio = previewHeight / scrollInfo.diff;
-            previewPosition = scrollInfo.top * ratio;
-
+            const previewHeight = $previewContent.height() - $previewViewPort.height();
+            const ratio = previewHeight / scrollInfo.diff;
+            const previewPosition = scrollInfo.top * ratio;
             return previewPosition;
         }),
 
@@ -1030,7 +1022,7 @@ define('ghost-admin/components/gh-editor', ['exports', 'ember-component', 'ember
         },
 
         _cacheElements: function _cacheElements() {
-            // cache these elements for use in other methods
+            // 缓存文章编辑框元素在其他地方使用
             this.$previewViewPort = this.$('.js-entry-preview-content');
             this.$previewContent = this.$('.js-rendered-markdown');
         },
@@ -10162,10 +10154,8 @@ define('ghost-admin/mixins/dropdown-mixin', ['exports', 'ember-metal/mixin', 'em
 define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'ember-runloop'], function (exports, _emberMetalMixin, _emberRunloop) {
     exports['default'] = _emberMetalMixin['default'].create({
         /**
-         * Get Value
-         *
-         * Get the full contents of the textarea
-         *
+         * 取值
+         * 得到的文章输入框中的内容
          * @returns {String}
          */
         getValue: function getValue() {
@@ -10173,10 +10163,8 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
         },
 
         /**
-         * Get Selection
-         *
-         * Return the currently selected text from the textarea
-         *
+         * 获取选择
+         * 当前选定的文本框返回文本
          * @returns {Selection}
          */
         getSelection: function getSelection() {
@@ -10184,53 +10172,39 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
         },
 
         /**
-         * Get Line To Cursor
-         *
-         * Fetch the string of characters from the start of the given line up to the cursor
+         * 获取光标行
+         * 从给定的开始光标位置获取行内字符串
          * @returns {{text: string, start: number}}
          */
         getLineToCursor: function getLineToCursor() {
-            var selection = this.$().getSelection();
-            var value = this.getValue();
-            var lineStart = undefined;
-
-            // Normalise newlines
-            value = value.replace('\r\n', '\n');
-
+            const selectionStart = this.$().getSelection().start;
+            const value = this.getValue().replace('\r\n', '\n');
             // We want to look at the characters behind the cursor
-            lineStart = value.lastIndexOf('\n', selection.start - 1) + 1;
-
+            const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
             return {
-                text: value.substring(lineStart, selection.start),
+                text: value.substring(lineStart, selectionStart),
                 start: lineStart
             };
         },
 
         /**
-         * Get Line
-         *
+         * 获取光标行
          * Return the string of characters for the line the cursor is currently on
-         *
          * @returns {{text: string, start: number, end: number}}
          */
         getLine: function getLine() {
-            var selection = this.$().getSelection();
-            var value = this.getValue();
-            var lineStart = undefined,
-                lineEnd = undefined;
-
-            // Normalise newlines
-            value = value.replace('\r\n', '\n');
+            const selectionStart = this.$().getSelection().start;
+            const value = this.getValue().replace('\r\n', '\n');
 
             // We want to look at the characters behind the cursor
-            lineStart = value.lastIndexOf('\n', selection.start - 1) + 1;
-            lineEnd = value.indexOf('\n', selection.start);
+            let lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
+            let lineEnd = value.indexOf('\n', selectionStart);
             lineEnd = lineEnd === -1 ? value.length - 1 : lineEnd;
 
             return {
-                // jscs:disable
+                // jscs:禁用
                 text: value.substring(lineStart, lineEnd).replace(/^\n/, ''),
-                // jscs:enable
+                // jscs:启用
                 start: lineStart,
                 end: lineEnd
             };
@@ -10299,31 +10273,31 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
 define('ghost-admin/mixins/ed-editor-scroll', ['exports', 'ember-metal/mixin', 'ember-runloop', 'ember-invoke-action'], function (exports, _emberMetalMixin, _emberRunloop, _emberInvokeAction) {
     exports['default'] = _emberMetalMixin['default'].create({
         /**
-         * Determine if the cursor is at the end of the textarea
+         * 判断鼠标是否处在文档末尾
          */
         isCursorAtEnd: function isCursorAtEnd() {
-            var selection = this.$().getSelection();
-            var value = this.getValue();
-            var linesAtEnd = 3;
-            var match = undefined,
-                stringAfterCursor = undefined;
-
-            stringAfterCursor = value.substring(selection.end);
-            match = stringAfterCursor.match(/\n/g);
-
-            if (!match || match.length < linesAtEnd) {
+            //获取当前鼠标位置以及选择信息 selection = Object {start: 4, end: 7, length: 3, text: "12"}
+            const selection = this.$().getSelection();
+            //获取当前文档内容
+            const value = this.getValue();
+            //截取鼠标位置以后的文档内容
+            const stringAfterCursor = value.substring(selection.end);
+            //判断鼠标位置后文档换行符个数
+            const match = stringAfterCursor.match(/\n/g);
+            //如果 没有后段文本 或者 后段文本少于3行返回真 否则 返回假
+            if (!match || match.length < 3) {
                 return true;
             }
-
             return false;
         },
 
         /**
-         * Build an object that represents the scroll state
+         * 建立一个包含滚动状态的对象
          */
         getScrollInfo: function getScrollInfo() {
-            var scroller = this.get('element');
-            var scrollInfo = {
+            //得到文章编辑框元素
+            const scroller = this.get('element');
+            const scrollInfo = {
                 top: scroller.scrollTop,
                 height: scroller.scrollHeight,
                 clientHeight: scroller.clientHeight,
@@ -10331,7 +10305,6 @@ define('ghost-admin/mixins/ed-editor-scroll', ['exports', 'ember-metal/mixin', '
                 padding: 50,
                 isCursorAtEnd: this.isCursorAtEnd()
             };
-
             return scrollInfo;
         },
 
@@ -10497,7 +10470,6 @@ define('ghost-admin/mixins/ed-editor-shortcuts', ['exports', 'ember-metal/mixin'
         copyHTML: function copyHTML(editor, selection) {
             var converter = new Showdown.converter();
             var generatedHTML = undefined;
-
             if (selection.text) {
                 generatedHTML = converter.makeHtml(selection.text);
             } else {
