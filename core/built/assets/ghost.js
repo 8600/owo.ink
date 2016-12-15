@@ -1035,8 +1035,7 @@ define('ghost-admin/components/gh-editor', ['exports', 'ember-component', 'ember
                 this.set('height', height);
             },
 
-            // set from a `sendAction` on the gh-ed-editor component,
-            // so that we get a reference for handling uploads.
+            // 从gh-ed-editor组件上的`sendAction`设置，以便我们获得处理上传的引用。
             setEditor: function setEditor(editor) {
                 this.set('editor', editor);
             },
@@ -1049,23 +1048,20 @@ define('ghost-admin/components/gh-editor', ['exports', 'ember-component', 'ember
                 this.set('editorDisabled', undefined);
             },
 
-            // The actual functionality is implemented in utils/ed-editor-shortcuts
+            // 实际的功能是在utils / ed-editor-shortcuts中实现的
             editorShortcut: function editorShortcut(options) {
                 if (this.editor.$().is(':focus')) {
                     this.editor.shortcut(options.type);
                 }
             },
 
-            // Match the uploaded file to a line in the editor, and update that line with a path reference
-            // ensuring that everything ends up in the correct place and format.
+            // 拖拽上传图片后，将图片路径填写到markdown标记内
             handleImgUpload: function handleImgUpload(imageIndex, newSrc) {
-                var editor = this.get('editor');
-                var editorValue = editor.getValue();
-                var replacement = _ghostAdminUtilsEdImageManager['default'].getSrcRange(editorValue, imageIndex);
-                var cursorPosition = undefined;
-
+                const editor = this.get('editor');
+                const editorValue = editor.getValue();
+                const replacement = _ghostAdminUtilsEdImageManager['default'].getSrcRange(editorValue, imageIndex);
                 if (replacement) {
-                    cursorPosition = replacement.start + newSrc.length + 1;
+                    const cursorPosition = replacement.start + newSrc.length + 1;
                     if (replacement.needsParens) {
                         newSrc = '(' + newSrc + ')';
                     }
@@ -1083,28 +1079,21 @@ define('ghost-admin/components/gh-editor', ['exports', 'ember-component', 'ember
 define('ghost-admin/components/gh-error-message', ['exports', 'ember-component', 'ember-computed', 'ember-utils'], function (exports, _emberComponent, _emberComputed, _emberUtils) {
 
     /**
-     * Renders one random error message when passed a DS.Errors object
-     * and a property name. The message will be one of the ones associated with
-     * that specific property. If there are no errors associated with the property,
-     * nothing will be rendered.
+     * 在通过DS对象和属性名称时呈现一个随机错误消息.。该消息将是与该特定属性关联的消息之一.。如果没有与该属性相关的错误，则将不显示任何属性.。
      * @param  {DS.Errors} errors   The DS.Errors object
      * @param  {string} property    The property name
      */
     exports['default'] = _emberComponent['default'].extend({
         tagName: 'p',
         classNames: ['response'],
-
         errors: null,
         property: '',
-
         isVisible: (0, _emberComputed.notEmpty)('errors'),
-
         message: (0, _emberComputed['default'])('errors.[]', 'property', function () {
-            var property = this.get('property');
-            var errors = this.get('errors');
-            var messages = [];
-            var index = undefined;
-
+            const property = this.get('property');
+            const errors = this.get('errors');
+            const messages = [];
+            const index = undefined;
             if (!(0, _emberUtils.isEmpty)(errors) && errors.get(property)) {
                 errors.get(property).forEach(function (error) {
                     messages.push(error);
@@ -1116,8 +1105,7 @@ define('ghost-admin/components/gh-error-message', ['exports', 'ember-component',
     });
 });
 define('ghost-admin/components/gh-feature-flag', ['exports', 'ember-component', 'ember-computed', 'ember-service/inject'], function (exports, _emberComponent, _emberComputed, _emberServiceInject) {
-
-    var FeatureFlagComponent = _emberComponent['default'].extend({
+    const FeatureFlagComponent = _emberComponent['default'].extend({
         tagName: 'label',
         classNames: 'checkbox',
         attributeBindings: ['for'],
@@ -1158,7 +1146,7 @@ define('ghost-admin/components/gh-feature-flag', ['exports', 'ember-component', 
 define('ghost-admin/components/gh-file-input', ['exports', 'ember', 'emberx-file-input/components/x-file-input'], function (exports, _ember, _emberxFileInputComponentsXFileInput) {
 
     // ember-cli-shims doesn't export Ember.testing
-    var testing = _ember['default'].testing;
+    const testing = _ember['default'].testing;
     exports['default'] = _emberxFileInputComponentsXFileInput['default'].extend({
         change: function change(e) {
             var files = testing ? (e.originalEvent || e).testingFiles : e.target.files;
@@ -1190,11 +1178,9 @@ define('ghost-admin/components/gh-file-upload', ['exports', 'ember-component'], 
                 if (!this.get('uploadButtonDisabled') && this._file) {
                     this.sendAction('onUpload', this._file);
                 }
-
-                // Prevent double post by disabling the button.
+                // 通过禁用按钮防止双重发布。
                 this.set('uploadButtonDisabled', true);
-
-                // Reset form
+                // 重置表单
                 if (this.get('shouldResetForm')) {
                     this.$().closest('form')[0].reset();
                 }
@@ -1229,9 +1215,9 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
         notifications: (0, _emberServiceInject['default'])(),
 
         formData: (0, _emberComputed['default'])('file', function () {
-            var paramName = this.get('paramName');
-            var file = this.get('file');
-            var formData = new FormData();
+            const paramName = this.get('paramName');
+            const file = this.get('file');
+            const formData = new FormData();
 
             formData.append(paramName, file);
 
@@ -1239,9 +1225,8 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
         }),
 
         progressStyle: (0, _emberComputed['default'])('uploadPercentage', function () {
-            var percentage = this.get('uploadPercentage');
-            var width = '';
-
+            const percentage = this.get('uploadPercentage');
+            let width = '';
             if (percentage > 0) {
                 width = percentage + '%';
             } else {
@@ -1251,11 +1236,10 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
             return (0, _emberString.htmlSafe)('width: ' + width);
         }),
 
-        // we can optionally listen to a named event bus channel so that the upload
-        // process can be triggered externally
+        // 我们可以选择监听一个命名的事件总线通道，以便上传过程可以从外部触发
         init: function init() {
             this._super.apply(this, arguments);
-            var listenTo = this.get('listenTo');
+            const listenTo = this.get('listenTo');
 
             if (listenTo) {
                 this.get('eventBus').subscribe(listenTo + ':upload', this, function (file) {
@@ -1269,18 +1253,15 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
 
         didReceiveAttrs: function didReceiveAttrs() {
             this._super.apply(this, arguments);
-            var accept = this.get('accept');
-            var extensions = this.get('extensions');
-
+            const accept = this.get('accept');
+            const extensions = this.get('extensions');
             this._accept = !(0, _emberUtils.isBlank)(accept) && !(0, _emberArrayUtils.isEmberArray)(accept) ? accept.split(',') : accept;
             this._extensions = !(0, _emberUtils.isBlank)(extensions) && !(0, _emberArrayUtils.isEmberArray)(extensions) ? extensions.split(',') : extensions;
         },
 
         willDestroyElement: function willDestroyElement() {
-            var listenTo = this.get('listenTo');
-
+            const listenTo = this.get('listenTo');
             this._super.apply(this, arguments);
-
             if (listenTo) {
                 this.get('eventBus').unsubscribe(listenTo + ':upload');
             }
@@ -1290,15 +1271,11 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
             if (!event.dataTransfer) {
                 return;
             }
-
-            // this is needed to work around inconsistencies with dropping files
-            // from Chrome's downloads bar
-            var eA = event.dataTransfer.effectAllowed;
+            // 解决从Chrome的下载栏中删除文件的不一致
+            let eA = event.dataTransfer.effectAllowed;
             event.dataTransfer.dropEffect = eA === 'move' || eA === 'linkMove' ? 'move' : 'copy';
-
             event.stopPropagation();
             event.preventDefault();
-
             this.set('dragClass', '-drag-over');
         },
 
@@ -1316,12 +1293,10 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
         },
 
         generateRequest: function generateRequest() {
-            var _this = this;
-
-            var ajax = this.get('ajax');
-            var formData = this.get('formData');
-            var url = this.get('url');
-
+            const _this = this;
+            const ajax = this.get('ajax');
+            const formData = this.get('formData');
+            const url = this.get('url');
             (0, _emberInvokeAction.invokeAction)(this, 'uploadStarted');
 
             ajax.post(url, {
@@ -1348,11 +1323,11 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
         },
 
         _uploadProgress: function _uploadProgress(event) {
-            var _this2 = this;
+            const _this2 = this;
 
             if (event.lengthComputable) {
                 (0, _emberRunloop['default'])(function () {
-                    var percentage = Math.round(event.loaded / event.total * 100);
+                    const percentage = Math.round(event.loaded / event.total * 100);
                     _this2.set('uploadPercentage', percentage);
                 });
             }
@@ -1364,8 +1339,7 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
         },
 
         _uploadFailed: function _uploadFailed(error) {
-            var message = undefined;
-
+            let message = undefined;
             if ((0, _ghostAdminServicesAjax.isVersionMismatchError)(error)) {
                 this.get('notifications').showAPIError(error);
             }
@@ -1393,13 +1367,13 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
         },
 
         _defaultValidator: function _defaultValidator(file) {
-            var _$$exec = /(?:\.([^.]+))?$/.exec(file.name);
+            const _$$exec = /(?:\.([^.]+))?$/.exec(file.name);
 
-            var _$$exec2 = _slicedToArray(_$$exec, 2);
+            const _$$exec2 = _slicedToArray(_$$exec, 2);
 
-            var extension = _$$exec2[1];
+            const extension = _$$exec2[1];
 
-            var extensions = this._extensions;
+            const extensions = this._extensions;
 
             if (!extension || extensions.indexOf(extension.toLowerCase()) === -1) {
                 return new _ghostAdminServicesAjax.UnsupportedMediaTypeError();
@@ -1413,9 +1387,9 @@ define('ghost-admin/components/gh-file-uploader', ['exports', 'ember-component',
                 // can't use array destructuring here as FileList is not a strict
                 // array and fails in Safari
                 // jscs:disable requireArrayDestructuring
-                var file = fileList[0];
+                const file = fileList[0];
                 // jscs:enable requireArrayDestructuring
-                var validationResult = this._validate(file);
+                const validationResult = this._validate(file);
 
                 this.set('file', file);
                 (0, _emberInvokeAction.invokeAction)(this, 'fileSelected', file);
@@ -10196,16 +10170,13 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
         },
 
         /**
-         * Set Selection
-         *
-         * 设置文本区域中应由光标选择的文本部分
-         *
+         * 设置光标选中
+         * 设置文本区域中光标选择部分
          * @param {number} start
          * @param {number} end
          */
         setSelection: function setSelection(start, end) {
             const $textarea = this.$();
-            console.log("***Set Selection***");
             if (start === 'end') {
                 start = $textarea.val().length;
             }
@@ -10214,21 +10185,19 @@ define('ghost-admin/mixins/ed-editor-api', ['exports', 'ember-metal/mixin', 'emb
         },
 
         /**
-         * 替换 Selection
+         * 插入MarkDown标记
          *
-         * @param {String} replacement - 替换的字符串
+         * @param {String} replacement - 插入的MarkDown标记
          * @param {number} replacementStart - 从哪里开始替换
          * @param {number} [replacementEnd] - 到哪里开始替换, 默认为开始位置
-         * @param {String|boolean|Object} [cursorPosition]  - 替换后把光标放在哪里
+         * @param {String|boolean|Object} [cursorPosition]  - 光标选中替换后的内容
          *
          */
         replaceSelection: function replaceSelection(replacement, replacementStart, replacementEnd, cursorPosition) {
             _emberRunloop['default'].schedule('afterRender', this, function () {
                 const $textarea = this.$();
-                console.log("***替换 Selection***");
                 cursorPosition = cursorPosition || 'collapseToEnd';
                 replacementEnd = replacementEnd || replacementStart;
-                $textarea.setSelection(replacementStart, replacementEnd);
 
                 if (['select', 'collapseToStart', 'collapseToEnd'].indexOf(cursorPosition) !== -1) {
                     $textarea.replaceSelectedText(replacement, cursorPosition);
