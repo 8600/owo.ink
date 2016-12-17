@@ -18,7 +18,6 @@ var _ = require('lodash'),
     getPublishedDate = require('./published_date'),
     getModifiedDate = require('./modified_date'),
     getOgType = require('./og_type'),
-    getStructuredData = require('./structured_data'),
     getSchema = require('./schema'),
     getExcerpt = require('./excerpt');
 
@@ -62,7 +61,6 @@ function getMetaData(data, root) {
     }
 
     return Promise.props(getImageDimensions(metaData)).then(function () {
-        metaData.structuredData = getStructuredData(metaData);
         metaData.schema = getSchema(metaData, data);
 
         return metaData;
