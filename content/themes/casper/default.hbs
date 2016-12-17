@@ -26,13 +26,16 @@
         {{!-- The tiny footer at the very bottom --}}
         <footer class="site-footer clearfix"></footer>
     </div>
-    {{!-- jQuery needs to come before `{{ghost_foot}}` so that jQuery can be used in code injection --}}
-    <script type="text/javascript" src="/assets/js/jquery-3.1.1.min.js"></script>
-    {{!-- Ghost outputs important scripts and data with this tag --}}
     {{ghost_foot}}
-    {{!-- 网页视频插件 --}}
-    {{!-- <script type="text/javascript" src="{{asset "js/jquery.fitvids.js"}}"></script> --}}
-    {{!-- The main JavaScript file for Casper --}}
-    <script type="text/javascript" src="{{asset "js/index.js"}}"></script>
+    <script>
+        var a=["menu-button","nav-cover","nav-close"];
+        function hasClass(obj, cls) {  return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));}  
+        function addClass(obj, cls) {  if (!this.hasClass(obj, cls)) obj.className += " " + cls;}  
+        function removeClass(obj, cls) {  if (hasClass(obj, cls)) {  var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');  obj.className = obj.className.replace(reg, ' ');  }  }  
+        function toggleClass(obj,cls){  if(hasClass(obj,cls)){  removeClass(obj, cls);  }else{  addClass(obj, cls);}}  
+        for(var i=0,k=a.length;i<k;i++){
+            document.getElementsByClassName(a[i])[0].addEventListener('click', function (){toggleClass(document.body,"nav-opened nav-closed")});  
+        }
+    </script>
 </body>
 </html>
