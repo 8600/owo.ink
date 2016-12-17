@@ -61,7 +61,7 @@ function finaliseStructuredData(metaData) {
 
 function getAjaxHelper(clientId, clientSecret) {
     return '<script type="text/javascript" src="' +
-        assetHelper('shared/ghost-url.js', {hash: {minifyInProduction: true}}) + '"></script>\n' +
+        assetHelper('shared/ghost-url.js', {hash: {minifyInProduction: true}}) + '"></script>' +
         '<script type="text/javascript">\n' +
         'ghost.init({\n' +
         '\tclientId: "' + clientId + '",\n' +
@@ -112,16 +112,16 @@ function ghost_head(options) {
                 head.push('<link rel="next" href="' +
                     escapeExpression(metaData.nextUrl) + '" />');
             }
+            head.push('<meta name="generator" content="owo ' +escapeExpression(safeVersion) + '" />');
+            //订阅标识
+            head.push('<link rel="alternate" type="application/rss+xml" title="' +escapeExpression(metaData.blog.title)  + '" href="' +escapeExpression(metaData.rssUrl) + '" />');
 
             if (!_.includes(context, 'paged') && useStructuredData) {
-                head.push('');
                 head.push.apply(head, finaliseStructuredData(metaData));
-                head.push('');
-
                 if (metaData.schema) {
-                    head.push('<script type="application/ld+json">\n' +
-                        JSON.stringify(metaData.schema, null, '    ') +
-                        '\n    </script>\n');
+                    head.push('<script type="application/ld+json">' +
+                        JSON.stringify(metaData.schema) +
+                        '</script>');
                 }
             }
 
@@ -130,11 +130,7 @@ function ghost_head(options) {
             }
         }
 
-        head.push('<meta name="generator" content="Ghost ' +
-            escapeExpression(safeVersion) + '" />');
-        head.push('<link rel="alternate" type="application/rss+xml" title="' +
-            escapeExpression(metaData.blog.title)  + '" href="' +
-            escapeExpression(metaData.rssUrl) + '" />');
+        
 
         return api.settings.read({key: 'ghost_head'});
     }).then(function (response) {
