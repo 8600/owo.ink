@@ -1,4 +1,6 @@
-html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+body,html{height:100%;max-height:100%}
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:62.5%;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:#333;letter-spacing:.01rem;font-size:1.8rem;font-family:Helvetica,Tahoma,Arial,STXihei,“华文细黑”,“Microsoft YaHei”,“微软雅黑”,sans-serif;line-height:1.75em;text-rendering:geometricPrecision}
 article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}
 audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
 audio:not([controls]){display:none;height:0}
@@ -9,9 +11,9 @@ b,strong{font-weight:700}
 dfn{font-style:italic}
 mark{background:#ff0;color:#000}
 small{font-size:80%}
-sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}
 sup{top:-.5em}
 sub{bottom:-.25em}
+sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}
 img{max-width:80%;border:0}
 svg:not(:root){overflow:hidden}
 figure{margin:1em 40px}
@@ -42,9 +44,6 @@ td,th{padding:0}
 .icon-location:before{margin-left:-3px;content:"\f607"}
 .icon-link:before{content:"\f608"}
 .icon-menu:before{content:"\f609"}
-html{font-size:62.5%;-webkit-tap-highlight-color:transparent}
-body,html{height:100%;max-height:100%}
-body{margin:0;color:#333;letter-spacing:.01rem;font-size:1.8rem;font-family:Helvetica,Tahoma,Arial,STXihei,“华文细黑”,“Microsoft YaHei”,“微软雅黑”,sans-serif;line-height:1.75em;text-rendering:geometricPrecision}
 ::selection{background:#d6edff}
 h1,h2,h3,h4,h5,h6{margin:0 0 .4em;color:#2e2e2e;line-height:1.15em;text-rendering:geometricPrecision}
 h1{text-indent:-3px;letter-spacing:-2px;font-size:5rem}
@@ -252,12 +251,7 @@ body:not(.post-template) .post-title{font-size:3.2rem}
 body.page-template .post-title{font-size:4.5rem}
 hr{margin:2.4em 0}
 ol,ul{padding-left:2em}
-h1{text-indent:-2px;font-size:4.5rem}
-h2{font-size:3.6rem}
-h3{font-size:3.1rem}
-h4{font-size:2.5rem}
-h5{font-size:2.2rem}
-h6{font-size:1.8rem}
+
 .author-profile{padding-bottom:4rem}
 .author-profile .author-bio{font-size:1.6rem}
 .author-meta span{display:block;margin:1.5rem 0}
