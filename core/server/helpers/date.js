@@ -1,8 +1,6 @@
 // # Date Helper
 // 帖子发布时间函数
 
-let date;
-
 function getDateDiff(nS){
     let result; 
     const diffValue =  new Date().getTime() - nS;
@@ -19,7 +17,7 @@ function getDateDiff(nS){
     else if(minC>=1){result=""+ parseInt(minC) +"分钟前";}
     else result="刚刚";return result;
 }
-date = function (date, options) {
+const date = function (date, options) {
     if (this.published_at) {
         const timestamp = new Date(this.published_at).getTime();
         date = getDateDiff(timestamp);

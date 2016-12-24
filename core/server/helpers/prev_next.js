@@ -3,15 +3,15 @@
 // `{{#prev_post}}<a href ="{{url}}>previous post</a>{{/prev_post}}'
 // `{{#next_post}}<a href ="{{url absolute="true">next post</a>{{/next_post}}'
 
-var api             = require('../api'),
-    schema          = require('../data/schema').checks,
-    Promise         = require('bluebird'),
-    fetch, prevNext;
+const api             = require('../api'),
+      schema          = require('../data/schema').checks,
+      Promise         = require('bluebird');
 
-fetch = function (apiOptions, options) {
+const fetch = function (apiOptions, options) {
+    
     return api.posts.read(apiOptions).then(function (result) {
         var related = result.posts[0];
-
+        console.log(related);
         if (related.previous) {
             return options.fn(related.previous);
         } else if (related.next) {
@@ -25,10 +25,9 @@ fetch = function (apiOptions, options) {
 // If prevNext method is called without valid post data then we must return a promise, if there is valid post data
 // then the promise is handled in the api call.
 
-prevNext = function (options) {
+const prevNext = function (options) {
     options = options || {};
-
-    var apiOptions = {
+    let apiOptions = {
         include: options.name === 'prev_post' ? 'previous,previous.author,previous.tags' : 'next,next.author,next.tags'
     };
 

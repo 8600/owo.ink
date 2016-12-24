@@ -1,4 +1,4 @@
-// # Content Helper
+// # 内容插件
 // 使用方法: `{{content}}`
 // 返回页面内容
 

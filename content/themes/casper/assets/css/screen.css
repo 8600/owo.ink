@@ -46,7 +46,7 @@ td,th{padding:0}
 .icon-menu:before{content:"\f609"}
 ::selection{background:#d6edff}
 h1,h2,h3,h4,h5,h6{margin:0 0 .4em;color:#2e2e2e;line-height:1.15em;text-rendering:geometricPrecision}
-h1{text-indent:-3px;letter-spacing:-2px;font-size:5rem}
+h1{text-indent:-3px;letter-spacing:-2px;font-size:4rem}
 h2{letter-spacing:-1px;font-size:3.6rem}
 h3{letter-spacing:-.6px;font-size:3rem}
 h4{font-size:2.5rem}
@@ -141,7 +141,7 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 .home-template .page-title{-webkit-animation:fade-in-down .6s;animation:fade-in-down .6s both;-webkit-animation-delay:.2s;animation-delay:.2s}
 .home-template .page-description{color:rgba(0,0,0,.5);-webkit-animation:fade-in-down .9s;animation:fade-in-down .9s both;-webkit-animation-delay:.1s;animation-delay:.1s}
 .post{position:relative;margin:4rem auto;padding:10px 2% 2%;width:80%;max-width:1400px;background:#fff;box-shadow:0 5px 6px rgba(0,0,0,.2);word-wrap:break-word}
-.post section{margin:0 auto;padding:10px 5px;max-width:750pt}
+.post section{padding-top: 5px;padding-right: 4rem;}
 body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:3.6rem}
 body.page-template .post-title{font-size:5rem}
 .post-title a{text-decoration:none}
@@ -161,11 +161,11 @@ body.page-template .post-title{font-size:5rem}
 .page-template .post-header,.post-template .post-header{margin-bottom:3.4rem}
 .page-template .post-title,.post-template .post-title{margin-bottom:0;border-bottom:1px solid #ebf2f6;text-align:center}
 .page-template .post-meta,.post-template .post-meta{margin:0}
-.page-template .post-date,.post-template .post-date{position:absolute;right:35px;margin:0;margin-top:22px;padding:0;border:none}
+.page-template .post-date,.post-template .post-date{position:absolute;right:35px;margin:0;padding:0;border:none}
 .page-template .content,.post-template .content{overflow:hidden}
 .page-template .post,.post-template .post{margin-top:0;padding-bottom:0;border-bottom:none}
 .page-template .post:after,.post-template .post:after{display:none}
-.post-content img{position:relative;left:50%;display:block;padding:.6em 0;height:auto;max-width:126%;-webkit-transform:translateX(-50%);transform:translateX(-50%);-ms-transform:translateX(-50%)}
+.post-content img{position:relative;left:50%;display:block;padding:.6em 0;height:auto;-webkit-transform:translateX(-50%);transform:translateX(-50%);-ms-transform:translateX(-50%)}
 .post-content p{text-indent:2em}
 .footnotes{font-style:italic;font-size:1.3rem;line-height:1.6em}
 .footnotes li{margin:.6rem 0}
