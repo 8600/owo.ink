@@ -7,3 +7,4 @@ const content = function (options) {
     return new hbs.handlebars.SafeString(this.html);
 };
 module.exports = content;
+ 
