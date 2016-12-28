@@ -1,14 +1,14 @@
 body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, form, label, dl, dt, dd, fieldset, img{margin: 0;padding: 0;border: 0;list-style: none;}
 body,html{height:100%;max-height:100%;}
-html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:62.5%;-webkit-tap-highlight-color:transparent}
-body{margin:0;color:#333;letter-spacing:.01rem;font-size:1.6rem;font-family:"Microsoft YaHei","Helvetica Neue",SimSun,sans-serif;line-height:1.75em;text-rendering:geometricPrecision}
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:#333;letter-spacing:.01rem;font-size:1.4rem;font-family:"Microsoft YaHei","Helvetica Neue",SimSun,sans-serif;line-height:1.75em;text-rendering:geometricPrecision}
 article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}
 audio,canvas,progress,video{display:inline-block;vertical-align:baseline}
 audio:not([controls]){display:none;height:0}
 [hidden],template{display:none}
 a:active,a:hover{outline:0}
 abbr[title]{border-bottom:1px dotted}
-b,strong{font-weight:700}
+b,strong{font-weight:700;line-height: 1.8rem;}
 dfn{font-style:italic}
 mark{background:#ff0;color:#000}
 small{font-size:80%}
@@ -18,7 +18,7 @@ sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}
 img{max-width:80%;border:0}
 svg:not(:root){overflow:hidden}
 figure{margin:1em 40px}
-code,samp{font-size:1.2em;line-height:1.7em}
+code,samp{font-size:1.4rem;}
 button,input,optgroup,select,textarea{margin:0;color:inherit;font:inherit}
 button,html input[type=button],input[type=reset],input[type=submit]{cursor:pointer;-webkit-appearance:button}
 button[disabled],html input[disabled]{cursor:default}
@@ -46,12 +46,12 @@ td,th{padding:0}
 .icon-link:before{content:"\f608"}
 .icon-menu:before{content:"\f609"}
 ::selection{background:#d6edff}
-h1,h2,h3,h4,h5,h6{margin:0;color:#2e2e2e;text-rendering:geometricPrecision;font-weight: 500;}
-h1{text-indent:-3px;letter-spacing:-2px;font-size: 3.4rem;line-height: 3.5rem;padding-left: 3px;}
-h2{letter-spacing:-1px;font-size: 2.5rem;line-height: 2.6rem;}
-h3{letter-spacing:-.6px;font-size: 2.1rem;line-height: 2.2rem;}
-h4{font-size: 1.7rem;line-height: 1.8rem;}
-h5,h6{font-size: 1.3rem;line-height: 1.4rem;}
+h1,h2,h3,h4,h5,h6{margin:0 0 .3em;color:#2e2e2e;text-rendering:geometricPrecision;font-weight: 500;}
+h1{letter-spacing:-1px;font-size:2.8rem;text-indent:-3px;line-height: 3.5rem;padding-left: 3px;}
+h2{letter-spacing:0;font-size:2.4rem;line-height: 2.6rem;}
+h3{font-size:2.1rem;letter-spacing:-.6px;line-height: 2.2rem;}
+h4{font-size:1.9rem;line-height: 1.8rem;}
+h5,h6{font-size:1.8rem;line-height: 1.4rem;}
 a{background-color:transparent;color:#21759b;transition:color .3s ease}
 a:hover{color:#111}
 dl,ol,p,ul{text-rendering:geometricPrecision}
@@ -60,21 +60,19 @@ ol ol,ol ul,ul ol,ul ul{margin:0 0 .4em;padding-left:2em}
 dl dt{float:left;clear:left;overflow:hidden;width:180px;text-align:right;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
 dl dd,dl dt{margin-bottom:1em}
 dl dd{margin-left:200px}
-li{list-style-type: disc;line-height: 1.4rem;}
+li{list-style-type: disc;line-height: 2.4rem;}
 li li{margin:0;line-height: 1.8rem;}
 li>p:last-of-type{margin-bottom:0}
 hr{display:block;margin:3.2em 0;padding:0;height:1px;border:0;border-top:1px solid #efefef}
-blockquote{box-sizing:border-box;margin:.75em 2em;border-left:.4em solid #caf7c9;background-color:#ecffe0}
-.post-excerpt blockquote p{margin:.8em 0;text-indent:0;font-style:italic}
+blockquote{box-sizing:border-box;margin:.75rem 2rem;border-left:.4em solid #caf7c9;background-color:#ecffe0;padding: 0.5rem;}
 .post-excerpt img{display:block;margin:auto}
 blockquote small{display:inline-block;margin:.8em 0 .8em 1.5em;color:#ccc;font-size:.9em}
 blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-code,tt{background:#d5f1fd;white-space:pre-wrap}
-pre{overflow:auto;box-sizing:border-box;padding:10px;border-radius:3px;background:#f8f8ff;white-space:pre;font-size:.9em;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.4em}
-pre code,pre tt{padding:0;border:none;background:0 0;white-space:pre-wrap;}
+pre{overflow:auto;box-sizing:border-box;padding:5px;border-radius:3px;background: -webkit-linear-gradient(top, transparent 19px, skyblue 20px), -webkit-linear-gradient(left, transparent 19px, skyblue 20px);background-size: 20px 20px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0 2rem;border: 1px solid skyblue;}
+p code,p tt{background: -webkit-linear-gradient(top, transparent 7px, skyblue 8px), -webkit-linear-gradient(left, transparent 7px, skyblue 8px);background-size: 8px 8px;white-space:pre-wrap;line-height: 2rem;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
 table td,table th{padding:8px;border-top:1px solid #efefef;vertical-align:top;text-align:left;line-height:20px}
 table th{color:#000}
@@ -146,7 +144,7 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:2.6rem}
 body.page-template .post-title{font-size:5rem}
 .post-title a{text-decoration:none}
-.post-excerpt p{line-height: 1.5rem;}
+.post-excerpt p{line-height: 1.6rem;}
 .post-meta{display:block;margin:1.75rem 0 0;color:#9eabb3;text-align:right;font-size:1.5rem;line-height:2.2rem}
 .author-thumb{float:left;margin-right:9px;width:24px;height:24px;border-radius:100%}
 .post-meta a{color:#9eabb3;text-decoration:none}
@@ -293,12 +291,7 @@ dl,ol,p,ul{margin:0 0 2.5rem;font-size:.95em}
 .page-title{font-size:3rem}
 .post-excerpt p{font-size:.85em}
 .page-description{font-size:1.6rem}
-h1,h2,h3,h4,h5,h6{margin:0 0 .3em}
-h1{letter-spacing:-1px;font-size:2.8rem}
-h2{letter-spacing:0;font-size:2.4rem}
-h3{font-size:2.1rem}
-h4{font-size:1.9rem}
-h5,h6{font-size:1.8rem}
+
 body:not(.post-template) .post-title{font-size:2.5rem}
 body.page-template .post-title{font-size:2.8rem}
 .page-template .site-footer,.post-template .site-footer{margin-top:0}
