@@ -15,7 +15,7 @@ small{font-size:80%}
 sup{top:-.5em}
 sub{bottom:-.25em}
 sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}
-img{max-width:80%;border:0;display:block;margin: 1rem auto;}
+img{max-width:80%;display:block;margin: 0rem auto;}
 svg:not(:root){overflow:hidden}
 figure{margin:1em 40px}
 code,samp{font-size:1.4rem;}
@@ -51,7 +51,7 @@ h1{letter-spacing:-1px;font-size:2.8rem;text-indent:-3px;line-height: 3.5rem;pad
 h2{letter-spacing:0;font-size:2.4rem;line-height: 2.6rem;}
 h3{font-size:2.1rem;letter-spacing:-.6px;line-height: 2.2rem;}
 h4{font-size:1.9rem;line-height: 1.8rem;}
-h5,h6{font-size:1.8rem;line-height: 1.4rem;}
+h5,h6{font-size:1.8rem;line-height: 1.6rem;}
 a{background-color:transparent;color:#21759b;transition:color .3s ease}
 a:hover{color:#111}
 dl,ol,p,ul{text-rendering:geometricPrecision}
@@ -70,8 +70,6 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-pre{overflow:auto;box-sizing:border-box;padding:5px;border-radius:3px;background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-size: 20px 20px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0 2rem;border: 1px solid #ddddec;background-color: #ddddec;}
-p code,p tt{background: -webkit-linear-gradient(top, transparent 7px, white 8px), -webkit-linear-gradient(left, transparent 7px, white 8px);background-size: 8px 8px;white-space:pre-wrap;line-height: 2rem;background-color: #ddddec;border-radius: 3px;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
 table td,table th{padding:8px;border-top:1px solid #efefef;vertical-align:top;text-align:left;line-height:20px}
 table th{color:#000}
@@ -143,7 +141,8 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:1.8rem}
 body.page-template .post-title{font-size:5rem}
 .post-title a{text-decoration:none}
-.post-excerpt p{line-height: 1.2rem;margin: 1rem auto;margin: 1rem auto;}
+.post-excerpt p{line-height: 1.2rem;margin: 1rem auto;}
+.post-excerpt h1,h2,h3,h4,h5,h6{margin: 1rem auto;}
 .post-meta{display:block;margin:1.75rem 0 0;color:#9eabb3;text-align:right;font-size:1rem;line-height:1rem}
 .author-thumb{float:left;margin-right:9px;width:24px;height:24px;border-radius:100%}
 .post-meta a{color:#9eabb3;text-decoration:none}
@@ -156,22 +155,19 @@ body.page-template .post-title{font-size:5rem}
 .publish-meta{position:absolute;top:0;right:0;padding:4.3rem 0 4rem;text-align:right}
 .publish-heading{display:block;font-weight:700}
 .publish-date{display:block;font-size:1.4rem;line-height:1.5em}
-.page-template .post-header,.post-template .post-header{margin-bottom:3.4rem}
+.page-template .post-header,.post-template{margin-bottom:3.4rem}
 .page-template .post-title,.post-template .post-title{margin-bottom:0;border-bottom:1px solid #ebf2f6;text-align:center}
 .page-template .post-meta,.post-template .post-meta{margin:0}
-.page-template .post-date,.post-template .post-date{position:absolute;right:35px;margin:0;padding:0;border:none}
+.page-template .post-date,.post-template .post-date{margin:0;padding:0;border:none}
 .page-template .content,.post-template .content{overflow:hidden}
 .page-template .post,.post-template .post{margin-top:0;padding-bottom:0;border-bottom:none}
 .page-template .post:after,.post-template .post:after{display:none}
-.post-content img{position:relative;left:50%;display:block;padding:.6em 0;height:auto;-webkit-transform:translateX(-50%);transform:translateX(-50%);-ms-transform:translateX(-50%)}
 .post-content p{text-indent:2em}
 .footnotes{font-style:italic;font-size:1.3rem;line-height:1.6em}
 .footnotes li{margin:.6rem 0}
 .footnotes p{margin:0}
 .footnotes p a:last-child{text-decoration:none}
-.post-footer{position:relative;margin:3rem 0 0;padding:1rem 0 0;border-top:1px solid #ebf2f6}
-.post-footer h4{margin:0;font-size:1.8rem}
-.post-footer p{margin:1rem 0;font-size:1.4rem;line-height:1.75em}
+.post-footer{position:relative;margin:3rem 0 0;border-top:1px solid #ebf2f6}
 .author-meta{margin:0;padding:0;list-style:none;font-style:italic;font-size:1.4rem;line-height:1}
 .author-meta,.author-meta a{color:#9eabb3}
 .author-meta a:hover{color:#111}
@@ -194,7 +190,6 @@ body.page-template .post-title{font-size:5rem}
 .author-profile .author-image{position:relative;top:auto;left:auto;margin:-75pt auto 0;padding:3px;width:90pt;height:90pt;box-shadow:none}
 .author-title{margin:1.5rem 0 1rem}
 .author-bio{color:#50585d;text-indent:0;letter-spacing:0;font-weight:200;font-size:1.8rem;line-height:1.5em}
-.author-meta{margin:1.6rem 0}
 .author-profile .author-meta{margin:2rem 0;letter-spacing:.01rem;font-size:1.7rem}
 .author-meta span{display:inline-block;margin:0 2rem 1rem 0;word-wrap:break-word}
 .author-meta a{text-decoration:none}
@@ -234,9 +229,6 @@ body.page-template .post-title{font-size:5rem}
 .gh-subscribe .subscribe-email:focus{border:1px solid #5ba4e5;transition:all ease .2s}
 .gh-subscribe button{margin-left:-1px;border-radius:0 4px 4px 0}
 .gh-subscribe-rss{font-size:1.2rem;line-height:1.4em}
-.site-footer{position:relative;margin:8rem 0 0;padding:1rem 15px;color:#bbc7cc;font-size:1rem;line-height:1.75em}
-.site-footer a{color:#bbc7cc;text-decoration:none;font-weight:700}
-.site-footer a:hover{border-bottom:1px solid #bbc7cc}
 @media only screen and (max-width:900px){blockquote{margin-left:1rem}
 .main-header{box-sizing:border-box;padding:15% 0;height:auto;height:60vh;min-height:15pc}
 .home-template .main-header:after,.scroll-down{display:none}
@@ -245,7 +237,6 @@ body.page-template .post-title{font-size:5rem}
 .page-title{letter-spacing:-1px;font-size:4rem}
 .page-description{font-size:1.8rem;line-height:1.5em}
 .post{font-size:.95em}
-body:not(.post-template) .post-title{font-size:3.2rem}
 body.page-template .post-title{font-size:4.5rem}
 hr{margin:2.4em 0}
 ol,ul{padding-left:2em}
