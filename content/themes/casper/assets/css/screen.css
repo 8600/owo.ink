@@ -70,6 +70,8 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
+pre{box-sizing:border-box;padding:5px;border-radius:3px;background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-size: 20px 20px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0 2rem;border: 1px solid #ddddec;background-color: #ddddec;}
+p code,p tt{background: -webkit-linear-gradient(top, transparent 7px, white 8px), -webkit-linear-gradient(left, transparent 7px, white 8px);background-size: 8px 8px;white-space:pre-wrap;line-height: 2rem;background-color: #ddddec;border-radius: 3px;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
 table td,table th{padding:8px;border-top:1px solid #efefef;vertical-align:top;text-align:left;line-height:20px}
 table th{color:#000}
