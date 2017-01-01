@@ -70,7 +70,7 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-pre{box-sizing:border-box;padding:5px;border-radius:3px;background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-size: 20px 20px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0 2rem;border: 1px solid #ddddec;background-color: #ddddec;}
+pre{box-sizing:border-box;padding:5px;border-radius:3px;background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-size: 20px 20px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0 2rem;background-color: #ddddec;overflow: hidden;}
 p code,p tt{background: -webkit-linear-gradient(top, transparent 7px, white 8px), -webkit-linear-gradient(left, transparent 7px, white 8px);background-size: 8px 8px;white-space:pre-wrap;line-height: 2rem;background-color: #ddddec;border-radius: 3px;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
 table td,table th{padding:8px;border-top:1px solid #efefef;vertical-align:top;text-align:left;line-height:20px}
@@ -159,7 +159,7 @@ body.page-template .post-title{font-size:5rem}
 .publish-date{display:block;font-size:1.4rem;line-height:1.5em}
 .page-template .post-header,.post-template{margin-bottom:3.4rem}
 .page-template .post-title,.post-template .post-title{margin-bottom:0;border-bottom:1px solid #ebf2f6;text-align:center}
-.page-template .post-meta,.post-template .post-meta{margin:0}
+.page-template .post-meta,.post-template .post-meta{margin:0;padding-bottom: 0;}
 .page-template .post-date,.post-template .post-date{margin:0;padding:0;border:none}
 .page-template .content,.post-template .content{overflow:hidden}
 .page-template .post,.post-template .post{margin-top:0;padding-bottom:0;border-bottom:none}
@@ -169,7 +169,7 @@ body.page-template .post-title{font-size:5rem}
 .footnotes li{margin:.6rem 0}
 .footnotes p{margin:0}
 .footnotes p a:last-child{text-decoration:none}
-.post-footer{position:relative;margin:3rem 0 0;border-top:1px solid #ebf2f6}
+.post-footer{border-top:1px solid #ebf2f6}
 .author-meta{margin:0;padding:0;list-style:none;font-style:italic;font-size:1.4rem;line-height:1}
 .author-meta,.author-meta a{color:#9eabb3}
 .author-meta a:hover{color:#111}
@@ -276,21 +276,19 @@ body.nav-opened .menu-button{border:transparent;background:0 0}
 .inner,.pagination{margin:2rem auto;width:auto}
 .post{margin:2rem 1pc;padding-bottom:2rem;width:auto;line-height:1.65em}
 .post-date{display:none}
-.page-template .post-header,.post-template .post-header{margin-bottom:2rem}
+.page-template .post-header{margin-bottom:2rem}
 .page-template .post-date,.post-template .post-date{display:inline-block}
 hr{margin:1.75em 0}
-dl,ol,p,ul{margin:0 0 2.5rem;font-size:.95em}
+dl,ol,p,ul{font-size:.95em}
+.post-excerpt p{margin: 10px auto;}
 .page-title{font-size:3rem}
-.post-excerpt p{font-size:.85em}
 .page-description{font-size:1.6rem}
 
 body:not(.post-template) .post-title{font-size:2.5rem}
 body.page-template .post-title{font-size:2.8rem}
 .page-template .site-footer,.post-template .site-footer{margin-top:0}
 .post-content img{padding:0;width:calc(100% + 2pc);max-width:112%;min-width:0}
-.post-meta{margin-top:1rem;font-size:1.3rem}
-.post-footer{padding:5rem 0 3rem;text-align:center}
-.post-footer .author{margin:0 0 2rem;padding:0 0 1.6rem;border-bottom:1px dashed #ebf2f6}
+.post-meta{font-size:1rem}
 .post-footer .share{position:static;width:auto}
 .post-footer .share a{margin:1.4rem .8rem 0}
 .author-meta li{float:none;margin:0;line-height:1.75em}
