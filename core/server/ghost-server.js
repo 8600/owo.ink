@@ -184,7 +184,6 @@ GhostServer.prototype.logStartMessages = function () {
                 i18n.t('notices.httpServer.yourBlogIsNowOffline')
             );
         } else {
-            console.log(process.uptime());
             console.log(
                 i18n.t('notices.httpServer.ghostWasRunningFor'),
                 time.secondToTime(process.uptime())
