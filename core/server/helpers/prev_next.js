@@ -13,7 +13,7 @@ const fetch = function (apiOptions, options) {
         // 存储文章详细信息以及前后文章的变量
         const related = result.posts[0];
         if (related.previous) {
-            console.log(options.fn(related.previous));
+            //console.log(options.fn(related.previous));
             return options.fn(related.previous);
         } else if (related.next) {
             return options.fn(related.next);
@@ -27,6 +27,7 @@ const fetch = function (apiOptions, options) {
 // then the promise is handled in the api call.
 
 const prevNext = function (options) {
+    //console.log(options.fn);
     options = options || {};
     let apiOptions = {
         include: options.name === 'prev_post' ? 'previous,previous.author,previous.tags' : 'next,next.author,next.tags'

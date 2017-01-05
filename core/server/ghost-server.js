@@ -1,8 +1,13 @@
 // # Ghost Server
 // 创建一个HTTP服务器
 "use strict";
-const promise = require('bluebird'),chalk = require('chalk'),fs = require('fs'),errors = require('./errors'),config = require('./config'),i18n   = require('./i18n'),moment = require('moment');
-
+const promise = require('bluebird'),
+      chalk = require('chalk'),
+      fs = require('fs'),
+      errors = require('./errors'),
+      config = require('./config'),
+      i18n   = require('./i18n'),
+      time = require('./helpers/time');
 /**
  * ## 博客服务器
  * @constructor
@@ -30,7 +35,6 @@ GhostServer.prototype.start = function (externalApp) {
     const self = this,rootApp = externalApp ? externalApp : self.rootApp;
     return new promise(function (resolve) {
         const socketConfig = config.getSocket();
-        console.log(socketConfig);
         if (socketConfig) {
             // 确保可以找到socketConfig文件
             try {
@@ -153,10 +157,10 @@ GhostServer.prototype.closeConnections = function () {
 };
 
 /**
- * ### Log Start Messages
+ * ### 打印启动系统日志
  */
 GhostServer.prototype.logStartMessages = function () {
-    // Startup & Shutdown messages
+    // 启动 & 关闭 日志
     if (process.env.NODE_ENV === 'production') {
         console.log(
             chalk.green(i18n.t('notices.httpServer.ghostIsRunningIn', {env: process.env.NODE_ENV})),
@@ -180,9 +184,10 @@ GhostServer.prototype.logStartMessages = function () {
                 i18n.t('notices.httpServer.yourBlogIsNowOffline')
             );
         } else {
+            console.log(process.uptime());
             console.log(
                 i18n.t('notices.httpServer.ghostWasRunningFor'),
-                moment.duration(process.uptime(), 'seconds').humanize()
+                time.secondToTime(process.uptime())
             );
         }
         process.exit(0);
