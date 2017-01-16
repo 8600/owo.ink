@@ -47,13 +47,14 @@ td,th{padding:0}
 .icon-menu:before{content:"\f609"}
 ::selection{background:#d6edff}
 h1,h2,h3,h4,h5,h6{color:#2e2e2e;text-rendering:geometricPrecision;font-weight: 500;}
-h1{letter-spacing:-1px;font-size:2.8rem;text-indent:-3px;line-height: 3.5rem;padding-left: 3px;}
-h2{letter-spacing:0;font-size:2.4rem;line-height: 2.6rem;}
-h3{font-size:2.1rem;letter-spacing:-.6px;line-height: 2.2rem;}
-h4{font-size:1.9rem;line-height: 1.8rem;}
-h5,h6{font-size:1.8rem;line-height: 1.6rem;}
+h1{font-size:2.2rem;line-height: 2.5rem;}
+h2{letter-spacing:0;font-size:2.0rem;line-height: 2.6rem;}
+h3{font-size:1.8rem;letter-spacing:-.6px;line-height: 2.2rem;}
+h4{font-size:1.6rem;line-height: 1.8rem;}
+h5,h6{font-size:1.4rem;line-height: 1.6rem;}
 a{background-color:transparent;color:#21759b;transition:color .3s ease}
 a:hover{color:#111}
+code{margin: 0 2rem;display: block;}
 dl,ol,p,ul{text-rendering:geometricPrecision}
 ol,ul{padding-left:3rem}
 ol ol,ol ul,ul ol,ul ul{margin:0 0 .4em;padding-left:2em}
@@ -70,7 +71,8 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-pre{box-sizing:border-box;padding:5px;border-radius:3px;background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-size: 20px 20px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0 2rem;background-color: #ddddec;overflow: hidden;}
+pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;}
+pre code{background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-color: #ddddec;background-size: 20px 20px;overflow: hidden;}
 p code,p tt{background: -webkit-linear-gradient(top, transparent 7px, white 8px), -webkit-linear-gradient(left, transparent 7px, white 8px);background-size: 8px 8px;white-space:pre-wrap;line-height: 2rem;background-color: #ddddec;border-radius: 3px;}
 p img {margin: 1rem auto;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
@@ -139,7 +141,7 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 .no-cover.main-header{max-height:30vh;min-height:10pc;background:#ece9e9}
 .home-template .page-title{-webkit-animation:fade-in-down .6s;animation:fade-in-down .6s both;-webkit-animation-delay:.2s;animation-delay:.2s}
 .home-template .page-description{color:rgba(0,0,0,.5);-webkit-animation:fade-in-down .9s;animation:fade-in-down .9s both;-webkit-animation-delay:.1s;animation-delay:.1s}
-.post{position:relative;margin:4rem auto;padding:10px 2% 2%;width:80%;max-width:1400px;background:#fff;box-shadow:0 5px 6px rgba(0,0,0,.2);word-wrap:break-word}
+.post{position:relative;margin:4rem auto;padding:10px 2% 2%;width:90%;max-width:1000px;background:#fff;box-shadow:0 5px 6px rgba(0,0,0,.2);word-wrap:break-word}
 .post section{padding: 20px;}
 body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:1.8rem}
 body.page-template .post-title{font-size:5rem}
@@ -186,6 +188,7 @@ body.page-template .post-title{font-size:5rem}
 .author-head.main-header,.tag-head.main-header{height:40vh;min-height:180px}
 .no-cover.author-head.main-header{height:10vh;min-height:75pt;background:0 0}
 .author-profile{padding:0 15px 5rem;border-bottom:1px solid #b0cdde;text-align:center}
+
 .author-profile:after{bottom:-5px;margin-left:-5px;width:7px;height:7px;border:1px solid #e7eef2;border-radius:100%;background:#d3d0fd;box-shadow:#f0f0f0 0 0 0 5px;content:""}
 .author-image,.author-profile:after{position:absolute;left:50%;display:block}
 .author-image{top:-40px;z-index:2;overflow:hidden;box-sizing:border-box;margin-left:-40px;padding:6px;width:5pc;height:5pc;border-radius:100%;background:#fff;box-shadow:#e7eef2 0 0 0 1px}
