@@ -54,7 +54,7 @@ h4{font-size:1.6rem;line-height: 1.8rem;}
 h5,h6{font-size:1.4rem;line-height: 1.6rem;}
 a{background-color:transparent;color:#21759b;transition:color .3s ease}
 a:hover{color:#111}
-code{margin: 0 2rem;display: block;}
+code{margin: 0 2rem;display: block;padding: 5px;}
 dl,ol,p,ul{text-rendering:geometricPrecision}
 ol,ul{padding-left:3rem}
 ol ol,ol ul,ul ol,ul ul{margin:0 0 .4em;padding-left:2em}
