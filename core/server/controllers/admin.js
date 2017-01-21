@@ -1,13 +1,12 @@
 "use strict";
-var _             = require('lodash'),
-    Promise       = require('bluebird'),
-    api           = require('../api'),
-    errors        = require('../errors'),
-    updateCheck   = require('../update-check'),
-    i18n          = require('../i18n'),
-    adminControllers;
+const _             = require('lodash'),
+      Promise       = require('bluebird'),
+      api           = require('../api'),
+      errors        = require('../errors'),
+      i18n          = require('../i18n');
 
-adminControllers = {
+//控制台入口
+const adminControllers = {
     // Route: index
     // Path: /ghost/
     // Method: GET
@@ -32,30 +31,7 @@ adminControllers = {
                 });
             });
         }
-
-        updateCheck().then(function then() {
-            return updateCheck.showUpdateNotification();
-        }).then(function then(updateVersion) {
-            if (!updateVersion) {
-                return;
-            }
-
-            var notification = {
-                status: 'alert',
-                type: 'info',
-                location: 'upgrade.new-version-available',
-                dismissible: false,
-                message: i18n.t('notices.controllers.newVersionAvailable',
-                                {version: updateVersion, link: '<a href="http://support.ghost.org/how-to-upgrade/" target="_blank">Click here</a>'})};
-
-            return api.notifications.browse({context: {internal: true}}).then(function then(results) {
-                if (!_.some(results.notifications, {message: notification.message})) {
-                    return api.notifications.add({notifications: [notification]}, {context: {internal: true}});
-                }
-            });
-        }).finally(function noMatterWhat() {
-            renderIndex();
-        }).catch(errors.logError);
+        renderIndex();
     }
 };
 

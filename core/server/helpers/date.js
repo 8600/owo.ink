@@ -22,7 +22,6 @@ const date = function (date, options) {
     if (this.published_at) {
         const timestamp = new Date(this.published_at).getTime();
         date = getDateDiff(timestamp);
-        console.log(date);
     }
     //console.log(date);
     if(!date){date="时间未知";}
