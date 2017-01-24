@@ -71,9 +71,9 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;}
-pre code{background: -webkit-linear-gradient(top, transparent 19px, white 20px), -webkit-linear-gradient(left, transparent 19px, white 20px);background-color: #ddddec;background-size: 20px 20px;overflow: hidden;}
-p code,p tt{background: -webkit-linear-gradient(top, transparent 7px, white 8px), -webkit-linear-gradient(left, transparent 7px, white 8px);background-size: 8px 8px;white-space:pre-wrap;line-height: 2rem;background-color: #ddddec;border-radius: 3px;}
+pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.8em;margin: 0;}
+pre code{background-color: #e8e8ff;overflow: hidden;border-radius: 10px;}
+p code,p tt{white-space:pre-wrap;line-height: 2rem;background-color: #e8e8ff;border-radius: 3px;display: inline;margin: 0 0.5rem;padding: 0;}
 p img {margin: 1rem auto;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
 table td,table th{padding:8px;border-top:1px solid #efefef;vertical-align:top;text-align:left;line-height:20px}
@@ -146,7 +146,7 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:1.8rem}
 body.page-template .post-title{font-size:5rem}
 .post-title a{text-decoration:none}
-.post-excerpt p{line-height: 1.2rem;margin: 1rem auto;}
+.post-excerpt p{line-height: 1.8rem;margin: 0.5rem auto;}
 .post-excerpt h1,h2,h3,h4,h5,h6{margin: 1rem auto;}
 .post-meta{display:block;margin:1.75rem 0 0;color:#9eabb3;text-align:right;font-size:1rem;line-height:1rem}
 .author-thumb{float:left;margin-right:9px;width:24px;height:24px;border-radius:100%}
