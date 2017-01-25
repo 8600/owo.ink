@@ -144,7 +144,6 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 .post{position:relative;margin:4rem auto;padding:10px 2% 2%;width:90%;max-width:1000px;background:#fff;box-shadow:0 5px 6px rgba(0,0,0,.2);word-wrap:break-word}
 .post section{padding: 20px;}
 body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:1.8rem}
-body.page-template .post-title{font-size:5rem}
 .post-title a{text-decoration:none}
 .post-excerpt p{line-height: 1.8rem;margin: 0.5rem auto;}
 .post-excerpt h1,h2,h3,h4,h5,h6{margin: 1rem auto;}
@@ -160,8 +159,8 @@ body.page-template .post-title{font-size:5rem}
 .publish-meta{position:absolute;top:0;right:0;padding:4.3rem 0 4rem;text-align:right}
 .publish-heading{display:block;font-weight:700}
 .publish-date{display:block;font-size:1.4rem;line-height:1.5em}
-.page-template .post-header,.post-template{margin-bottom:3.4rem}
-.page-template .post-title,.post-template .post-title{margin-bottom:0;border-bottom:1px solid #ebf2f6;text-align:center}
+.page-template .post-header,.post-template{padding-bottom: 1rem;border-bottom: 1px solid #ebf2f6;}
+.page-template .post-title,.post-template .post-title{text-align:center}
 .page-template .post-meta,.post-template .post-meta{margin:0;padding-bottom: 0;}
 .page-template .post-date,.post-template .post-date{margin:0;padding:0;border:none}
 .page-template .content,.post-template .content{overflow:hidden}
@@ -173,6 +172,7 @@ body.page-template .post-title{font-size:5rem}
 .footnotes p{margin:0}
 .footnotes p a:last-child{text-decoration:none}
 .post-footer{border-top:1px solid #ebf2f6}
+.post-header{border-bottom: 1px solid #ebf2f6;}
 .author-meta{margin:0;padding:0;list-style:none;font-style:italic;font-size:1.4rem;line-height:1}
 .author-meta,.author-meta a{color:#9eabb3}
 .author-meta a:hover{color:#111}
