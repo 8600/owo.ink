@@ -142,12 +142,11 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 .home-template .page-title{-webkit-animation:fade-in-down .6s;animation:fade-in-down .6s both;-webkit-animation-delay:.2s;animation-delay:.2s}
 .home-template .page-description{color:rgba(0,0,0,.5);-webkit-animation:fade-in-down .9s;animation:fade-in-down .9s both;-webkit-animation-delay:.1s;animation-delay:.1s}
 .post{position:relative;margin:4rem auto;padding:10px 2% 2%;width:90%;max-width:1000px;background:#fff;box-shadow:0 5px 6px rgba(0,0,0,.2);word-wrap:break-word}
-.post section{padding: 20px;}
-body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebeeef;text-align:center;font-size:1.8rem}
+.post-title{text-align:center;}
 .post-title a{text-decoration:none}
 .post-excerpt p{line-height: 1.8rem;margin: 0.5rem auto;}
-.post-excerpt h1,h2,h3,h4,h5,h6{margin: 1rem auto;}
-.post-meta{display:block;margin:1.75rem 0 0;color:#9eabb3;text-align:right;font-size:1rem;line-height:1rem}
+.post-excerpt h1,.post-excerpt h2,.post-excerpt h3,.post-excerpt h4,.post-excerpt h5,.post-excerpt h6{margin: 1rem auto;}
+.post-meta{display:block;color:#9eabb3;text-align:right;font-size:1rem;line-height:1rem;position: absolute;right: 1rem;top: 2rem;}
 .author-thumb{float:left;margin-right:9px;width:24px;height:24px;border-radius:100%}
 .post-meta a{color:#9eabb3;text-decoration:none}
 .post-meta a:hover{text-decoration:underline}
@@ -160,7 +159,6 @@ body:not(.post-template) .post-title{padding:7px 0;border-bottom:2px solid #ebee
 .publish-heading{display:block;font-weight:700}
 .publish-date{display:block;font-size:1.4rem;line-height:1.5em}
 .page-template .post-header,.post-template{padding-bottom: 1rem;border-bottom: 1px solid #ebf2f6;}
-.page-template .post-title,.post-template .post-title{text-align:center}
 .page-template .post-meta,.post-template .post-meta{margin:0;padding-bottom: 0;}
 .page-template .post-date,.post-template .post-date{margin:0;padding:0;border:none}
 .page-template .content,.post-template .content{overflow:hidden}
