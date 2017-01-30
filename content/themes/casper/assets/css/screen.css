@@ -54,7 +54,7 @@ h4{font-size:1.6rem;line-height: 1.8rem;}
 h5,h6{font-size:1.4rem;line-height: 1.6rem;}
 a{background-color:transparent;color:#21759b;transition:color .3s ease}
 a:hover{color:#111}
-code{margin: 0 2rem;display: block;padding: 5px;}
+code{margin: 0 2rem;display: block;padding: 15px;}
 dl,ol,p,ul{text-rendering:geometricPrecision}
 ol,ul{padding-left:3rem}
 ol ol,ol ul,ul ol,ul ul{margin:0 0 .4em;padding-left:2em}
@@ -71,7 +71,7 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.8em;margin: 0;}
+pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.4em;margin: 0;}
 pre code{background-color: #e8e8ff;overflow: hidden;border-radius: 10px;}
 p code,p tt{white-space:pre-wrap;line-height: 2rem;background-color: #e8e8ff;border-radius: 3px;display: inline;margin: 0 0.5rem;padding: 0;}
 p img {margin: 1rem auto;}
