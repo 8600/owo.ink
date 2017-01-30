@@ -146,12 +146,12 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 .post-title a{text-decoration:none}
 .post-excerpt p{line-height: 1.8rem;margin: 0.5rem auto;}
 .post-excerpt h1,.post-excerpt h2,.post-excerpt h3,.post-excerpt h4,.post-excerpt h5,.post-excerpt h6{margin: 1rem auto;}
-.post-meta{display:block;color:#9eabb3;text-align:right;font-size:1rem;line-height:1rem;position: absolute;right: 1rem;top: 2rem;}
+.post-meta{display:block;color:#9eabb3;text-align:right;font-size:0.8rem;line-height:1rem;position: absolute;right: 1rem;top: 2rem;}
 .author-thumb{float:left;margin-right:9px;width:24px;height:24px;border-radius:100%}
 .post-meta a{color:#9eabb3;text-decoration:none}
 .post-meta a:hover{text-decoration:underline}
 .user-meta{position:relative;padding:.3rem 40px 0 75pt;min-height:77px}
-.post-date{display:inline-block;margin-left:8px;padding-left:9pt;border-left:1px solid #d5dbde;text-transform:uppercase;white-space:nowrap;font-size:1rem}
+.post-date{display:inline-block;margin-left:8px;padding-left:9pt;border-left:1px solid #d5dbde;text-transform:uppercase;white-space:nowrap;}
 .user-image{position:absolute;top:0;left:0}
 .user-name{display:block;font-weight:700}
 .user-bio{display:block;max-width:440px;font-size:1.4rem;line-height:1.5em}
