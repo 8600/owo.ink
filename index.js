@@ -1,20 +1,19 @@
-// # Ghost Startup
-// Orchestrates the startup of Ghost when run from command line.
+// # 启动博客
 
-var ghost = require('./core'),
-    express = require('express'),
-    errors = require('./core/server/errors'),
-    parentApp = express();
+const owo = require('./core'),
+      express = require('express'),
+      errors = require('./core/server/errors'),
+      parentApp = express();
 
-// Make sure dependencies are installed and file system permissions are correct.
+// 确保依赖模块正确安装并且文件系统权限正确。
 require('./core/server/utils/startup-check').check();
 
-ghost().then(function (ghostServer) {
+owo().then(function (server) {
     // Mount our Ghost instance on our desired subdirectory path if it exists.
-    parentApp.use(ghostServer.config.paths.subdir, ghostServer.rootApp);
+    parentApp.use(server.config.paths.subdir, server.rootApp);
 
-    // Let Ghost handle starting our server instance.
-    ghostServer.start(parentApp);
+    // 启动服务器实例
+    server.start(parentApp);
 }).catch(function (err) {
     errors.logErrorAndExit(err, err.context, err.help);
 });

@@ -12,11 +12,10 @@ let   exitCodes = {
         CONTENT_PATH_NOT_WRITABLE: 235,
         SQLITE_DB_NOT_WRITABLE: 236,
         BUILT_FILES_DO_NOT_EXIST: 237
-    },
-    configFilePath = process.env.GHOST_CONFIG || path.join(appRoot, 'config.js'),
-    checks;
+      },
+      configFilePath = process.env.GHOST_CONFIG || path.join(appRoot, 'config.js');
 
-checks = {
+const checks = {
     check: function check() {
         this.nodeVersion();
         this.nodeEnv();

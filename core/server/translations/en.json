@@ -78,7 +78,7 @@
             },
             "oauth": {
                 "invalidClient": "Invalid client.",
-                "invalidRefreshToken": "Invalid refresh token.",
+                "invalidRefreshToken": "无效的token.",
                 "refreshTokenExpired": "Refresh token expired."
             },
             "privateblogging": {

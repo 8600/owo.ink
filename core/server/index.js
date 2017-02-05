@@ -1,34 +1,34 @@
-// # Bootup
+// # 启动
 // This file needs serious love & refactoring
 
 /**
  *
- * the call order is the following:
+ * 调用顺序如下：
  * - root index requires core module
  * - core index requires server
  */
 
-// Module dependencies
-var express = require('express'),
-    _ = require('lodash'),
-    uuid = require('node-uuid'),
-    Promise = require('bluebird'),
-    i18n = require('./i18n'),
-    api = require('./api'),
-    config = require('./config'),
-    errors = require('./errors'),
-    middleware = require('./middleware'),
-    migrations = require('./data/migration'),
-    versioning = require('./data/schema/versioning'),
-    models = require('./models'),
-    permissions = require('./permissions'),
-    apps = require('./apps'),
-    xmlrpc = require('./data/xml/xmlrpc'),
-    slack = require('./data/slack'),
-    GhostServer = require('./ghost-server'),
-    scheduling = require('./scheduling'),
-    validateThemes = require('./utils/validate-themes'),
-    dbHash;
+// 依赖模块
+const express = require('express'),
+      _ = require('lodash'),
+      uuid = require('node-uuid'),
+      Promise = require('bluebird'),
+      i18n = require('./i18n'),
+      api = require('./api'),
+      config = require('./config'),
+      errors = require('./errors'),
+      middleware = require('./middleware'),
+      migrations = require('./data/migration'),
+      versioning = require('./data/schema/versioning'),
+      models = require('./models'),
+      permissions = require('./permissions'),
+      apps = require('./apps'),
+      xmlrpc = require('./data/xml/xmlrpc'),
+      slack = require('./data/slack'),
+      GhostServer = require('./ghost-server'),
+      scheduling = require('./scheduling'),
+      validateThemes = require('./utils/validate-themes')
+let   dbHash;
 
 function initDbHashAndFirstRun() {
     return api.settings.read({key: 'dbHash', context: {internal: true}}).then(function (response) {
