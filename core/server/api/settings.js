@@ -340,40 +340,33 @@ settings = {
         if (_.isString(options)) {
             options = {key: options};
         }
+        const getSettingsResult = function () {
+            const setting = settingsCache[options.key];
+            let result = {};
+            result[options.key] = setting;
+            if (setting.type === 'core' && !(options.context && options.context.internal)) {
+                return Promise.reject(
+                    new errors.NoPermissionError(i18n.t('errors.api.settings.accessCoreSettingFromExtReq'))
+                );
+            }
+            if (setting.type === 'blog') {
+                return Promise.resolve(settingsResult(result));
+            }
+            return canThis(options.context).read.setting(options.key).then(function () {
+                return settingsResult(result);
+            }, 
+            function () {
+                return Promise.reject(new errors.NoPermissionError(i18n.t('errors.api.settings.noPermissionToReadSettings')));
+            });
+        };
 
-        var getSettingsResult = function () {
-                var setting = settingsCache[options.key],
-                    result = {};
-
-                result[options.key] = setting;
-
-                if (setting.type === 'core' && !(options.context && options.context.internal)) {
-                    return Promise.reject(
-                        new errors.NoPermissionError(i18n.t('errors.api.settings.accessCoreSettingFromExtReq'))
-                    );
-                }
-
-                if (setting.type === 'blog') {
-                    return Promise.resolve(settingsResult(result));
-                }
-
-                return canThis(options.context).read.setting(options.key).then(function () {
-                    return settingsResult(result);
-                }, function () {
-                    return Promise.reject(new errors.NoPermissionError(i18n.t('errors.api.settings.noPermissionToReadSettings')));
-                });
-            };
-
-        // If the setting is not already in the cache
+        // 如果设置尚未在缓存中
         if (!settingsCache[options.key]) {
-            // Try to populate the setting from default-settings file
+            // 尝试使用默认设置
             return populateDefaultSetting(options.key).then(function () {
-                // Get the result from the cache with permission checks
                 return getSettingsResult();
             });
         }
-
-        // Get the result from the cache with permission checks
         return getSettingsResult();
     },
 

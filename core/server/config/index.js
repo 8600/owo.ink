@@ -315,21 +315,15 @@ ConfigManager.prototype.get = function () {
 };
 
 ConfigManager.prototype.load = function (configFilePath) {
-    var self = this;
-
+    const self = this;
     self._config.paths.config = process.env.GHOST_CONFIG || configFilePath || self._config.paths.config;
-
-    /* Check for config file and copy from config.example.js
-        if one doesn't exist. After that, start the server. */
+    //检查配置文件并从config.example.js（如果不存在）复制。 之后，启动服务器.
     return new Promise(function (resolve, reject) {
         fs.stat(self._config.paths.config, function (err) {
-            var exists = (err) ? false : true,
-                pendingConfig;
-
-            if (!exists) {
+            let pendingConfig;
+            if (err) {
                 pendingConfig = self.writeFile();
             }
-
             Promise.resolve(pendingConfig).then(function () {
                 return self.validate();
             }).then(function (rawConfig) {

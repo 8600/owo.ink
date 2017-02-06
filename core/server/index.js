@@ -30,15 +30,14 @@ const express = require('express'),
       validateThemes = require('./utils/validate-themes')
 let   dbHash;
 
+//注册数据库
 function initDbHashAndFirstRun() {
     return api.settings.read({key: 'dbHash', context: {internal: true}}).then(function (response) {
-        var hash = response.settings[0].value,
-            initHash;
-
-        dbHash = hash;
-
+        //数据库Hash信息
+        dbHash = response.settings[0].value;
         if (dbHash === null) {
-            initHash = uuid.v4();
+            let initHash = uuid.v4();
+            console.log(initHash);
             return api.settings.edit({settings: [{key: 'dbHash', value: initHash}]}, {context: {internal: true}})
                 .then(function (response) {
                     dbHash = response.settings[0].value;
@@ -51,41 +50,25 @@ function initDbHashAndFirstRun() {
     });
 }
 
-// ## Initialise Ghost
-// Sets up the express server instances, runs init on a bunch of stuff, configures views, helpers, routes and more
-// Finally it returns an instance of GhostServer
+// ## 初始化博客服务器
+// 返回一个服务器实例
 function init(options) {
     options = options || {};
 
-    var ghostServer = null, settingsMigrations, currentDatabaseVersion;
+    let ghostServer = null, settingsMigrations, currentDatabaseVersion;
 
-    // ### Initialisation
-    // The server and its dependencies require a populated config
-    // It returns a promise that is resolved when the application
-    // has finished starting up.
-
-    // Initialize Internationalization
+    // ### 初始化
+    // 国际化初始
     i18n.init();
 
-    // Load our config.js file from the local file system.
+    // 从本地文件系统加载配置文件config.js。
     return config.load(options.config).then(function () {
         return config.checkDeprecated();
     }).then(function () {
         models.init();
     }).then(function () {
-        /**
-         * fresh install:
-         * - getDatabaseVersion will throw an error and we will create all tables (including populating settings)
-         * - this will run in one single transaction to avoid having problems with non existent settings
-         * - see https://github.com/TryGhost/Ghost/issues/7345
-         */
         return versioning.getDatabaseVersion()
             .then(function () {
-                /**
-                 * No fresh install:
-                 * - every time Ghost starts,  we populate the default settings before we run migrations
-                 * - important, because it can happen that a new added default property won't be existent
-                 */
                 return models.Settings.populateDefaults();
             })
             .catch(function (err) {
@@ -97,16 +80,13 @@ function init(options) {
             });
     }).then(function () {
         /**
-         * a little bit of duplicated code, but:
-         * - ensure now we load the current database version and remember
+         * 确保数据库版本正确
          */
         return versioning.getDatabaseVersion()
             .then(function (_currentDatabaseVersion) {
                 currentDatabaseVersion = _currentDatabaseVersion;
             });
     }).then(function () {
-        // ATTENTION:
-        // this piece of code was only invented for https://github.com/TryGhost/Ghost/issues/7351#issuecomment-250414759
         if (currentDatabaseVersion !== '008') {
             return;
         }
@@ -127,12 +107,12 @@ function init(options) {
                     return;
                 }
 
-                // force them to re-run 008, because we have fixed the date fixture migration
+                // 强迫重新运行008
                 currentDatabaseVersion = '007';
                 return versioning.setDatabaseVersion(null, '007');
             });
     }).then(function () {
-        var response = migrations.update.isDatabaseOutOfDate({
+        const response = migrations.update.isDatabaseOutOfDate({
             fromVersion: currentDatabaseVersion,
             toVersion: versioning.getNewestDatabaseVersion(),
             forceMigration: process.env.FORCE_MIGRATION
@@ -159,31 +139,28 @@ function init(options) {
             return Promise.reject(response.error);
         }
     }).then(function () {
-        // Initialize the settings cache
+        // 初始化设置缓存
         return api.init();
     }).then(function () {
-        // Initialize the permissions actions and objects
-        // NOTE: Must be done before initDbHashAndFirstRun calls
+        // 初始化权限操作和对象
+        // 注意：必须在initDbHashAndFirstRun调用之前完成
         return permissions.init();
     }).then(function () {
         return Promise.join(
-            // Check for or initialise a dbHash.
+            // 检查并初始化dbHash。
             initDbHashAndFirstRun(),
-            // Initialize apps
+            // 初始化应用程序
             apps.init(),
-            // Initialize xmrpc ping
             xmlrpc.listen(),
-            // Initialize slack ping
             slack.listen()
         );
     }).then(function () {
-        // Get reference to an express app instance.
-        var parentApp = express();
+        const parentApp = express();
 
-        // ## Middleware and Routing
+        // ## 中间件和路由
         middleware(parentApp);
 
-        // Log all theme errors and warnings
+        // 记录所有主题错误和警告
         validateThemes(config.paths.themePath)
             .catch(function (result) {
                 // TODO: change `result` to something better
