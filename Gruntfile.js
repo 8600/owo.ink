@@ -63,7 +63,7 @@ var overrides      = require('./core/server/overrides'),
                     }
                 },
                 express: {
-                    files:  ['core/ghost-server.js', 'core/server/**/*.js'],
+                    files:  ['core/blogServer.js', 'core/server/**/*.js'],
                     tasks:  ['express:dev'],
                     options: {
                         spawn: false

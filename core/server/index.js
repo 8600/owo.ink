@@ -25,7 +25,7 @@ const express = require('express'),
       apps = require('./apps'),
       xmlrpc = require('./data/xml/xmlrpc'),
       slack = require('./data/slack'),
-      GhostServer = require('./ghost-server'),
+      BlogServer = require('./blogServer'),
       scheduling = require('./scheduling'),
       validateThemes = require('./utils/validate-themes')
 let   dbHash;
@@ -55,7 +55,7 @@ function initDbHashAndFirstRun() {
 function init(options) {
     options = options || {};
 
-    let ghostServer = null, settingsMigrations, currentDatabaseVersion;
+    let blogServer = null, settingsMigrations, currentDatabaseVersion;
 
     // ### 初始化
     // 国际化初始
@@ -112,7 +112,7 @@ function init(options) {
                 return versioning.setDatabaseVersion(null, '007');
             });
     }).then(function () {
-        const response = migrations.update.isDatabaseOutOfDate({
+        let response = migrations.update.isDatabaseOutOfDate({
             fromVersion: currentDatabaseVersion,
             toVersion: versioning.getNewestDatabaseVersion(),
             forceMigration: process.env.FORCE_MIGRATION
@@ -173,15 +173,15 @@ function init(options) {
                 });
             });
 
-        return new GhostServer(parentApp);
-    }).then(function (_ghostServer) {
-        ghostServer = _ghostServer;
+        return new BlogServer(parentApp);
+    }).then(function (_blogServer) {
+        blogServer = _blogServer;
 
-        // scheduling can trigger api requests, that's why we initialize the module after the ghost server creation
+        // scheduling can trigger api requests, that's why we initialize the module after the server creation
         // scheduling module can create x schedulers with different adapters
         return scheduling.init(_.extend(config.scheduling, {apiUrl: config.apiUrl()}));
     }).then(function () {
-        return ghostServer;
+        return blogServer;
     });
 }
 
