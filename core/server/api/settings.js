@@ -1,26 +1,25 @@
 // # Settings API
 // RESTful API for the Setting resource
-var _            = require('lodash'),
-    dataProvider = require('../models'),
-    Promise      = require('bluebird'),
-    config       = require('../config'),
-    canThis      = require('../permissions').canThis,
-    errors       = require('../errors'),
-    utils        = require('./utils'),
-    i18n         = require('../i18n'),
+const   _            = require('lodash'),
+        dataProvider = require('../models'),
+        Promise      = require('bluebird'),
+        config       = require('../config'),
+        canThis      = require('../permissions').canThis,
+        errors       = require('../errors'),
+        utils        = require('./utils'),
+        i18n         = require('../i18n')
 
-    docName      = 'settings',
-    settings,
-
-    updateConfigCache,
-    updateSettingsCache,
-    settingsFilter,
-    filterPaths,
-    readSettingsResult,
-    settingsResult,
-    canEditAllSettings,
-    populateDefaultSetting,
-    hasPopulatedDefaults = false,
+let     docName      = 'settings',
+        settings,
+        updateConfigCache,
+        updateSettingsCache,
+        settingsFilter,
+        filterPaths,
+        readSettingsResult,
+        settingsResult,
+        canEditAllSettings,
+        populateDefaultSetting,
+        hasPopulatedDefaults = false,
 
     /**
      * ## Cache

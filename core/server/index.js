@@ -36,8 +36,8 @@ function initDbHashAndFirstRun() {
         //数据库Hash信息
         dbHash = response.settings[0].value;
         if (dbHash === null) {
+            //生成唯一识别码
             let initHash = uuid.v4();
-            console.log(initHash);
             return api.settings.edit({settings: [{key: 'dbHash', value: initHash}]}, {context: {internal: true}})
                 .then(function (response) {
                     dbHash = response.settings[0].value;

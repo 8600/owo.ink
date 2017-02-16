@@ -1,42 +1,37 @@
-// # Ghost Data API
-// Provides access from anywhere to the Ghost data layer.
-//
-// Ghost's JSON API is integral to the workings of Ghost, regardless of whether you want to access data internally,
-// from a theme, an app, or from an external app, you'll use the Ghost JSON API to do so.
 
-var _              = require('lodash'),
-    Promise        = require('bluebird'),
-    config         = require('../config'),
-    configuration  = require('./configuration'),
-    db             = require('./db'),
-    mail           = require('./mail'),
-    notifications  = require('./notifications'),
-    posts          = require('./posts'),
-    schedules      = require('./schedules'),
-    roles          = require('./roles'),
-    settings       = require('./settings'),
-    tags           = require('./tags'),
-    clients        = require('./clients'),
-    users          = require('./users'),
-    slugs          = require('./slugs'),
-    themes         = require('./themes'),
-    subscribers    = require('./subscribers'),
-    authentication = require('./authentication'),
-    uploads        = require('./upload'),
-    exporter       = require('../data/export'),
-    slack          = require('./slack'),
+const   _              = require('lodash'),
+        Promise        = require('bluebird'),
+        config         = require('../config'),
+        configuration  = require('./configuration'),
+        db             = require('./db'),
+        mail           = require('./mail'),
+        notifications  = require('./notifications'),
+        posts          = require('./posts'),
+        schedules      = require('./schedules'),
+        roles          = require('./roles'),
+        settings       = require('./settings'),
+        tags           = require('./tags'),
+        clients        = require('./clients'),
+        users          = require('./users'),
+        slugs          = require('./slugs'),
+        themes         = require('./themes'),
+        subscribers    = require('./subscribers'),
+        authentication = require('./authentication'),
+        uploads        = require('./upload'),
+        exporter       = require('../data/export'),
+        slack          = require('./slack');
 
-    http,
-    addHeaders,
-    cacheInvalidationHeader,
-    locationHeader,
-    contentDispositionHeaderExport,
-    contentDispositionHeaderSubscribers,
-    init;
+let     http,
+        addHeaders,
+        cacheInvalidationHeader,
+        locationHeader,
+        contentDispositionHeaderExport,
+        contentDispositionHeaderSubscribers,
+        init;
 
 /**
  * ### Init
- * Initialise the API - populate the settings cache
+ * 初始化API，设置缓存
  * @return {Promise(Settings)} Resolves to Settings Collection
  */
 init = function init() {
