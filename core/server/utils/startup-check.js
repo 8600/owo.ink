@@ -19,6 +19,7 @@ const checks = {
     check: function check() {
         this.nodeVersion();
         this.nodeEnv();
+        this.packages();
         this.contentPath();
         this.mail();
         this.sqlite();
@@ -57,6 +58,31 @@ const checks = {
             process.exit(exitCodes.NODE_ENV_CONFIG_MISSING);
         }
         console.log("√ 配置文件没有错误");
+    },
+
+    // 确保package.json依赖已经完全安装.
+    packages: function checkPackages() {
+        if (mode !== 'production' && mode !== 'development') {
+            return;
+        }
+        let errors = [];
+        Object.keys(packages.dependencies).forEach(function (p) {
+            try {
+                require.resolve(p);
+            } catch (e) {
+                errors.push(e.message);
+            }
+        });
+
+        if (!errors.length) {
+            return;
+        }
+        errors = errors.join('\n  ');
+        console.error('\x1B[31m错误: 丢失关键性组件:\033[0m\n  ' + errors);
+        console.error('\x1B[32m\n请运行`npm install --production`安装组件后尝试再次运行.');
+        console.error('\x1B[32m或者查看帮助文档 http://support.ghost.org.\033[0m\n');
+
+        process.exit(exitCodes.DEPENDENCIES_MISSING);
     },
 
     // 检查content文件夹权限
