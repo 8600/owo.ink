@@ -49,3 +49,5 @@ node_modules
 
 *.db
 content/data/
+
+content/data/ghost-dev.db
