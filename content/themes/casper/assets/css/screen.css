@@ -18,7 +18,7 @@ sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}
 img{max-width:80%;display:block;margin: 0rem auto;}
 svg:not(:root){overflow:hidden}
 figure{margin:1em 40px}
-code,samp{font-size:1.4rem;}
+code,samp{font-size:1rem;}
 button,input,optgroup,select,textarea{margin:0;color:inherit;font:inherit}
 button,html input[type=button],input[type=reset],input[type=submit]{cursor:pointer;-webkit-appearance:button}
 button[disabled],html input[disabled]{cursor:default}
@@ -46,7 +46,7 @@ td,th{padding:0}
 .icon-link:before{content:"\f608"}
 .icon-menu:before{content:"\f609"}
 ::selection{background:#d6edff}
-h1,h2,h3,h4,h5,h6{color:#2e2e2e;text-rendering:geometricPrecision;font-weight: 500;}
+h1,h2,h3,h4,h5,h6{color:#2e2e2e;text-rendering:geometricPrecision;font-weight: bold;}
 h1{font-size:2.2rem;line-height: 2.5rem;}
 h2{letter-spacing:0;font-size:2.0rem;line-height: 2.6rem;}
 h3{font-size:1.8rem;letter-spacing:-.6px;line-height: 2.2rem;}
@@ -54,7 +54,7 @@ h4{font-size:1.6rem;line-height: 1.8rem;}
 h5,h6{font-size:1.4rem;line-height: 1.6rem;}
 a{background-color:transparent;color:#21759b;transition:color .3s ease}
 a:hover{color:#111}
-code{margin: 0 2rem;display: block;padding: 15px;}
+code{margin: 0 2rem;display: block;padding: 10px;}
 dl,ol,p,ul{text-rendering:geometricPrecision}
 ol,ul{padding-left:3rem}
 ol ol,ol ul,ul ol,ul ul{margin:0 0 .4em;padding-left:2em}
@@ -71,8 +71,8 @@ blockquote small:before{content:"\2014 \00A0"}
 blockquote cite{font-weight:700}
 blockquote cite a{font-weight:400}
 mark{background-color:#fdffb6}
-pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.4em;margin: 0;}
-pre code{background-color: #e8e8ff;overflow: hidden;border-radius: 10px;}
+pre{box-sizing:border-box;padding:5px;border-radius:3px;white-space:pre;font-family:Menlo,Monaco,Consolas,Courier New,monospace;line-height:1.2em;margin: 0;}
+pre code{background-color: #e8e8ff;overflow: hidden;}
 p code,p tt{white-space:pre-wrap;line-height: 2rem;background-color: #e8e8ff;border-radius: 3px;display: inline;margin: 0 0.5rem;padding: 0;}
 p img {margin: 1rem auto;}
 table{box-sizing:border-box;margin:1.75em 0;width:100%;max-width:100%;background-color:transparent}
@@ -142,11 +142,11 @@ body.nav-opened .nav{opacity:1;-webkit-transition:-webkit-transform .3s ease,opa
 .home-template .page-title{-webkit-animation:fade-in-down .6s;animation:fade-in-down .6s both;-webkit-animation-delay:.2s;animation-delay:.2s}
 .home-template .page-description{color:rgba(0,0,0,.5);-webkit-animation:fade-in-down .9s;animation:fade-in-down .9s both;-webkit-animation-delay:.1s;animation-delay:.1s}
 .post{position:relative;margin:4rem auto;padding:10px 2% 2%;width:90%;max-width:1000px;background:#fff;box-shadow:0 5px 6px rgba(0,0,0,.2);word-wrap:break-word}
-.post-title{text-align:center;}
+.post-title{text-align:center;margin: 5px;}
 .post-title a{text-decoration:none}
-.post-excerpt p{line-height: 1.8rem;margin: 0.5rem auto;}
+.post-excerpt p{line-height: 1.2rem;margin: 0.5rem auto;}
 .post-excerpt h1,.post-excerpt h2,.post-excerpt h3,.post-excerpt h4,.post-excerpt h5,.post-excerpt h6{margin: 1rem auto;}
-.post-meta{display:block;color:#9eabb3;text-align:right;font-size:0.8rem;line-height:1rem;position: absolute;right: 1rem;top: 2rem;}
+.post-meta{display:block;color:#9eabb3;text-align:right;font-size:0.8rem;line-height:1rem;}
 .author-thumb{float:left;margin-right:9px;width:24px;height:24px;border-radius:100%}
 .post-meta a{color:#9eabb3;text-decoration:none}
 .post-meta a:hover{text-decoration:underline}
