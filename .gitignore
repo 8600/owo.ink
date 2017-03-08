@@ -47,8 +47,3 @@ Temporary Items
 .apdisk
 node_modules
 
-*.db
-content/data/
-
-content/data/ghost-dev.db
-content/data/ghost-dev.db
