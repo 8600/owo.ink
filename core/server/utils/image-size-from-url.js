@@ -15,8 +15,8 @@ const sizeOf       = require('image-size'),
       Promise      = require('bluebird'),
       http         = require('http'),
       https        = require('https'),
-      config       = require('../config'),
-      dimensions,
+      config       = require('../config');
+let   dimensions,
       request,
       requestHandler;
 
