@@ -1,26 +1,36 @@
 /**
- * 前端页面控制函数
+ * Main controller for Ghost frontend
  */
-"use strict";
-const api         = require('../../api'),
-      config      = require('../../config'),
-      filters     = require('../../filters'),
-      templates   = require('./templates'),
-      handleError = require('./error'),
-      formatResponse = require('./format-response'),
-      postLookup     = require('./post-lookup'),
-      setResponseContext = require('./context'),
-      setRequestIsSecure = require('./secure');
 
-let   frontendControllers;
+/*global require, module */
+
+var debug = require('debug')('ghost:channels:single'),
+    api         = require('../../api'),
+    utils       = require('../../utils'),
+    filters     = require('../../filters'),
+    templates   = require('./templates'),
+    handleError = require('./error'),
+    formatResponse = require('./format-response'),
+    postLookup     = require('./post-lookup'),
+    setResponseContext = require('./context'),
+    setRequestIsSecure = require('./secure'),
+
+    frontendControllers;
 
 /*
-* 根据主题的设置显示文章排版
+* Sets the response context around a post and renders it
+* with the current theme's post view. Used by post preview
+* and single post methods.
+* Returns a function that takes the post to be rendered.
 */
 function renderPost(req, res) {
+    debug('renderPost called');
     return function renderPost(post) {
-        const view = templates.single(req.app.get('activeTheme'), post),response = formatResponse.single(post);
+        var view = templates.single(post),
+            response = formatResponse.single(post);
+
         setResponseContext(req, res, response);
+        debug('Rendering view: ' + view);
         res.render(view, response);
     };
 }
@@ -41,7 +51,7 @@ frontendControllers = {
             }
 
             if (post.status === 'published') {
-                return res.redirect(301, config.urlFor('post', {post: post}));
+                return res.redirect(301, utils.url.urlFor('post', {post: post}));
             }
 
             setRequestIsSecure(req, post);
@@ -59,9 +69,14 @@ frontendControllers = {
                 return next();
             }
 
+            // CASE: postlookup can detect options for example /edit, unknown options get ignored and end in 404
+            if (lookup.isUnknownOption) {
+                return next();
+            }
+
             // CASE: last param is of url is /edit, redirect to admin
             if (lookup.isEditURL) {
-                return res.redirect(config.paths.subdir + '/ghost/editor/' + post.id + '/');
+                return res.redirect(utils.url.urlJoin(utils.url.urlFor('admin'), 'editor', post.id, '/'));
             }
 
             // CASE: permalink is not valid anymore, we redirect him permanently to the correct one

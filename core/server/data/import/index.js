@@ -2,7 +2,7 @@ var Promise         = require('bluebird'),
     _               = require('lodash'),
     validation      = require('../validation'),
     errors          = require('../../errors'),
-    uuid            = require('node-uuid'),
+    uuid            = require('uuid'),
     importer        = require('./data-importer'),
     tables          = require('../schema').tables,
     i18n            = require('../../i18n'),
@@ -44,7 +44,7 @@ cleanError = function cleanError(error) {
     value = value || 'unknown';
     message = message || error.raw.message;
 
-    return new errors.DataImportError(message, offendingProperty, value);
+    return new errors.DataImportError({message: message, property: offendingProperty, value: value});
 };
 
 handleErrors = function handleErrors(errorList) {

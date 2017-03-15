@@ -1,15 +1,15 @@
 // # Client API
 // RESTful API for the Client resource
-"use strict";
-const Promise      = require('bluebird'),
-      _            = require('lodash'),
-      dataProvider = require('../models'),
-      errors       = require('../errors'),
-      utils        = require('./utils'),
-      pipeline     = require('../utils/pipeline'),
-      i18n         = require('../i18n');
+var Promise      = require('bluebird'),
+    _            = require('lodash'),
+    dataProvider = require('../models'),
+    errors       = require('../errors'),
+    utils        = require('./utils'),
+    pipeline     = require('../utils/pipeline'),
+    i18n         = require('../i18n'),
 
-let   docName= 'clients',clients;
+    docName      = 'clients',
+    clients;
 
 /**
  * ### Clients API Methods
@@ -24,7 +24,8 @@ clients = {
      * @return {Promise<Client>} Client
      */
     read: function read(options) {
-        var attrs = ['id', 'slug'],tasks;
+        var attrs = ['id', 'slug'],
+            tasks;
 
         /**
          * ### Model Query
@@ -52,7 +53,7 @@ clients = {
                 return {clients: [result.toJSON(options)]};
             }
 
-            return Promise.reject(new errors.NotFoundError(i18n.t('common.api.clients.clientNotFound')));
+            return Promise.reject(new errors.NotFoundError({message: i18n.t('common.api.clients.clientNotFound')}));
         });
     }
 };

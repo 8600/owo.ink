@@ -5,31 +5,25 @@
 //
 // We use the name body_class to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-"use strict";
-const hbs= require('express-hbs'),_= require('lodash'),template= require('../controllers/frontend/templates');
-let body_class;
+
+var hbs             = require('express-hbs'),
+    _               = require('lodash'),
+    body_class;
 
 body_class = function (options) {
-    let classes = [],
+    var classes = [],
         context = options.data.root.context,
         post = this.post,
         tags = this.post && this.post.tags ? this.post.tags : this.tags || [],
-        page = this.post && this.post.page ? this.post.page : this.page || false,
-        activeTheme = options.data.root.settings.activeTheme,
-        view;
-
-    if (post) {
-        // To be removed from pages by #2597 when we're ready to deprecate this
-        // i.e. this should be if (_.includes(context, 'post') && post) { ... }
-        classes.push('post-template');
-    }
+        page = this.post && this.post.page ? this.post.page : this.page || false;
 
     if (_.includes(context, 'home')) {
         classes.push('home-template');
+    } else if (_.includes(context, 'post') && post) {
+        classes.push('post-template');
     } else if (_.includes(context, 'page') && page) {
         classes.push('page-template');
-        // To be removed by #2597 when we're ready to deprecate this
-        classes.push('page');
+        classes.push('page-' + this.post.slug);
     } else if (_.includes(context, 'tag') && this.tag) {
         classes.push('tag-template');
         classes.push('tag-' + this.tag.slug);
@@ -46,19 +40,6 @@ body_class = function (options) {
 
     if (_.includes(context, 'paged')) {
         classes.push('paged');
-        // To be removed from pages by #2597 when we're ready to deprecate this
-        classes.push('archive-template');
-    }
-
-    if (post && page) {
-        view = template.single(activeTheme, post).split('-');
-
-        if (view[0] === 'page' && view.length > 1) {
-            classes.push(view.join('-'));
-            // To be removed by #2597 when we're ready to deprecate this
-            view.splice(1, 0, 'template');
-            classes.push(view.join('-'));
-        }
     }
 
     classes = _.reduce(classes, function (memo, item) { return memo + ' ' + item; }, '');

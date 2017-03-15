@@ -1,19 +1,46 @@
-// # 启动博客
+// # Ghost Startup
+// Orchestrates the startup of Ghost when run from command line.
+console.time('Ghost boot');
 
-const owo = require('./core'),
-      express = require('express'),
-      errors = require('./core/server/errors'),
-      parentApp = express();
+var debug = require('debug')('ghost:boot:index'),
+    ghost, express, logging, errors, utils, parentApp;
 
-// 确保依赖模块正确安装并且文件系统权限正确。
-require('./core/server/utils/startup-check').check();
+debug('First requires...');
 
-owo().then(function (server) {
+ghost = require('./core');
+
+debug('Required ghost');
+
+express = require('express');
+logging = require('./core/server/logging');
+errors = require('./core/server/errors');
+utils = require('./core/server/utils');
+parentApp = express();
+
+debug('Initialising Ghost');
+ghost().then(function (ghostServer) {
     // Mount our Ghost instance on our desired subdirectory path if it exists.
-    parentApp.use(server.config.paths.subdir, server.rootApp);
+    parentApp.use(utils.url.getSubdir(), ghostServer.rootApp);
 
-    // 启动服务器实例
-    server.start(parentApp);
+    debug('Starting Ghost');
+    // Let Ghost handle starting our server instance.
+    return ghostServer.start(parentApp).then(function afterStart() {
+        console.timeEnd('Ghost boot');
+        // if IPC messaging is enabled, ensure ghost sends message to parent
+        // process on successful start
+        if (process.send) {
+            process.send({started: true});
+        }
+    });
 }).catch(function (err) {
-    errors.logErrorAndExit(err, err.context, err.help);
+    if (!errors.utils.isIgnitionError(err)) {
+        err = new errors.GhostError({err: err});
+    }
+
+    if (process.send) {
+        process.send({started: false, error: err.message});
+    }
+
+    logging.error(err);
+    process.exit(-1);
 });

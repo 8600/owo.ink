@@ -1,6 +1,6 @@
-var _ = require('lodash'),
-    Promise = require('bluebird'),
-    config = require('../../config'),
+var Promise = require('bluebird'),
+    settingsCache = require('../../settings/cache'),
+    utils = require('../../utils'),
     getUrl = require('./url'),
     getImageDimensions = require('./image-dimensions'),
     getCanonicalUrl = require('./canonical_url'),
@@ -18,6 +18,7 @@ var _ = require('lodash'),
     getPublishedDate = require('./published_date'),
     getModifiedDate = require('./modified_date'),
     getOgType = require('./og_type'),
+    getStructuredData = require('./structured_data'),
     getSchema = require('./schema'),
     getExcerpt = require('./excerpt');
 
@@ -44,12 +45,29 @@ function getMetaData(data, root) {
         publishedDate: getPublishedDate(data),
         modifiedDate: getModifiedDate(data),
         ogType: getOgType(data),
-        blog: _.cloneDeep(config.theme)
+        // @TODO: pass into each meta helper - wrap each helper
+        blog: {
+            title: settingsCache.get('title'),
+            description: settingsCache.get('description'),
+            url: utils.url.urlFor('home', true),
+            facebook: settingsCache.get('facebook'),
+            twitter: settingsCache.get('twitter'),
+            timezone: settingsCache.get('activeTimezone'),
+            navigation: settingsCache.get('navigation'),
+            icon: settingsCache.get('icon'),
+            cover: settingsCache.get('cover'),
+            logo: settingsCache.get('logo'),
+            amp: settingsCache.get('amp')
+        }
     };
 
     metaData.blog.logo = {};
-    metaData.blog.logo.url = config.theme.logo ?
-        config.urlFor('image', {image: config.theme.logo}, true) : config.urlFor({relativeUrl: '/ghost/img/ghosticon.jpg'}, {}, true);
+
+    if (settingsCache.get('logo')) {
+        metaData.blog.logo.url = utils.url.urlFor('image', {image: settingsCache.get('logo')}, true);
+    } else {
+        metaData.blog.logo.url = utils.url.urlJoin(utils.url.urlFor('admin'), 'img/ghosticon.jpg');
+    }
 
     // TODO: cleanup these if statements
     if (data.post && data.post.html) {
@@ -61,6 +79,7 @@ function getMetaData(data, root) {
     }
 
     return Promise.props(getImageDimensions(metaData)).then(function () {
+        metaData.structuredData = getStructuredData(metaData);
         metaData.schema = getSchema(metaData, data);
 
         return metaData;

@@ -4,9 +4,9 @@
 // Block helper designed for looping through posts
 var hbs             = require('express-hbs'),
     _               = require('lodash'),
-    errors          = require('../errors'),
+    logging         = require('../logging'),
     i18n            = require('../i18n'),
-    labs            = require('../utils/labs'),
+    visibilityFilter = require('../utils/visibility-filter'),
     utils           = require('./utils'),
 
     hbsUtils        = hbs.handlebars.Utils,
@@ -15,25 +15,12 @@ var hbs             = require('express-hbs'),
 function filterItemsByVisibility(items, options) {
     var visibility = utils.parseVisibility(options);
 
-    if (!labs.isSet('internalTags') || _.includes(visibility, 'all')) {
-        return items;
-    }
-
-    function visibilityFilter(item) {
-        // If the item doesn't have a visibility property && options.hash.visibility wasn't set
-        // We return the item, else we need to be sure that this item has the property
-        if (!item.visibility && !options.hash.visibility || _.includes(visibility, item.visibility)) {
-            return item;
-        }
-    }
-
-    // We don't want to change the structure of what is returned
-    return _.isArray(items) ? _.filter(items, visibilityFilter) : _.pickBy(items, visibilityFilter);
+    return visibilityFilter(items, visibility, !!options.hash.visibility);
 }
 
 foreach = function (items, options) {
     if (!options) {
-        errors.logWarn(i18n.t('warnings.helpers.foreach.iteratorNeeded'));
+        logging.warn(i18n.t('warnings.helpers.foreach.iteratorNeeded'));
     }
 
     if (hbsUtils.isFunction(items)) {

@@ -2,24 +2,24 @@
 // Handles sending email for Ghost
 var _          = require('lodash'),
     Promise    = require('bluebird'),
-    nodemailer = require('nodemailer'),
     validator  = require('validator'),
     config     = require('../config'),
-    i18n       = require('../i18n');
+    settingsCache = require('../settings/cache'),
+    i18n       = require('../i18n'),
+    utils      = require('../utils');
 
 function GhostMailer() {
-    var transport = config.mail && config.mail.transport || 'direct',
-        options = config.mail && _.clone(config.mail.options) || {};
+    var nodemailer = require('nodemailer'),
+        transport = config.get('mail') && config.get('mail').transport || 'direct',
+        options = config.get('mail') && _.clone(config.get('mail').options) || {};
 
     this.state = {};
-
     this.transport = nodemailer.createTransport(transport, options);
-
     this.state.usingDirect = transport === 'direct';
 }
 
 GhostMailer.prototype.from = function () {
-    var from = config.mail && (config.mail.from || config.mail.fromaddress),
+    var from = config.get('mail') && (config.get('mail').from || config.get('mail').fromaddress),
         defaultBlogTitle;
 
     // If we don't have a from address at all
@@ -30,8 +30,7 @@ GhostMailer.prototype.from = function () {
 
     // If we do have a from address, and it's just an email
     if (validator.isEmail(from)) {
-        defaultBlogTitle = config.theme.title ? config.theme.title : i18n.t('common.mail.title', {domain: this.getDomain()});
-
+        defaultBlogTitle = settingsCache.get('title') || i18n.t('common.mail.title', {domain: this.getDomain()});
         from = '"' + defaultBlogTitle + '" <' + from + '>';
     }
 
@@ -40,7 +39,7 @@ GhostMailer.prototype.from = function () {
 
 // Moved it to its own module
 GhostMailer.prototype.getDomain = function () {
-    var domain = config.url.match(new RegExp('^https?://([^/:?#]+)(?:[/:?#]|$)', 'i'));
+    var domain = utils.url.urlFor('home', true).match(new RegExp('^https?://([^/:?#]+)(?:[/:?#]|$)', 'i'));
     return domain && domain[1];
 };
 

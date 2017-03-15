@@ -1,17 +1,37 @@
 var config = require('../../config'),
-    events = require(config.paths.corePath + '/server/events'),
-    models = require(config.paths.corePath + '/server/models'),
-    errors = require(config.paths.corePath + '/server/errors'),
-    sequence = require(config.paths.corePath + '/server/utils/sequence'),
+    events = require(config.get('paths:corePath') + '/server/events'),
+    models = require(config.get('paths:corePath') + '/server/models'),
+    errors = require(config.get('paths:corePath') + '/server/errors'),
+    logging = require(config.get('paths:corePath') + '/server/logging'),
+    sequence = require(config.get('paths:corePath') + '/server/utils/sequence'),
     moment = require('moment-timezone');
 
 /**
- * 当用户成功登陆时，标记下他的登陆时间.
+ * WHEN access token is created we will update last_login for user.
  */
 events.on('token.added', function (tokenModel) {
-    models.User.edit({last_login: Date.parse(new Date())}, {id: tokenModel.get('user_id')})
+    models.User.edit({last_login: moment().toDate()}, {id: tokenModel.get('user_id')})
         .catch(function (err) {
-            errors.logError(err);
+            logging.error(new errors.GhostError({err: err, level: 'critical'}));
+        });
+});
+
+/**
+ * WHEN user get's suspended (status=inactive), we delete his tokens to ensure
+ * he can't login anymore
+ */
+events.on('user.deactivated', function (userModel) {
+    var options = {id: userModel.id};
+
+    models.Accesstoken.destroyByUser(options)
+        .then(function () {
+            return models.Refreshtoken.destroyByUser(options);
+        })
+        .catch(function (err) {
+            logging.error(new errors.GhostError({
+                err: err,
+                level: 'critical'
+            }));
         });
 });
 
@@ -24,7 +44,7 @@ events.on('settings.activeTimezone.edited', function (settingModel) {
     var newTimezone = settingModel.attributes.value,
         previousTimezone = settingModel._updatedAttributes.value,
         timezoneOffsetDiff = moment.tz(newTimezone).utcOffset() - moment.tz(previousTimezone).utcOffset();
-        console.log(timezoneOffsetDiff);
+
     // CASE: TZ was updated, but did not change
     if (previousTimezone === newTimezone) {
         return;
@@ -61,11 +81,16 @@ events.on('settings.activeTimezone.edited', function (settingModel) {
                 };
             })).each(function (result) {
                 if (!result.isFulfilled()) {
-                    errors.logError(result.reason());
+                    logging.error(new errors.GhostError({
+                        err: result.reason()
+                    }));
                 }
             });
         })
         .catch(function (err) {
-            errors.logError(err);
+            logging.error(new errors.GhostError({
+                err: err,
+                level: 'critical'
+            }));
         });
 });

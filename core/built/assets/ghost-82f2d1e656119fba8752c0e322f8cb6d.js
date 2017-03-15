@@ -14209,7 +14209,7 @@ define('ghost-admin/routes/application', ['exports', 'ember-route', 'ember-strin
         _setAdminTheme: function _setAdminTheme() {
             var nightShift = this.get('feature.nightShift');
 
-            return this.get('lazyLoader').loadStyle('dark', 'assets/ghost-dark-d7c3e8df39affbd15892842c4cadecf1.css', true).then(function () {
+            return this.get('lazyLoader').loadStyle('dark', 'assets/ghost-dark-8b80ae9550d5eba3b55710002007e8d9.css', true).then(function () {
                 (0, _jquery['default'])('link[title=dark]').prop('disabled', !nightShift);
                 (0, _jquery['default'])('link[title=light]').prop('disabled', nightShift);
             });

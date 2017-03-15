@@ -2,7 +2,9 @@ var _               = require('lodash'),
     http            = require('http'),
     xml             = require('xml'),
     config          = require('../../config'),
+    utils           = require('../../utils'),
     errors          = require('../../errors'),
+    logging         = require('../../logging'),
     events          = require('../../events'),
     i18n            = require('../../i18n'),
     pingList;
@@ -19,10 +21,9 @@ pingList = [{
 function ping(post) {
     var pingXML,
         title = post.title,
-        url = config.urlFor('post', {post: post}, true);
+        url = utils.url.urlFor('post', {post: post}, true);
 
-    // Only ping when in production and not a page
-    if (process.env.NODE_ENV !== 'production' || post.page || config.isPrivacyDisabled('useRpcPing')) {
+    if (post.page || config.isPrivacyDisabled('useRpcPing')) {
         return;
     }
 
@@ -66,14 +67,16 @@ function ping(post) {
 
         req = http.request(options);
         req.write(pingXML);
-        req.on('error', function handleError(error) {
-                errors.logError(
-                    error,
-                    i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.error'),
-                    i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.help', {url: 'http://support.ghost.org'})
-                );
-            }
-        );
+
+        req.on('error', function handleError(err) {
+            logging.error(new errors.GhostError({
+                err: err,
+                message: err.message,
+                context: i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.error'),
+                help: i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.help', {url: 'http://support.ghost.org'})
+            }));
+        });
+
         req.end();
     });
 }

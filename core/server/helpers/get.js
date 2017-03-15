@@ -5,6 +5,7 @@ var _               = require('lodash'),
     hbs             = require('express-hbs'),
     Promise         = require('bluebird'),
     errors          = require('../errors'),
+    logging         = require('../logging'),
     api             = require('../api'),
     jsonpath        = require('jsonpath'),
     labs            = require('../utils/labs'),
@@ -101,13 +102,13 @@ get = function get(resource, options) {
 
     if (!options.fn) {
         data.error = i18n.t('warnings.helpers.get.mustBeCalledAsBlock');
-        errors.logWarn(data.error);
+        logging.warn(data.error);
         return Promise.resolve();
     }
 
     if (!_.includes(resources, resource)) {
         data.error = i18n.t('warnings.helpers.get.invalidResource');
-        errors.logWarn(data.error);
+        logging.warn(data.error);
         return Promise.resolve(options.inverse(self, {data: data}));
     }
 
@@ -118,11 +119,6 @@ get = function get(resource, options) {
 
     return apiMethod(apiOptions).then(function success(result) {
         var blockParams;
-
-        // If no result is found, call the inverse or `{{else}}` function
-        if (_.isEmpty(result[resource])) {
-            return options.inverse(self, {data: data});
-        }
 
         // block params allows the theme developer to name the data using something like
         // `{{#get "posts" as |result pageInfo|}}`
@@ -144,20 +140,22 @@ get = function get(resource, options) {
 };
 
 module.exports = function getWithLabs(resource, options) {
-    var self = this,
-        errorMessages = [
-            i18n.t('warnings.helpers.get.helperNotAvailable'),
-            i18n.t('warnings.helpers.get.apiMustBeEnabled'),
-            i18n.t('warnings.helpers.get.seeLink', {url: 'http://support.ghost.org/public-api-beta'})
-        ];
+    var self = this, err;
 
     if (labs.isSet('publicAPI') === true) {
         // get helper is  active
         return get.call(self, resource, options);
     } else {
-        errors.logError.apply(this, errorMessages);
+        err = new errors.GhostError({
+            message: i18n.t('warnings.helpers.get.helperNotAvailable'),
+            context: i18n.t('warnings.helpers.get.apiMustBeEnabled'),
+            help: i18n.t('warnings.helpers.get.seeLink', {url: 'http://support.ghost.org/public-api-beta'})
+        });
+
+        logging.error(err);
+
         return Promise.resolve(function noGetHelper() {
-            return '<script>console.error("' + errorMessages.join(' ') + '");</script>';
+            return '<script>console.error(' + JSON.stringify(err) + ');</script>';
         });
     }
 };

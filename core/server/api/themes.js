@@ -1,16 +1,20 @@
 // # Themes API
 // RESTful API for Themes
-var Promise = require('bluebird'),
-    _ = require('lodash'),
-    gscan = require('gscan'),
+var debug = require('debug')('ghost:api:themes'),
+    Promise = require('bluebird'),
     fs = require('fs-extra'),
     config = require('../config'),
     errors = require('../errors'),
     events = require('../events'),
+    logging = require('../logging'),
     storage = require('../storage'),
-    settings = require('./settings'),
-    utils = require('./utils'),
+    apiUtils = require('./utils'),
+    utils = require('./../utils'),
     i18n = require('../i18n'),
+    settingsModel = require('../models/settings').Settings,
+    settingsCache = require('../settings/cache'),
+    themeUtils = require('../themes'),
+    themeList = themeUtils.list,
     themes;
 
 /**
@@ -19,6 +23,47 @@ var Promise = require('bluebird'),
  * **See:** [API Methods](index.js.html#api%20methods)
  */
 themes = {
+    browse: function browse() {
+        return Promise.resolve(themeUtils.toJSON());
+    },
+
+    activate: function activate(options) {
+        var themeName = options.name,
+            newSettings = [{
+                key: 'activeTheme',
+                value: themeName
+            }],
+            loadedTheme,
+            checkedTheme;
+
+        return apiUtils
+            .handlePermissions('themes', 'activate')(options)
+            .then(function activateTheme() {
+                loadedTheme = themeList.get(themeName);
+
+                if (!loadedTheme) {
+                    return Promise.reject(new errors.ValidationError({
+                        message: i18n.t('notices.data.validation.index.themeCannotBeActivated', {themeName: themeName}),
+                        context: 'activeTheme'
+                    }));
+                }
+
+                return themeUtils.validate.check(loadedTheme);
+            })
+            .then(function haveValidTheme(_checkedTheme) {
+                checkedTheme = _checkedTheme;
+                // We use the model, not the API here, as we don't want to trigger permissions
+                return settingsModel.edit(newSettings, options);
+            })
+            .then(function hasEditedSetting() {
+                // Activate! (sort of)
+                debug('Activating theme (method B on API "activate")', themeName);
+                themeUtils.activate(loadedTheme, checkedTheme);
+
+                return themeUtils.toJSON(themeName, checkedTheme);
+            });
+    },
+
     upload: function upload(options) {
         options = options || {};
 
@@ -26,41 +71,31 @@ themes = {
         options.originalname = options.originalname.toLowerCase();
 
         var storageAdapter = storage.getStorage('themes'),
-        zip = {
-            path: options.path,
-            name: options.originalname,
-            shortName: storageAdapter.getSanitizedFileName(options.originalname.split('.zip')[0])
-        }, theme;
+            zip = {
+                path: options.path,
+                name: options.originalname,
+                shortName: storageAdapter.getSanitizedFileName(options.originalname.split('.zip')[0])
+            },
+            checkedTheme;
 
         // check if zip name is casper.zip
         if (zip.name === 'casper.zip') {
-            throw new errors.ValidationError(i18n.t('errors.api.themes.overrideCasper'));
+            throw new errors.ValidationError({message: i18n.t('errors.api.themes.overrideCasper')});
         }
 
-        return utils.handlePermissions('themes', 'add')(options)
-            .then(function () {
-                return gscan.checkZip(zip, {keepExtractedDir: true});
+        return apiUtils.handlePermissions('themes', 'add')(options)
+            .then(function validateTheme() {
+                return themeUtils.validate.check(zip, true);
             })
-            .then(function (_theme) {
-                theme = _theme;
-                theme = gscan.format(theme);
+            .then(function checkExists(_checkedTheme) {
+                checkedTheme = _checkedTheme;
 
-                if (!theme.results.error.length) {
-                    return;
-                }
-
-                throw new errors.ThemeValidationError(
-                    i18n.t('errors.api.themes.invalidTheme'),
-                    theme.results.error
-                );
-            })
-            .then(function () {
-                return storageAdapter.exists(config.paths.themePath + '/' + zip.shortName);
+                return storageAdapter.exists(utils.url.urlJoin(config.getContentPath('themes'), zip.shortName));
             })
             .then(function (themeExists) {
                 // delete existing theme
                 if (themeExists) {
-                    return storageAdapter.delete(zip.shortName, config.paths.themePath);
+                    return storageAdapter.delete(zip.shortName, config.getContentPath('themes'));
                 }
             })
             .then(function () {
@@ -68,42 +103,42 @@ themes = {
                 // store extracted theme
                 return storageAdapter.save({
                     name: zip.shortName,
-                    path: theme.path
-                }, config.paths.themePath);
+                    path: checkedTheme.path
+                }, config.getContentPath('themes'));
             })
             .then(function () {
-                // force reload of availableThemes
-                // right now the logic is in the ConfigManager
-                // if we create a theme collection, we don't have to read them from disk
-                return config.loadThemes();
+                // Loads the theme from the filesystem
+                // Sets the theme on the themeList
+                return themeUtils.loadOne(zip.shortName);
             })
-            .then(function () {
-                // the settings endpoint is used to fetch the availableThemes
-                // so we have to force updating the in process cache
-                return settings.updateSettingsCache();
-            })
-            .then(function (settings) {
-                // gscan theme structure !== ghost theme structure
-                var themeObject = _.find(settings.availableThemes.value, {name: zip.shortName}) || {};
-                if (theme.results.warning.length > 0) {
-                    themeObject.warnings = _.cloneDeep(theme.results.warning);
+            .then(function (loadedTheme) {
+                // If this is the active theme, we are overriding
+                // This is a special case of activation
+                if (zip.shortName === settingsCache.get('activeTheme')) {
+                    // Activate! (sort of)
+                    debug('Activating theme (method C, on API "override")', zip.shortName);
+                    themeUtils.activate(loadedTheme, checkedTheme);
                 }
-                return {themes: [themeObject]};
+
+                // @TODO: unify the name across gscan and Ghost!
+                return themeUtils.toJSON(zip.shortName, checkedTheme);
             })
             .finally(function () {
+                // @TODO we should probably do this as part of saving the theme
                 // remove zip upload from multer
                 // happens in background
                 Promise.promisify(fs.removeSync)(zip.path)
                     .catch(function (err) {
-                        errors.logError(err);
+                        logging.error(new errors.GhostError({err: err}));
                     });
 
+                // @TODO we should probably do this as part of saving the theme
                 // remove extracted dir from gscan
                 // happens in background
-                if (theme) {
-                    Promise.promisify(fs.removeSync)(theme.path)
+                if (checkedTheme) {
+                    Promise.promisify(fs.removeSync)(checkedTheme.path)
                         .catch(function (err) {
-                            errors.logError(err);
+                            logging.error(new errors.GhostError({err: err}));
                         });
                 }
             });
@@ -111,14 +146,14 @@ themes = {
 
     download: function download(options) {
         var themeName = options.name,
-            theme = config.paths.availableThemes[themeName],
+            theme = themeList.get(themeName),
             storageAdapter = storage.getStorage('themes');
 
         if (!theme) {
-            return Promise.reject(new errors.BadRequestError(i18n.t('errors.api.themes.invalidRequest')));
+            return Promise.reject(new errors.BadRequestError({message: i18n.t('errors.api.themes.invalidRequest')}));
         }
 
-        return utils.handlePermissions('themes', 'read')(options)
+        return apiUtils.handlePermissions('themes', 'read')(options)
             .then(function () {
                 events.emit('theme.downloaded', themeName);
                 return storageAdapter.serve({isTheme: true, name: themeName});
@@ -134,26 +169,28 @@ themes = {
             theme,
             storageAdapter = storage.getStorage('themes');
 
-        return utils.handlePermissions('themes', 'destroy')(options)
+        return apiUtils.handlePermissions('themes', 'destroy')(options)
             .then(function () {
                 if (name === 'casper') {
-                    throw new errors.ValidationError(i18n.t('errors.api.themes.destroyCasper'));
+                    throw new errors.ValidationError({message: i18n.t('errors.api.themes.destroyCasper')});
                 }
 
-                theme = config.paths.availableThemes[name];
+                if (name === settingsCache.get('activeTheme')) {
+                    throw new errors.ValidationError({message: i18n.t('errors.api.themes.destroyActive')});
+                }
+
+                theme = themeList.get(name);
 
                 if (!theme) {
-                    throw new errors.NotFoundError(i18n.t('errors.api.themes.themeDoesNotExist'));
+                    throw new errors.NotFoundError({message: i18n.t('errors.api.themes.themeDoesNotExist')});
                 }
 
+                return storageAdapter.delete(name, config.getContentPath('themes'));
+            })
+            .then(function () {
+                themeList.del(name);
                 events.emit('theme.deleted', name);
-                return storageAdapter.delete(name, config.paths.themePath);
-            })
-            .then(function () {
-                return config.loadThemes();
-            })
-            .then(function () {
-                return settings.updateSettingsCache();
+                // Delete returns an empty 204 response
             });
     }
 };

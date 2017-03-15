@@ -1,4 +1,4 @@
-/*globals describe, beforeEach, afterEach, before, it*/
+/*globals describe, beforeEach, afterEach, it*/
 var crypto          = require('crypto'),
     should          = require('should'),
     sinon           = require('sinon'),
@@ -92,11 +92,8 @@ describe('Private Blogging', function () {
         });
 
         describe('private', function () {
-            var errorSpy;
-
             beforeEach(function () {
                 res.isPrivateBlog = true;
-                errorSpy = sandbox.spy(errors, 'error404');
                 res = {
                     status: function () {
                         return this;
@@ -121,39 +118,62 @@ describe('Private Blogging', function () {
 
             it('filterPrivateRoutes should throw 404 if url is sitemap', function () {
                 req.path = req.url = '/sitemap.xml';
+                var next = function next(err) {
+                    (err instanceof errors.NotFoundError).should.eql(true);
+                };
+
                 privateBlogging.filterPrivateRoutes(req, res, next);
-                errorSpy.called.should.be.true();
             });
 
             it('filterPrivateRoutes should throw 404 if url is sitemap with param', function () {
                 req.url = '/sitemap.xml?weird=param';
                 req.path = '/sitemap.xml';
+
+                var next = function next(err) {
+                    (err instanceof errors.NotFoundError).should.eql(true);
+                };
+
                 privateBlogging.filterPrivateRoutes(req, res, next);
-                errorSpy.called.should.be.true();
             });
 
             it('filterPrivateRoutes should throw 404 if url is rss', function () {
                 req.path = req.url = '/rss/';
+
+                var next = function next(err) {
+                    (err instanceof errors.NotFoundError).should.eql(true);
+                };
+
                 privateBlogging.filterPrivateRoutes(req, res, next);
-                errorSpy.called.should.be.true();
             });
 
             it('filterPrivateRoutes should throw 404 if url is author rss', function () {
                 req.path = req.url = '/author/halfdan/rss/';
+
+                var next = function next(err) {
+                    (err instanceof errors.NotFoundError).should.eql(true);
+                };
+
                 privateBlogging.filterPrivateRoutes(req, res, next);
-                errorSpy.called.should.be.true();
             });
 
             it('filterPrivateRoutes should throw 404 if url is tag rss', function () {
                 req.path = req.url = '/tag/slimer/rss/';
+
+                var next = function next(err) {
+                    (err instanceof errors.NotFoundError).should.eql(true);
+                };
+
                 privateBlogging.filterPrivateRoutes(req, res, next);
-                errorSpy.called.should.be.true();
             });
 
             it('filterPrivateRoutes should throw 404 if url is rss plus something', function () {
                 req.path = req.url = '/rss/sometag';
+
+                var next = function next(err) {
+                    (err instanceof errors.NotFoundError).should.eql(true);
+                };
+
                 privateBlogging.filterPrivateRoutes(req, res, next);
-                errorSpy.called.should.be.true();
             });
 
             it('filterPrivateRoutes should render custom robots.txt', function () {
@@ -266,79 +286,6 @@ describe('Private Blogging', function () {
                     }).catch(done);
                 });
             });
-        });
-    });
-
-    describe('spamPrevention', function () {
-        var error = null,
-            res, req, spyNext;
-
-        before(function () {
-            spyNext = sinon.spy(function (param) {
-                error = param;
-            });
-        });
-
-        beforeEach(function () {
-            res = sinon.spy();
-            req = {
-                connection: {
-                    remoteAddress: '10.0.0.0'
-                },
-                body: {
-                    password: 'password'
-                }
-            };
-        });
-
-        it ('sets an error when there is no password', function (done) {
-            req.body = {};
-
-            privateBlogging.spamPrevention(req, res, spyNext);
-            res.error.message.should.equal('No password entered');
-            spyNext.calledOnce.should.be.true();
-
-            done();
-        });
-
-        it ('sets and error message after 10 tries', function (done) {
-            var ndx;
-
-            for (ndx = 0; ndx < 10; ndx = ndx + 1) {
-                privateBlogging.spamPrevention(req, res, spyNext);
-            }
-
-            should.not.exist(res.error);
-            privateBlogging.spamPrevention(req, res, spyNext);
-            should.exist(res.error);
-            should.exist(res.error.message);
-
-            done();
-        });
-
-        it ('allows more tries after an hour', function (done) {
-            var ndx,
-                stub = sinon.stub(process, 'hrtime', function () {
-                    return [10, 10];
-                });
-
-            for (ndx = 0; ndx < 11; ndx = ndx + 1) {
-                privateBlogging.spamPrevention(req, res, spyNext);
-            }
-
-            should.exist(res.error);
-            process.hrtime.restore();
-            stub = sinon.stub(process, 'hrtime', function () {
-                return [3610000, 10];
-            });
-
-            res = sinon.spy();
-
-            privateBlogging.spamPrevention(req, res, spyNext);
-            should.not.exist(res.error);
-
-            process.hrtime.restore();
-            done();
         });
     });
 });

@@ -1,12 +1,15 @@
 // # Slug API
 // RESTful API for the Slug resource
-const dataProvider = require('../models'),
-      errors       = require('../errors'),
-      Promise      = require('bluebird'),
-      pipeline     = require('../utils/pipeline'),
-      utils        = require('./utils'),
-      i18n         = require('../i18n');
-let   docName = 'slugs',slugs,allowedTypes;
+var dataProvider = require('../models'),
+    errors       = require('../errors'),
+    Promise      = require('bluebird'),
+    pipeline     = require('../utils/pipeline'),
+    utils        = require('./utils'),
+    i18n         = require('../i18n'),
+    docName      = 'slugs',
+
+    slugs,
+    allowedTypes;
 
 /**
  * ## Slugs API Methods
@@ -23,7 +26,10 @@ slugs = {
      * @returns {Promise(String)} Unique string
      */
     generate: function (options) {
-        let opts = ['type'],attrs = ['name'],tasks;
+        var opts = ['type'],
+            attrs = ['name'],
+            tasks;
+
         // `allowedTypes` is used to define allowed slug types and map them against its model class counterpart
         allowedTypes = {
             post: dataProvider.Post,
@@ -40,14 +46,14 @@ slugs = {
          */
         function checkAllowedTypes(options) {
             if (allowedTypes[options.type] === undefined) {
-                return Promise.reject(new errors.BadRequestError(i18n.t('errors.api.slugs.unknownSlugType', {type: options.type})));
+                return Promise.reject(new errors.BadRequestError({message: i18n.t('errors.api.slugs.unknownSlugType', {type: options.type})}));
             }
             return options;
         }
 
         /**
          * ### Model Query
-         * 调用模块将检查帖子标题的合理性
+         * Make the call to the Model layer
          * @param {Object} options
          * @returns {Object} options
          */
@@ -66,7 +72,7 @@ slugs = {
         // Pipeline calls each task passing the result of one to be the arguments for the next
         return pipeline(tasks, options).then(function (slug) {
             if (!slug) {
-                return Promise.reject(new errors.InternalServerError(i18n.t('errors.api.slugs.couldNotGenerateSlug')));
+                return Promise.reject(new errors.GhostError({message: i18n.t('errors.api.slugs.couldNotGenerateSlug')}));
             }
 
             return {slugs: [{slug: slug}]};

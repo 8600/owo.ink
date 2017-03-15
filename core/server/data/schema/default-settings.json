@@ -1,8 +1,5 @@
 {
     "core": {
-        "databaseVersion": {
-            "defaultValue": "009"
-        },
         "dbHash": {
             "defaultValue": null
         },
@@ -14,9 +11,6 @@
         },
         "seenNotifications": {
             "defaultValue": "[]"
-        },
-        "migrations": {
-            "defaultValue": "{}"
         }
     },
     "blog": {
@@ -32,31 +26,26 @@
         "cover": {
             "defaultValue": ""
         },
+        "icon": {
+            "defaultValue": ""
+        },
         "defaultLang": {
             "defaultValue": "en_US",
             "validations": {
-                "isNull": false
-            }
-        },
-        "postsPerPage": {
-            "defaultValue": "5",
-            "validations": {
-                "isNull": false,
-                "isInt": true,
-                "isLength": [1, 1000]
+                "isEmpty": false
             }
         },
         "activeTimezone": {
             "defaultValue": "Etc/UTC",
             "validations": {
                 "isTimezone": true,
-                "isNull": false
+                "isEmpty": false
             }
         },
         "forceI18n": {
             "defaultValue": "true",
             "validations": {
-                "isNull": false,
+                "isEmpty": false,
                 "isIn": [["true", "false"]]
             }
         },
@@ -67,6 +56,9 @@
                 "matches": "(:id|:slug|:year|:month|:day|:author)",
                 "notContains": "/ghost/"
             }
+        },
+        "amp": {
+            "defaultValue" : "true"
         },
         "ghost_head": {
             "defaultValue" : ""

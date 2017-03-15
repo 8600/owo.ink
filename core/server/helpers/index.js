@@ -1,22 +1,23 @@
-var hbs             = require('express-hbs'),
-    Promise         = require('bluebird'),
-    errors          = require('../errors'),
-    utils           = require('./utils'),
-    i18n            = require('../i18n'),
-    coreHelpers     = {},
+var hbs = require('express-hbs'),
+    Promise = require('bluebird'),
+    errors = require('../errors'),
+    logging = require('../logging'),
+    utils = require('./utils'),
+    i18n = require('../i18n'),
+    coreHelpers = {},
     registerHelpers;
 
 if (!utils.isProduction) {
     hbs.handlebars.logger.level = 0;
 }
 
-coreHelpers.asset  = require('./asset');
-coreHelpers.author  = require('./author');
-coreHelpers.body_class  = require('./body_class');
-coreHelpers.content  = require('./content');
-coreHelpers.date  = require('./date');
-coreHelpers.encode  = require('./encode');
-coreHelpers.excerpt  = require('./excerpt');
+coreHelpers.asset = require('./asset');
+coreHelpers.author = require('./author');
+coreHelpers.body_class = require('./body_class');
+coreHelpers.content = require('./content');
+coreHelpers.date = require('./date');
+coreHelpers.encode = require('./encode');
+coreHelpers.excerpt = require('./excerpt');
 coreHelpers.facebook_url = require('./facebook_url');
 coreHelpers.foreach = require('./foreach');
 coreHelpers.get = require('./get');
@@ -28,6 +29,7 @@ coreHelpers.has = require('./has');
 coreHelpers.meta_description = require('./meta_description');
 coreHelpers.meta_title = require('./meta_title');
 coreHelpers.navigation = require('./navigation');
+coreHelpers.page_url = require('./page_url');
 coreHelpers.pagination = require('./pagination');
 coreHelpers.plural = require('./plural');
 coreHelpers.post_class = require('./post_class');
@@ -38,17 +40,14 @@ coreHelpers.title = require('./title');
 coreHelpers.twitter_url = require('./twitter_url');
 coreHelpers.url = require('./url');
 
-// Specialist helpers for certain templates
-coreHelpers.input_password = require('./input_password');
-coreHelpers.input_email = require('./input_email');
-coreHelpers.page_url = require('./page_url');
-coreHelpers.pageUrl = require('./page_url').deprecated;
-
 coreHelpers.helperMissing = function (arg) {
     if (arguments.length === 2) {
         return undefined;
     }
-    errors.logError(i18n.t('warnings.helpers.index.missingHelper', {arg: arg}));
+
+    logging.error(new errors.GhostError({
+        message: i18n.t('warnings.helpers.index.missingHelper', {arg: arg})
+    }));
 };
 
 // Register an async handlebars helper for a given handlebars instance
@@ -64,7 +63,10 @@ function registerAsyncHelper(hbs, name, fn) {
         Promise.resolve(fn.call(this, context, options)).then(function (result) {
             cb(result);
         }).catch(function (err) {
-            errors.logAndThrowError(err, 'registerAsyncThemeHelper: ' + name);
+            throw new errors.IncorrectUsageError({
+                err: err,
+                context: 'registerAsyncThemeHelper: ' + name
+            });
         });
     });
 }
@@ -79,15 +81,7 @@ function registerAsyncThemeHelper(name, fn) {
     registerAsyncHelper(hbs, name, fn);
 }
 
-// Register a handlebars helper for admin
-function registerAdminHelper(name, fn) {
-    coreHelpers.adminHbs.registerHelper(name, fn);
-}
-
-registerHelpers = function (adminHbs) {
-    // Expose hbs instance for admin
-    coreHelpers.adminHbs = adminHbs;
-
+registerHelpers = function () {
     // Register theme helpers
     registerThemeHelper('asset', coreHelpers.asset);
     registerThemeHelper('author', coreHelpers.author);
@@ -100,13 +94,10 @@ registerHelpers = function (adminHbs) {
     registerThemeHelper('has', coreHelpers.has);
     registerThemeHelper('is', coreHelpers.is);
     registerThemeHelper('image', coreHelpers.image);
-    registerThemeHelper('input_email', coreHelpers.input_email);
-    registerThemeHelper('input_password', coreHelpers.input_password);
     registerThemeHelper('meta_description', coreHelpers.meta_description);
     registerThemeHelper('meta_title', coreHelpers.meta_title);
     registerThemeHelper('navigation', coreHelpers.navigation);
     registerThemeHelper('page_url', coreHelpers.page_url);
-    registerThemeHelper('pageUrl', coreHelpers.pageUrl);
     registerThemeHelper('pagination', coreHelpers.pagination);
     registerThemeHelper('plural', coreHelpers.plural);
     registerThemeHelper('post_class', coreHelpers.post_class);
@@ -122,10 +113,6 @@ registerHelpers = function (adminHbs) {
     registerAsyncThemeHelper('next_post', coreHelpers.next_post);
     registerAsyncThemeHelper('prev_post', coreHelpers.prev_post);
     registerAsyncThemeHelper('get', coreHelpers.get);
-
-    // Register admin helpers
-    registerAdminHelper('asset', coreHelpers.asset);
-    registerAdminHelper('input_password', coreHelpers.input_password);
 };
 
 module.exports = coreHelpers;

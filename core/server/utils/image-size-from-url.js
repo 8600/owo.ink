@@ -1,56 +1,62 @@
-// https://github.com/image-size/image-size:
-// 支持的格式
+// Supported formats of https://github.com/image-size/image-size:
 // BMP, GIF, JPEG, PNG, PSD, TIFF, WebP, SVG
 // ***
 // Takes the url of the image and an optional timeout
-// 返回格式
+// getImageSizeFromUrl returns an Object like this
 // {
 //     height: 50,
 //     url: 'http://myblog.com/images/cat.jpg',
 //     width: 50
 // };
+// if the dimensions can be fetched and rejects with error, if not.
+// ***
+// In case we get a locally stored image or a not complete url (like //www.gravatar.com/andsoon),
+// we add the protocol to the incomplete one and use urlFor() to get the absolute URL.
+// If the request fails or image-size is not able to read the file, we reject with error.
 
-const sizeOf       = require('image-size'),
-      url          = require('url'),
-      Promise      = require('bluebird'),
-      http         = require('http'),
-      https        = require('https'),
-      config       = require('../config');
-let   dimensions,
-      request,
-      requestHandler;
+var sizeOf       = require('image-size'),
+    url          = require('url'),
+    Promise      = require('bluebird'),
+    http         = require('http'),
+    https        = require('https'),
+    utils        = require('../utils'),
+    dimensions,
+    request,
+    requestHandler;
 
 /**
- * @description 从URL读取图像尺寸
+ * @description read image dimensions from URL
  * @param {String} imagePath
  * @param {Number} timeout (optional)
  * @returns {Promise<Object>} imageObject or error
  */
 module.exports.getImageSizeFromUrl = function getImageSizeFromUrl(imagePath, timeout) {
     return new Promise(function imageSizeRequest(resolve, reject) {
-        let imageObject = {},options;
+        var imageObject = {},
+            options;
+
         imageObject.url = imagePath;
 
-        // 纠正不正确的URL格式
+        // check if we got an url without any protocol
         if (imagePath.indexOf('http') === -1) {
             // our gravatar urls start with '//' in that case add 'http:'
             if (imagePath.indexOf('//') === 0) {
                 // it's a gravatar url
                 imagePath = 'http:' + imagePath;
             } else {
-                // 获取图像的绝对url
-                imagePath = config.urlFor('image', {image: imagePath}, true);
+                // get absolute url for image
+                imagePath = utils.url.urlFor('image', {image: imagePath}, true);
             }
         }
 
         options = url.parse(imagePath);
-        //判断是否为HTTPS
+
         requestHandler = imagePath.indexOf('https') === 0 ? https : http;
         options.headers = {'User-Agent': 'Mozilla/5.0'};
 
         request = requestHandler.get(options, function (res) {
-            //存储数据
-            let chunks = [];
+            var chunks = [];
+
             res.on('data', function (chunk) {
                 chunks.push(chunk);
             });
@@ -65,18 +71,20 @@ module.exports.getImageSizeFromUrl = function getImageSizeFromUrl(imagePath, tim
 
                         return resolve(imageObject);
                     } catch (err) {
-                        // 如果出错返回错误信息
+                        // @ToDo: add real error handling here as soon as we have error logging
                         return reject(err);
                     }
                 } else {
-                    let err = new Error();
+                    // @ToDo: add real error handling here as soon as we have error logging
+                    var err = new Error();
                     err.message = imagePath;
                     err.statusCode = res.statusCode;
+
                     return reject(err);
                 }
             });
         }).on('socket', function (socket) {
-            // 如果没有超时作为参数，则不设置超时
+            // don't set timeout if no timeout give as argument
             if (timeout) {
                 socket.setTimeout(timeout);
                 socket.on('timeout', function () {
@@ -84,6 +92,8 @@ module.exports.getImageSizeFromUrl = function getImageSizeFromUrl(imagePath, tim
                 });
             }
         }).on('error', function (err) {
+            // @ToDo: add real error handling here as soon as we have error logging
+
             return reject(err);
         });
     });
