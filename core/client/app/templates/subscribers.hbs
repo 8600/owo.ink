@@ -1,0 +1,29 @@
+<section class="gh-canvas">
+    <header class="gh-canvas-header">
+        <h2 class="gh-canvas-title">Subscribers <span style="font-weight:200;margin-left:10px;display:inline-block;" data-test-total-subscribers> ({{total}})</span></h2>
+        <div class="view-actions">
+            {{#link-to "subscribers.import" class="gh-btn gh-btn-hover-green"}}<span>Import CSV</span>{{/link-to}}
+            <a {{action 'exportData'}} class="gh-btn"><span>Export CSV</span></a>
+            {{#link-to "subscribers.new" class="gh-btn gh-btn-green"}}<span>Add Subscriber</span>{{/link-to}}
+        </div>
+    </header>
+
+    <section class="view-container">
+        {{gh-subscribers-table
+                table=table
+                isLoading=isLoading
+                loadNextPage=(action 'loadNextPage')
+                sortByColumn=(action 'sortByColumn')
+                delete=(action 'deleteSubscriber')}}
+    </section>
+</section>
+
+{{#if subscriberToDelete}}
+    {{gh-fullscreen-modal "delete-subscriber"
+        model=subscriberToDelete
+        confirm=(action "confirmDeleteSubscriber")
+        close=(action "cancelDeleteSubscriber")
+        modifier="action wide"}}
+{{/if}}
+
+{{outlet}}

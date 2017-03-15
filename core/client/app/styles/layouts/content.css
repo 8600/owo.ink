@@ -1,0 +1,198 @@
+/* Content /ghost/
+
+/* Header
+/* ---------------------------------------------------------- */
+
+.gh-contentfilter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2vw 0 1vw;
+    padding: 10px 0 0 0;
+    border-top: color(var(--lightgrey)) 1px solid;
+    list-style: none;
+}
+
+.gh-contentfilter-left {
+    display: flex;
+    align-items: center;
+}
+
+.gh-contentfilter-left .gh-contentfilter-menu {
+    margin-right: 10px;
+}
+
+.gh-contentfilter-right {
+    display: flex;
+    align-items: center;
+}
+
+.gh-contentfilter-right .gh-contentfilter-menu {
+    margin-left: 10px;
+}
+
+.gh-contentfilter li {
+    position: relative;
+    display: inline-block;
+    margin: 0 25px 0 0;
+}
+
+.gh-contentfilter li.active:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--darkgrey);
+    position: absolute;
+    top: -1px;
+    opacity: 0.5;
+}
+
+.gh-contentfilter li a {
+    display: block;
+    padding: 13px 1px 0;
+    color: color(var(--midgrey) l(+8%));
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+.gh-contentfilter a.active {
+    font-weight: 500;
+    color: var(--darkgrey);
+}
+
+
+/* Content List
+/* ---------------------------------------------------------- */
+
+.content-list {
+    position: relative;
+    overflow-y: auto;
+}
+
+.content-list ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gh-posts-list-item {
+    position: relative;
+    margin: 0;
+    padding: 24px 0 25px 0;
+    border-bottom: color(var(--lightgrey)) 1px solid;
+}
+
+.gh-posts-list-item a:hover {
+    text-decoration: none;
+}
+
+.gh-content-entry-title {
+    margin: 0 0 3px 0;
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.gh-content-entry-title a {
+    color: color(var(--darkgrey) l(+3%));
+}
+
+.gh-posts-list-item p {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 300;
+}
+
+
+.gh-content-entry-meta {
+    margin: 10px 0 0 0;
+    font-size: 1.3rem;
+    color: var(--midgrey);
+    font-weight: 200;
+    letter-spacing: 0.3px;
+}
+
+.gh-content-entry-meta .gh-badge {
+    margin-right: 3px;
+}
+
+.gh-content-status-published {
+    color: var(--darkgrey);
+}
+
+.gh-content-entry-author {
+    color: var(--darkgrey);
+}
+
+@media (max-width: 400px) {
+    .gh-posts-list-item a {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 900px) {
+    .gh-posts-list-item a {
+        padding-right: 40px;
+    }
+}
+
+@media (min-width: 901px) {
+    .gh-posts-list-item a:after {
+        display: none;
+    }
+}
+
+@media (min-width: 901px) {
+    .content-list .active a {
+        box-shadow: var(--blue) 3px 0 0 inset;
+    }
+}
+
+
+/* Empty State
+/* ---------------------------------------------------------- */
+
+.no-posts-box {
+    position: relative;
+    z-index: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0;
+    height: 90%;
+}
+
+.no-posts-box .no-posts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-posts-box .no-posts h3 {
+    margin-bottom: 20px;
+    color: var(--midgrey);
+    font-size: 2em;
+    font-weight: 200;
+}
+
+
+/* Keyboard Focus Effects
+/* ---------------------------------------------------------- */
+
+
+/* This has to be a pseudo element to sit over the top of everything else in the content list */
+.tag-list-content.keyboard-focused:before,
+.tag-settings.keyboard-focused:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 500;
+    animation: keyboard-focus-style-fade-out 1.5s 1 forwards;
+    pointer-events: none;
+}

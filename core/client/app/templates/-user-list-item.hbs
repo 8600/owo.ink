@@ -1,0 +1,25 @@
+<div class="apps-grid-cell">
+    {{#link-to 'team.user' user.slug data-test-user-id=user.id}}
+    <article class="apps-card-app">
+        <div class="apps-card-left">
+            <span class="user-list-item-figure" style={{component.userImageBackground}}>
+                <span class="hidden">Photo of {{user.name}}</span>
+            </span>
+            <div class="apps-card-meta">
+                <h3 class="apps-card-app-title">{{user.name}}</h3>
+                <p class="apps-card-app-desc">Last seen: {{component.lastLoginUTC}}</p>
+            </div>
+        </div>
+        <div class="apps-card-right">
+            <div class="apps-configured">
+                {{#unless session.user.isAuthor}}
+                    {{#each user.roles as |role|}}
+                        <span class="gh-badge {{role.lowerCaseName}}" data-test-role-name>{{role.name}}</span>
+                    {{/each}}
+                {{/unless}}
+                <i class="icon-arrow-right"></i>
+            </div>
+        </div>
+    </article>
+    {{/link-to}}
+</div>

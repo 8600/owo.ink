@@ -1,0 +1,66 @@
+<section class="gh-canvas">
+    <header class="gh-canvas-header">
+        <h2 class="gh-canvas-title">Your stories</h2>
+        <section class="view-actions">
+            {{#link-to "editor.new" class="gh-btn gh-btn-green" data-test-new-post-button=true}}<span>New story</span>{{/link-to}}
+        </section>
+    </header>
+
+    <div class="gh-contentfilter">
+        {{#power-select
+            placeholder="All posts"
+            selected=selectedType
+            options=availableTypes
+            searchField="name"
+            onchange=(action (mut k))
+            tagName="div"
+            data-test-type-select=true
+            as |type|
+        }}
+            {{type.name}}
+        {{/power-select}}
+
+        {{#unless session.user.isAuthor}}
+        {{#power-select
+            placeholder="All authors"
+            selected=selectedAuthor
+            options=availableAuthors
+            searchField="name"
+            onchange=(action (mut k))
+            tagName="div"
+            data-test-author-select=true
+            as |author|
+        }}
+            {{author.name}}
+        {{/power-select}}
+        {{/unless}}
+
+        {{#power-select
+            placeholder="All tags"
+            selected=selectedTag
+            options=availableTags
+            searchField="name"
+            onchange=(action (mut k))
+            tagName="div"
+            data-test-tag-select=true
+            as |tag|
+        }}
+            {{tag.name}}
+        {{/power-select}}
+
+        Sort by:
+        {{#power-select
+            selected=selectedOrder
+            options=availableOrders
+            searchEnabled=false
+            onchange=(action (mut k))
+            tagName="div"
+            data-test-order-select=true
+            as |order|
+        }}
+            {{order.name}}
+        {{/power-select}}
+    </div>
+
+    {{gh-loading-spinner}}
+</section>

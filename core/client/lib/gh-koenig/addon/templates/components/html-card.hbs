@@ -1,0 +1,5 @@
+{{#if isEditing}}
+    {{gh-cm-editor value update=(action (mut value))}} {{!-- codemirror editor component from Ghost-Admin --}}
+{{else}}
+    {{{value}}}    
+{{/if}}

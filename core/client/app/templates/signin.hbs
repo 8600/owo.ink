@@ -1,0 +1,34 @@
+<div class="gh-flow">
+    <div class="gh-flow-content-wrap">
+        <section class="gh-flow-content">
+            {{#if config.ghostOAuth}}
+                <header>
+                    <h1>{{config.blogTitle}}</h1>
+                </header>
+            {{/if}}
+
+            <form id="login" method="post" class="gh-signin" novalidate="novalidate" {{action "authenticate" on="submit"}}>
+                {{#if config.ghostOAuth}}
+                    {{gh-task-button "Sign in with Ghost" task=authenticateWithGhostOrg class="login gh-btn gh-btn-blue gh-btn-block" tabindex="3"}}
+                {{else}}
+                    {{#gh-form-group errors=model.errors hasValidated=hasValidated property="identification"}}
+                        <span class="input-icon icon-mail">
+                            {{gh-trim-focus-input model.identification class="email" type="email" placeholder="Email Address" name="identification" autocapitalize="off" autocorrect="off" tabindex="1" focusOut=(action "validate" "identification") update=(action (mut model.identification))}}
+                        </span>
+                    {{/gh-form-group}}
+                    {{#gh-form-group errors=model.errors hasValidated=hasValidated property="password"}}
+                        <span class="input-icon icon-lock forgotten-wrap">
+                            {{gh-input model.password class="password" type="password" placeholder="Password" name="password" tabindex="2" autocorrect="off" update=(action (mut model.password))}}
+                            {{#gh-task-button task=forgotten class="forgotten-link gh-btn gh-btn-link" successClass="" failureClass="" tabindex="4" type="button" as |task|}}
+                                <span>{{#if task.isRunning}}<span class="spinner"></span>{{else}}Forgot?{{/if}}</span>
+                            {{/gh-task-button}}
+                        </span>
+                    {{/gh-form-group}}
+                    {{gh-task-button "Sign in" task=validateAndAuthenticate class="login gh-btn gh-btn-blue gh-btn-block" type="submit" tabindex="3"}}
+                {{/if}}
+            </form>
+
+            <p class="main-error">{{{flowErrors}}}</p>
+        </section>
+    </div>
+</div>

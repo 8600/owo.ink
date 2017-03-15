@@ -1,0 +1,13 @@
+<header class="modal-header">
+    <h1>Would you really like to delete all content from your blog?</h1>
+</header>
+<a class="close icon-x" href="" title="Close" {{action "closeModal"}}><span class="hidden">Close</span></a>
+
+<div class="modal-body">
+    <p>This is permanent! No backups, no restores, no magic undo button. We warned you, k?</p>
+</div>
+
+<div class="modal-footer">
+    <button {{action "closeModal"}} class="gh-btn"><span>Cancel</span></button>
+    {{gh-task-button "Delete" successText="Deleted" task=deleteAll class="gh-btn gh-btn-red"}}
+</div>

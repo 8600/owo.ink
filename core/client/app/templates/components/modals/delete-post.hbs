@@ -1,0 +1,15 @@
+<header class="modal-header">
+    <h1>Are you sure you want to delete this post?</h1>
+</header>
+<a class="close icon-x" href="" title="Close" {{action "closeModal"}}><span class="hidden">Close</span></a>
+
+<div class="modal-body">
+    <p>
+        You're about to delete "<strong>{{post.title}}</strong>". This is permanent! We warned you, k?
+    </p>
+</div>
+
+<div class="modal-footer">
+    <button {{action "closeModal"}} class="gh-btn"><span>Cancel</span></button>
+    {{gh-task-button "Delete" successText="Deleted" task=deletePost class="gh-btn gh-btn-red"}}
+</div>

@@ -1,0 +1,22 @@
+<header class="modal-header">
+    <h1>Please re-authenticate</h1>
+</header>
+<a class="close icon-x" href="" title="Close" {{action "closeModal"}}><span class="hidden">Close</span></a>
+
+<div class="modal-body {{if authenticationError 'error'}}">
+
+    {{#if config.ghostOAuth}}
+        {{gh-task-button "Sign in with Ghost" task=reauthenticate class="login gh-btn gh-btn-blue gh-btn-block" tabindex="3" autoWidth="false"}}
+    {{else}}
+        <form id="login" class="login-form" method="post" novalidate="novalidate" {{action "confirm" on="submit"}}>
+            {{#gh-validation-status-container class="password-wrap" errors=errors property="password" hasValidated=hasValidated}}
+                {{gh-input password class="password" type="password" placeholder="Password" name="password" update=(action (mut password))}}
+            {{/gh-validation-status-container}}
+            {{gh-task-button "Log in" task=reauthenticate class="gh-btn gh-btn-blue" type="submit"}}
+        </form>
+    {{/if}}
+
+   {{#if authenticationError}}
+     <p class="response">{{authenticationError}}</p>
+   {{/if}}
+</div>
