@@ -69,7 +69,7 @@ export default Component.extend({
 
         input.blur(() => {
             window.setTimeout(() => {
-                this.send('closeMenu');
+                this.send('closeMenuKeepButton');
             }, 200);
         });
 
@@ -130,19 +130,19 @@ export default Component.extend({
             this.set('isButton', true);
             run.schedule('afterRender', this,
                 () => {
-                    let button = this.$('#gh-cardmenu-button');
-                    button.css('top', offset.top + $editor.scrollTop() - editorOffset.top - 5);
+                    let button = this.$('.gh-cardmenu-button');
+                    button.css('top', offset.top + $editor.scrollTop() - editorOffset.top - 2);
                     if (currentNode.tagName.toLowerCase() === 'li') {
                         button.css('left', this.$(currentNode.parentNode).position().left + $editor.scrollLeft() - 90);
                     } else {
-                        button.css('left', offset.left + $editor.scrollLeft() - 90);
+                        button.css('left', offset.left + $editor.scrollLeft() - 50);
                     }
                 });
         });
     },
     actions: {
         openMenu: function () { // eslint-disable-line
-            let button = this.$('#gh-cardmenu-button');
+            let button = this.$('.gh-cardmenu-button');
             let editor = this.get('editor');
             this.set('isOpen', true);
 
@@ -165,8 +165,11 @@ export default Component.extend({
             this.set('isOpen', false);
             this.set('isButton', false);
         },
+        closeMenuKeepButton: function () { // eslint-disable-line
+            this.set('isOpen', false);
+        },
         updateSelection: function (event) { // eslint-disable-line
-            alert(event);
+            // alert(event);
         }
     }
 });
