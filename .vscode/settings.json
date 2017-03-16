@@ -2,7 +2,11 @@
 {
     "search.exclude": {  
         "**/node_modules": true,  
-        "**/bower_components": true  
+        "**/bower_components": true,
+        "**/built": true,
+        "**/dist": true,
+        "**/tmp": true,
+        "**/bower_components": true,
     },  
   
     //-------- Files configuration --------  
@@ -17,6 +21,10 @@
         "**/iOS": true,
         "**/.gitattributes": true,
         "**/.gitignore": true,
+        "**/built": true,
+        "**/dist": true,
+        "**/tmp": true,
+        "**/bower_components": true,
         "**/fonts": true
     }  
 }

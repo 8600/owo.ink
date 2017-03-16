@@ -5036,7 +5036,7 @@ define('ghost-admin/tests/app.lint-test', ['exports'], function (exports) {
 define('ghost-admin/tests/authenticators/oauth2-ghost.lint-test', ['exports'], function (exports) {
   'use strict';
 
-  describe('ESLint - authenticators/oauth2-ghost-82f2d1e656119fba8752c0e322f8cb6d.js', function () {
+  describe('ESLint - authenticators/oauth2-ghost-d4c6e1e9448da6630953397cde85eac8.js', function () {
     it('should pass ESLint', function () {
       // precompiled test passed
     });
