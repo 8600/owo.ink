@@ -9,7 +9,7 @@ import Tools from '../options/default-tools';
 export default Component.extend({
     layout,
     classNames: ['gh-toolbar'],
-    classNameBindings: ['isVisible'],
+    classNameBindings: ['isVisible', 'isLink'],
     isVisible: false,
     tools: [],
     hasRendered: false,
@@ -83,14 +83,14 @@ export default Component.extend({
         linkKeyDown(event) {
             // if escape close link
             if (event.keyCode === 27) {
-                this.set('isLink', false);
+                this.send('closeLink');
             }
         },
 
         linkKeyPress(event) {
             // if enter run link
             if (event.keyCode === 13) {
-                this.set('isLink', false);
+                this.send('closeLink');
                 this.set('isVisible', false);
                 this.editor.run((postEditor) => {
                     let markup = postEditor.builder.createMarkup('a', {href: event.target.value});
@@ -100,11 +100,19 @@ export default Component.extend({
                 this.set('linkRange', null);
                 event.stopPropagation();
             }
+        },
+        doLink(range) {
+            this.set('isLink', true);
+            this.set('linkRange', range);
+            run.schedule('afterRender', this,
+                () => {
+                    this.$('input').focus();
+                }
+            );
+        },
+        closeLink() {
+            this.set('isLink', false);
         }
-    },
-    doLink(range) {
-        this.set('isLink', true);
-        this.set('linkRange', range);
     }
 });
 
@@ -136,7 +144,7 @@ function updateToolbarToRange(self, $holder, $editor, isMouseDown) {
             }
         );
 
-        self.set('isLink', false);
+        self.send('closeLink');
 
         self.tools.forEach((tool) => {
             if (tool.hasOwnProperty('checkElements')) {
@@ -148,7 +156,7 @@ function updateToolbarToRange(self, $holder, $editor, isMouseDown) {
     } else {
         if (self.isVisible) {
             self.set('isVisible', false);
-            self.set('isLink', false);
+            self.send('closeLink');
         }
     }
 

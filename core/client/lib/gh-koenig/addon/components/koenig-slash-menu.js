@@ -41,15 +41,18 @@ export default Component.extend({
         this.set('toolsLength', i);
         tools.sort((a, b) => a.order > b.order);
 
-        let selectedTool = tools[selected] || tools[0];
-        if (selectedTool) {
-            this.set('selectedTool', selectedTool);
-            selectedTool.selected = true;
+        let selectedTool = tools[selected];
+        if (selected > -1) {
+            if (selectedTool) {
+                this.set('selectedTool', selectedTool);
+                selectedTool.selected = true;
+            }
+        } else {
+            // even if the range is out of bounds (as in the starting state where the selection prompt is not shown)
+            // we still need a selected item for the enter key.
+            this.set('selectedTool', tools[0]);
         }
 
-        if (i === 0) {
-         //   this.send('closeMenu');
-        }
         return tools;
     }),
     init() {
@@ -79,12 +82,18 @@ export default Component.extend({
     cursorChange() {
         let editor = this.get('editor');
         let range = this.get('range');
+        let isOpen = this.get('isOpen');
+
+        // if the cursor isn't in the editor then close the menu
         if (!range || !editor.range.isCollapsed || editor.range.head.section !== range.section || this.editor.range.head.offset < 1 || !this.editor.range.head.section) {
-            this.send('closeMenu');
+            // unless we click on a tool because the tool will close the menu.
+            if (isOpen && !$(window.getSelection().anchorNode).parents('.gh-cardmenu').length) {
+                this.send('closeMenu');
+            }
             return;
         }
 
-        if (this.get('isOpen')) {
+        if (isOpen) {
             let queryString = editor.range.head.section.text.substring(range.startOffset, editor.range.head.offset);
             this.set('query', queryString);
             // if we've typed 5 characters and have no tools then close.
@@ -106,6 +115,8 @@ export default Component.extend({
                 startOffset: editor.range.head.offset,
                 endOffset: editor.range.head.offset
             });
+            this.set('selected', -1);
+            this.set('selectedTool', null);
 
             editor.registerKeyCommand({
                 str: 'LEFT',
@@ -153,6 +164,9 @@ export default Component.extend({
                 name: 'slash',
                 run() {
                     let item = self.get('selected');
+                    if (item < 0) {
+                        item = 0;
+                    }
                     let length = self.get('toolsLength');
                     if (item + ROW_LENGTH < length) {
                         self.set('selected', item + ROW_LENGTH);
@@ -208,6 +222,13 @@ export default Component.extend({
                     editor._keyCommands.splice(i, 1);
                 }
             }
+        },
+        clickedMenu: function () { // eslint-disable-line
+            // let{section, startOffset, endOffset} = this.get('range');
+
+            window.editor.range.head.offset = this.get('range').startOffset - 1;
+            window.editor.deleteRange(window.editor.range);
+            this.send('closeMenu');
         }
     }
 });

@@ -1,13 +1,12 @@
-var sinon        = require('sinon'),
-    should       = require('should'),
-    express      = require('express'),
+var should = require('should'), // jshint ignore:line
+    sinon = require('sinon'),
+    express = require('express'),
     serveFavicon = require('../../../server/middleware/serve-favicon'),
     settingsCache = require('../../../server/settings/cache'),
-    configUtils  = require('../../utils/configUtils'),
-    path         = require('path'),
-    sandbox      = sinon.sandbox.create();
+    configUtils = require('../../utils/configUtils'),
+    path = require('path'),
 
-should.equal(true, true);
+    sandbox = sinon.sandbox.create();
 
 describe('Serve Favicon', function () {
     var req, res, next, blogApp, localSettingsCache = {};
@@ -88,8 +87,6 @@ describe('Serve Favicon', function () {
             it('default favicon.ico', function (done) {
                 var middleware = serveFavicon();
                 req.path = '/favicon.ico';
-
-                configUtils.set('paths:corePath', path.join(__dirname, '../../../test/utils/fixtures/'));
                 localSettingsCache.icon = '';
 
                 res = {
