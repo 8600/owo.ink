@@ -131,7 +131,7 @@ describe('Acceptance: Editor', function() {
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').hasClass('gh-btn-red'), 'no red button expected')
                     .to.be.false;
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').text().trim(), 'text in save button')
-                    .to.equal('Save Draft');
+                    .to.equal('保存草稿');
                 expect(find('.post-save-draft').hasClass('active'), 'highlights the default active button state for a draft')
                     .to.be.true;
             });
@@ -145,7 +145,7 @@ describe('Acceptance: Editor', function() {
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').hasClass('gh-btn-red'), 'red button to change from draft to published')
                     .to.be.true;
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').text().trim(), 'text in save button after click on \'publish now\'')
-                    .to.equal('Publish Now');
+                    .to.equal('立即发布');
             });
 
             // Publish the post
@@ -254,7 +254,7 @@ describe('Acceptance: Editor', function() {
 
             andThen(() => {
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').text().trim(), 'text in save button for draft')
-                    .to.equal('Save Draft');
+                    .to.equal('保存草稿');
                 expect(find('.post-save-draft').hasClass('active'), 'highlights the default active button state for a draft')
                     .to.be.true;
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').hasClass('gh-btn-red'), 'no red button expected')
@@ -329,7 +329,7 @@ describe('Acceptance: Editor', function() {
 
             andThen(() => {
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').text().trim(), 'text in save button for a draft')
-                    .to.equal('Save Draft');
+                    .to.equal('保存草稿');
                 expect(find('.post-save-draft').hasClass('active'), 'highlights the default active button state for a draft post')
                     .to.be.true;
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').hasClass('gh-btn-red'), 'red button expected due to status change')
@@ -495,7 +495,7 @@ describe('Acceptance: Editor', function() {
                 expect(find('.markdown-editor').val(), 'changed text in markdown editor')
                     .to.equal('Let\'s make some markdown changes');
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').text().trim(), 'text in save button for a draft')
-                    .to.equal('Save Draft');
+                    .to.equal('保存草稿');
                 expect(find('.post-save-draft').hasClass('active'), 'highlights the default active button state for a draft post')
                     .to.be.true;
                 expect(find('.gh-btn.gh-btn-sm.js-publish-button').hasClass('gh-btn-red'), 'red button expected due to status change')

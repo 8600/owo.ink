@@ -7,7 +7,7 @@
         {{else if model.isScheduled}}
             Scheduled
         {{else}}
-            Draft
+            草稿
         {{/if}}
 
         </div>
@@ -35,7 +35,7 @@
     <div class="gh-editor-container">
         <div class="gh-editor-inner">
             {{#gh-view-title classNames="gh-editor-title" openMobileMenu="openMobileMenu"}}
-                {{gh-trim-focus-input model.titleScratch type="text" id="entry-title" placeholder="Your Post Title" tabindex="1" shouldFocus=shouldFocusTitle focus-out="updateTitle" update=(action (perform updateTitle)) keyDown=(action "titleKeyDown")}}
+                {{gh-trim-focus-input model.titleScratch type="text" id="entry-title" placeholder="文章标题" tabindex="1" shouldFocus=shouldFocusTitle focus-out="updateTitle" update=(action (perform updateTitle)) keyDown=(action "titleKeyDown")}}
             {{/gh-view-title}}
             {{#if scheduleCountdown}}
                 <time datetime="{{post.publishedAtUTC}}" class="gh-notification gh-notification-schedule">
