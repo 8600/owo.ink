@@ -3,6 +3,7 @@ import computed from 'ember-computed';
 import run from 'ember-runloop';
 import $ from 'jquery';
 import layout from '../templates/components/koenig-toolbar';
+import cajaSanitizers from '../lib/caja-sanitizers';
 
 import Tools from '../options/default-tools';
 
@@ -13,6 +14,7 @@ export default Component.extend({
     isVisible: false,
     tools: [],
     hasRendered: false,
+    activeTags: null,
     isLink: computed({
         get() {
             return this._isLink;
@@ -90,10 +92,15 @@ export default Component.extend({
         linkKeyPress(event) {
             // if enter run link
             if (event.keyCode === 13) {
+                let url = event.target.value;
+                //URL合法性检查
+                if (!cajaSanitizers.url(url)) {
+                    url = `http://${url}`;
+                }
                 this.send('closeLink');
                 this.set('isVisible', false);
                 this.editor.run((postEditor) => {
-                    let markup = postEditor.builder.createMarkup('a', {href: event.target.value});
+                    let markup = postEditor.builder.createMarkup('a', {href: url});
                     postEditor.addMarkupToRange(this.get('linkRange'), markup);
                 });
 
@@ -102,6 +109,17 @@ export default Component.extend({
             }
         },
         doLink(range) {
+            // if a link is already selected then we remove the links from within the range.
+            let currentLinks = this.get('activeTags').filter((element) => element.tagName === 'a');
+            if (currentLinks.length) {
+                this.get('editor').run((postEditor) => {
+                    currentLinks.forEach((link) => {
+                        postEditor.removeMarkupFromRange(range, link);
+                    });
+                });
+
+                return;
+            }
             this.set('isLink', true);
             this.set('linkRange', range);
             run.schedule('afterRender', this,
@@ -126,6 +144,11 @@ function updateToolbarToRange(self, $holder, $editor, isMouseDown) {
         }
         return;
     }
+
+    // set the active markups and sections
+    let sectionTagName = editor.activeSection.tagName === 'li' ? editor.activeSection.parent.tagName : editor.activeSection.tagName;
+    self.set('activeTags', editor.activeMarkups.concat([{tagName: sectionTagName}]));
+
     self.propertyWillChange('toolbar');
     self.propertyWillChange('toolbarBlocks');
 

@@ -1,9 +1,6 @@
 /**
- * google-caja uses url() and id() to verify if the values are allowed.
- */
-/**
- * Check if URL is allowed
- * URLs are allowed if they start with http://, https://, or /.
+ * 检查URL是否合法
+ * 合法的URL地址开头应该是 http://, https://, 或 /.
  */
 let url = function (url) {
     url = url.toString().replace(/['"]+/g, '');
@@ -13,8 +10,8 @@ let url = function (url) {
 };
 
 /**
- * Check if ID is allowed
- * All ids are allowed at the moment.
+ * 检查ID是否合法
+ * 目前所有ID都是合法的
  */
 let id = function (id) {
     return id;

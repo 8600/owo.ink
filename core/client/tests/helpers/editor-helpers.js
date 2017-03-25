@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import $ from 'jquery';
-
 // polls the editor until it's started.
 export function editorRendered() {
     return Ember.Test.promise(function (resolve) { // eslint-disable-line
