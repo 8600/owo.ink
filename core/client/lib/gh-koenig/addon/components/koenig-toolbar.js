@@ -4,7 +4,6 @@ import run from 'ember-runloop';
 import $ from 'jquery';
 import layout from '../templates/components/koenig-toolbar';
 import cajaSanitizers from '../lib/caja-sanitizers';
-
 import Tools from '../options/default-tools';
 
 export default Component.extend({
@@ -93,7 +92,6 @@ export default Component.extend({
             // if enter run link
             if (event.keyCode === 13) {
                 let url = event.target.value;
-                //URL合法性检查
                 if (!cajaSanitizers.url(url)) {
                     url = `http://${url}`;
                 }

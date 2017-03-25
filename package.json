@@ -1,13 +1,19 @@
 {
-  "name": "owo.ink",
+  "name": "ghost",
   "version": "1.0.0-alpha.17",
-  "description": "一个博客系统.",
-  "author": "PUGE",
-  "homepage": "http://ghost.org",
+  "description": "Just a blogging platform.",
+  "author": "Ghost Foundation",
+  "homepage": "http://owo.ink",
+  "keywords": [
+    "blog",
+    "cms"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/PUGE/owo.ink.git"
+    "url": "git://github.com/PUGE/owo.ink.git"
   },
+  "bugs": "https://github.com/PUGE/owo.ink/issues",
+  "contributors": "https://github.com/PUGE/owo.ink/graphs/contributors",
   "license": "MIT",
   "main": "./core/index",
   "scripts": {
@@ -74,7 +80,6 @@
     "showdown-ghost": "0.3.6",
     "simple-dom": "0.3.2",
     "simple-html-tokenizer": "0.4.0",
-    "sqlite3": "^3.1.8",
     "superagent": "3.5.0",
     "unidecode": "0.1.8",
     "uuid": "3.0.0",

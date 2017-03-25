@@ -53,7 +53,7 @@ export default Component.extend({
             }],
             spellcheck: true,
             autofocus: this.get('shouldFocusEditor'),
-            placeholder: '点击这里开始...',
+            placeholder: 'Click here to start ...',
             unknownCardHandler: () => {
                 // todo
             }
