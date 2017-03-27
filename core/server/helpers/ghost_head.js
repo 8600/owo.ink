@@ -136,9 +136,8 @@ function ghost_head(options) {
                 head.push('');
 
                 if (metaData.schema) {
-                    head.push('<script type="application/ld+json">\n' +
-                        JSON.stringify(metaData.schema, null, '    ') +
-                        '\n    </script>\n');
+                    head.push('<script type="application/ld+json">' +JSON.stringify(metaData.schema) +
+                        '</script>\n');
                 }
             }
 
