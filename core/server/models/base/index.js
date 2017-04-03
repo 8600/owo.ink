@@ -196,7 +196,7 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
         } else {
             throw new errors.NotFoundError({
                 message: i18n.t('errors.models.base.index.missingContext'),
-                level: 'critical'
+                level: '严重'
             });
         }
     },

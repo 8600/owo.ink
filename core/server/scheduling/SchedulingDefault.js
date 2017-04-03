@@ -215,7 +215,7 @@ SchedulingDefault.prototype._pingUrl = function (object) {
 
             logging.error(new errors.GhostError({
                 err: err,
-                level: 'critical'
+                level: '严重'
             }));
         }
     });

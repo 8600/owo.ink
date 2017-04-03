@@ -75,7 +75,7 @@ describe('Authentication API', function () {
                             done(new Error('Setup ran when it should not have.'));
                         }).catch(function (err) {
                             should.exist(err);
-                            err.name.should.equal('InternalServerError');
+                            err.name.should.equal('内部服务器错误');
                             err.statusCode.should.equal(500);
 
                             done();

@@ -32,7 +32,7 @@ attach = function attach(Model, effectedModelId, relation, modelsToAttach, optio
             fetchedModel = _fetchedModel;
 
             if (!fetchedModel) {
-                throw new errors.NotFoundError({level: 'critical', help: effectedModelId});
+                throw new errors.NotFoundError({level: '严重', help: effectedModelId});
             }
 
             fetchedModel.related(relation).on('creating', function (collection, data) {
