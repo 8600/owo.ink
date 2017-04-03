@@ -149,10 +149,6 @@ function ghost_head(options) {
         head.push('<meta name="generator" content="Ghost ' +
             escapeExpression(safeVersion) + '" />');
 
-        head.push('<link rel="alternate" type="application/rss+xml" title="' +
-            escapeExpression(metaData.blog.title)  + '" href="' +
-            escapeExpression(metaData.rssUrl) + '" />');
-
         // no code injection for amp context!!!
         if (!_.includes(context, 'amp') && !_.isEmpty(codeInjection)) {
             head.push(codeInjection);

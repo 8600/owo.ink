@@ -281,9 +281,6 @@ input[type="text"] {
   width: 50%;
   float: left;
 }
-.text-right {
-  text-align: right;
-}
 .video {
   width: 100%;
 }
@@ -441,10 +438,7 @@ footer a.subscribe_magnum {
   margin-bottom: 1.3483333333333334em;
   display: inline-block;
 }
-.share_magnum {
-  margin: 0;
-  margin-bottom: 1em;
-}
+
 .postauther_magnum {
   padding-top: 1.3483333333333334em;
   margin-top: 2.6966666666666668em;
@@ -511,8 +505,5 @@ footer a.subscribe_magnum {
   .half {
     width: 100%;
     float: none;
-  }
-  .half.text-right {
-    text-align: left;
   }
 }
