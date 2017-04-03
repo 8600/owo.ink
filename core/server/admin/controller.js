@@ -1,14 +1,9 @@
-var debug = require('debug')('ghost:admin:controller'),
-    _ = require('lodash'),
-    path = require('path'),
-    config = require('../config'),
-    api = require('../api'),
-    logging = require('../logging'),
-    i18n = require('../i18n');
+const path = require('path'),
+      config = require('../config');
 
-// Route: index
-// Path: /ghost/
-// Method: GET
+// 路线: index
+// 路径: /ghost/
+// 方法: GET
 module.exports = function adminController(req, res) {
     const defaultTemplate = config.get('env') === 'production' ? 'default-prod.html' : 'default.html',
           templatePath = path.resolve(config.get('paths').adminViews, defaultTemplate);
