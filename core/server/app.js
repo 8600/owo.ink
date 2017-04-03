@@ -35,8 +35,8 @@ module.exports = function setupParentApp() {
         })());
     }
 
-    // enabled gzip compression by default
-    if (config.get('server').compress !== false) {
+    // 默认启动gzip压缩
+    if (config.get('compress') !== false) {
         parentApp.use(compress());
     }
 
