@@ -3,7 +3,7 @@
         "mail": {
             "title": "Ghost at {domain}"
         },
-        "seeLinkForInstructions": "See {link} for instructions.",
+        "seeLinkForInstructions": "查看 {link} 了解更多.",
         "time": {
             "seconds": "seconds"
         },
@@ -479,7 +479,7 @@
     "warnings": {
         "index": {
             "usingDirectMethodToSendEmail": "Ghost is attempting to use a direct method to send email. \nIt is recommended that you explicitly configure an email service.",
-            "unableToSendEmail": "Ghost is currently unable to send email."
+            "unableToSendEmail": "博客目前无法发送邮件."
         },
         "helpers": {
             "helperNotAvailable": "The \\{\\{{helperName}\\}\\} helper is not available.",
