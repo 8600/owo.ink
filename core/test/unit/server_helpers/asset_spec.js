@@ -35,6 +35,18 @@ describe('{{asset}} helper', function () {
             String(rendered).should.equal('/favicon.ico');
         });
 
+        it('handles ghost.css for default templates correctly', function () {
+            // with ghost set
+            rendered = helpers.asset('shared/ghost.css', {hash: {ghost: 'true'}});
+            should.exist(rendered);
+            String(rendered).should.equal('/shared/ghost.css?v=abc');
+
+            // without ghost set
+            rendered = helpers.asset('shared/ghost.css');
+            should.exist(rendered);
+            String(rendered).should.equal('/shared/ghost.css?v=abc');
+        });
+
         it('handles custom favicon correctly', function () {
             localSettingsCache.icon = '/content/images/favicon.png';
 
@@ -92,7 +104,7 @@ describe('{{asset}} helper', function () {
 
     describe('with /blog subdirectory', function () {
         before(function () {
-            configUtils.set({url: 'http://testurl.com/blog'});
+            configUtils.set({url: 'http://localhost:82832/blog'});
         });
 
         it('handles favicon correctly', function () {
@@ -105,6 +117,18 @@ describe('{{asset}} helper', function () {
             rendered = helpers.asset('favicon.ico');
             should.exist(rendered);
             String(rendered).should.equal('/blog/favicon.ico');
+        });
+
+        it('handles ghost.css for default templates correctly', function () {
+            // with ghost set
+            rendered = helpers.asset('shared/ghost.css', {hash: {ghost: 'true'}});
+            should.exist(rendered);
+            String(rendered).should.equal('/blog/shared/ghost.css?v=abc');
+
+            // without ghost set
+            rendered = helpers.asset('shared/ghost.css');
+            should.exist(rendered);
+            String(rendered).should.equal('/blog/shared/ghost.css?v=abc');
         });
 
         it('handles custom favicon correctly', function () {
