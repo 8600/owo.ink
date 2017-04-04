@@ -4,3 +4,5 @@ core/client/dist/
 node_modules/
 yarn-error.log
 npm-debug.log
+core/client/*
+core/server/admin/views/*
