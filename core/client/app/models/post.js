@@ -2,14 +2,12 @@
 import Ember from 'ember';
 import computed, {equal, filterBy} from 'ember-computed';
 import injectService from 'ember-service/inject';
-
+import moment from 'moment';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import {belongsTo, hasMany} from 'ember-data/relationships';
-
 import ValidationEngine from 'ghost-admin/mixins/validation-engine';
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
-
 import {BLANK_DOC} from 'ghost-admin/components/gh-koenig';  // a blank mobile doc
 
 // ember-cli-shims doesn't export these so we must get them manually
