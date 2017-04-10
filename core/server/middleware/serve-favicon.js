@@ -53,14 +53,14 @@ function serveFavicon() {
                         return next(err);
                     }
 
-                    iconType = settingsCache.get('icon').match(/\/favicon\.ico$/i) ? 'x-icon' : 'png';
+                    iconType = settingsCache.get('icon').match(/\.ico$/i) ? 'x-icon' : 'png';
                     content = buildContentResponse(iconType, buf);
 
                     res.writeHead(200, content.headers);
                     res.end(content.body);
                 });
             } else {
-                filePath = path.join(config.get('paths:corePath'), 'shared', 'favicon.ico');
+                filePath = path.join(config.get('paths:publicFilePath'), 'favicon.ico');
                 originalExtension = path.extname(filePath).toLowerCase();
 
                 // CASE: always redirect to .ico for default icon
