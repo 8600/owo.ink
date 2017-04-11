@@ -2,37 +2,30 @@
 
     <header class="gh-editor-header">
         <div class="gh-editor-status">
-        {{#if model.isPublished}}
-            Published
-        {{else if model.isScheduled}}
-            Scheduled
-        {{else}}
-            Draft
-        {{/if}}
-
-        </div>
-        <section class="view-actions">
-            {{gh-editor-save-button
-                isPublished=model.isPublished
-                isScheduled=model.isScheduled
-                willPublish=willPublish
-                willSchedule=willSchedule
-                statusFreeze=statusFreeze
-                scheduledWillPublish=scheduledWillPublish
-                timeScheduled=model.timeScheduled
-                postOrPage=postOrPage
-                isNew=model.isNew
-                save="save"
-                setSaveType="setSaveType"
-                delete="toggleDeletePostModal"
-                submitting=submitting
+            {{gh-editor-post-status
+                post=model
+                isSaving=autosave.isRunning
             }}
-            <button type="button" class="post-settings" title="Settings" {{action "openSettingsMenu"}}>
-                <i class="icon-settings"></i>
+        </div>
+        {{#if scheduleCountdown}}
+            <time datetime="{{post.publishedAtUTC}}" class="gh-notification gh-notification-schedule" data-test-schedule-countdown>
+                Post will be published {{scheduleCountdown}}.
+            </time>
+        {{/if}}
+        <section class="view-actions">
+            {{gh-publishmenu
+                post=model
+                saveTask=save
+                setSaveType=(action "setSaveType")
+                onOpen=(action "cancelAutosave")
+                onClose=(action "restartAutosave")}}
+
+            <button type="button" class="post-settings" title="Settings" {{action "openSettingsMenu"}} data-test-psm-trigger>
+                {{inline-svg "settings"}}
             </button>
         </section>
     </header>
-    <div class="gh-editor-container">
+    <div class="gh-editor-container needsclick">
         <div class="gh-editor-inner">
             {{gh-editor-title 
                 val=(readonly model.titleScratch)
@@ -41,7 +34,9 @@
                 shouldFocus=shouldFocusTitle 
                 focus-out="updateTitle" 
                 update=(action (perform updateTitle)) 
-                id='gh-editor-title'
+                id="gh-editor-title"
+                koenigEditor=(readonly editor)
+                editorMenuIsOpen=editorMenuIsOpen
             }}
             {{#if scheduleCountdown}}
                 <time datetime="{{post.publishedAtUTC}}" class="gh-notification gh-notification-schedule">
@@ -56,9 +51,12 @@
                 shouldFocusEditor=shouldFocusEditor
                 apiRoot=apiRoot
                 assetPath=assetPath
-                tabindex=2
-		        containerSelector='.gh-editor-container'
-                titleQuery='#gh-editor-title div'
+                tabindex="2"
+                titleSelector=".gh-editor-title"
+		        containerSelector=".gh-editor-container"
+                setEditor=(action "setEditor")
+                menuIsOpen=(action "editorMenuIsOpen")
+                menuIsClosed=(action "editorMenuIsClosed")
             }}
         </div>
     </div>

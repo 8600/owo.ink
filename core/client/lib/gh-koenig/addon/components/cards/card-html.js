@@ -6,7 +6,6 @@ import {invokeAction} from 'ember-invoke-action';
 
 export default Component.extend({
     layout,
-    isEditing: true,
     hasRendered: false,
     save: observer('doSave', function () {
         this.get('env').save(this.get('payload'), false);
@@ -25,13 +24,9 @@ export default Component.extend({
 
     init() {
         this._super(...arguments);
-        let payload = this.get('payload');
-        this.isEditing = !payload.hasOwnProperty('html');
-        this.isEditing = true;
     },
-
-    actions:{
-        selectCard(){
+    actions: {
+        selectCard() {
             invokeAction(this, 'selectCard');
         }
     }

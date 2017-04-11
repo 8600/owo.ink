@@ -26,10 +26,11 @@
 @import "components/dropdowns.css";
 @import "components/pagination.css";
 @import "components/badges.css";
-@import "components/popovers.css";
 @import "components/settings-menu.css";
 @import "components/selectize.css";
 @import "components/power-select.css";
+@import "components/power-calendar.css";
+@import "components/publishmenu.css";
 
 
 /* Layouts: Groups of Components
@@ -91,8 +92,12 @@ input,
     background: color(var(--lightgrey));
 }
 
-.gh-nav-list i {
-    color: var(--darkgrey);
+.gh-nav-list svg {
+    fill: var(--darkgrey);
+}
+
+.gh-nav-list svg g {
+    stroke: var(--darkgrey);
 }
 
 .gh-main {

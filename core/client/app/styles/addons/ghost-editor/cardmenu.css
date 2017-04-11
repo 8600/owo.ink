@@ -19,22 +19,32 @@
 }
 
 .gh-cardmenu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     width: 30px;
     height: 30px;
-    padding: 6px;
     border: var(--midgrey) 1px solid;
     background: #fff;
     border-radius: 100%;
-    font-size: 16px;
-    line-height: 16px;
-    text-align: center;
-    color: var(--midgrey);
+    margin-left: -40px;
+}
+
+.gh-cardmenu-button svg {
+    height: 15px;
+    width: 15px;
 }
 
 .gh-cardmenu-button svg path {
     stroke: var(--midgrey);
     stroke-width: 2px;
+}
+
+@media (max-width: 1024px) {
+  .gh-cardmenu-button {
+        right:10px;
+  }
 }
 
 .gh-cardmenu-search {

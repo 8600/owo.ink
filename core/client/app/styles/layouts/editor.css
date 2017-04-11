@@ -8,7 +8,32 @@
 .gh-editor-title {
     flex-grow: 1;
     margin-bottom: 2vw;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    position: relative;
+    width: 100%;
+    letter-spacing: 0.8px;
+    font-weight: bold;
+    font-size: 3.2rem;
+    line-height: 1.3em;
+    z-index: 1;
 }
+
+/* Place holder content that displays in the title if it is empty */
+.gh-editor-title.no-content:before {
+    content: attr(data-placeholder);
+    color: color(var(--midgrey) l(+35%));
+    cursor: text;
+    position: absolute;
+    top: 0;
+    font-size: 3.2rem;
+    font-weight: bold;
+    line-height: 1.3em;
+    min-width: 30rem; /* hack it's defaulting just to enough width for the 'Your' in 'Your Post Title' */
+    z-index: -1;
+}
+
 
 .gh-editor-title input {
     margin: 0;
@@ -112,6 +137,17 @@
     line-height: 16px;
 }
 
+.post-settings svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--midgrey);
+}
+
+.post-settings svg:hover,
+.post-settings.active svg {
+    fill: var(--darkgrey);
+}
+
 .post-settings-menu .dropdown-menu {
     top: auto;
     right: 100%;
@@ -126,9 +162,11 @@
     font-size: 1.3rem;
 }
 
-.post-view-link i {
+.post-view-link svg {
     display: inline;
-    font-size: 10px;
+    height: 10px;
+    width: auto;
+    fill: var(--blue);
 }
 
 
