@@ -3,7 +3,7 @@
         "mail": {
             "title": "Ghost at {domain}"
         },
-        "seeLinkForInstructions": "查看 {link} 了解更多.",
+        "seeLinkForInstructions": "See {link} for instructions.",
         "time": {
             "seconds": "seconds"
         },
@@ -115,6 +115,9 @@
                 "nameOrVersionMissing": "\"name\" or \"version\" is missing from theme package.json file.",
                 "willBeRequired": "This will be required in future. Please see {url}",
                 "themeFileIsMalformed": "Theme package.json file is malformed"
+            },
+            "blogIcon": {
+                "error": "Could not fetch icon dimensions."
             }
         },
         "config": {
@@ -475,7 +478,7 @@
     "warnings": {
         "index": {
             "usingDirectMethodToSendEmail": "Ghost is attempting to use a direct method to send email. \nIt is recommended that you explicitly configure an email service.",
-            "unableToSendEmail": "博客目前无法发送邮件."
+            "unableToSendEmail": "Ghost is currently unable to send email."
         },
         "helpers": {
             "helperNotAvailable": "The \\{\\{{helperName}\\}\\} helper is not available.",

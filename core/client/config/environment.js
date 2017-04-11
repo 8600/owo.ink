@@ -32,10 +32,12 @@ module.exports = function (environment) {
         },
 
         'ember-simple-auth': { },
+
         moment: {
             includeTimezone: 'all'
         },
-        torii: {}
+
+        torii: { }
     };
 
     if (environment === 'development') {

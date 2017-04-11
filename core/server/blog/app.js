@@ -50,12 +50,15 @@ module.exports = function setupBlogApp() {
     blogApp.use(servePublicFile('sitemap.xsl', 'text/xsl', utils.ONE_DAY_S));
     // Serve robots.txt if not found in theme
     blogApp.use(servePublicFile('robots.txt', 'text/plain', utils.ONE_HOUR_S));
-    // 为模板提供默认样式
+
+    // Serve stylesheets for default templates
+    blogApp.use(servePublicFile('public/ghost.css', 'text/css', utils.ONE_HOUR_S));
     blogApp.use(servePublicFile('public/ghost.min.css', 'text/css', utils.ONE_HOUR_S));
 
     // Serve images for default templates
     blogApp.use(servePublicFile('public/404-ghost@2x.png', 'png', utils.ONE_HOUR_S));
     blogApp.use(servePublicFile('public/404-ghost.png', 'png', utils.ONE_HOUR_S));
+
     // Serve blog images using the storage adapter
     blogApp.use('/' + utils.url.STATIC_IMAGE_URL_PREFIX, storage.getStorage().serve());
 

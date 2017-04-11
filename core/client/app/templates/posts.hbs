@@ -1,8 +1,8 @@
 <section class="gh-canvas">
     <header class="gh-canvas-header">
-        <h2 class="gh-canvas-title">文章管理</h2>
+        <h2 class="gh-canvas-title">Your stories</h2>
         <section class="view-actions">
-            {{#link-to "editor.new" class="gh-btn gh-btn-green" data-test-new-post-button=true}}<span>新建文章</span>{{/link-to}}
+            {{#link-to "editor.new" class="gh-btn gh-btn-green" data-test-new-post-button=true}}<span>New story</span>{{/link-to}}
         </section>
     </header>
     <div class="gh-contentfilter">
@@ -16,6 +16,7 @@
                 classNames="gh-contentfilter-menu gh-contentfilter-type"
                 triggerClass="gh-contentfilter-menu-trigger"
                 dropdownClass="gh-contentfilter-menu-dropdown"
+                matchTriggerWidth=false
                 data-test-type-select=true
                 as |type|
             }}
@@ -33,6 +34,7 @@
                 triggerClass="gh-contentfilter-menu-trigger"
                 dropdownClass="gh-contentfilter-menu-dropdown"
                 searchPlaceholder="Search authors"
+                matchTriggerWidth=false
                 data-test-author-select=true
                 as |author|
             }}
@@ -50,6 +52,7 @@
                 triggerClass="gh-contentfilter-menu-trigger"
                 dropdownClass="gh-contentfilter-menu-dropdown"
                 searchPlaceholder="Search tags"
+                matchTriggerWidth=false
                 data-test-tag-select=true
                 as |tag|
             }}
@@ -58,7 +61,7 @@
         </div>
 
         <div class="gh-contentfilter-right">
-            排序方式:
+            Sort by:
             {{#power-select
                 selected=selectedOrder
                 options=availableOrders

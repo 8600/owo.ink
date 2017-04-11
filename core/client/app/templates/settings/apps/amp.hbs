@@ -1,14 +1,14 @@
 <header class="view-header">
-    {{#gh-view-title openMobileMenu="openMobileMenu"}}<span style="padding-left:1px">{{#link-to "settings.apps.index"}}扩展应用{{/link-to}} <i class="icon-arrow-right" style="display:inline"></i> AMP</span>{{/gh-view-title}}
+    {{#gh-view-title openMobileMenu="openMobileMenu"}}<span style="padding-left:1px">{{#link-to "settings.apps.index"}}Apps{{/link-to}} {{inline-svg "arrow-right"}} AMP</span>{{/gh-view-title}}
     <section class="view-actions">
-        {{gh-task-button task=save class="gh-btn gh-btn-blue" data-test-save-button=true}}
+        {{gh-task-button task=save class="gh-btn gh-btn-blue gh-btn-icon" data-test-save-button=true}}
     </section>
 </header>
 <section class="view-container">
     <section class="view-content">
         <section class="app-grid">
             <div class="app-cell">
-                <img class="app-icon" src="{{gh-path 'asset' '/img/ampicon.png'}}" />
+                <img class="app-icon" src="assets/img/ampicon.png" />
             </div>
             <div class="app-cell">
                 <h3>AMP</h3>

@@ -1,5 +1,5 @@
 <header class="gh-canvas-header">
-    <h2 class="gh-canvas-title">扩展应用</h2>
+    <h2 class="gh-canvas-title">Apps</h2>
 </header>
 
 <section class="apps-grid-container">
@@ -9,7 +9,7 @@
             {{#link-to "settings.apps.slack" id="slack-link"}}
             <article class="apps-card-app">
                 <div class="apps-card-left">
-                    <figure class="apps-card-app-icon" style="background-image:url({{gh-path 'asset' '/img/slackicon.png'}})"></figure>
+                    <figure class="apps-card-app-icon" style="background-image:url(assets/img/slackicon.png)"></figure>
                     <div class="apps-card-meta">
                         <h3 class="apps-card-app-title">Slack</h3>
                         <p class="apps-card-app-desc">A team communication tool</p>
@@ -22,7 +22,7 @@
                         {{else}}
                             <span>Configure</span>
                         {{/if}}
-                        <i class="icon-arrow-right"></i>
+                        {{inline-svg "arrow-right"}}
                     </div>
                 </div>
             </article>
@@ -33,7 +33,7 @@
             {{#link-to "settings.apps.amp" id="amp-link"}}
             <article class="apps-card-app">
                 <div class="apps-card-left">
-                    <figure class="apps-card-app-icon" style="background-image:url({{gh-path 'asset' '/img/ampicon.png'}})"></figure>
+                    <figure class="apps-card-app-icon" style="background-image:url(assets/img/ampicon.png)"></figure>
                     <div class="apps-card-meta">
                         <h3 class="apps-card-app-title">AMP</h3>
                         <p class="apps-card-app-desc">Google Accelerated Mobile Pages</p>
@@ -46,7 +46,7 @@
                         {{else}}
                             <span>Configure</span>
                         {{/if}}
-                        <i class="icon-arrow-right"></i>
+                        {{inline-svg "arrow-right"}}
                     </div>
                 </div>
             </article>

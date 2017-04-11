@@ -27,27 +27,21 @@
     </header>
     <div class="gh-editor-container needsclick">
         <div class="gh-editor-inner">
-            {{gh-editor-title 
+            {{gh-editor-title
                 val=(readonly model.titleScratch)
-                onChange=(action (mut model.titleScratch)) 
-                tabindex="1" 
-                shouldFocus=shouldFocusTitle 
-                focus-out="updateTitle" 
-                update=(action (perform updateTitle)) 
+                onChange=(action (mut model.titleScratch))
+                tabindex="1"
+                shouldFocus=shouldFocusTitle
+                focus-out="updateTitle"
+                update=(action (perform updateTitle))
                 id="gh-editor-title"
                 koenigEditor=(readonly editor)
                 editorMenuIsOpen=editorMenuIsOpen
             }}
-            {{#if scheduleCountdown}}
-                <time datetime="{{post.publishedAtUTC}}" class="gh-notification gh-notification-schedule">
-                    Post will be published {{scheduleCountdown}}.
-                </time>
-            {{/if}}
             {{gh-koenig
                 value=(readonly model.scratch)
-                onChange=(action (mut model.scratch))
+                onChange=(action "updateScratch")
                 onFirstChange=(action "autoSaveNew")
-                onTeardown=(action "cancelTimers")
                 shouldFocusEditor=shouldFocusEditor
                 apiRoot=apiRoot
                 assetPath=assetPath

@@ -8,7 +8,7 @@ module.exports = function createTables(options) {
     var transacting = options.transacting;
 
     return Promise.mapSeries(schemaTables, function createTable(table) {
-        logging.info('创建表项: ' + table);
+        logging.info('Creating table: ' + table);
         return commands.createTable(table, transacting);
     });
 };

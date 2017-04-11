@@ -16,9 +16,10 @@ export default Route.extend({
 
             this.toggleProperty('controller.loggingIn');
             this.set('controller.flowErrors', '');
-            console.log(this.get('torii'))
-            return this.get('torii').open('ghost-oauth2', {type: 'setup'}).then((authentication) => {
-                    console.log(authStrategy)
+
+            return this.get('torii')
+                .open('ghost-oauth2', {type: 'setup'})
+                .then((authentication) => {
                     return this.send('authenticate', authStrategy, [authentication]);
                 })
                 .catch(() => {

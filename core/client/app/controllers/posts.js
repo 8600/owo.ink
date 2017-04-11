@@ -20,27 +20,27 @@ export default Controller.extend({
     showDeletePostModal: false,
 
     availableTypes: [{
-        name: '所有',
+        name: 'All posts',
         value: null
     }, {
-        name: '草稿',
+        name: 'Draft posts',
         value: 'draft'
     }, {
-        name: '已发布',
+        name: 'Published posts',
         value: 'published'
     }, {
-        name: '定时发布',
+        name: 'Scheduled posts',
         value: 'scheduled'
     }, {
-        name: '页面',
+        name: 'Pages',
         value: 'page'
     }],
 
     availableOrders: [{
-        name: '最新',
+        name: 'Newest',
         value: null
     }, {
-        name: '最早',
+        name: 'Oldest',
         value: 'published_at asc'
     }],
 
@@ -68,7 +68,7 @@ export default Controller.extend({
         let tags = this.get('_availableTags');
         let options = tags.toArray();
 
-        options.unshiftObject({name: '所有标签', slug: null});
+        options.unshiftObject({name: 'All tags', slug: null});
 
         return options;
     }),
@@ -88,7 +88,7 @@ export default Controller.extend({
         let authors = this.get('_availableAuthors');
         let options = authors.toArray();
 
-        options.unshiftObject({name: '所有作者', slug: null});
+        options.unshiftObject({name: 'All authors', slug: null});
 
         return options;
     }),

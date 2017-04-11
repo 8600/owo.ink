@@ -36,7 +36,7 @@ handleStoreError = function handleStoreError(err) {
     // we are using reset as synchronous call, so we have to log the error if it occurs
     // there is no way to try/catch, because the reset operation happens asynchronous
     if (!err.next) {
-        err.level = '严重';
+        err.level = 'critical';
         logging.error(err);
         return;
     }

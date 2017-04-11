@@ -211,7 +211,7 @@ exports.init = function initPassport(options) {
                 });
             }
 
-            err.level = '严重';
+            err.level = 'critical';
             err.context = err.context || 'Public client registration failed';
             err.help = err.help || 'Please verify the configured url: ' + ghostOAuth2Strategy.url;
 

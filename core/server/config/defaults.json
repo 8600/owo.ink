@@ -2,7 +2,7 @@
     "url": "http://localhost:2368",
     "server": {
         "host": "127.0.0.1",
-        "port": 80
+        "port": 2368
     },
     "privacy": false,
     "useMinFiles": true,
@@ -11,9 +11,7 @@
         "contentPath": "content/"
     },
     "storage": {
-        "active": {
-            "images": "local-file-store"
-        }
+        "active": "LocalFileStorage"
     },
     "scheduling": {
         "active": "SchedulingDefault"

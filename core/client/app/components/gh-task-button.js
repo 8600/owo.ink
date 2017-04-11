@@ -92,7 +92,14 @@ const GhTaskButton = Component.extend({
     },
 
     setSize: observer('isRunning', function () {
-
+        if (this.get('isRunning')) {
+            this.set('hasRun', true);
+            // this.$().width(this.$().width());
+            // this.$().height(this.$().height());
+        } else {
+            // this.$().width('');
+            // this.$().height('');
+        }
     })
 });
 

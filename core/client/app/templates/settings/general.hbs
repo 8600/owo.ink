@@ -1,42 +1,42 @@
 <section class="gh-canvas">
     <header class="gh-canvas-header">
-        <h2 class="gh-canvas-title">常用设置</h2>
+        <h2 class="gh-canvas-title">General</h2>
         <section class="view-actions">
-            {{gh-task-button "保存设置" task=save class="gh-btn gh-btn-blue" data-test-save-button=true}}
+            {{gh-task-button "Save settings" task=save class="gh-btn gh-btn-blue gh-btn-icon" data-test-save-button=true}}
         </section>
     </header>
 
     <section class="view-container">
 
-        <div class="gh-setting-header">基本信息</div>
+        <div class="gh-setting-header">Publication info</div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">标题 &amp; 描述</div>
-                <div class="gh-setting-desc">让别人对你的网站有大致的了解</div>
+                <div class="gh-setting-title">Title &amp; description</div>
+                <div class="gh-setting-desc">The details used to identify your publication around the web</div>
                 {{#liquid-if pubInfoOpen}}
                 <div class="gh-setting-content-extended">
                     {{#gh-form-group errors=model.errors hasValidated=model.hasValidated property="title"}}
                         {{gh-input model.title type="text" focusOut=(action "validate" "title" target=model) update=(action (mut model.title)) data-test-title-input=true}}
                         {{gh-error-message errors=model.errors property="title"}}
-                        <p>您的网站的名称</p>
+                        <p>The name of your site</p>
                     {{/gh-form-group}}
 
                     {{#gh-form-group errors=model.errors hasValidated=model.hasValidated property="description" class="description-container"}}
                         {{gh-input model.description type="text" focusOut=(action "validate" "description" target=model) update=(action (mut model.description)) data-test-description-input=true}}
                         {{gh-error-message errors=model.errors property="description"}}
-                        <p>您的网站说明</p>
+                        <p>Used in your theme, meta data and search results</p>
                     {{/gh-form-group}}
                 </div>
                 {{/liquid-if}}
             </div>
             <div class="gh-setting-action">
-                <button type="button" class="gh-btn gh-btn-hover-blue" {{action (toggle "pubInfoOpen" this)}} data-test-toggle-pub-info><span>{{if pubInfoOpen "关闭" "展开"}}</span></button>
+                <button type="button" class="gh-btn gh-btn-hover-blue" {{action (toggle "pubInfoOpen" this)}} data-test-toggle-pub-info><span>{{if pubInfoOpen "Close" "Expand"}}</span></button>
             </div>
         </div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">时区设置</div>
-                <div class="gh-setting-desc">设置网站运行在哪个时区</div>
+                <div class="gh-setting-title">Site timezone</div>
+                <div class="gh-setting-desc">Set the time and date of your publication, used for all published posts</div>
                 {{#liquid-if timezoneOpen}}
                 <div class="gh-setting-content-extended">
                     {{gh-timezone-select
@@ -47,21 +47,21 @@
                 {{/liquid-if}}
             </div>
             <div class="gh-setting-action">
-                <button type="button" class="gh-btn gh-btn-hover-blue" {{action (toggle "timezoneOpen" this)}} data-test-toggle-timezone><span>{{if timezoneOpen "关闭" "展开"}}</span></button>
+                <button type="button" class="gh-btn gh-btn-hover-blue" {{action (toggle "timezoneOpen" this)}} data-test-toggle-timezone><span>{{if timezoneOpen "Close" "Expand"}}</span></button>
             </div>
         </div>
 
-        <div class="gh-setting-header">个性设置</div>
+        <div class="gh-setting-header">Publication identity</div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">网站图标</div>
-                <div class="gh-setting-desc">设置您的网站图标, 图片大小至少为60x60像素</div>
+                <div class="gh-setting-title">Publication icon</div>
+                <div class="gh-setting-desc">A square, social icon used in the UI of your publication, at least 60x60px</div>
             </div>
             <div class="gh-setting-action gh-setting-action-smallimg">
                 {{#if model.icon}}
                     <img class="blog-icon" src="{{model.icon}}" alt="icon" role="button" {{action "toggleUploadIconModal"}}>
                 {{else}}
-                    <button type="button" class="gh-btn" {{action "toggleUploadIconModal"}}><span>上传图片</span></button>
+                    <button type="button" class="gh-btn" {{action "toggleUploadIconModal"}}><span>Upload Image</span></button>
                 {{/if}}
 
                 {{#if showUploadIconModal}}
@@ -74,14 +74,14 @@
         </div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">网站logo</div>
-                <div class="gh-setting-desc">展示在您的网站首页, 图片大小最好大于600px x 72像素</div>
+                <div class="gh-setting-title">Publication logo</div>
+                <div class="gh-setting-desc">The primary logo for your brand displayed across your theme, should be transparent and at least 600px x 72px</div>
             </div>
             <div class="gh-setting-action gh-setting-action-smallimg">
                 {{#if model.logo}}
                     <img class="blog-logo" src="{{model.logo}}" alt="logo" role="button" {{action "toggleUploadLogoModal"}}>
                 {{else}}
-                    <button type="button" class="gh-btn" {{action "toggleUploadLogoModal"}}><span>上传图片</span></button>
+                    <button type="button" class="gh-btn" {{action "toggleUploadLogoModal"}}><span>Upload Image</span></button>
                 {{/if}}
 
                 {{#if showUploadLogoModal}}
@@ -94,14 +94,14 @@
         </div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">封面背景</div>
-                <div class="gh-setting-desc">为你的网站选择一个背景图片</div>
+                <div class="gh-setting-title">Publication cover</div>
+                <div class="gh-setting-desc">An optional large background image for your site</div>
             </div>
             <div class="gh-setting-action gh-setting-action-largeimg">
                 {{#if model.cover}}
                     <img class="blog-cover" src="{{model.cover}}" alt="cover photo" role="button" {{action "toggleUploadCoverModal"}}>
                 {{else}}
-                    <button type="button" class="gh-btn" {{action "toggleUploadCoverModal"}}><span>上传图片</span></button>
+                    <button type="button" class="gh-btn" {{action "toggleUploadCoverModal"}}><span>Upload Image</span></button>
                 {{/if}}
 
                 {{#if showUploadCoverModal}}
@@ -113,36 +113,36 @@
             </div>
         </div>
 
-        <div class="gh-setting-header">社交配置</div>
+        <div class="gh-setting-header">Social accounts</div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">社交账号</div>
-                <div class="gh-setting-desc">添加你的社交账号到你的网站</div>
+                <div class="gh-setting-title">Social accounts</div>
+                <div class="gh-setting-desc">Link your social accounts for full structured data and rich card support</div>
                 {{#liquid-if socialOpen}}
                 <div class="gh-setting-content-extended">
                     {{#gh-form-group errors=model.errors hasValidated=model.hasValidated property="facebook"}}
                         <input value={{model.facebook}} oninput={{action (mut _scratchFacebook) value="target.value"}} {{action "validateFacebookUrl" on="focusOut"}} type="url" class="gh-input" placeholder="https://www.facebook.com/ghost" autocorrect="off" data-test-facebook-input />
                         {{gh-error-message errors=model.errors property="facebook" data-test-facebook-error=true}}
-                        <p>FaceBook主页</p>
+                        <p>URL of your publication's Facebook Page</p>
                     {{/gh-form-group}}
                     {{#gh-form-group errors=model.errors hasValidated=model.hasValidated property="twitter"}}
                         <input value={{model.twitter}} oninput={{action (mut _scratchTwitter) value="target.value"}} {{action "validateTwitterUrl" on="focusOut"}} type="url" class="gh-input" placeholder="https://twitter.com/tryghost" autocorrect="off" data-test-twitter-input />
                         {{gh-error-message errors=model.errors property="twitter" data-test-twitter-error=true}}
-                        <p>Twitter主页</p>
+                        <p>URL of your publication's Twitter profile</p>
                     {{/gh-form-group}}
                 </div>
                 {{/liquid-if}}
             </div>
             <div class="gh-setting-action">
-                <button type="button" class="gh-btn gh-btn-hover-blue" {{action (toggle "socialOpen" this)}} data-test-toggle-social><span>{{if socialOpen "关闭" "展开"}}</span></button>
+                <button type="button" class="gh-btn gh-btn-hover-blue" {{action (toggle "socialOpen" this)}} data-test-toggle-social><span>{{if socialOpen "Close" "Expand"}}</span></button>
             </div>
         </div>
 
-        <div class="gh-setting-header">高级设置</div>
+        <div class="gh-setting-header">Advanced settings</div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">使用日期链接</div>
-                <div class="gh-setting-desc">在帖子URL里包涵日期.例如：<strong>blogurl.com/2017/01/post-title/</strong></div>
+                <div class="gh-setting-title">Use dated permalinks</div>
+                <div class="gh-setting-desc">Include the date in your post URLs, eg. <strong>blogurl.com/2017/01/post-title/</strong></div>
             </div>
             <div class="gh-setting-action">
                 <div class="for-checkbox">
@@ -155,14 +155,14 @@
         </div>
         <div class="gh-setting">
             <div class="gh-setting-content">
-                <div class="gh-setting-title">私人站点</div>
-                <div class="gh-setting-desc">启用密码保护，所有的引擎优化将不可用.</div>
+                <div class="gh-setting-title">Make this site private</div>
+                <div class="gh-setting-desc">Enable protection with simple shared password, All search engine optimization and social features will be disabled.</div>
                 {{#if model.isPrivate}}
                 <div class="gh-setting-content-extended">
                     {{#gh-form-group errors=model.errors hasValidated=model.hasValidated property="password"}}
                         {{gh-input model.password name="general[password]" type="text" focusOut=(action "validate" "password" target=model) update=(action (mut model.password)) data-test-password-input=true}}
                         {{gh-error-message errors=model.errors property="password" data-test-password-error=true}}
-                        <p>设置站点密码</p>
+                        <p>Set the password for this site</p>
                     {{/gh-form-group}}
                 </div>
                 {{/if}}
