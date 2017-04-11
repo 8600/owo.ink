@@ -6,11 +6,11 @@
 // We use the name facebook_url to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-var proxy = require('./proxy'),
-    socialUrls = proxy.socialUrls,
-    findKey = proxy.utils.findKey;
+var socialUrls = require('../utils/social-urls'),
+    findKey    = require('./utils').findKey,
+    facebook_url;
 
-module.exports = function facebook_url(username, options) {
+facebook_url = function (username, options) {
     if (!options) {
         options = username;
         username = findKey('facebook', this, options.data.blog);
@@ -22,3 +22,5 @@ module.exports = function facebook_url(username, options) {
 
     return null;
 };
+
+module.exports = facebook_url;

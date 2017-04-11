@@ -207,10 +207,6 @@
     font-size: 15px;
 }
 
-.package-downloads svg {
-    margin-right: 5px;
-    height: 15px;
-}
 
 .package-download-count {
     font-size: 13px;
@@ -307,12 +303,6 @@
     width: 11px;
     height: 11px;
     font-size: 11px;
-}
-
-.package-controls-button svg {
-    margin-right: 5px;
-    width: 11px;
-    height: 11px;
 }
 
 .package-disable {

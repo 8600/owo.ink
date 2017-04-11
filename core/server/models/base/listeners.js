@@ -12,7 +12,7 @@ var config = require('../../config'),
 events.on('token.added', function (tokenModel) {
     models.User.edit({last_seen: moment().toDate()}, {id: tokenModel.get('user_id')})
         .catch(function (err) {
-            logging.error(new errors.GhostError({err: err, level: 'critical'}));
+            logging.error(new errors.GhostError({err: err, level: '严重'}));
         });
 });
 
@@ -30,7 +30,7 @@ events.on('user.deactivated', function (userModel) {
         .catch(function (err) {
             logging.error(new errors.GhostError({
                 err: err,
-                level: 'critical'
+                level: '严重'
             }));
         });
 });
@@ -90,7 +90,7 @@ events.on('settings.activeTimezone.edited', function (settingModel) {
         .catch(function (err) {
             logging.error(new errors.GhostError({
                 err: err,
-                level: 'critical'
+                level: '严重'
             }));
         });
 });

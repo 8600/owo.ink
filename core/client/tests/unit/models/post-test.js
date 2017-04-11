@@ -13,8 +13,7 @@ describe('Unit: Model: post', function () {
             'service:config',
             'service:feature',
             'service:ghostPaths',
-            'service:session',
-            'service:settings'
+            'service:session'
         ]
     });
 

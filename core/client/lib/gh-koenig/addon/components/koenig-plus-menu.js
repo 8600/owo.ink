@@ -80,7 +80,6 @@ export default Component.extend({
         });
 
         editor.cursorDidChange(() => {
-
             if (!editor.range || !editor.range.head.section) {
                 return;
             }
@@ -96,32 +95,29 @@ export default Component.extend({
             let editorOffset = $editor.offset();
 
             this.set('isButton', true);
-
-            // we store the range for the current paragraph as we can lose it later.
-            this.set('range', {
-                section: editor.range.head.section,
-                startOffset: editor.range.head.offset,
-                endOffset: editor.range.head.offset
-            });
-
             run.schedule('afterRender', this,
                 () => {
                     let button = this.$('.gh-cardmenu-button');
-
                     button.css('top', offset.top + $editor.scrollTop() - editorOffset.top - 2);
                     if (currentNode.tagName.toLowerCase() === 'li') {
-                     //   button.css('left', this.$(currentNode.parentNode).position().left + $editor.scrollLeft());
+                        button.css('left', this.$(currentNode.parentNode).position().left + $editor.scrollLeft() - 90);
                     } else {
-                     //   button.css('left', offset.left + $editor.scrollLeft() - 50);
+                        button.css('left', offset.left + $editor.scrollLeft() - 50);
                     }
                 });
         });
     },
     actions: {
         openMenu: function () { // eslint-disable-line
-            let button = this.$('.gh-cardmenu-button'); // the ⊕ button.
-            let $editor = $(this.get('containerSelector'));
+            let button = this.$('.gh-cardmenu-button');
+            let editor = this.get('editor');
             this.set('isOpen', true);
+
+            this.set('range', {
+                section: editor.range.head.section,
+                startOffset: editor.range.head.offset,
+                endOffset: editor.range.head.offset
+            });
 
             this.set('selected', -1);
             this.set('selectedTool', null);
@@ -131,28 +127,14 @@ export default Component.extend({
             run.schedule('afterRender', this,
                 () => {
                     let menu = this.$('.gh-cardmenu');
-                    let top = parseInt(button.css('top').replace('px', ''));
-
-                    // calculate the parts of the menu that are hidden by the overflow.
-                    let hiddenByOverflow = ($editor.innerHeight() + $editor.scrollTop()) - (menu.height() + top);
-                    if (hiddenByOverflow < 0) {
-                        top = top + hiddenByOverflow - 30;
-                    }
-
-                    menu.css('top', top);
+                    menu.css('top', button.css('top'));
                     menu.css('left', button.css('left') + button.width());
-                    menu.hide().fadeIn('fast', () => {
-                        this.$('.gh-cardmenu-search-input').focus();
-                    });
+                    this.$('.gh-cardmenu-search-input').focus();
                 });
-            this.sendAction('menuIsOpen');
         },
         closeMenu: function () { // eslint-disable-line
+            this.set('isOpen', false);
             this.set('isButton', false);
-            this.$('.gh-cardmenu').fadeOut('fast', () => {
-                this.set('isOpen', false);
-            });
-            this.sendAction('menuIsClosed');
         },
         closeMenuKeepButton: function () { // eslint-disable-line
             this.set('isOpen', false);

@@ -12,9 +12,6 @@ module.exports = {
         selectChoose: false,
         selectSearch: false,
         removeMultipleOption: false,
-        clearSelected: false,
-
-        // ember-power-datepicker test helpers
-        datepickerSelect: false
+        clearSelected: false
     }
 };

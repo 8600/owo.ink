@@ -198,19 +198,10 @@ export default function (editor, toolbar) {
             order: 2,
             cardMenu: true,
             onClick: (editor) => {
-                editor.run((postEditor, section) => {
-                    let thisSection = section || editor.range.headSection;
-                    let card = postEditor.builder.createCardSection('card-image', {pos: 'top', newlyCreated: true});
-                    if (thisSection.text.length) {
-                        postEditor.insertSection(card);
-                    } else {
-                        postEditor.replaceSection(thisSection, card);
-                    }
-                    // insert empty paragraph after card if it's the last element.
-                    if (!thisSection.next) {
-                        let newSection = editor.builder.createMarkupSection('p');
-                        postEditor.insertSectionAtEnd(newSection);
-                    }
+                editor.run((postEditor) => {
+                    let card = postEditor.builder.createCardSection('card-image', {pos: 'top'});
+                    postEditor.insertSection(card);
+
                 });
             },
             checkElements(elements) {
@@ -228,18 +219,15 @@ export default function (editor, toolbar) {
             cardMenu: true,
             onClick: (editor, section) => {
                 editor.run((postEditor) => {
-                    let thisSection = section || editor.range.headSection;
-                    let card = postEditor.builder.createCardSection('card-html', {pos: 'top', html: thisSection.text, newlyCreated: true});
+                    let card = postEditor.builder.createCardSection('card-markdown', {pos: 'top', markdown: editor.range.headSection.text, newlyCreated: true});
                     // we can't replace a list item so we insert a card after it and then delete it.
-                    if (thisSection.isListItem) {
+                    if (editor.range.headSection.isListItem) {
+                        // postEditor.toggleSection('p');
+                        // postEditor.insertSection(card);
+                        // postEditor.removeSection(editor.range.head.section);
                         editor.insertCard('card-html');
                     } else {
-                        postEditor.replaceSection(thisSection, card);
-                    }
-
-                    if (!thisSection.next) {
-                        let newSection = editor.builder.createMarkupSection('p');
-                        postEditor.insertSectionAtEnd(newSection);
+                        postEditor.replaceSection(section || editor.range.headSection, card);
                     }
                 });
             },
@@ -256,20 +244,10 @@ export default function (editor, toolbar) {
             visibility: 'primary',
             order: 4,
             cardMenu: true,
-            onClick: (editor, section) => {
+            onClick: (editor) => {
                 editor.run((postEditor) => {
-                    let thisSection = section || editor.range.headSection;
-                    let card = postEditor.builder.createCardSection('card-hr', {pos: 'top', newlyCreated: true});
-                    if (thisSection.text.length) {
-                        postEditor.insertSection(card);
-                    } else {
-                        postEditor.replaceSection(thisSection, card);
-                    }
-
-                    if (!thisSection.next) {
-                        let newSection = editor.builder.createMarkupSection('p');
-                        postEditor.insertSectionAtEnd(newSection);
-                    }
+                    let card = postEditor.builder.createCardSection('card-hr', {pos: 'top'});
+                    postEditor.insertSection(card);
                 });
             },
             checkElements() {
@@ -286,18 +264,12 @@ export default function (editor, toolbar) {
             cardMenu: true,
             onClick: (editor, section) => {
                 editor.run((postEditor) => {
-                    let thisSection = section || editor.range.headSection;
-                    let card = postEditor.builder.createCardSection('card-markdown', {pos: 'top', markdown: thisSection.text, newlyCreated: true});
+                    let card = postEditor.builder.createCardSection('card-markdown', {pos: 'top', markdown: editor.range.headSection.text});
                     // we can't replace a list item so we insert a card after it and then delete it.
-                    if (thisSection.isListItem) {
+                    if (editor.range.headSection.isListItem) {
                         editor.insertCard('card-markdown');
                     } else {
-                        postEditor.replaceSection(thisSection, card);
-                    }
-                    // if this is the last element then insert a paragraph after the card
-                    if (!thisSection.next) {
-                        let newSection = editor.builder.createMarkupSection('p');
-                        postEditor.insertSectionAtEnd(newSection);
+                        postEditor.replaceSection(section || editor.range.headSection, card);
                     }
                 });
             },

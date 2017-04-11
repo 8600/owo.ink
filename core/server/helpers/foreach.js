@@ -2,21 +2,23 @@
 // Usage: `{{#foreach data}}{{/foreach}}`
 //
 // Block helper designed for looping through posts
-var proxy = require('./proxy'),
-    _ = require('lodash'),
-    logging = proxy.logging,
-    i18n = proxy.i18n,
-    visibilityUtils = proxy.visibility,
-    hbsUtils = proxy.hbs.Utils,
-    createFrame = proxy.hbs.handlebars.createFrame;
+var hbs             = require('express-hbs'),
+    _               = require('lodash'),
+    logging         = require('../logging'),
+    i18n            = require('../i18n'),
+    visibilityFilter = require('../utils/visibility-filter'),
+    utils           = require('./utils'),
+
+    hbsUtils        = hbs.handlebars.Utils,
+    foreach;
 
 function filterItemsByVisibility(items, options) {
-    var visibility = visibilityUtils.parser(options);
+    var visibility = utils.parseVisibility(options);
 
-    return visibilityUtils.filter(items, visibility, !!options.hash.visibility);
+    return visibilityFilter(items, visibility, !!options.hash.visibility);
 }
 
-module.exports = function foreach(items, options) {
+foreach = function (items, options) {
     if (!options) {
         logging.warn(i18n.t('warnings.helpers.foreach.iteratorNeeded'));
     }
@@ -51,7 +53,7 @@ module.exports = function foreach(items, options) {
     }
 
     if (options.data) {
-        data = createFrame(options.data);
+        data = hbs.handlebars.createFrame(options.data);
     }
 
     function execIteration(field, index, last) {
@@ -71,9 +73,9 @@ module.exports = function foreach(items, options) {
         }
 
         output = output + fn(items[field], {
-                data: data,
-                blockParams: hbsUtils.blockParams([items[field], field], [contextPath + field, null])
-            });
+            data: data,
+            blockParams: hbsUtils.blockParams([items[field], field], [contextPath + field, null])
+        });
     }
 
     function iterateCollection(context) {
@@ -107,3 +109,5 @@ module.exports = function foreach(items, options) {
 
     return output;
 };
+
+module.exports = foreach;

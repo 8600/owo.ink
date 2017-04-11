@@ -48,17 +48,6 @@
     line-height: 8px;
 }
 
-.gh-flow-back svg {
-    margin-right: 4px;
-    height: 12px;
-    line-height: 14px;
-}
-
-.gh-flow-back svg path {
-    stroke: #7d878a;
-    stroke-width: 1.2px;
-}
-
 .gh-flow-back:hover {
     border: #dae1e3 1px solid;
 }
@@ -116,10 +105,10 @@
     display: none;
 }
 
-.gh-flow-nav .step svg {
+.gh-flow-nav .step i {
     width: 26px;
     height: 26px;
-    fill: #fff;
+    font-size: 26px;
 }
 
 .gh-flow-nav .active ~ li:not(divider) .step {
@@ -132,7 +121,7 @@
     display: block;
 }
 
-.gh-flow-nav .active ~ li:not(divider) .step svg {
+.gh-flow-nav .active ~ li:not(divider) .step i {
     display: none;
 }
 
@@ -147,7 +136,7 @@
     display: block;
 }
 
-.gh-flow-nav .active .step svg {
+.gh-flow-nav .active .step i {
     display: none;
 }
 
@@ -400,9 +389,10 @@
     align-items: center;
 }
 
-.gh-flow-invite label svg {
+.gh-flow-invite label i {
     width: 14px;
     height: 14px;
+    font-size: 14px;
     line-height: 1.4em;
 }
 
@@ -417,7 +407,7 @@
 }
 
 @media (max-width: 460px) {
-    .gh-flow-content .gh-flow-invite label svg {
+    .gh-flow-content .gh-flow-invite label i {
         display: none;
     }
 }

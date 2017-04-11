@@ -13,8 +13,7 @@ describe('Unit: Serializer: post', function() {
             'model:tag',
             'service:clock',
             'service:config',
-            'service:ghostPaths',
-            'service:settings'
+            'service:ghostPaths'
         ]
     });
 

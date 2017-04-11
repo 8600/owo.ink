@@ -88,26 +88,6 @@ describe('Serve Favicon', function () {
                 middleware(req, res, next);
             });
 
-            it('custom uploaded myicon.ico', function (done) {
-                var middleware = serveFavicon();
-                req.path = '/favicon.ico';
-
-                storage.getStorage().storagePath = path.join(__dirname, '../../../test/utils/fixtures/images/');
-                localSettingsCache.icon = 'myicon.ico';
-
-                res = {
-                    writeHead: function (statusCode) {
-                        statusCode.should.eql(200);
-                    },
-                    end: function (body) {
-                        body.length.should.eql(15086);
-                        done();
-                    }
-                };
-
-                middleware(req, res, next);
-            });
-
             it('default favicon.ico', function (done) {
                 var middleware = serveFavicon();
                 req.path = '/favicon.ico';
@@ -118,7 +98,7 @@ describe('Serve Favicon', function () {
                         statusCode.should.eql(200);
                     },
                     end: function (body) {
-                        body.length.should.eql(34494);
+                        body.length.should.eql(15086);
                         done();
                     }
                 };
@@ -166,7 +146,7 @@ describe('Serve Favicon', function () {
                 var middleware = serveFavicon();
                 req.path = '/favicon.png';
 
-                configUtils.set('paths:publicFilePath', path.join(__dirname, '../../../test/utils/fixtures/'));
+                configUtils.set('paths:corePath', path.join(__dirname, '../../../test/utils/fixtures/'));
                 localSettingsCache.icon = '';
 
                 res = {

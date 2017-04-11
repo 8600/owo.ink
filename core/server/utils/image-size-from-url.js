@@ -91,12 +91,11 @@ module.exports.getImageSizeFromUrl = function getImageSizeFromUrl(imagePath) {
         }).on('socket', function (socket) {
             if (timeout) {
                 socket.setTimeout(timeout);
-
-                /**
+                /*
                  * https://nodejs.org/api/http.html
                  * "...if a callback is assigned to the Server's 'timeout' event, timeouts must be handled explicitly"
                  *
-                 * socket.destroy will jump to the error listener
+                 * socket.destroy 将跳转到错误处理
                  */
                 socket.on('timeout', function () {
                     request.abort();

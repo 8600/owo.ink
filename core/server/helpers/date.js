@@ -3,13 +3,11 @@
 //
 // Formats a date using moment-timezone.js. Formats published_at by default but will also take a date as a parameter
 
-var proxy = require('./proxy'),
-    moment = require('moment-timezone'),
-    SafeString = proxy.SafeString;
+var moment = require('moment-timezone'),
+    date,
+    timezone;
 
-module.exports = function (date, options) {
-    var timezone, format, timeago, timeNow;
-
+date = function (date, options) {
     if (!options && date.hasOwnProperty('hash')) {
         options = date;
         date = undefined;
@@ -25,15 +23,17 @@ module.exports = function (date, options) {
     // ensure that context is undefined, not null, as that can cause errors
     date = date === null ? undefined : date;
 
-    format = options.hash.format || 'MMM DD, YYYY';
-    timeago = options.hash.timeago;
-    timeNow = moment().tz(timezone);
+    var f = options.hash.format || 'MMM DD, YYYY',
+        timeago = options.hash.timeago,
+        timeNow = moment().tz(timezone);
 
     if (timeago) {
-        date = timezone ? moment(date).tz(timezone).from(timeNow) : moment(date).fromNow();
+        date = timezone ?  moment(date).tz(timezone).from(timeNow) : moment(date).fromNow();
     } else {
-        date = timezone ? moment(date).tz(timezone).format(format) : moment(date).format(format);
+        date = timezone ? moment(date).tz(timezone).format(f) : moment(date).format(f);
     }
 
-    return new SafeString(date);
+    return date;
 };
+
+module.exports = date;

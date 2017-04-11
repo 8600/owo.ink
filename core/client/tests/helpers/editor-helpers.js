@@ -59,17 +59,6 @@ export function testInput(input, output, expect) {
     });
 }
 
-export function testInputTimeout(input) {
-    window.editor.element.focus();
-    return Ember.Test.promise(function (resolve, reject) { // eslint-disable-line
-        window.setTimeout(() => {
-            resolve(window.editor.element.innerHTML);
-        }, 300);
-
-        inputText(window.editor, input);
-    });
-}
-
 export function waitForRender(selector) {
     let isRejected = false;
     return Ember.Test.promise(function (resolve, reject) { // eslint-disable-line
@@ -87,13 +76,5 @@ export function waitForRender(selector) {
             }
         }
         checkIsRendered();
-    });
-}
-
-export function timeoutPromise(timeout) {
-    return Ember.Test.promise(function (resolve) { // eslint-disable-line
-        window.setTimeout(() => {
-            resolve();
-        }, timeout);
     });
 }

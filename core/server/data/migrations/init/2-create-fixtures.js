@@ -9,11 +9,11 @@ module.exports = function insertFixtures(options) {
     }, options);
 
     return Promise.mapSeries(fixtures.models, function (model) {
-        logging.info('Model: ' + model.name);
+        logging.info('加载模块: ' + model.name);
         return fixtures.utils.addFixturesForModel(model, localOptions);
     }).then(function () {
         return Promise.mapSeries(fixtures.relations, function (relation) {
-            logging.info('Relation: ' + relation.from.model + ' to ' + relation.to.model);
+            logging.info('建立关系: ' + relation.from.model + ' to ' + relation.to.model);
             return fixtures.utils.addFixturesForRelation(relation, localOptions);
         });
     });

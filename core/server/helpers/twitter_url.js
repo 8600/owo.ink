@@ -6,11 +6,11 @@
 // We use the name twitter_url to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-var proxy = require('./proxy'),
-    socialUrls = proxy.socialUrls,
-    findKey = proxy.utils.findKey;
+var socialUrls = require('../utils/social-urls'),
+    findKey    = require('./utils').findKey,
+    twitter_url;
 
-module.exports = function twitter_url(username, options) {
+twitter_url = function twitter_url(username, options) {
     if (!options) {
         options = username;
         username = findKey('twitter', this, options.data.blog);
@@ -22,3 +22,5 @@ module.exports = function twitter_url(username, options) {
 
     return null;
 };
+
+module.exports = twitter_url;

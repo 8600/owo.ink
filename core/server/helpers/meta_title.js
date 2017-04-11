@@ -6,8 +6,7 @@
 // We use the name meta_title to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-var proxy = require('./proxy'),
-    getMetaDataTitle = proxy.metaData.getMetaDataTitle;
+var getMetaDataTitle = require('../data/meta/title');
 
 function meta_title(options) {
     return getMetaDataTitle(this, options.data.root);

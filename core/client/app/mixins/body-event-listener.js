@@ -30,8 +30,8 @@ export default Mixin.create({
             return;
         }
 
-        this._clickHandler = (event) => {
-            return this.bodyClick(event);
+        this._clickHandler = () => {
+            return this.bodyClick();
         };
 
         return $(this.get('bodyElementSelector')).on('click', this._clickHandler);

@@ -1,7 +1,7 @@
 var settingsCache = require('../settings/cache'),
     _ = require('lodash'),
     Promise = require('bluebird'),
-    SafeString = require('../themes/engine').SafeString,
+    hbs = require('express-hbs'),
     errors = require('../errors'),
     logging = require('../logging'),
     i18n = require('../i18n'),
@@ -32,7 +32,7 @@ labs.enabledHelper = function enabledHelper(options, callback) {
 
     logging.error(new errors.GhostError(errDetails));
 
-    errString = new SafeString(
+    errString = new hbs.handlebars.SafeString(
         '<script>console.error("' + _.values(errDetails).join(' ') + '");</script>'
     );
 

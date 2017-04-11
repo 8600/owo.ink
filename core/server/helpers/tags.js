@@ -6,15 +6,14 @@
 //
 // Note that the standard {{#each tags}} implementation is unaffected by this helper
 
-var proxy = require('./proxy'),
-    _ = require('lodash'),
+var hbs             = require('express-hbs'),
+    _               = require('lodash'),
+    utils           = require('../utils'),
+    localUtils      = require('./utils'),
+    visibilityFilter = require('../utils/visibility-filter'),
+    tags;
 
-    SafeString = proxy.SafeString,
-    templates = proxy.templates,
-    url = proxy.url,
-    visibilityUtils = proxy.visibility;
-
-module.exports = function tags(options) {
+tags = function (options) {
     options = options || {};
     options.hash = options.hash || {};
 
@@ -25,18 +24,18 @@ module.exports = function tags(options) {
         limit      = options.hash.limit ? parseInt(options.hash.limit, 10) : undefined,
         from       = options.hash.from ? parseInt(options.hash.from, 10) : 1,
         to         = options.hash.to ? parseInt(options.hash.to, 10) : undefined,
-        visibility = visibilityUtils.parser(options),
+        visibility = localUtils.parseVisibility(options),
         output     = '';
 
     function createTagList(tags) {
         function processTag(tag) {
-            return autolink ? templates.link({
-                url: url.urlFor('tag', {tag: tag}),
+            return autolink ? localUtils.linkTemplate({
+                url: utils.url.urlFor('tag', {tag: tag}),
                 text: _.escape(tag.name)
             }) : _.escape(tag.name);
         }
 
-        return visibilityUtils.filter(tags, visibility, !!options.hash.visibility, processTag);
+        return visibilityFilter(tags, visibility, !!options.hash.visibility, processTag);
     }
 
     if (this.tags && this.tags.length) {
@@ -50,5 +49,7 @@ module.exports = function tags(options) {
         output = prefix + output + suffix;
     }
 
-    return new SafeString(output);
+    return new hbs.handlebars.SafeString(output);
 };
+
+module.exports = tags;

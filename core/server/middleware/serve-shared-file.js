@@ -4,18 +4,18 @@ var crypto = require('crypto'),
     config = require('../config'),
     utils  = require('../utils');
 
-// ### servePublicFile Middleware
+// ### ServeSharedFile Middleware
 // Handles requests to robots.txt and favicon.ico (and caches them)
-function servePublicFile(file, type, maxAge) {
+function serveSharedFile(file, type, maxAge) {
     var content,
-        publicFilePath = config.get('paths').publicFilePath,
+        corePath = config.get('paths').corePath,
         filePath,
         blogRegex = /(\{\{blog-url\}\})/g,
         apiRegex = /(\{\{api-url\}\})/g;
 
-    filePath = file.match(/^public/) ? path.join(publicFilePath, file.replace(/^public/, '')) : path.join(publicFilePath, file);
+    filePath = file.match(/^shared/) ? path.join(corePath, file) : path.join(corePath, 'shared', file);
 
-    return function servePublicFile(req, res, next) {
+    return function serveSharedFile(req, res, next) {
         if (req.path === '/' + file) {
             if (content) {
                 res.writeHead(200, content.headers);
@@ -49,4 +49,4 @@ function servePublicFile(file, type, maxAge) {
     };
 }
 
-module.exports = servePublicFile;
+module.exports = serveSharedFile;

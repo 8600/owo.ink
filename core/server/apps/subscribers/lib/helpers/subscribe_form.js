@@ -5,19 +5,20 @@
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 var _ = require('lodash'),
 
-    // (Less) dirty requires
-    proxy = require('../../../../helpers/proxy'),
-    templates = proxy.templates,
-    config = proxy.config,
-    url = proxy.url,
-    SafeString = proxy.SafeString,
+    // Dirty requires
+    hbs = require('express-hbs'),
+    config = require('../../../../config'),
+    template = require('../../../../helpers/template'),
+    utils = require('../../../../helpers/utils'),
+    globalUtils = require('../../../../utils'),
 
     params = ['error', 'success', 'email'],
 
+    subscribe_form,
     subscribeScript;
 
 function makeHidden(name, extras) {
-    return templates.input({
+    return utils.inputTemplate({
         type: 'hidden',
         name: name,
         className: name,
@@ -38,17 +39,19 @@ subscribeScript =
     '})(window,document,\'querySelector\',\'value\');' +
     '</script>';
 
-module.exports = function subscribe_form(options) {
+subscribe_form = function (options) {
     var root = options.data.root,
         data = _.merge({}, options.hash, _.pick(root, params), {
-            action: url.urlJoin('/', url.getSubdir(), config.get('routeKeywords').subscribe, '/'),
-            script: new SafeString(subscribeScript),
-            hidden: new SafeString(
+            action: globalUtils.url.urlJoin('/', globalUtils.url.getSubdir(), config.get('routeKeywords').subscribe, '/'),
+            script: new hbs.handlebars.SafeString(subscribeScript),
+            hidden: new hbs.handlebars.SafeString(
                 makeHidden('confirm') +
                 makeHidden('location', root.subscribed_url ? 'value=' + root.subscribed_url : '') +
                 makeHidden('referrer', root.subscribed_referrer ? 'value=' + root.subscribed_referrer : '')
             )
         });
 
-    return templates.execute('subscribe_form', data, options);
+    return template.execute('subscribe_form', data, options);
 };
+
+module.exports = subscribe_form;

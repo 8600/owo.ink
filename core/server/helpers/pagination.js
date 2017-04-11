@@ -2,11 +2,10 @@
 // `{{pagination}}`
 // Outputs previous and next buttons, along with info about the current page
 
-var proxy = require('./proxy'),
-    _ = require('lodash'),
-    errors = proxy.errors,
-    i18n = proxy.i18n,
-    templates = proxy.templates,
+var _               = require('lodash'),
+    errors          = require('../errors'),
+    i18n            = require('../i18n'),
+    template        = require('./template'),
     pagination;
 
 pagination = function (options) {
@@ -38,7 +37,7 @@ pagination = function (options) {
 
     var data = _.merge({}, this.pagination);
 
-    return templates.execute('pagination', data, options);
+    return template.execute('pagination', data, options);
 };
 
 module.exports = pagination;

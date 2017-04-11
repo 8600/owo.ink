@@ -1,8 +1,8 @@
 <section class="gh-canvas">
     <header class="gh-canvas-header">
-        <h2 class="gh-canvas-title">Your stories</h2>
+        <h2 class="gh-canvas-title">文章管理</h2>
         <section class="view-actions">
-            {{#link-to "editor.new" class="gh-btn gh-btn-green" data-test-new-post-button=true}}<span>New story</span>{{/link-to}}
+            {{#link-to "editor.new" class="gh-btn gh-btn-green" data-test-new-post-button=true}}<span>新建文章</span>{{/link-to}}
         </section>
     </header>
     <div class="gh-contentfilter">
@@ -10,13 +10,10 @@
             {{#power-select
                 selected=selectedType
                 options=availableTypes
-                searchEnabled=false
+                searchField="name"
                 onchange=(action "changeType")
                 tagName="div"
                 classNames="gh-contentfilter-menu gh-contentfilter-type"
-                triggerClass="gh-contentfilter-menu-trigger"
-                dropdownClass="gh-contentfilter-menu-dropdown"
-                matchTriggerWidth=false
                 data-test-type-select=true
                 as |type|
             }}
@@ -31,10 +28,6 @@
                 onchange=(action "changeAuthor")
                 tagName="div"
                 classNames="gh-contentfilter-menu gh-contentfilter-author"
-                triggerClass="gh-contentfilter-menu-trigger"
-                dropdownClass="gh-contentfilter-menu-dropdown"
-                searchPlaceholder="Search authors"
-                matchTriggerWidth=false
                 data-test-author-select=true
                 as |author|
             }}
@@ -49,10 +42,6 @@
                 onchange=(action "changeTag")
                 tagName="div"
                 classNames="gh-contentfilter-menu gh-contentfilter-tag"
-                triggerClass="gh-contentfilter-menu-trigger"
-                dropdownClass="gh-contentfilter-menu-dropdown"
-                searchPlaceholder="Search tags"
-                matchTriggerWidth=false
                 data-test-tag-select=true
                 as |tag|
             }}
@@ -61,7 +50,7 @@
         </div>
 
         <div class="gh-contentfilter-right">
-            Sort by:
+            排序方式:
             {{#power-select
                 selected=selectedOrder
                 options=availableOrders
@@ -69,10 +58,6 @@
                 onchange=(action "changeOrder")
                 tagName="div"
                 classNames="gh-contentfilter-menu gh-contentfilter-sort"
-                triggerClass="gh-contentfilter-menu-trigger"
-                dropdownClass="gh-contentfilter-menu-dropdown"
-                horizontalPosition="right"
-                matchTriggerWidth=false
                 data-test-order-select=true
                 as |order|
             }}
@@ -96,7 +81,7 @@
                             <h3>You Haven't Written Any Posts Yet!</h3>
                             {{#link-to "editor.new"}}<button type="button" class="gh-btn gh-btn-green gh-btn-lg"><span>Write a new Post</span></button>{{/link-to}}
                         {{else}}
-                            <h3>No posts match the current filter</h3>
+                            <h3>No posts that match the current filter</h3>
                             {{#link-to "posts.index" (query-params type=null)}}<button type="button" class="gh-btn gh-btn-lg"><span>Show all posts</span></button>{{/link-to}}
                         {{/if}}
                     </div>

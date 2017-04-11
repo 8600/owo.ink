@@ -1,17 +1,15 @@
 // # Get Helper
 // Usage: `{{#get "posts" limit="5"}}`, `{{#get "tags" limit="all"}}`
 // Fetches data from the API
-var proxy = require('./proxy'),
-    _ = require('lodash'),
+var _ = require('lodash'),
+    hbs = require('express-hbs'),
     Promise = require('bluebird'),
     jsonpath = require('jsonpath'),
 
-    logging = proxy.logging,
-    i18n = proxy.i18n,
-    createFrame = proxy.hbs.handlebars.createFrame,
-
-    api = proxy.api,
-    labs = proxy.labs,
+    logging = require('../logging'),
+    i18n = require('../i18n'),
+    api = require('../api'),
+    labs = require('../utils/labs'),
     resources,
     pathAliases,
     get;
@@ -98,7 +96,7 @@ get = function get(resource, options) {
     options.data = options.data || {};
 
     var self = this,
-        data = createFrame(options.data),
+        data = hbs.handlebars.createFrame(options.data),
         apiOptions = options.hash,
         apiMethod;
 

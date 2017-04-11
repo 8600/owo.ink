@@ -1,6 +1,6 @@
 <section class="gh-canvas">
     <header class="gh-canvas-header">
-        <h2 class="gh-canvas-title">Team members</h2>
+        <h2 class="gh-canvas-title">管理团队</h2>
         {{!-- Do not show Invite user button to authors --}}
         {{#unless session.user.isAuthor}}
             <section class="view-actions">
@@ -78,7 +78,7 @@
     {{/unless}}
 
     <section class="apps-grid-container gh-active-users" data-test-active-users>
-        <span class="apps-grid-title">Active users</span>
+        <span class="apps-grid-title">注册用户</span>
         <div class="apps-grid">
             {{#each sortedActiveUsers key="id" as |user|}}
                 {{!-- For authors only shows users as a list, otherwise show users with links to user page --}}

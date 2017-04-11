@@ -3,7 +3,7 @@
         "mail": {
             "title": "Ghost at {domain}"
         },
-        "seeLinkForInstructions": "See {link} for instructions.",
+        "seeLinkForInstructions": "查看 {link} 了解更多.",
         "time": {
             "seconds": "seconds"
         },
@@ -115,9 +115,6 @@
                 "nameOrVersionMissing": "\"name\" or \"version\" is missing from theme package.json file.",
                 "willBeRequired": "This will be required in future. Please see {url}",
                 "themeFileIsMalformed": "Theme package.json file is malformed"
-            },
-            "blogIcon": {
-                "error": "Could not fetch icon dimensions."
             }
         },
         "config": {
@@ -374,7 +371,11 @@
             },
             "icons": {
                 "missingFile": "Please select an icon.",
-                "invalidFile": "Blog icon must be a square .ico or .png file between 60px – 1,000px, under 100kb.",
+                "fileSizeTooLarge": "Please select an icon file smaller than 100kb.",
+                "iconNotSquare": "The icon needs to be a square.",
+                "fileTooLarge": "Please select an icon file smaller than 1000px.",
+                "fileTooSmall": "Please select an icon file larger than 32px.",
+                "invalidFile": "Please select a valid icon file.",
                 "couldNotGetSize": "Couldn/'t get icon dimensions"
             },
             "users": {
@@ -478,7 +479,7 @@
     "warnings": {
         "index": {
             "usingDirectMethodToSendEmail": "Ghost is attempting to use a direct method to send email. \nIt is recommended that you explicitly configure an email service.",
-            "unableToSendEmail": "Ghost is currently unable to send email."
+            "unableToSendEmail": "博客目前无法发送邮件."
         },
         "helpers": {
             "helperNotAvailable": "The \\{\\{{helperName}\\}\\} helper is not available.",

@@ -3,11 +3,11 @@
     <p>Ghost works best when shared with others. Collaborate, get feedback on your posts &amp; work together on ideas.</p>
 </header>
 
-<div><img class="gh-flow-faces" src="assets/img/users.png" alt="" /></div>
+<div><img class="gh-flow-faces" src="{{gh-path 'asset' 'img/users.png'}}" alt="" /></div>
 
 <form class="gh-flow-invite">
     {{#gh-form-group errors=errors hasValidated=hasValidated property="users"}}
-        <label for="users">Enter one email address per line, we’ll handle the rest! {{inline-svg "email"}}</label>
+        <label for="users">Enter one email address per line, we’ll handle the rest! <i class="icon-mail"></i></label>
         {{gh-textarea users name="users" required="required" focusOut=(action "validate") update=(action (mut users))}}
     {{/gh-form-group}}
 

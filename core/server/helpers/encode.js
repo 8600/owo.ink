@@ -4,10 +4,12 @@
 //
 // Returns URI encoded string
 
-var proxy = require('./proxy'),
-    SafeString = proxy.SafeString;
+var hbs = require('express-hbs'),
+    encode;
 
-module.exports = function encode(string, options) {
+encode = function (string, options) {
     var uri = string || options;
-    return new SafeString(encodeURIComponent(uri));
+    return new hbs.handlebars.SafeString(encodeURIComponent(uri));
 };
+
+module.exports = encode;

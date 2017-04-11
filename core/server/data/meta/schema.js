@@ -1,6 +1,7 @@
 var config = require('../../config'),
-    escapeExpression = require('../../themes/engine').escapeExpression,
+    hbs = require('express-hbs'),
     socialUrls = require('../../utils/social-urls'),
+    escapeExpression = hbs.handlebars.Utils.escapeExpression,
     _ = require('lodash');
 
 function schemaImageObject(metaDataVal) {

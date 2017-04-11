@@ -21,43 +21,18 @@
     resize: none;
     font-weight: 200;
     letter-spacing: 0.1px;
-    -webkit-user-select: text;
-    user-select: text;
-    line-height: normal;
 }
-
-/*.__mobiledoc-editor *,
-.__mobiledoc-editor *:before,
-.__mobiledoc-editor *:after {
-    box-sizing:unset;
-}*/
 
 .kg-card {
     position: relative;
-    display: inline-block; /* even though we hide the cursors there is still a 
-                            zero width divider character on either side of this card, 
-                            we need them to sit inline around this block otherwise we have
-                            a line at the top and bottom of the card. */
-    width:100%;
+    display: block; 
+    padding: 10px;
     outline:none;
-    user-select: none;
-    cursor: pointer;
-    z-index: 110; /* the title has a z-index of 100, this makes it sit above it. */
 }
 
-.kg-card * {
-    user-select: none;
-    cursor: pointer;
-}
-
-.kg-card .is-editing * {
-    user-select: auto;
-    cursor: auto;
-}
-
-.kg-card:hover,
-.kg-card.selected {
+.kg-card:hover, .kg-card.selected {
     box-shadow: var(--blue) 0 0 0 1px;
+    border-radius:10px;
 }
 .kg-card.selected-hard {
     box-shadow: var(--blue) 0 0 0 3px;
@@ -66,9 +41,9 @@
     position: absolute;
     left: 0px;
     top: 0px;
-    height: 10px;
+    margin-top: -56px;
+    height: 46px;
     width:100%;
-    overflow: visible;
     display: none;
 }
 .button-group {
@@ -80,17 +55,27 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-radius:5px;
-    margin-top:-56px;
+    
     height:46px;
     display:flex;
     box-shadow: 0 0 0 1px color(var(--darkgrey) l(-10%)), 0 8px 16px rgba(26,39,49,0.16), rgba(255,255,255,0.09) 0 1px 0 0 inset;
+}
+
+/* keeps the hover when the cursor is moving from the card to the toolbar */
+.button-group:before {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom:-9px;
+    width: 100%;
+    height: 8px;
 }
 
 .button-group:after {
     display: block;
     content: "";
     position: absolute;
-    bottom:11px;
+    bottom:-9px;
     left: 50%;
     margin-left: -10px;
     
@@ -101,10 +86,8 @@
     border-top: color(var(--darkgrey) l(-10%)) 8px solid;
 }
 
-.kg-card {
-    min-height: 100px;
-}
-.kg-card.selected .kg-card-toolbar {
+
+.kg-card:hover .kg-card-toolbar, .kg-card.selected .kg-card-toolbar {
     display: flex;
     align-items: stretch;
     justify-content: space-around;
@@ -116,7 +99,6 @@
     font-size: 1.3rem;
     line-height: 46px;
     text-align:center;
-    justify-content: center;
     vertical-align: middle;
     font-weight: bold;
     padding:0 18px;
@@ -124,7 +106,7 @@
 
 
 .kg-card .kg-card-toolbar button {
-    /*display: flex;*/
+    display: flex;
     justify-content: center;
     align-items: center;
     height: 46px;
@@ -139,8 +121,6 @@
     line-height: 46px;
     width:70px;
     text-align:center;
-    justify-content: center;
-    align-items: center;
     vertical-align: middle;
     padding:0;
 }
@@ -150,8 +130,6 @@
     height:30px;
     width:60px;
     text-align:center;
-    justify-content: center;
-    align-items: center;
     vertical-align: middle;
     margin:8px;
 
@@ -178,7 +156,6 @@
     outline: none;
     border: none;
     resize: none;
-    
 }
 
 .kg-card-toolbar button:hover {
@@ -194,15 +171,13 @@ textarea.ed_code {
     border: none;
 }
 
-.dragOver {
-    background-color: var(--lightgrey);
-}
-
 
 
 /**
  * Tooltip
  */
+
+
 @keyframes tooltip-fadein {
     0% { opacity: 0; }
     100% { opacity: 1; }
@@ -244,7 +219,11 @@ textarea.ed_code {
     border-radius: 3px;
 }
 
-/* markdown card */
-.kg-card-markdown textarea {
-    resize: vertical;
-}
+
+/**
+ * HTML Card
+ */
+
+ .kg-card-html {
+     border: #ddd 1px solid;
+ }

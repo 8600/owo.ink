@@ -3,12 +3,12 @@
 //
 // Checks if a post has a particular property
 
-var proxy = require('./proxy'),
-    _ = require('lodash'),
-    logging = proxy.logging,
-    i18n = proxy.i18n;
+var _               = require('lodash'),
+    logging         = require('../logging'),
+    i18n            = require('../i18n'),
+    has;
 
-module.exports = function has(options) {
+has = function (options) {
     options = options || {};
     options.hash = options.hash || {};
 
@@ -33,7 +33,7 @@ module.exports = function has(options) {
     }
 
     function evaluateAuthorList(expr, author) {
-        var authorList = expr.split(',').map(function (v) {
+        var authorList =  expr.split(',').map(function (v) {
             return v.trim().toLocaleLowerCase();
         });
 
@@ -53,3 +53,5 @@ module.exports = function has(options) {
     }
     return options.inverse(this);
 };
+
+module.exports = has;

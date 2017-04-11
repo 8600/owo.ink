@@ -2,26 +2,26 @@
 <div id="entry-controls">
     <div class="{{if isViewingSubview 'settings-menu-pane-out-left' 'settings-menu-pane-in'}} settings-menu settings-menu-pane">
         <div class="settings-menu-header">
-            <h4>Post Settings</h4>
+            <h4>文章设置</h4>
             <button class="close icon-x settings-menu-header-action" {{action "closeMenus"}}><span class="hidden">Close</span></button>
         </div>
         <div class="settings-menu-content">
             {{gh-image-uploader-with-preview
                 image=model.image
-                text="Add post image"
+                text="添加图片"
                 update=(action "setCoverImage")
                 remove=(action "clearCoverImage")
             }}
             <form>
             <div class="form-group">
-                <label for="url">Post URL</label>
+                <label for="url">文章URL</label>
                 {{#if model.isPublished}}
                 <a class="post-view-link" target="_blank" href="{{model.absoluteUrl}}">
-                    View post {{inline-svg "external"}}
+                    View post <i class="icon-external"></i>
                 </a>
                 {{else}}
                 <a class="post-view-link" target="_blank" href="{{model.previewUrl}}">
-                    Preview {{inline-svg "external"}}
+                    Preview <i class="icon-external"></i>
                 </a>
                 {{/if}}
 
@@ -31,29 +31,24 @@
                 {{gh-url-preview slug=slugValue tagName="p" classNames="description"}}
             </div>
 
-            <div class="form-group">
-                {{#if (or model.isDraft model.isPublished model.pastScheduledTime)}}
-                    <label>Publish Date</label>
+            {{#gh-form-group errors=model.errors property="post-setting-date"}}
+                {{#if model.timeScheduled}}
+                    <label for="post-setting-date">指定日期</label>
                 {{else}}
-                    <label>Scheduled Date</label>
-                    <p>Use the publish menu to re-schedule</p>
+                    <label for="post-setting-date">发布日期</label>
                 {{/if}}
-                {{gh-date-time-picker
-                    date=model.publishedAtBlogDate
-                    time=model.publishedAtBlogTime
-                    setDate=(action "setPublishedAtBlogDate")
-                    setTime=(action "setPublishedAtBlogTime")
-                    errors=model.errors
-                    dateErrorProperty="publishedAtBlogDate"
-                    timeErrorProperty="publishedAtBlogTime"
-                    maxDate='now'
-                    disabled=model.isScheduled
-                    static=true
+                {{gh-datetime-input
+                    value=model.publishedAtUTC
+                    update=(action "setPublishedAtUTC")
+                    inputClass="post-setting-date"
+                    inputId="post-setting-date"
+                    inputName="post-setting-date"
                 }}
-            </div>
+                {{gh-error-message errors=model.errors property="post-setting-date"}}
+            {{/gh-form-group}}
 
             <div class="form-group">
-                <label for="tag-input">Tags</label>
+                <label for="tag-input">标签设置</label>
                 {{gh-selectize
                     id="tag-input"
                     multiple=true
@@ -69,7 +64,7 @@
 
             {{#unless session.user.isAuthor}}
             <div class="form-group for-select">
-                <label for="author-list">Author</label>
+                <label for="author-list">作者</label>
                 <span class="input-icon icon-user">
                     <span class="gh-select" tabindex="0">
                     {{one-way-select
@@ -89,10 +84,10 @@
             <ul class="nav-list nav-list-block">
                 {{#gh-tab tagName="li" classNames="nav-list-item"}}
                     <button type="button">
-                        <b>Meta Data</b>
-                        <span>Extra content for SEO and social media.</span>
+                        <b>Meta设置</b>
+                        <span>SEO优化以及增添额外内容.</span>
                     </button>
-                     {{inline-svg "arrow-right"}}
+                    <i class="icon-arrow-right"></i>
                 {{/gh-tab}}
             </ul>
 
@@ -118,7 +113,7 @@
     {{#gh-tab-pane}}
         {{#if isViewingSubview}}
         <div class="settings-menu-header subview">
-            <button {{action "closeSubview"}} class="back icon-arrow-left settings-menu-header-action"><span class="hidden">Back</span></button>
+            <button {{action "closeSubview"}} class="back icon-arrow-left settings-menu-header-action"><span class="hidden">返回</span></button>
             <h4>Meta Data</h4>
             <div style="width:23px;">{{!flexbox space-between}}</div>
         </div>

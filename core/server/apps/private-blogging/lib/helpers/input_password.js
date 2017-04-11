@@ -6,12 +6,12 @@
 // We use the name input_password to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-// (less) dirty requires
-var proxy = require('../../../../helpers/proxy'),
-    SafeString = proxy.SafeString,
-    templates = proxy.templates;
+// Dirty requires
+var hbs = require('express-hbs'),
+    utils = require('../../../../helpers/utils'),
+    input_password;
 
-module.exports = function input_password(options) {
+input_password = function (options) {
     options = options || {};
     options.hash = options.hash || {};
 
@@ -23,12 +23,14 @@ module.exports = function input_password(options) {
         extras += ' placeholder="' + options.hash.placeholder + '"';
     }
 
-    output = templates.input({
+    output = utils.inputTemplate({
         type: 'password',
         name: 'password',
         className: className,
         extras: extras
     });
 
-    return new SafeString(output);
+    return new hbs.handlebars.SafeString(output);
 };
+
+module.exports = input_password;

@@ -5,12 +5,11 @@
 //
 // Defaults to words="50"
 
-var proxy = require('./proxy'),
-    _ = require('lodash'),
-    SafeString = proxy.SafeString,
-    getMetaDataExcerpt = proxy.metaData.getMetaDataExcerpt;
+var hbs = require('express-hbs'),
+    _   = require('lodash'),
+    getMetaDataExcerpt = require('../data/meta/excerpt');
 
-module.exports = function excerpt(options) {
+function excerpt(options) {
     var truncateOptions = (options || {}).hash || {};
 
     truncateOptions = _.pick(truncateOptions, ['words', 'characters']);
@@ -18,7 +17,9 @@ module.exports = function excerpt(options) {
         truncateOptions[key] = parseInt(truncateOptions[key], 10);
     });
 
-    return new SafeString(
+    return new hbs.handlebars.SafeString(
         getMetaDataExcerpt(String(this.html), truncateOptions)
     );
-};
+}
+
+module.exports = excerpt;

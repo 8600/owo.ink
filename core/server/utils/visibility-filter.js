@@ -7,7 +7,7 @@ var _ = require('lodash');
  * @param {Function} [fn]
  * @returns {Array|Object} filtered items
  */
-module.exports.filter = function visibilityFilter(items, visibility, explicit, fn) {
+module.exports = function visibilityFilter(items, visibility, explicit, fn) {
     var memo = _.isArray(items) ? [] : {};
 
     if (_.includes(visibility, 'all')) {
@@ -26,12 +26,4 @@ module.exports.filter = function visibilityFilter(items, visibility, explicit, f
         }
         return memo;
     }, memo);
-};
-
-module.exports.parser = function visibilityParser(options) {
-    if (!options.hash.visibility) {
-        return ['public'];
-    }
-
-    return _.map(options.hash.visibility.split(','), _.trim);
 };

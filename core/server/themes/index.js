@@ -7,9 +7,7 @@ var debug = require('debug')('ghost:themes'),
     themeLoader = require('./loader'),
     active = require('./active'),
     validate = require('./validate'),
-    Storage = require('./Storage'),
-    settingsCache = require('../settings/cache'),
-    themeStorage;
+    settingsCache = require('../settings/cache');
 
 // @TODO: reduce the amount of things we expose to the outside world
 // Make this a nice clean sensible API we can all understand!
@@ -52,11 +50,6 @@ module.exports = {
     // Load themes, soon to be removed and exposed via specific function.
     loadAll: themeLoader.loadAllThemes,
     loadOne: themeLoader.loadOneTheme,
-    get storage() {
-        themeStorage = themeStorage || new Storage();
-
-        return themeStorage;
-    },
     list: require('./list'),
     validate: validate,
     toJSON: require('./to-json'),

@@ -9,8 +9,7 @@
         "internalAppPath": "core/server/apps/",
         "internalStoragePath": "core/server/storage/",
         "internalSchedulingPath": "core/server/scheduling/",
-        "migrationPath": "core/server/data/migrations",
-        "publicFilePath": "core/server/public"
+        "migrationPath": "core/server/data/migrations"
     },
     "internalApps": [
         "private-blogging",
@@ -54,6 +53,11 @@
         "themes": {
             "extensions": [".zip"],
             "contentTypes": ["application/zip", "application/x-zip-compressed", "application/octet-stream"]
+        }
+    },
+    "storage": {
+        "active": {
+            "themes": "local-file-store"
         }
     },
     "times": {

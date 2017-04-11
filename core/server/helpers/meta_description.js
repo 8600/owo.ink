@@ -6,8 +6,7 @@
 // We use the name meta_description to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-var proxy = require('./proxy'),
-    getMetaDataDescription = proxy.metaData.getMetaDataDescription;
+var getMetaDataDescription = require('../data/meta/description');
 
 function meta_description(options) {
     options = options || {};

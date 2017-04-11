@@ -6,19 +6,16 @@
 //
 // Converts normal HTML into AMP HTML with Amperize module and uses a cache to return it from
 // there if available. The cacheId is a combination of `updated_at` and the `slug`.
-var Promise = require('bluebird'),
-    moment = require('moment'),
-
-    // (less) dirty requires
-    proxy = require('../../../../helpers/proxy'),
-    SafeString = proxy.SafeString,
-    logging = proxy.logging,
-    i18n = proxy.i18n,
-    errors = proxy.errors,
-    makeAbsoluteUrl = require('../../../../utils/make-absolute-urls'),
-    utils = require('../../../../utils'),
-    amperizeCache = {},
-    allowedAMPTags = [],
+var hbs                  = require('express-hbs'),
+    Promise              = require('bluebird'),
+    moment               = require('moment'),
+    logging              = require('../../../../logging'),
+    i18n                 = require('../../../../i18n'),
+    errors               = require('../../../../errors'),
+    makeAbsoluteUrl      = require('../../../../utils/make-absolute-urls'),
+    utils                = require('../../../../utils'),
+    amperizeCache        = {},
+    allowedAMPTags       = [],
     allowedAMPAttributes = {},
     amperize,
     cleanHTML,
@@ -193,7 +190,7 @@ function ampContent() {
             selfClosing: ['source', 'track']
         });
 
-        return new SafeString(cleanHTML);
+        return new hbs.handlebars.SafeString(cleanHTML);
     });
 }
 

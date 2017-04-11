@@ -5,6 +5,8 @@ import computed, {alias, mapBy} from 'ember-computed';
 import injectService from 'ember-service/inject';
 import injectController from 'ember-controller/inject';
 import {htmlSafe} from 'ember-string';
+import observer from 'ember-metal/observer';
+import run from 'ember-runloop';
 import {isEmberArray} from 'ember-array/utils';
 import {isBlank} from 'ember-utils';
 import {task, timeout} from 'ember-concurrency';
@@ -12,7 +14,6 @@ import PostModel from 'ghost-admin/models/post';
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
 import {isVersionMismatchError} from 'ghost-admin/services/ajax';
 import {isInvalidError} from 'ember-ajax/errors';
-
 import ghostPaths from 'ghost-admin/utils/ghost-paths';
 import moment from 'moment';
 
@@ -32,6 +33,9 @@ PostModel.eachAttribute(function (name) {
 });
 
 export default Mixin.create({
+    _autoSaveId: null,
+    _timedSaveId: null,
+    submitting: false,
 
     showLeaveEditorModal: false,
     showReAuthenticateModal: false,
@@ -46,8 +50,7 @@ export default Mixin.create({
     toolbar: [], // for apps
     apiRoot: ghostPaths().apiRoot,
     assetPath: ghostPaths().assetRoot,
-    editor: null,
-    editorMenuIsOpen: false,
+
     init() {
         this._super(...arguments);
         window.onbeforeunload = () => {
@@ -58,127 +61,25 @@ export default Mixin.create({
     shouldFocusTitle: alias('model.isNew'),
     shouldFocusEditor: false,
 
-    _canAutosave: computed('model.{isDraft,isNew}', function () {
-        return !testing && this.get('model.isDraft') && !this.get('model.isNew');
-    }),
+    autoSave: observer('model.scratch', function () {
+        // Don't save just because we swapped out models
+        if (this.get('model.isDraft') && !this.get('model.isNew')) {
+            let autoSaveId,
+                saveOptions,
+                timedSaveId;
 
-    // save 3 seconds after the last edit
-    _autosave: task(function* () {
-        yield timeout(3000);
-
-        if (this.get('_canAutosave')) {
-            yield this.get('autosave').perform();
-        }
-    }).restartable(),
-
-    // save every 60 seconds so we still save even if the user doesn't stop typing
-    _timedSave: task(function* () {
-        // eslint-disable-next-line no-constant-condition
-        while (!testing && true) {
-            yield timeout(60000);
-
-            if (this.get('_canAutosave')) {
-                yield this.get('autosave').perform();
-            }
-        }
-    }).drop().on('init'),
-
-    // separate task for autosave so that it doesn't override a manual save
-    autosave: task(function* () {
-        if (!this.get('save.isRunning')) {
-            return yield this._savePromise({
+            saveOptions = {
                 silent: true,
                 backgroundSave: true
-            });
-        }
-    }).drop(),
+            };
 
-    // save tasks cancels autosave before running, although the _xSave tasks
-    // are the ones being cancelled that will also cancel the autosave task
-    save: task(function* (options) {
-        try {
-            this.send('cancelAutosave');
-            return yield this._savePromise(options);
-        } finally {
-            this.send('restartAutosave');
+            timedSaveId = run.throttle(this, 'send', 'save', saveOptions, 60000, false);
+            this._timedSaveId = timedSaveId;
+
+            autoSaveId = run.debounce(this, 'send', 'save', saveOptions, 3000);
+            this._autoSaveId = autoSaveId;
         }
     }),
-
-    // TODO: convert this into a more ember-concurrency flavour
-    _savePromise(options) {
-        let prevStatus = this.get('model.status');
-        let isNew = this.get('model.isNew');
-        let promise, status;
-
-        options = options || {};
-
-        if (options.backgroundSave) {
-            // do not allow a post's status to be set to published by a background save
-            status = 'draft';
-        } else {
-            if (this.get('post.pastScheduledTime')) {
-                status = (!this.get('willSchedule') && !this.get('willPublish')) ? 'draft' : 'published';
-            } else {
-                if (this.get('willPublish') && !this.get('model.isScheduled') && !this.get('statusFreeze')) {
-                    status = 'published';
-                } else if (this.get('willSchedule') && !this.get('model.isPublished') && !this.get('statusFreeze')) {
-                    status = 'scheduled';
-                } else {
-                    status = 'draft';
-                }
-            }
-        }
-
-        // Set the properties that are indirected
-        // set mobiledoc equal to what's in the editor, minus the image markers.
-        this.set('model.mobiledoc', this.get('model.scratch'));
-        this.set('model.status', status);
-
-        // Set a default title
-        if (!this.get('model.titleScratch').trim()) {
-            this.set('model.titleScratch', '(Untitled)');
-        }
-
-        this.set('model.title', this.get('model.titleScratch'));
-        this.set('model.metaTitle', this.get('model.metaTitleScratch'));
-        this.set('model.metaDescription', this.get('model.metaDescriptionScratch'));
-
-        if (!this.get('model.slug')) {
-            this.get('updateTitle').cancelAll();
-
-            promise = this.get('generateSlug').perform();
-        }
-
-        return resolve(promise).then(() => {
-            return this.get('model').save(options).then((model) => {
-                if (!options.silent) {
-                    this.showSaveNotification(prevStatus, model.get('status'), isNew ? true : false);
-                }
-
-                this.get('model').set('statusScratch', null);
-
-                return model;
-            });
-
-        }).catch((error) => {
-            // re-throw if we have a general server error
-            if (error && !isInvalidError(error)) {
-                this.send('error', error);
-                return;
-            }
-
-            this.set('model.status', prevStatus);
-
-            if (!options.silent) {
-                error = error || this.get('model.errors.messages');
-                this.showErrorAlert(prevStatus, this.get('model.status'), error);
-                // simulate a validation error for upstream tasks
-                throw undefined;
-            }
-
-            return this.get('model');
-        });
-    },
 
     /**
      * By default, a post will not change its publish state.
@@ -187,6 +88,7 @@ export default Mixin.create({
      */
     willPublish: boundOneWay('model.isPublished'),
     willSchedule: boundOneWay('model.isScheduled'),
+    scheduledWillPublish: boundOneWay('model.isPublished'),
 
     // set by the editor route and `hasDirtyAttributes`. useful when checking
     // whether the number of tags has changed for `hasDirtyAttributes`.
@@ -200,17 +102,37 @@ export default Mixin.create({
 
     // countdown timer to show the time left until publish time for a scheduled post
     // starts 15 minutes before scheduled time
-    scheduleCountdown: computed('model.{publishedAtUTC,isScheduled}', 'clock.second', function () {
-        let isScheduled = this.get('model.isScheduled');
-        let publishTime = this.get('model.publishedAtUTC') || moment.utc();
-        let timeUntilPublished = publishTime.diff(moment.utc(), 'minutes', true);
-        let isPublishedSoon = timeUntilPublished > 0 && timeUntilPublished < 15;
+    scheduleCountdown: computed('model.status', 'clock.second', 'model.publishedAtUTC', 'model.timeScheduled', function () {
+        let status = this.get('model.status');
+        let publishTime = this.get('model.publishedAtUTC');
 
-        // force a recompute
         this.get('clock.second');
 
-        if (isScheduled && isPublishedSoon) {
+        if (this.get('model.timeScheduled') && status === 'scheduled' && publishTime.diff(moment.utc(new Date()), 'minutes', true) < 15) {
             return moment(publishTime).fromNow();
+        } else {
+            return false;
+        }
+    }),
+
+    // statusFreeze has two tasks:
+    // 1. 2 minutes before the scheduled time it will return true to change the button layout in gh-editor-save-button. There will be no
+    //    dropdown menu, the save button gets the status 'isDangerous' to turn red and will only have the option to unschedule the post
+    // 2. when the scheduled time is reached we use a helper 'scheduledWillPublish' to pretend we're already dealing with a published post.
+    //    This will take effect on the save button menu, the workflows and existing conditionals.
+    statusFreeze: computed('model.status', 'clock.second', 'model.publishedAtUTC', 'model.timeScheduled', function () {
+        let status = this.get('model.status');
+        let publishTime = this.get('model.publishedAtUTC');
+
+        this.get('clock.second');
+
+        if (this.get('model.timeScheduled') && status === 'scheduled' && publishTime.diff(moment.utc(new Date()), 'minutes', true) < 2) {
+            return true;
+        } else if (!this.get('model.timeScheduled') && !this.get('scheduledWillPublish') && status === 'scheduled' && publishTime.diff(moment.utc(new Date()), 'hours', true) < 0) {
+            // set the helper to true, until the model refreshed
+            this.set('scheduledWillPublish', true);
+            this.showSaveNotification('scheduled', 'published', false);
+            return false;
         } else {
             return false;
         }
@@ -269,10 +191,11 @@ export default Mixin.create({
                 return false;
             }
 
-            let mobiledoc = JSON.stringify(model.get('mobiledoc'));
-            let scratch = JSON.stringify(model.get('scratch'));
+            // let markdown = model.get('markdown');
+            let mobiledoc = model.get('mobiledoc');
             let title = model.get('title');
             let titleScratch = model.get('titleScratch');
+            let scratch = this.get('model.scratch');
             let changedAttributes;
 
             if (!this.tagNamesEqual()) {
@@ -285,6 +208,7 @@ export default Mixin.create({
 
             // since `scratch` is not model property, we need to check
             // it explicitly against the model's mobiledoc attribute
+            // TODO either deep equals or compare the serialised version - RYAN
             if (mobiledoc !== scratch) {
                 return true;
             }
@@ -459,22 +383,100 @@ export default Mixin.create({
     }).enqueue(),
 
     actions: {
-        updateScratch(value) {
-            this.set('model.scratch', value);
-            this.get('_autosave').perform();
-        },
+        cancelTimers() {
+            let autoSaveId = this._autoSaveId;
+            let timedSaveId = this._timedSaveId;
 
-        restartAutosave() {
-            this.get('_timedSave').perform();
-        },
+            if (autoSaveId) {
+                run.cancel(autoSaveId);
+                this._autoSaveId = null;
+            }
 
-        cancelAutosave() {
-            this.get('_autosave').cancelAll();
-            this.get('_timedSave').cancelAll();
+            if (timedSaveId) {
+                run.cancel(timedSaveId);
+                this._timedSaveId = null;
+            }
         },
 
         save(options) {
-            return this.get('save').perform(options);
+            let prevStatus = this.get('model.status');
+            let isNew = this.get('model.isNew');
+            let promise, status;
+
+            options = options || {};
+            this.toggleProperty('submitting');
+            if (options.backgroundSave) {
+                // do not allow a post's status to be set to published by a background save
+                status = 'draft';
+            } else {
+                if (this.get('scheduledWillPublish')) {
+                    status = (!this.get('willSchedule') && !this.get('willPublish')) ? 'draft' : 'published';
+                } else {
+                    if (this.get('willPublish') && !this.get('model.isScheduled') && !this.get('statusFreeze')) {
+                        status = 'published';
+                    } else if (this.get('willSchedule') && !this.get('model.isPublished') && !this.get('statusFreeze')) {
+                        status = 'scheduled';
+                    } else {
+                        status = 'draft';
+                    }
+                }
+            }
+
+            this.send('cancelTimers');
+
+            // Set the properties that are indirected
+            // set mobiledoc equal to what's in the editor, minus the image markers.
+            this.set('model.mobiledoc', this.get('model.scratch'));
+            this.set('model.status', status);
+
+            // Set a default title
+            if (!this.get('model.titleScratch').trim()) {
+                this.set('model.titleScratch', '(Untitled)');
+            }
+
+            this.set('model.title', this.get('model.titleScratch'));
+            this.set('model.metaTitle', this.get('model.metaTitleScratch'));
+            this.set('model.metaDescription', this.get('model.metaDescriptionScratch'));
+
+            if (!this.get('model.slug')) {
+                this.get('updateTitle').cancelAll();
+
+                promise = this.get('generateSlug').perform();
+            }
+
+            return resolve(promise).then(() => {
+                return this.get('model').save(options).then((model) => {
+                    if (!options.silent) {
+                        this.showSaveNotification(prevStatus, model.get('status'), isNew ? true : false);
+                    }
+
+                    this.toggleProperty('submitting');
+
+                    // reset the helper CP back to false after saving and refetching the new model
+                    // which is published by the scheduler process on the server now
+                    if (this.get('scheduledWillPublish')) {
+                        this.set('scheduledWillPublish', false);
+                    }
+                    return model;
+                });
+            }).catch((error) => {
+                // re-throw if we have a general server error
+                if (error && !isInvalidError(error)) {
+                    this.toggleProperty('submitting');
+                    this.send('error', error);
+                    return;
+                }
+
+                if (!options.silent) {
+                    error = error || this.get('model.errors.messages');
+                    this.showErrorAlert(prevStatus, this.get('model.status'), error);
+                }
+
+                this.set('model.status', prevStatus);
+
+                this.toggleProperty('submitting');
+                return this.get('model');
+            });
         },
 
         setSaveType(newType) {
@@ -559,16 +561,6 @@ export default Mixin.create({
 
         toggleReAuthenticateModal() {
             this.toggleProperty('showReAuthenticateModal');
-        },
-
-        setEditor(editor) {
-            this.set('editor', editor);
-        },
-        editorMenuIsOpen() {
-            this.set('editorMenuIsOpen', true);
-        },
-        editorMenuIsClosed() {
-            this.set('editorMenuIsOpen', false);
         }
     }
 });

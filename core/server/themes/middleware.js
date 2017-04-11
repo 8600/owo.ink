@@ -1,5 +1,5 @@
 var _  = require('lodash'),
-    hbs = require('./engine'),
+    hbs = require('express-hbs'),
     utils = require('../utils'),
     errors = require('../errors'),
     i18n = require('../i18n'),

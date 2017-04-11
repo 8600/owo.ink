@@ -52,5 +52,5 @@
         "useTinfoil": true,
         "useStructuredData": true
     },
-    "useMinFiles": false
+    "minifyAssets": false
 }

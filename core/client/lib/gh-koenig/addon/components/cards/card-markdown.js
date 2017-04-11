@@ -18,29 +18,36 @@ import {
 
 export default Component.extend({
     layout,
+    isEditing: true,
     accept: 'image/gif,image/jpg,image/jpeg,image/png,image/svg+xml',
     extensions: ['gif', 'jpg', 'jpeg', 'png', 'svg'],
+
     ajax: injectService(),
 
     editing: observer('isEditing', function () {
-        if (!this.isEditing) {
-            this.set('preview', formatMarkdown([this.get('payload').markdown]));
-        }
+        // if (!this.isEditing) {
+        //     this.set('preview', formatMarkdown([this.get('payload').markdown]));
+        // }
     }),
     preview: computed('value', function() {
         return formatMarkdown([this.get('payload').markdown]);
     }),
     save: observer('doSave', function () {
-        let payload = this.get('payload');
-        payload.markdown = this.$('textarea').val();
-        this.set('value', this.$('textarea').val());
-        this.set('payload', payload);
-        this.get('env').save(payload, false);
+        this.get('env').save(this.get('payload'), false);
     }),
-    init() {
-        this._super(...arguments);
-        this.set('value', this.get('payload').markdown);
-    },
+
+    value: computed('payload', {
+        get() {
+            return this.get('payload').markdown || '';
+        },
+
+        set(_, value) {
+            this.get('payload').markdown = value;
+            this.get('env').save(this.get('payload'), false);
+            return value;
+        }
+
+    }),
     _uploadStarted() {
         invokeAction(this, 'uploadStarted');
     },
@@ -69,8 +76,7 @@ export default Component.extend({
         invokeAction(this, 'uploadSuccess', response);
         let placeholderText = `![uploading:${response.file.name}]()`;
         let imageText = `![](${response.url})`;
-        // eslint-disable-next-line ember-suave/prefer-destructuring
-        let el = this.$('textarea')[0]; // array destructuring on jquery causes ember to throw an error about calling an Object as a Function
+        let [el] = this.$('textarea');
 
         el.value = el.value.replace(placeholderText, imageText);
         this.sendAction('updateValue');
@@ -165,7 +171,40 @@ export default Component.extend({
         });
     },
 
+    drop(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let [el] = this.$('textarea');
+        let start = el.selectionStart;
+        let end = el.selectionEnd;
+
+        let {files} = event.dataTransfer;
+        let combinedLength = 0;
+        // for(let i = 0; i < files.length; i++) {
+        //     let file = files[i];
+        //     let placeholderText = `\r\n![uploading:${file.name}]()\r\n`;
+        //     el.value = el.value.substring(0, start) + placeholderText + el.value.substring(end, el.value.length);
+        //     combinedLength += placeholderText.length;
+        // }
+
+        // eslint-disable-next-line ember-suave/prefer-destructuring
+        let file = files[0];
+        let placeholderText = `\r\n![uploading:${file.name}]()\r\n`;
+        el.value = el.value.substring(0, start) + placeholderText + el.value.substring(end, el.value.length);
+        combinedLength += placeholderText.length;
+
+        el.selectionStart = start;
+        el.selectionEnd = end + combinedLength;
+
+        this.send('fileSelected', event.dataTransfer.files);
+    },
+
     actions: {
+        updateValue() {
+            this.get('payload').markdown = this.$('textarea').val();
+            this.get('env').save(this.get('payload'), false);
+            this.set('preview', formatMarkdown([this.get('payload').markdown]));
+        },
 
         fileSelected(fileList) {
             // can't use array destructuring here as FileList is not a strict
@@ -200,36 +239,7 @@ export default Component.extend({
         },
         selectCard() {
             invokeAction(this, 'selectCard');
-        },
-        didDrop(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            // eslint-disable-next-line ember-suave/prefer-destructuring
-            let el = this.$('textarea')[0]; // array destructuring here causes ember to throw an error about calling an Object as a Function
-
-            let start = el.selectionStart;
-
-            let end = el.selectionEnd;
-
-            let {files} = event.dataTransfer;
-            let combinedLength = 0;
-
-            // eslint-disable-next-line ember-suave/prefer-destructuring
-            let file = files[0]; // array destructuring here causes ember to throw an error about calling an Object as a Function
-            let placeholderText = `\r\n![uploading:${file.name}]()\r\n`;
-            el.value = el.value.substring(0, start) + placeholderText + el.value.substring(end, el.value.length);
-            combinedLength += placeholderText.length;
-
-            el.selectionStart = start;
-            el.selectionEnd = end + combinedLength;
-
-            this.send('fileSelected', event.dataTransfer.files);
-        },
-        didDragOver() {
-            this.$('textarea').addClass('dragOver');
-        },
-        didDragLeave() {
-            this.$('textarea').removeClass('dragOver');
         }
     }
+
 });

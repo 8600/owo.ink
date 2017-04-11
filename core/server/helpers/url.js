@@ -4,15 +4,16 @@
 // Returns the URL for the current object scope i.e. If inside a post scope will return post permalink
 // `absolute` flag outputs absolute URL, else URL is relative
 
-var proxy = require('./proxy'),
-    SafeString = proxy.SafeString,
-    getMetaDataUrl = proxy.metaData.getMetaDataUrl;
+var hbs            = require('express-hbs'),
+    getMetaDataUrl = require('../data/meta/url');
 
-module.exports = function url(options) {
+function url(options) {
     var absolute = options && options.hash.absolute,
-        outputUrl = getMetaDataUrl(this, absolute);
+        url = getMetaDataUrl(this, absolute);
 
-    outputUrl = encodeURI(decodeURI(outputUrl));
+    url = encodeURI(decodeURI(url));
 
-    return new SafeString(outputUrl);
-};
+    return new hbs.SafeString(url);
+}
+
+module.exports = url;

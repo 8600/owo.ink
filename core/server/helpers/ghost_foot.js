@@ -5,13 +5,14 @@
 //
 // We use the name ghost_foot to match the helper for consistency:
 // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-var proxy = require('./proxy'),
+var hbs = require('express-hbs'),
+    SafeString = hbs.handlebars.SafeString,
     _ = require('lodash'),
-    SafeString = proxy.SafeString,
-    filters = proxy.filters,
-    settingsCache = proxy.settingsCache;
+    filters = require('../filters'),
+    settingsCache = require('../settings/cache'),
+    ghost_foot;
 
-module.exports = function ghost_foot() {
+ghost_foot = function ghost_foot() {
     var foot = [],
         codeInjection = settingsCache.get('ghost_foot');
 
@@ -25,3 +26,5 @@ module.exports = function ghost_foot() {
             return new SafeString(foot.join(' ').trim());
         });
 };
+
+module.exports = ghost_foot;

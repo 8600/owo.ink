@@ -10,16 +10,15 @@
 // Block helper: `{{#author}}{{/author}}`
 // This is the default handlebars behaviour of dropping into the author object scope
 
-var proxy = require('./proxy'),
-    _ = require('lodash'),
-    SafeString = proxy.SafeString,
-    handlebars = proxy.hbs.handlebars,
-    templates = proxy.templates,
-    url = proxy.url;
+var hbs             = require('express-hbs'),
+    _               = require('lodash'),
+    utils          = require('../utils'),
+    localUtils     = require('./utils'),
+    author;
 
-module.exports = function author(options) {
+author = function (options) {
     if (options.fn) {
-        return handlebars.helpers.with.call(this, this.author, options);
+        return hbs.handlebars.helpers.with.call(this, this.author, options);
     }
 
     var autolink = _.isString(options.hash.autolink) && options.hash.autolink === 'false' ? false : true,
@@ -27,8 +26,8 @@ module.exports = function author(options) {
 
     if (this.author && this.author.name) {
         if (autolink) {
-            output = templates.link({
-                url: url.urlFor('author', {author: this.author}),
+            output = localUtils.linkTemplate({
+                url: utils.url.urlFor('author', {author: this.author}),
                 text: _.escape(this.author.name)
             });
         } else {
@@ -36,5 +35,7 @@ module.exports = function author(options) {
         }
     }
 
-    return new SafeString(output);
+    return new hbs.handlebars.SafeString(output);
 };
+
+module.exports = author;
