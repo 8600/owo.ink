@@ -86,12 +86,13 @@ db = {
 
         function deleteContent() {
             var collections = [
+                models.Subscriber.findAll(queryOpts),
                 models.Post.findAll(queryOpts),
                 models.Tag.findAll(queryOpts)
             ];
 
             return Promise.each(collections, function then(Collection) {
-                return Collection.invokeThen('destroy', queryOpts);
+                return Collection.invokeThen('destroy');
             }).return({db: []})
             .catch(function (err) {
                 throw new errors.GhostError({err: err});

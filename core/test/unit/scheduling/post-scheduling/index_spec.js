@@ -45,9 +45,9 @@ describe('Scheduling: Post Scheduling', function () {
 
         sandbox.stub(schedulingUtils, 'createAdapter').returns(Promise.resolve(scope.adapter));
 
-        sandbox.stub(models.Client, 'findOne', function () {
+        models.Client.findOne = function () {
             return Promise.resolve(scope.client);
-        });
+        };
 
         sandbox.spy(scope.adapter, 'schedule');
         sandbox.spy(scope.adapter, 'reschedule');

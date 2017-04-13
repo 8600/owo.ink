@@ -3,8 +3,7 @@ var should = require('should'), // jshint ignore:line
 
 // Stuff we are testing
     helpers = require('../../../server/helpers'),
-    proxy = require('../../../server/helpers/proxy'),
-    settingsCache = proxy.settingsCache,
+    settingsCache = require('../../../server/settings/cache'),
 
     sandbox = sinon.sandbox.create();
 

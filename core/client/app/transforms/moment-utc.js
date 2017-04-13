@@ -1,6 +1,5 @@
 /* global moment */
 import Transform from 'ember-data/transform';
-import moment from 'moment';
 
 export default Transform.extend({
     deserialize(serialized) {

@@ -1,8 +1,8 @@
 var should = require('should'),
-    hbs = require.main.require('core/server/themes/engine'),
+    hbs = require('express-hbs'),
 
     // Stuff we are testing
-    template = require.main.require('core/server/helpers/template');
+    template = require('../../server/helpers/template');
 
 describe('Helpers Template', function () {
     it('can execute a template', function () {

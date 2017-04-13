@@ -2,7 +2,8 @@ var should = require('should'),
     testUtils = require('../../utils'),
     _ = require('lodash'),
     dbAPI = require('../../../server/api/db'),
-    models = require('../../../server/models');
+    ModelTag = require('../../../server/models/tag'),
+    ModelPost = require('../../../server/models/post');
 
 describe('DB API', function () {
     // Keep the DB clean
@@ -18,19 +19,14 @@ describe('DB API', function () {
             result.db.should.be.instanceof(Array);
             result.db.should.be.empty();
         }).then(function () {
-            return models.Tag.findAll(testUtils.context.owner).then(function (results) {
+            return ModelTag.Tag.findAll(testUtils.context.owner).then(function (results) {
                 should.exist(results);
                 results.length.should.equal(0);
             });
         }).then(function () {
-            return models.Post.findAll(testUtils.context.owner).then(function (results) {
+            return ModelPost.Post.findAll(testUtils.context.owner).then(function (results) {
                 should.exist(results);
                 results.length.should.equal(0);
-            });
-        }).then(function () {
-            return models.Subscriber.findAll(testUtils.context.owner).then(function (results) {
-                should.exist(results);
-                results.length.should.equal(1);
             });
         });
     });
@@ -41,12 +37,12 @@ describe('DB API', function () {
             result.db.should.be.instanceof(Array);
             result.db.should.be.empty();
         }).then(function () {
-            return models.Tag.findAll(testUtils.context.admin).then(function (results) {
+            return ModelTag.Tag.findAll(testUtils.context.admin).then(function (results) {
                 should.exist(results);
                 results.length.should.equal(0);
             });
         }).then(function () {
-            return models.Post.findAll(testUtils.context.admin).then(function (results) {
+            return ModelPost.Post.findAll(testUtils.context.admin).then(function (results) {
                 should.exist(results);
                 results.length.should.equal(0);
             });

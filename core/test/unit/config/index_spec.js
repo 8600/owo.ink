@@ -118,7 +118,10 @@ describe('Config', function () {
         it('should default to local-file-store', function () {
             configUtils.config.get('paths').should.have.property('internalStoragePath', path.join(configUtils.config.get('paths').corePath, '/server/storage/'));
 
-            configUtils.config.get('storage').should.have.property('active', 'LocalFileStorage');
+            configUtils.config.get('storage').should.have.property('active', {
+                images: 'local-file-store',
+                themes: 'local-file-store'
+            });
         });
 
         it('no effect: setting a custom active storage as string', function () {

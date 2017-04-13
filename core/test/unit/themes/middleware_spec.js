@@ -1,6 +1,6 @@
 var should = require('should'), // jshint ignore:line
     sinon = require('sinon'),
-    hbs = require('../../../server/themes/engine'),
+    hbs = require('express-hbs'),
 
     themes = require('../../../server/themes'),
     // is only exposed via themes.getActive()

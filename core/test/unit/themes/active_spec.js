@@ -1,10 +1,10 @@
 var should = require('should'), // jshint ignore:line
     sinon = require('sinon'),
+    hbs = require('express-hbs'),
 
     config = require('../../../server/config'),
     // is only exposed via themes.getActive()
     activeTheme = require('../../../server/themes/active'),
-    engine = require('../../../server/themes/engine'),
 
     sandbox = sinon.sandbox.create();
 
@@ -15,11 +15,11 @@ describe('Themes', function () {
 
     describe('Active', function () {
         describe('Mount', function () {
-            var engineStub, configStub,
+            var hbsStub, configStub,
                 fakeBlogApp, fakeLoadedTheme, fakeCheckedTheme;
 
             beforeEach(function () {
-                engineStub = sandbox.stub(engine, 'configure');
+                hbsStub = sandbox.stub(hbs, 'express3');
                 configStub = sandbox.stub(config, 'set');
 
                 fakeBlogApp = {
@@ -58,9 +58,11 @@ describe('Themes', function () {
                 fakeBlogApp.set.calledOnce.should.be.true();
                 fakeBlogApp.set.calledWith('views', 'my/fake/theme/path').should.be.true();
 
-                // Check handlebars was configured correctly
-                engineStub.calledOnce.should.be.true();
-                engineStub.calledWith('my/fake/theme/path/partials').should.be.true();
+                // Check handlebars was initialised correctly
+                hbsStub.calledOnce.should.be.true();
+                hbsStub.firstCall.args[0].should.be.an.Object().and.have.property('partialsDir');
+                hbsStub.firstCall.args[0].partialsDir.should.be.an.Array().with.lengthOf(2);
+                hbsStub.firstCall.args[0].partialsDir[1].should.eql('my/fake/theme/path/partials');
 
                 // Check the theme is now mounted
                 activeTheme.get().mounted.should.be.true();
@@ -89,9 +91,10 @@ describe('Themes', function () {
                 fakeBlogApp.set.calledOnce.should.be.true();
                 fakeBlogApp.set.calledWith('views', 'my/fake/theme/path').should.be.true();
 
-                // Check handlebars was configured correctly
-                engineStub.calledOnce.should.be.true();
-                engineStub.calledWith().should.be.true();
+                // Check handlebars was initialised correctly
+                hbsStub.calledOnce.should.be.true();
+                hbsStub.firstCall.args[0].should.be.an.Object().and.have.property('partialsDir');
+                hbsStub.firstCall.args[0].partialsDir.should.have.lengthOf(1);
 
                 // Check the theme is now mounted
                 activeTheme.get().mounted.should.be.true();

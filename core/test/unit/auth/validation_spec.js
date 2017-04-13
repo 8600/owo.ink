@@ -11,7 +11,7 @@ describe('UNIT: auth validation', function () {
         models.init();
     });
 
-    afterEach(function () {
+    beforeEach(function () {
         sandbox.restore();
     });
 

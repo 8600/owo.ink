@@ -3,8 +3,7 @@ var should = require('should'), // jshint ignore:line
     _ = require('lodash'),
 
 // Stuff we are testing
-    helpers = require.main.require('core/server/helpers'),
-    handlebars = require.main.require('core/server/themes/engine').handlebars,
+    helpers = require('../../../server/helpers'),
 
     sandbox = sinon.sandbox.create();
 
@@ -251,7 +250,8 @@ describe('{{#foreach}} helper', function () {
     });
 
     describe('(compile)', function () {
-        var objectHash = {
+        var handlebars = require('express-hbs').handlebars,
+            objectHash = {
                 posts: {
                     first: {title: 'first'},
                     second: {title: 'second'},

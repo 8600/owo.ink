@@ -13,8 +13,6 @@ import Mirage from 'ember-cli-mirage';
 import sinon from 'sinon';
 import testSelector from 'ember-test-selectors';
 import {titleRendered} from '../helpers/editor-helpers';
-import moment from 'moment';
-
 describe('Acceptance: Editor', function() {
     let application;
 

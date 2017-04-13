@@ -5,10 +5,9 @@ var should = require('should'), // jshint ignore:line
     moment = require('moment'),
     configUtils = require('../../utils/configUtils'),
     helpers = require('../../../server/helpers'),
-    proxy = require('../../../server/helpers/proxy'),
-    settingsCache = proxy.settingsCache,
-    api = proxy.api,
-    labs = proxy.labs,
+    api = require('../../../server/api'),
+    labs = require('../../../server/utils/labs'),
+    settingsCache = require('../../../server/settings/cache'),
 
     sandbox = sinon.sandbox.create();
 

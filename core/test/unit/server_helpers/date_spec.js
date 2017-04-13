@@ -29,7 +29,7 @@ describe('{{date}} helper', function () {
             var rendered = helpers.date.call({published_at: d}, context);
 
             should.exist(rendered);
-            String(rendered).should.equal(moment(d).tz(timezones).format(format));
+            rendered.should.equal(moment(d).tz(timezones).format(format));
         });
     });
 
@@ -57,7 +57,7 @@ describe('{{date}} helper', function () {
             var rendered = helpers.date.call({published_at: d}, context);
 
             should.exist(rendered);
-            String(rendered).should.equal(moment(d).tz(timezones).from(timeNow));
+            rendered.should.equal(moment(d).tz(timezones).from(timeNow));
         });
     });
 });

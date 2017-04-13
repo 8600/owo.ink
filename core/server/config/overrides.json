@@ -62,8 +62,7 @@
     },
     "times": {
         "cannotScheduleAPostBeforeInMinutes": 2,
-        "publishAPostBySchedulerToleranceInMinutes": 2,
-        "getImageSizeTimeoutInMS": 5000
+        "publishAPostBySchedulerToleranceInMinutes": 2
     },
     "maintenance": {
         "enabled": false
