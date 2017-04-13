@@ -1,13 +1,13 @@
 <header>
-    <h1>Invite your team</h1>
-    <p>Ghost works best when shared with others. Collaborate, get feedback on your posts &amp; work together on ideas.</p>
+    <h1>发送邀请</h1>
+    <p>恭喜你，你的博客已经建立成功了!在下方输入框中填写收件人邮箱，我们会发送一封邮件给他们以分享您的喜悦</p>
 </header>
 
 <div><img class="gh-flow-faces" src="{{gh-path 'asset' 'img/users.png'}}" alt="" /></div>
 
 <form class="gh-flow-invite">
     {{#gh-form-group errors=errors hasValidated=hasValidated property="users"}}
-        <label for="users">Enter one email address per line, we’ll handle the rest! <i class="icon-mail"></i></label>
+        <label for="users">注意:每行输入一个电子邮箱! <i class="icon-mail"></i></label>
         {{gh-textarea users name="users" required="required" focusOut=(action "validate") update=(action (mut users))}}
     {{/gh-form-group}}
 
@@ -15,5 +15,5 @@
 </form>
 
 <button class="gh-flow-skip" {{action "skipInvite"}}>
-    I'll do this later, take me to my blog!
+    直接进入博客管理
 </button>
