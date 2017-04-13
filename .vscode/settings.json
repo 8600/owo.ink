@@ -5,19 +5,18 @@
         "**/bower_components": true,
         "**/built": true,
         "**/dist": true,
-        "**/tmp": true,
-        "**/bower_components": true,
+        "**/tmp": true
     },  
   
     //-------- Files configuration --------  
   
     // Configure glob patterns for excluding files and folders.  
-    "files.exclude": {  
+    "files.exclude": { 
+        "**/node_modules": true, 
         "**/.git": true,  
         "**/.svn": true,  
         "**/.DS_Store": true,
         "**/.vscode": true,  
-        "**/node_modules": true,  
         "**/iOS": true,
         "**/.gitattributes": true,
         "**/.gitignore": true,
