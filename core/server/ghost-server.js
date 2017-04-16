@@ -1,3 +1,4 @@
+"use strict";
 // # Ghost Server
 // Handles the creation of an HTTP Server for Ghost
 const debug = require('debug')('ghost:server'),
@@ -5,7 +6,6 @@ const debug = require('debug')('ghost:server'),
       chalk = require('chalk'),
       fs = require('fs'),
       path = require('path'),
-      _ = require('lodash'),
       errors = require('./errors'),
       events = require('./events'),
       config = require('./config'),
@@ -38,8 +38,8 @@ function GhostServer(rootApp) {
 GhostServer.prototype.start = function (externalApp) {
     debug('正在启动...');
     const self = this,
-          rootApp = externalApp ? externalApp : self.rootApp,
-          socketConfig, socketValues = {
+          rootApp = externalApp ? externalApp : self.rootApp
+    let   socketConfig, socketValues = {
               path: path.join(config.get('paths').contentPath, config.get('env') + '.socket'),
               permissions: '660'
           };
@@ -47,20 +47,19 @@ GhostServer.prototype.start = function (externalApp) {
     return new Promise(function (resolve, reject) {
         if (config.get('server').hasOwnProperty('socket')) {
             socketConfig = config.get('server').socket;
-
-            if (_.isString(socketConfig)) {
-                socketValues.path = socketConfig;
-            } else if (_.isObject(socketConfig)) {
-                socketValues.path = socketConfig.path || socketValues.path;
-                socketValues.permissions = socketConfig.permissions || socketValues.permissions;
+            switch(typeof socketConfig){
+                case 'string':
+                    socketValues.path = socketConfig;
+                    break;
+                case 'object':
+                    socketValues.path = socketConfig.path || socketValues.path;
+                    socketValues.permissions = socketConfig.permissions || socketValues.permissions;
+                    break;
+                default:
+                    console.error("socketConfig格式错误!")
             }
-
-            // Make sure the socket is gone before trying to create another
-            try {
-                fs.unlinkSync(socketValues.path);
-            } catch (e) {
-                // We can ignore this.
-            }
+            // 创建前保证这个文件不存在
+            fs.unlinkSync(socketValues.path);
 
             self.httpServer = rootApp.listen(socketValues.path);
             fs.chmod(socketValues.path, socketValues.permissions);
@@ -150,12 +149,11 @@ GhostServer.prototype.hammertime = function () {
 /**
  * ## Private (internal) methods
  *
- * ### Connection
+ * ### 连接
  * @param {Object} socket
  */
 GhostServer.prototype.connection = function (socket) {
-    var self = this;
-
+    const self = this;
     self.connectionId += 1;
     socket._ghostId = self.connectionId;
 
@@ -167,16 +165,13 @@ GhostServer.prototype.connection = function (socket) {
 };
 
 /**
- * ### Close Connections
- * Most browsers keep a persistent connection open to the server, which prevents the close callback of
- * httpServer from returning. We need to destroy all connections manually.
+ * ### 关闭连接
+ * 大多数浏览器会保持和服务器的持续连接，所以我们要手动关闭连接
  */
 GhostServer.prototype.closeConnections = function () {
-    var self = this;
-
+    const self = this;
     Object.keys(self.connections).forEach(function (socketId) {
-        var socket = self.connections[socketId];
-
+        const socket = self.connections[socketId];
         if (socket) {
             socket.destroy();
         }
@@ -184,33 +179,24 @@ GhostServer.prototype.closeConnections = function () {
 };
 
 /**
- * ### Log Start Messages
+ * ### 消息/日志
  */
 GhostServer.prototype.logStartMessages = function () {
-    // Startup & Shutdown messages
-    if (config.get('env') === 'production') {
-        console.log(
-            chalk.red('Currently running Ghost 1.0.0 Alpha, this is NOT suitable for production! \n'),
-            chalk.white('Please switch to the stable branch. \n'),
-            chalk.white('More information on the Ghost 1.0.0 Alpha at: ') + chalk.cyan('https://support.ghost.org/v1-0-alpha') + '\n',
-            chalk.gray(i18n.t('notices.httpServer.ctrlCToShutDown'))
-        );
-    } else {
-        console.log(
-            chalk.blue('Welcome to the Ghost 1.0.0 Alpha - this version of Ghost is for development only.')
-        );
-        console.log(
-            chalk.green(i18n.t('notices.httpServer.ghostIsRunningIn', {env: config.get('env')})),
-            i18n.t('notices.httpServer.listeningOn'),
-            config.get('server').socket || config.get('server').host + ':' + config.get('server').port,
-            i18n.t('notices.httpServer.urlConfiguredAs', {url: utils.url.urlFor('home', true)}),
-            chalk.gray(i18n.t('notices.httpServer.ctrlCToShutDown'))
-        );
-    }
+    // 博客系统欢迎提示
+    console.log(
+        chalk.blue('----------欢迎使用owo博客系统!----------')
+    );
+    console.log(
+        chalk.green(i18n.t('notices.httpServer.ghostIsRunningIn', {env: config.get('env')})),
+        i18n.t('notices.httpServer.listeningOn'),
+        config.get('server').socket || config.get('server').host + ':' + config.get('server').port,
+        i18n.t('notices.httpServer.urlConfiguredAs', {url: utils.url.urlFor('home', true)}),
+        chalk.gray(i18n.t('notices.httpServer.ctrlCToShutDown'))
+    );
 
     function shutdown() {
         console.log(chalk.red(i18n.t('notices.httpServer.ghostHasShutdown')));
-
+        //如果是生产环境 提示博客已离线 否则 提示博客运行时长
         if (config.get('env') === 'production') {
             console.log(
                 i18n.t('notices.httpServer.yourBlogIsNowOffline')
@@ -221,10 +207,9 @@ GhostServer.prototype.logStartMessages = function () {
                 moment.duration(process.uptime(), 'seconds').humanize()
             );
         }
-
         process.exit(0);
     }
-    // ensure that Ghost exits correctly on Ctrl+C and SIGTERM
+    // 确保用户下达终止命令后博客正常退出
     process.
         removeAllListeners('SIGINT').on('SIGINT', shutdown).
         removeAllListeners('SIGTERM').on('SIGTERM', shutdown);

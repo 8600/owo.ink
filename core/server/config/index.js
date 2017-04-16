@@ -1,18 +1,16 @@
-var Nconf = require('nconf'),
-    path = require('path'),
-    _debug = require('debug'),
-    debug = _debug('ghost:config'),
-    localUtils = require('./utils'),
-    env = process.env.NODE_ENV || 'development',
-    _private = {};
+const Nconf = require('nconf'),
+      path = require('path'),
+      _debug = require('debug'),
+      debug = _debug('ghost:config'),
+      localUtils = require('./utils'),
+      env = process.env.NODE_ENV || 'development';
+let   _private = {};
 
-_private.loadNconf = function loadNconf(options) {
-    debug('config start');
-    options = options || {};
-
-    var baseConfigPath = options.baseConfigPath || __dirname,
-        customConfigPath = options.customConfigPath || process.cwd(),
-        nconf = new Nconf.Provider();
+_private.loadNconf = function loadNconf(options = {}) {
+    debug('读取配置');
+    const baseConfigPath = options.baseConfigPath || __dirname,
+          customConfigPath = options.customConfigPath || process.cwd(),
+          nconf = new Nconf.Provider();
 
     /**
      * no channel can override the overrides
