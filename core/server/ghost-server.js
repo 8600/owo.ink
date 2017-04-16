@@ -1,20 +1,20 @@
 // # Ghost Server
 // Handles the creation of an HTTP Server for Ghost
-var debug = require('debug')('ghost:server'),
-    Promise = require('bluebird'),
-    chalk = require('chalk'),
-    fs = require('fs'),
-    path = require('path'),
-    _ = require('lodash'),
-    errors = require('./errors'),
-    events = require('./events'),
-    config = require('./config'),
-    utils = require('./utils'),
-    i18n   = require('./i18n'),
-    moment = require('moment');
+const debug = require('debug')('ghost:server'),
+      Promise = require('bluebird'),
+      chalk = require('chalk'),
+      fs = require('fs'),
+      path = require('path'),
+      _ = require('lodash'),
+      errors = require('./errors'),
+      events = require('./events'),
+      config = require('./config'),
+      utils = require('./utils'),
+      i18n   = require('./i18n'),
+      moment = require('moment');
 
 /**
- * ## GhostServer
+ * ## 博客服务
  * @constructor
  * @param {Object} rootApp - parent express instance
  */
@@ -23,29 +23,26 @@ function GhostServer(rootApp) {
     this.httpServer = null;
     this.connections = {};
     this.connectionId = 0;
-
-    // Expose config module for use externally.
+    // 导入配置项.
     this.config = config;
 }
 
 /**
- * ## Public API methods
+ * ## 公共API方法
  *
- * ### Start
- * Starts the ghost server listening on the configured port.
- * Alternatively you can pass in your own express instance and let Ghost
- * start listening for you.
- * @param  {Object} externalApp - Optional express app instance.
+ * ### 启动
+ * 启动博客服务并监听配置端口,或者一个express实例
+ * @param  {Object} externalApp - 可选的express实例.
  * @return {Promise} Resolves once Ghost has started
  */
 GhostServer.prototype.start = function (externalApp) {
-    debug('Starting...');
-    var self = this,
-        rootApp = externalApp ? externalApp : self.rootApp,
-        socketConfig, socketValues = {
-            path: path.join(config.get('paths').contentPath, config.get('env') + '.socket'),
-            permissions: '660'
-        };
+    debug('正在启动...');
+    const self = this,
+          rootApp = externalApp ? externalApp : self.rootApp,
+          socketConfig, socketValues = {
+              path: path.join(config.get('paths').contentPath, config.get('env') + '.socket'),
+              permissions: '660'
+          };
 
     return new Promise(function (resolve, reject) {
         if (config.get('server').hasOwnProperty('socket')) {

@@ -324,7 +324,7 @@ describe('Acceptance: Setup', function () {
                     .to.be.false;
 
                 expect(button.text().trim(), 'default button text')
-                    .to.equal('Invite some users');
+                    .to.equal('向好友发送邀请');
 
                 expect(button.hasClass('gh-btn-minor'), 'default button is disabled')
                     .to.be.true;

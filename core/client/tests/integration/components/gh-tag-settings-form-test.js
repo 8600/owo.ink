@@ -63,10 +63,10 @@ describe('Integration: Component: gh-tag-settings-form', function () {
         this.render(hbs`
             {{gh-tag-settings-form tag=tag setProperty=(action 'setProperty')}}
         `);
-        expect(this.$('.tag-settings-pane h4').text(), 'existing tag title').to.equal('Tag Settings');
+        expect(this.$('.tag-settings-pane h4').text(), 'existing tag title').to.equal('标签设置');
 
         this.set('tag.isNew', true);
-        expect(this.$('.tag-settings-pane h4').text(), 'new tag title').to.equal('New Tag');
+        expect(this.$('.tag-settings-pane h4').text(), 'new tag title').to.equal('新建标签');
     });
 
     it('renders main settings', function () {
