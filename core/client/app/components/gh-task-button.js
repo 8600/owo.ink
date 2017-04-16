@@ -22,7 +22,7 @@ const GhTaskButton = Component.extend({
 
     task: null,
     disabled: false,
-    buttonText: '保存',
+    buttonText: 'Save',
     runningText: reads('buttonText'),
     successText: 'Saved',
     successClass: 'gh-btn-green',

@@ -8,7 +8,7 @@
 
     <div class="gh-contentfilter">
         {{#power-select
-            placeholder="All posts"
+            placeholder="所有文章"
             selected=selectedType
             options=availableTypes
             searchField="name"
@@ -22,7 +22,7 @@
 
         {{#unless session.user.isAuthor}}
         {{#power-select
-            placeholder="All authors"
+            placeholder="所有作者"
             selected=selectedAuthor
             options=availableAuthors
             searchField="name"
