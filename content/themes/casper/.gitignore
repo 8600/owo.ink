@@ -1,4 +1,7 @@
-b-cov
+########################
+# node.js / npm
+########################
+lib-cov
 *.seed
 *.log
 *.csv
@@ -11,11 +14,18 @@ pids
 logs
 results
 
-npm-debug.log
 node_modules
+asset-compiler/node_modules
 
-.idea/*
-*.iml
-projectFilesBackup
+npm-debug.log
 
-.DS_Store
+
+########################
+# misc / editors
+########################
+*~
+*#
+.DS_STORE
+.netbeans
+nbproject
+.idea
