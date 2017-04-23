@@ -1,3 +1,3 @@
-# Content / Logs
+# Content / Data
 
-This is the default log file location when Ghost runs in Production.
+This is the home of your Ghost database, do not overwrite this folder or any of the files inside of it.

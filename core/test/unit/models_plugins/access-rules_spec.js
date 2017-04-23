@@ -1,11 +1,15 @@
-var should = require('should'), // jshint ignore:line
+var should = require('should'),
     sinon = require('sinon'),
 
 // Thing we're testing
+    // accessRules = require('../../../server/models/plugins/access-rules'),
     models = require('../../../server/models'),
     ghostBookshelf,
 
     sandbox = sinon.sandbox.create();
+
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('Access Rules', function () {
     beforeEach(function () {

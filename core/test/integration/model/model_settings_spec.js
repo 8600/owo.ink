@@ -1,13 +1,13 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    testUtils = require('../../utils'),
+var testUtils       = require('../../utils'),
+    should          = require('should'),
+    sinon           = require('sinon'),
 
     // Stuff we are testing
-    SettingsModel = require('../../../server/models/settings').Settings,
-    db = require('../../../server/data/db'),
-    events = require('../../../server/events'),
-    context = testUtils.context.admin,
-    sandbox = sinon.sandbox.create();
+    SettingsModel   = require('../../../server/models/settings').Settings,
+    db              = require('../../../server/data/db'),
+    events          = require('../../../server/events'),
+    sandbox         = sinon.sandbox.create(),
+    context         = testUtils.context.admin;
 
 describe('Settings Model', function () {
     var eventSpy;
@@ -138,7 +138,7 @@ describe('Settings Model', function () {
 
             SettingsModel.add(newSetting, context).then(function (createdSetting) {
                 should.exist(createdSetting);
-                createdSetting.has('uuid').should.equal(false);
+                createdSetting.has('uuid').should.equal(true);
                 createdSetting.attributes.key.should.equal(newSetting.key, 'key is correct');
                 createdSetting.attributes.value.should.equal(newSetting.value, 'value is correct');
                 createdSetting.attributes.type.should.equal('core');
@@ -152,19 +152,22 @@ describe('Settings Model', function () {
         });
 
         it('can destroy', function (done) {
-            SettingsModel.findAll().then(function (allSettings) {
-                SettingsModel.findOne({id: allSettings.models[1].id}).then(function (results) {
-                    should.exist(results);
-                    results.attributes.id.should.equal(allSettings.models[1].id);
-                    return SettingsModel.destroy({id: allSettings.models[1].id});
-                }).then(function (response) {
-                    response.toJSON().should.be.empty();
-                    return SettingsModel.findOne({id: allSettings.models[1].id});
-                }).then(function (newResults) {
-                    should.equal(newResults, null);
+            // dont't use id 1, since it will delete databaseversion
+            var settingToDestroy = {id: 2};
 
-                    done();
-                }).catch(done);
+            SettingsModel.findOne(settingToDestroy).then(function (results) {
+                should.exist(results);
+                results.attributes.id.should.equal(settingToDestroy.id);
+
+                return SettingsModel.destroy(settingToDestroy);
+            }).then(function (response) {
+                response.toJSON().should.be.empty();
+
+                return SettingsModel.findOne(settingToDestroy);
+            }).then(function (newResults) {
+                should.equal(newResults, null);
+
+                done();
             }).catch(done);
         });
     });

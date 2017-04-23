@@ -24,6 +24,6 @@
 </div>
 
 <div class="modal-footer">
-    <button {{action "closeModal"}} class="gh-btn"><span>Cancel</span></button>
-    {{gh-task-button "Add" successText="Added" task=addSubscriber class="gh-btn gh-btn-green"}}
+    <button {{action "closeModal"}} class="btn btn-default btn-minor">Cancel</button>
+    {{#gh-spin-button action="confirm" class="btn btn-green" submitting=submitting}}Add{{/gh-spin-button}}
 </div>

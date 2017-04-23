@@ -7,7 +7,7 @@ labs = {
         if (labsUtil.isSet('subscribers') === true) {
             return next();
         } else {
-            return next(new errors.NotFoundError());
+            return errors.handleAPIError(new errors.NotFoundError(), req, res, next);
         }
     }
 };

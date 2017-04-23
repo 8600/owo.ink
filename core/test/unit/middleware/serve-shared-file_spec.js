@@ -1,9 +1,10 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
-    fs = require('fs'),
+var fs              = require('fs'),
+    sinon           = require('sinon'),
+    should          = require('should'),
     serveSharedFile = require('../../../server/middleware/serve-shared-file'),
-
     sandbox = sinon.sandbox.create();
+
+should.equal(true, true);
 
 describe('serveSharedFile', function () {
     var res, req, next;

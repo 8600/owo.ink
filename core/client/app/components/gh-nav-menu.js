@@ -10,8 +10,8 @@ export default Component.extend({
 
     open: false,
 
-    navMenuIcon: computed('config.blogUrl', function () {
-        let url = `${this.get('config.blogUrl')}/favicon.png`;
+    navMenuIcon: computed('ghostPaths.subdir', function () {
+        let url = `${this.get('ghostPaths.subdir')}/ghost/img/ghosticon.jpg`;
 
         return htmlSafe(`background-image: url(${url})`);
     }),
@@ -20,7 +20,6 @@ export default Component.extend({
     session: injectService(),
     ghostPaths: injectService(),
     feature: injectService(),
-    routing: injectService('-routing'),
 
     mouseEnter() {
         this.sendAction('onMouseEnter');

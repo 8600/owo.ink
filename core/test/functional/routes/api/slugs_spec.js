@@ -1,21 +1,19 @@
-var should = require('should'),
-    supertest = require('supertest'),
-    testUtils = require('../../../utils'),
-    config = require('../../../../../core/server/config'),
-    ghost = testUtils.startGhost,
+var testUtils     = require('../../../utils'),
+    should        = require('should'),
+    supertest     = require('supertest'),
+
+    ghost         = require('../../../../../core'),
+
     request;
 
 describe('Slug API', function () {
-    var accesstoken = '', ghostServer;
+    var accesstoken = '';
 
     before(function (done) {
         // starting ghost automatically populates the db
         // TODO: prevent db init, and manage bringing up the DB with fixtures ourselves
-        ghost().then(function (_ghostServer) {
-            ghostServer = _ghostServer;
-            return ghostServer.start();
-        }).then(function () {
-            request = supertest.agent(config.get('url'));
+        ghost().then(function (ghostServer) {
+            request = supertest.agent(ghostServer.rootApp);
         }).then(function () {
             return testUtils.doAuth(request);
         }).then(function (token) {
@@ -24,11 +22,10 @@ describe('Slug API', function () {
         }).catch(done);
     });
 
-    after(function () {
-        return testUtils.clearData()
-            .then(function () {
-                return ghostServer.stop();
-            });
+    after(function (done) {
+        testUtils.clearData().then(function () {
+            done();
+        }).catch(done);
     });
 
     it('should be able to get a post slug', function (done) {
@@ -126,7 +123,6 @@ describe('Slug API', function () {
     it('should not be able to get a slug for an unknown type', function (done) {
         request.get(testUtils.API.getApiQuery('slugs/unknown/who knows/'))
             .set('Authorization', 'Bearer ' + accesstoken)
-            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect('Cache-Control', testUtils.cacheRules.private)
             .expect(400)

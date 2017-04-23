@@ -1,32 +1,22 @@
 var config     = require('../../config'),
-    utils      = require('../../utils'),
     errors     = require('../../errors'),
-    logging    = require('../../logging'),
     i18n       = require('../../i18n'),
     middleware = require('./lib/middleware'),
-    router     = require('./lib/router'),
-    registerHelpers = require('./lib/helpers');
+    router     = require('./lib/router');
 
 module.exports = {
-    activate: function activate(ghost) {
-        var paths;
+    activate: function activate() {
+        if (config.paths.subdir) {
+            var paths = config.paths.subdir.split('/');
 
-        if (utils.url.getSubdir()) {
-            paths = utils.url.getSubdir().split('/');
-
-            if (paths.pop() === config.get('routeKeywords').private) {
-                logging.error(new errors.GhostError({
-                    message: i18n.t('errors.config.urlCannotContainPrivateSubdir.error'),
-                    context: i18n.t('errors.config.urlCannotContainPrivateSubdir.description'),
-                    help: i18n.t('errors.config.urlCannotContainPrivateSubdir.help')
-                }));
-
-                // @TODO: why
-                process.exit(0);
+            if (paths.pop() === config.routeKeywords.private) {
+                errors.logErrorAndExit(
+                    new Error(i18n.t('errors.config.urlCannotContainPrivateSubdir.error')),
+                    i18n.t('errors.config.urlCannotContainPrivateSubdir.description'),
+                    i18n.t('errors.config.urlCannotContainPrivateSubdir.help')
+                );
             }
         }
-
-        registerHelpers(ghost);
     },
 
     setupMiddleware: function setupMiddleware(blogApp) {
@@ -35,6 +25,6 @@ module.exports = {
     },
 
     setupRoutes: function setupRoutes(blogRouter) {
-        blogRouter.use('/' + config.get('routeKeywords').private + '/', router);
+        blogRouter.use('/' + config.routeKeywords.private + '/', router);
     }
 };

@@ -5,11 +5,13 @@
 
 <div class="modal-body">
     <p>
-        You're about to delete "<strong>{{post.title}}</strong>". This is permanent! We warned you, k?
+        You're about to delete "<strong>{{post.title}}</strong>".<br />
+        This is permanent! No backups, no restores, no magic undo button.<br />
+        We warned you, ok?
     </p>
 </div>
 
 <div class="modal-footer">
-    <button {{action "closeModal"}} class="gh-btn"><span>Cancel</span></button>
-    {{gh-task-button "Delete" successText="Deleted" task=deletePost class="gh-btn gh-btn-red"}}
+    <button {{action "closeModal"}} class="btn btn-default btn-minor">Cancel</button>
+    {{#gh-spin-button action="confirm" class="btn btn-red" submitting=submitting}}Delete{{/gh-spin-button}}
 </div>

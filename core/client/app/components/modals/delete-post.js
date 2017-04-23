@@ -1,12 +1,12 @@
 import {alias} from 'ember-computed';
 import injectService from 'ember-service/inject';
 import ModalComponent from 'ghost-admin/components/modals/base';
-import {task} from 'ember-concurrency';
 
 export default ModalComponent.extend({
 
-    post: alias('model.post'),
-    onSuccess: alias('model.onSuccess'),
+    submitting: false,
+
+    post: alias('model'),
 
     notifications: injectService(),
     routing: injectService('-routing'),
@@ -25,30 +25,25 @@ export default ModalComponent.extend({
         // clear any previous error messages
         this.get('notifications').closeAlerts('post.delete');
 
-        // trigger the success action
-        if (this.get('onSuccess')) {
-            this.get('onSuccess')();
-        }
+        // redirect to content screen
+        this.get('routing').transitionTo('posts');
     },
 
     _failure(error) {
         this.get('notifications').showAPIError(error, {key: 'post.delete.failed'});
     },
 
-    deletePost: task(function* () {
-        try {
-            yield this._deletePost();
-            this._success();
-        } catch (e) {
-            this._failure(e);
-        } finally {
-            this.send('closeModal');
-        }
-    }).drop(),
-
     actions: {
         confirm() {
-            this.get('deletePost').perform();
+            this.set('submitting', true);
+
+            this._deletePost().then(() => {
+                this._success();
+            }, (error) => {
+                this._failure(error);
+            }).finally(() => {
+                this.send('closeModal');
+            });
         }
     }
 });

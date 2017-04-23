@@ -7,13 +7,13 @@
 
 :root {
     /* Colours */
-    --darkgrey: #343f44;
-    --midgrey: #738a94;
-    --lightgrey: #e5eff5;
-    --blue: #3eb0ef;
-    --red: #f05230;
-    --orange: #fecd35;
-    --green: #a4d037;
+    --darkgrey: #242628;
+    --midgrey: #7d878a;
+    --lightgrey: #e2edf2;
+    --blue: #5ba4e5;
+    --red: #e25440;
+    --orange: #f2a925;
+    --green: #9fbb58;
     /* Style values */
     --border-radius: 4px;
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -22,7 +22,6 @@
 
 /* Colour classes
 /* ---------------------------------------------------------- */
-
 .darkgrey {
     color: var(--darkgrey);
 }
@@ -51,40 +50,6 @@
     color: var(--green);
 }
 
-
-/* Colour classes (hover)
-/* ---------------------------------------------------------- */
-
-.darkgrey-hover:hover {
-    color: var(--darkgrey);
-}
-
-.midgrey-hover:hover {
-    color: var(--midgrey);
-}
-
-.lightgrey-hover:hover {
-    color: var(--lightgrey);
-}
-
-.blue-hover:hover {
-    color: var(--blue);
-}
-
-.red-hover:hover {
-    color: var(--red);
-}
-
-.orange-hover:hover {
-    color: var(--orange);
-}
-
-.green-hover:hover {
-    color: var(--green);
-}
-
-
-
 /* Layout
 /* ---------------------------------------------------------- */
 
@@ -92,6 +57,7 @@
 *:before,
 *:after {
     box-sizing: border-box;
+    user-select: none;
 }
 
 html {
@@ -102,7 +68,6 @@ html {
     font-family: var(--font-family);
     font-size: 62.5%;
     line-height: 1.65;
-    letter-spacing: 0.2px;
 
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -113,7 +78,7 @@ body {
     width: 100%;
     /* Prevent elastic scrolling on the whole page */
     height: 100%;
-    color: var(--darkgrey);
+    color: color(var(--darkgrey) lightness(+10%));
     font-size: 1.4rem;
 }
 
@@ -139,43 +104,28 @@ h6 {
 
 h1 {
     text-indent: -1px;
-    font-size: 2.9rem;
-}
-@media (max-width: 500px) {
-    h1 {
-        font-size: 2.4rem;
-    }
+    font-size: 5rem;
 }
 
 h2 {
     text-indent: -1px;
-    font-size: 2.2rem;
-}
-@media (max-width: 500px) {
-    h2 {
-        font-size: 1.9rem;
-    }
+    font-size: 4.2rem;
 }
 
 h3 {
-    font-size: 1.9rem;
-}
-@media (max-width: 500px) {
-    h3 {
-        font-size: 1.7rem;
-    }
+    font-size: 3.8rem;
 }
 
 h4 {
-    font-size: 1.7rem;
+    font-size: 3.1rem;
 }
 
 h5 {
-    font-size: 1.5rem;
+    font-size: 2.8rem;
 }
 
 h6 {
-    font-size: 1.5rem;
+    font-size: 2.2rem;
 }
 
 p,
@@ -187,12 +137,7 @@ dl {
 
 ol,
 ul {
-    padding-left: 1.2em;
-}
-
-li {
-    margin-bottom: 10px;
-    line-height: 1.4em;
+    padding-left: 2.5em;
 }
 
 ol ol,
@@ -423,10 +368,6 @@ img {
 .vertical {
     display: table-cell;
     vertical-align: middle;
-}
-
-.flex {
-    display: flex;
 }
 
 

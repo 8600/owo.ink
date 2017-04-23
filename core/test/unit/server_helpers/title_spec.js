@@ -1,9 +1,20 @@
-var should = require('should'), // jshint ignore:line
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers');
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers');
 
 describe('{{title}} Helper', function () {
+    before(function () {
+        utils.loadHelpers();
+    });
+
+    it('has loaded title helper', function () {
+        should.exist(handlebars.helpers.title);
+    });
+
     it('can render title', function () {
         var title = 'Hello World',
             rendered = helpers.title.call({title: title});

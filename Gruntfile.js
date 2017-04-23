@@ -8,15 +8,9 @@
 
 // jshint unused: false
 var overrides      = require('./core/server/overrides'),
-    config         = require('./core/server/config'),
     _              = require('lodash'),
     chalk          = require('chalk'),
     fs             = require('fs-extra'),
-    KnexMigrator   = require('knex-migrator'),
-    knexMigrator = new KnexMigrator({
-        knexMigratorFilePath: config.get('paths:appRoot')
-    }),
-
     path           = require('path'),
 
     escapeChar     = process.platform.match(/^win/) ? '^' : '\\',
@@ -46,7 +40,7 @@ var overrides      = require('./core/server/overrides'),
             pkg: grunt.file.readJSON('package.json'),
 
             clientFiles: [
-                'server/admin/views/default.html',
+                'server/views/default.hbs',
                 'built/assets/ghost.js',
                 'built/assets/ghost.css',
                 'built/assets/vendor.js',
@@ -69,11 +63,10 @@ var overrides      = require('./core/server/overrides'),
                     }
                 },
                 express: {
-                    files:  ['core/ghost-server.js', 'core/server/**/*.js', 'config.*.json'],
+                    files:  ['core/ghost-server.js', 'core/server/**/*.js'],
                     tasks:  ['express:dev'],
                     options: {
-                        nospawn: true,
-                        livereload: true
+                        spawn: false
                     }
                 }
             },
@@ -106,7 +99,7 @@ var overrides      = require('./core/server/overrides'),
 
                 server: [
                     '*.js',
-                    '!config.*.json', // note: i added this, do we want this linted?
+                    '!config*.js', // note: i added this, do we want this linted?
                     'core/*.js',
                     'core/server/**/*.js',
                     'core/test/**/*.js',
@@ -124,7 +117,7 @@ var overrides      = require('./core/server/overrides'),
                     files: {
                         src: [
                             '*.js',
-                            '!config.*.json', // note: i added this, do we want this linted?
+                            '!config*.js', // note: i added this, do we want this linted?
                             'core/*.js',
                             'core/server/**/*.js',
                             'core/test/**/*.js',
@@ -218,9 +211,7 @@ var overrides      = require('./core/server/overrides'),
             bgShell: {
                 client: {
                     cmd: 'grunt subgrunt:watch',
-                    bg: true,
-                    stdout: true,
-                    stderr: true
+                    bg: true
                 }
             },
 
@@ -249,8 +240,8 @@ var overrides      = require('./core/server/overrides'),
                     options: {
                         onlyUpdated: true,
                         exclude: 'node_modules,bower_components,content,core/client,*test,*doc*,' +
-                        '*vendor,config.*.json,*buil*,.dist*,.idea,.git*,.travis.yml,.bower*,.editorconfig,.js*,*.md,' +
-                        'MigratorConfig.js'
+                        '*vendor,config.js,*buil*,.dist*,.idea,.git*,.travis.yml,.bower*,.editorconfig,.js*,*.md',
+                        extras: ['fileSearch']
                     }
                 }
             },
@@ -320,7 +311,6 @@ var overrides      = require('./core/server/overrides'),
                 options: {
                     npmInstall: false
                 },
-
                 init: {
                     options: {
                         npmInstall: true
@@ -339,7 +329,15 @@ var overrides      = require('./core/server/overrides'),
                 },
 
                 watch: {
-                    'core/client': 'shell:ember:watch'
+                    'core/client': ['bgShell:ember', 'watch']
+                },
+
+                lint: {
+                    'core/client': 'lint'
+                },
+
+                test: {
+                    'core/client': 'shell:test'
                 }
             }
         };
@@ -372,12 +370,12 @@ var overrides      = require('./core/server/overrides'),
         // Run `grunt docs` to generate annotated source code using the documentation described in the code comments.
         grunt.registerTask('docs', 'Generate Docs', ['docker']);
 
-        // Run `grunt watch-docs` to setup livereload & watch whilst you're editing the docs
+        // Runun `grunt watch-docs` to setup livereload & watch whilst you're editing the docs
         grunt.registerTask('watch-docs', function () {
             grunt.config.merge({
                 watch: {
                     docs: {
-                        files: ['core/server/**/*', 'index.js', 'Gruntfile.js'],
+                        files: ['core/server/**/*', 'index.js', 'Gruntfile.js', 'config.example.js'],
                         tasks: ['docker'],
                         options: {
                             livereload: true
@@ -407,6 +405,43 @@ var overrides      = require('./core/server/overrides'),
                 cfg.express.test.options.node_env = process.env.NODE_ENV;
             });
 
+        // #### Ensure Config *(Utility Task)*
+        // Make sure that we have a `config.js` file when running tests
+        // Ghost requires a `config.js` file to specify the database settings etc. Ghost comes with an example file:
+        // `config.example.js` which is copied and renamed to `config.js` by the bootstrap process
+        grunt.registerTask('ensureConfig', function () {
+            var config = require('./core/server/config'),
+                done = this.async();
+
+            if (!process.env.TEST_SUITE || process.env.TEST_SUITE !== 'client') {
+                config.load().then(function () {
+                    done();
+                }).catch(function (err) {
+                    grunt.fail.fatal(err.stack);
+                });
+            } else {
+                done();
+            }
+        });
+
+        // #### Reset Database to "New" state *(Utility Task)*
+        // Drops all database tables and then runs the migration process to put the database
+        // in a "new" state.
+        grunt.registerTask('cleanDatabase', function () {
+            var done = this.async(),
+                models    = require('./core/server/models'),
+                migration = require('./core/server/data/migration');
+
+            migration.reset().then(function () {
+                models.init();
+                return migration.init();
+            }).then(function () {
+                done();
+            }).catch(function (err) {
+                grunt.fail.fatal(err.stack);
+            });
+        });
+
         // ### Test
         // **Testing utility**
         //
@@ -422,7 +457,7 @@ var overrides      = require('./core/server/overrides'),
                 grunt.fail.fatal('No test provided. `grunt test` expects a filename. e.g.: `grunt test:unit/apps_spec.js`. Did you mean `npm test` or `grunt validate`?');
             }
 
-            if (!test.match(/core\/test/)) {
+            if (!test.match(/core\/test/) && !test.match(/core\/server/)) {
                 test = 'core/test/' + test;
             }
 
@@ -448,33 +483,44 @@ var overrides      = require('./core/server/overrides'),
             });
         });
 
-        /**
-         * Ensures the target database get's automatically created.
-         */
-        grunt.registerTask('knex-migrator', function () {
-            return knexMigrator.init({noScripts: true});
-        });
-
         // ### Validate
         // **Main testing task**
         //
-        // `grunt validate` will either run all tests or run linting
+        // `grunt validate` will build, lint and test your local Ghost codebase.
+        //
+        // `grunt validate` is one of the most important and useful grunt tasks that we have available to use. It
+        // manages the build of your environment and then calls `grunt test`
+        //
         // `grunt validate` is called by `npm test` and is used by Travis.
-        grunt.registerTask('validate', 'Run tests or lint code', function () {
-            if (process.env.TEST_SUITE === 'lint') {
-                return grunt.task.run(['lint']);
+        grunt.registerTask('validate', 'Run tests and lint code', function () {
+            if (process.env.TEST_SUITE === 'server') {
+                grunt.task.run(['stubClientFiles', 'test-server']);
+            } else if (process.env.TEST_SUITE === 'lint') {
+                grunt.task.run(['lint']);
+            } else {
+                grunt.task.run(['validate-all']);
             }
-
-            grunt.task.run(['test-all']);
         });
+
+        grunt.registerTask('validate-all', 'Lint code and run all tests',
+            ['init', 'lint', 'test-all']);
 
         // ### Test-All
         // **Main testing task**
         //
         // `grunt test-all` will lint and test your pre-built local Ghost codebase.
         //
-        grunt.registerTask('test-all', 'Run all server tests',
+        // `grunt test-all` runs all 6 test suites. See the individual sub tasks below for
+        // details of each of the test suites.
+        //
+        grunt.registerTask('test-all', 'Run tests for both server and client',
+            ['test-server', 'test-client']);
+
+        grunt.registerTask('test-server', 'Run server tests',
             ['test-routes', 'test-module', 'test-unit', 'test-integration']);
+
+        grunt.registerTask('test-client', 'Run client tests',
+            ['subgrunt:test']);
 
         // ### Lint
         //
@@ -483,10 +529,14 @@ var overrides      = require('./core/server/overrides'),
             ['jshint', 'jscs']
         );
 
+        grunt.registerTask('lint-all', 'Run the code style checks and linter for server and client',
+            ['lint', 'subgrunt:lint']
+        );
+
         // ### test-setup *(utility)(
         // `grunt test-setup` will run all the setup tasks required for running tests
         grunt.registerTask('test-setup', 'Setup ready to run tests',
-            ['knex-migrator', 'clean:test', 'setTestEnv', 'stubClientFiles']
+            ['clean:test', 'setTestEnv', 'ensureConfig']
         );
 
         // ### Unit Tests *(sub task)*
@@ -511,7 +561,7 @@ var overrides      = require('./core/server/overrides'),
         // ### Integration tests *(sub task)*
         // `grunt test-integration` will run just the integration tests
         //
-        // Provided you already have a `config.*.json` file, you can run just the model integration tests by running:
+        // Provided you already have a `config.js` file, you can run just the model integration tests by running:
         //
         // `grunt test:integration/model`
         //
@@ -528,8 +578,8 @@ var overrides      = require('./core/server/overrides'),
         // `grunt test:integration/api/api_tags_spec.js`
         //
         // Their purpose is to test that both the api and models behave as expected when the database layer is involved.
-        // These tests are run against sqlite3 and mysql on travis and ensure that differences between the databases
-        // don't cause bugs.
+        // These tests are run against sqlite3, mysql and pg on travis and ensure that differences between the databases
+        // don't cause bugs. At present, pg often fails and is not officially supported.
         //
         // A coverage report can be generated for these tests using the `grunt test-coverage` task.
         grunt.registerTask('test-integration', 'Run integration tests (mocha + db access)',

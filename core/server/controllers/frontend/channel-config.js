@@ -1,6 +1,5 @@
 var _ = require('lodash'),
     config = require('../../config'),
-    utils = require('../../utils'),
     channelConfig;
 
 channelConfig = function channelConfig() {
@@ -12,23 +11,23 @@ channelConfig = function channelConfig() {
         },
         tag: {
             name: 'tag',
-            route: utils.url.urlJoin('/', config.get('routeKeywords').tag, ':slug/'),
+            route: '/' + config.routeKeywords.tag + '/:slug/',
             postOptions: {
-                filter: 'tags:\'%s\'+tags.visibility:\'public\''
+                filter: 'tags:\'%s\''
             },
             data: {
                 tag: {
                     type: 'read',
                     resource: 'tags',
-                    options: {slug: '%s', visibility: 'public'}
+                    options: {slug: '%s'}
                 }
             },
             slugTemplate: true,
-            editRedirect: utils.url.urlJoin(utils.url.urlFor('admin'), '#/settings/tags/:slug/')
+            editRedirect: '/ghost/settings/tags/:slug/'
         },
         author: {
             name: 'author',
-            route: utils.url.urlJoin('/', config.get('routeKeywords').author, ':slug/'),
+            route: '/' + config.routeKeywords.author + '/:slug/',
             postOptions: {
                 filter: 'author:\'%s\''
             },
@@ -40,7 +39,7 @@ channelConfig = function channelConfig() {
                 }
             },
             slugTemplate: true,
-            editRedirect: utils.url.urlJoin(utils.url.urlFor('admin'), '#/team/:slug/')
+            editRedirect: '/ghost/team/:slug/'
         }
     };
 

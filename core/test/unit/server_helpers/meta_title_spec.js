@@ -1,23 +1,28 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    configUtils = require('../../utils/configUtils'),
-    helpers = require('../../../server/helpers'),
-    settingsCache = require('../../../server/settings/cache'),
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
+    configUtils    = require('../../utils/configUtils'),
 
-    sandbox = sinon.sandbox.create();
+// Stuff we are testing
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers');
 
 describe('{{meta_title}} helper', function () {
     before(function () {
-        sandbox.stub(settingsCache, 'get', function (key) {
-            return {
+        utils.loadHelpers();
+        configUtils.set({
+            theme: {
                 title: 'Ghost'
-            }[key];
+            }
         });
     });
 
     after(function () {
         configUtils.restore();
-        sandbox.restore();
+    });
+
+    it('has loaded meta_title helper', function () {
+        should.exist(handlebars.helpers.meta_title);
     });
 
     it('returns correct title for homepage', function () {

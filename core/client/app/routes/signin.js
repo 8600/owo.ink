@@ -1,15 +1,26 @@
 import Route from 'ember-route';
+import injectService from 'ember-service/inject';
 import EmberObject from 'ember-object';
 import styleBody from 'ghost-admin/mixins/style-body';
+import Configuration from 'ember-simple-auth/configuration';
 import DS from 'ember-data';
-import UnauthenticatedRouteMixin from 'ghost-admin/mixins/unauthenticated-route-mixin';
 
 const {Errors} = DS;
 
-export default Route.extend(UnauthenticatedRouteMixin, styleBody, {
+export default Route.extend(styleBody, {
     titleToken: 'Sign In',
 
     classNames: ['ghost-login'],
+
+    session: injectService(),
+
+    beforeModel() {
+        this._super(...arguments);
+
+        if (this.get('session.isAuthenticated')) {
+            this.transitionTo(Configuration.routeIfAlreadyAuthenticated);
+        }
+    },
 
     model() {
         return EmberObject.create({

@@ -1,23 +1,20 @@
 import ModalComponent from 'ghost-admin/components/modals/base';
 import {invokeAction} from 'ember-invoke-action';
 import {alias} from 'ember-computed';
-import {task} from 'ember-concurrency';
 
 export default ModalComponent.extend({
 
-    user: alias('model'),
+    submitting: false,
 
-    deleteUser: task(function* () {
-        try {
-            yield invokeAction(this, 'confirm');
-        } finally {
-            this.send('closeModal');
-        }
-    }).drop(),
+    user: alias('model'),
 
     actions: {
         confirm() {
-            this.get('deleteUser').perform();
+            this.set('submitting', true);
+
+            invokeAction(this, 'confirm').finally(() => {
+                this.send('closeModal');
+            });
         }
     }
 });

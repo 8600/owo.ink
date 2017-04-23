@@ -1,12 +1,10 @@
 import AuthenticatedRoute from 'ghost-admin/routes/authenticated';
 import CurrentUserSettings from 'ghost-admin/mixins/current-user-settings';
 import styleBody from 'ghost-admin/mixins/style-body';
-import injectService from 'ember-service/inject';
 
 export default AuthenticatedRoute.extend(styleBody, CurrentUserSettings, {
-    settings: injectService(),
-
     titleToken: 'Settings - Apps',
+
     classNames: ['settings-view-apps'],
 
     beforeModel() {
@@ -16,9 +14,7 @@ export default AuthenticatedRoute.extend(styleBody, CurrentUserSettings, {
             .then(this.transitionEditor());
     },
 
-    // we don't want to set the model property but we do want to ensure we have
-    // up-to-date settings so pause via afterModel
-    afterModel() {
-        return this.get('settings').reload();
+    model() {
+        return this.store.queryRecord('setting', {type: 'blog,theme,private'});
     }
 });

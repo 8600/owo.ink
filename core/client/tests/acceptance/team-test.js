@@ -5,14 +5,13 @@ import {
   beforeEach,
   afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from '../helpers/ember-simple-auth';
-import {errorOverride, errorReset} from '../helpers/adapter-error';
-import {enableGhostOAuth} from '../helpers/configuration';
-import {Response} from 'ember-cli-mirage';
-import testSelector from 'ember-test-selectors';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
+import { errorOverride, errorReset } from 'ghost-admin/tests/helpers/adapter-error';
+import Mirage from 'ember-cli-mirage';
+import $ from 'jquery';
 
 describe('Acceptance: Team', function () {
     let application;
@@ -36,7 +35,7 @@ describe('Acceptance: Team', function () {
 
     it('redirects correctly when authenticated as author', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         server.create('user', {slug: 'no-access'});
 
@@ -50,7 +49,7 @@ describe('Acceptance: Team', function () {
 
     it('redirects correctly when authenticated as editor', function () {
         let role = server.create('role', {name: 'Editor'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         server.create('user', {slug: 'no-access'});
 
@@ -62,20 +61,14 @@ describe('Acceptance: Team', function () {
         });
     });
 
-    describe('when logged in as admin', function () {
-        let admin, adminRole, suspendedUser;
+    describe('when logged in', function () {
+        let admin;
 
         beforeEach(function () {
-            server.loadFixtures('roles');
-            adminRole = server.schema.roles.find(1);
+            let role = server.create('role', {name: 'Administrator'});
+            admin = server.create('user', {roles: [role]});
 
-            admin = server.create('user', {email: 'admin@example.com', roles: [adminRole]});
-
-            // add an expired invite
-            server.create('invite', {expires: moment.utc().subtract(1, 'day').valueOf()});
-
-            // add a suspended user
-            suspendedUser = server.create('user', {email: 'suspended@example.com', roles: [adminRole], status: 'inactive'});
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -93,31 +86,11 @@ describe('Acceptance: Team', function () {
                 // it has correct page title
                 expect(document.title, 'page title').to.equal('Team - Test Blog');
 
-                // it shows active users in active section
-                expect(
-                    find(`${testSelector('active-users')} ${testSelector('user-id')}`).length,
-                    'number of active users'
-                ).to.equal(3);
-                expect(
-                    find(`${testSelector('active-users')} ${testSelector('user-id', user1.id)}`)
-                ).to.exist;
-                expect(
-                    find(`${testSelector('active-users')} ${testSelector('user-id', user2.id)}`)
-                ).to.exist;
-                expect(
-                    find(`${testSelector('active-users')} ${testSelector('user-id', admin.id)}`)
-                ).to.exist;
+                // it shows 3 users in list (includes currently logged in user)
+                expect(find('.user-list .user-list-item').length, 'user list count')
+                    .to.equal(3);
 
-                // it shows suspended users in suspended section
-                expect(
-                    find(`${testSelector('suspended-users')} ${testSelector('user-id')}`).length,
-                    'number of suspended users'
-                ).to.equal(1);
-                expect(
-                    find(`${testSelector('suspended-users')} ${testSelector('user-id', suspendedUser.id)}`)
-                ).to.exist;
-
-                click(testSelector('user-id', user2.id));
+                click('.user-list-item:last');
 
                 andThen(() => {
                     // url is correct
@@ -140,316 +113,139 @@ describe('Acceptance: Team', function () {
             });
         });
 
-        it('can manage invites', function () {
-            visit('/team');
+        describe('invite new user', function () {
+            let emailInputField = '.fullscreen-modal input[name="email"]';
 
-            andThen(() => {
-                // invite user button exists
-                expect(
-                    find('.view-actions .gh-btn-green').text().trim(),
-                    'invite people button text'
-                ).to.equal('Invite People');
+            // @TODO: Evaluate after the modal PR goes in
+            it('modal loads correctly', function () {
+                visit('/team');
 
-                // existing users are listed
-                expect(
-                    find(testSelector('user-id')).length,
-                    'initial number of active users'
-                ).to.equal(2);
+                andThen(() => {
+                    // url is correct
+                    expect(currentURL(), 'currentURL').to.equal('/team');
 
-                expect(
-                    find(testSelector('user-id', '1')).find(testSelector('role-name')).text().trim(),
-                    'active user\'s role label'
-                ).to.equal('Administrator');
+                    // invite user button exists
+                    expect(find('.view-actions .btn-green').html(), 'invite people button text')
+                        .to.equal('Invite People');
+                });
 
-                // existing invites are shown
-                expect(
-                    find(testSelector('invite-id')).length,
-                    'initial number of invited users'
-                ).to.equal(1);
+                click('.view-actions .btn-green');
 
-                expect(
-                    find(testSelector('invite-id', '1')).find(testSelector('invite-description')).text(),
-                    'expired invite description'
-                ).to.match(/expired/);
-            });
+                andThen(() => {
+                    let roleOptions = find('#new-user-role select option');
 
-            // remove expired invite
-            click(`${testSelector('invite-id', '1')} ${testSelector('revoke-button')}`);
-
-            andThen(() => {
-                expect(
-                    find(testSelector('invite-id')).length,
-                    'initial number of invited users'
-                ).to.equal(0);
-            });
-
-            // click the invite people button
-            click('.view-actions .gh-btn-green');
-
-            andThen(() => {
-                let roleOptions = find('.fullscreen-modal select[name="role"] option');
-
-                function checkOwnerExists() {
-                    for (let i in roleOptions) {
-                        if (roleOptions[i].tagName === 'option' && roleOptions[i].text === 'Owner') {
-                            return true;
+                    function checkOwnerExists() {
+                        for (let i in roleOptions) {
+                            if (roleOptions[i].tagName === 'option' && roleOptions[i].text === 'Owner') {
+                                return true;
+                            }
                         }
+                        return false;
                     }
-                    return false;
-                }
 
-                function checkSelectedIsAuthor() {
-                    for (let i in roleOptions) {
-                        if (roleOptions[i].selected) {
-                            return roleOptions[i].text === 'Author';
+                    function checkSelectedIsAuthor() {
+                        for (let i in roleOptions) {
+                            if (roleOptions[i].selected) {
+                                return roleOptions[i].text === 'Author';
+                            }
                         }
+                        return false;
                     }
-                    return false;
-                }
 
-                // modal is displayed
-                expect(
-                    find('.fullscreen-modal h1').text().trim(),
-                    'correct modal is displayed'
-                ).to.equal('Invite a New User');
+                    // should be 3 available roles
+                    expect(roleOptions.length, 'number of available roles').to.equal(3);
 
-                // number of roles is correct
-                expect(
-                    find('.fullscreen-modal select[name="role"] option').length,
-                    'number of selectable roles'
-                ).to.equal(3);
-
-                expect(checkOwnerExists(), 'owner role isn\'t available').to.be.false;
-                expect(checkSelectedIsAuthor(), 'author role is selected initially').to.be.true;
+                    expect(checkOwnerExists(), 'owner role isn\'t available').to.be.false;
+                    expect(checkSelectedIsAuthor(), 'author role is selected initially').to.be.true;
+                });
             });
 
-            // submit valid invite form
-            fillIn('.fullscreen-modal input[name="email"]', 'invite1@example.com');
-            click('.fullscreen-modal .gh-btn-green');
+            it('sends an invite correctly', function () {
+                visit('/team');
 
-            andThen(() => {
-                // modal closes
-                expect(
-                    find('.fullscreen-modal').length,
-                    'number of modals after sending invite'
-                ).to.equal(0);
+                andThen(() => {
+                    expect(find('.user-list.invited-users .user-list-item').length, 'number of invited users').to.equal(0);
+                });
 
-                // invite is displayed, has correct e-mail + role
-                expect(
-                    find(testSelector('invite-id')).length,
-                    'number of invites after first invite'
-                ).to.equal(1);
+                click('.view-actions .btn-green');
+                click(emailInputField);
+                triggerEvent(emailInputField, 'blur');
 
-                expect(
-                    find(testSelector('invite-id', '2')).find(testSelector('email')).text().trim(),
-                    'displayed email of first invite'
-                ).to.equal('invite1@example.com');
+                andThen(() => {
+                    expect(find('.modal-body .form-group:first').hasClass('error'), 'email input has error status').to.be.true;
+                    expect(find('.modal-body .form-group:first .response').text()).to.contain('Please enter an email.');
+                });
 
-                expect(
-                    find(testSelector('invite-id', '2')).find(testSelector('role-name')).text().trim(),
-                    'displayed role of first invite'
-                ).to.equal('Author');
+                fillIn(emailInputField, 'test@example.com');
+                click('.fullscreen-modal .btn-green');
 
-                expect(
-                    find(testSelector('invite-id', '2')).find(testSelector('invite-description')).text(),
-                    'new invite description'
-                ).to.match(/expires/);
+                andThen(() => {
+                    expect(find('.user-list.invited-users .user-list-item').length, 'number of invited users').to.equal(1);
+                    expect(find('.user-list.invited-users .user-list-item:first .name').text(), 'name of invited user').to.equal('test@example.com');
+                });
 
-                // number of users is unchanged
-                expect(
-                    find(testSelector('user-id')).length,
-                    'number of active users after first invite'
-                ).to.equal(2);
+                click('.user-list.invited-users .user-list-item:first .user-list-item-aside .user-list-action:contains("Revoke")');
+
+                andThen(() => {
+                    expect(find('.user-list.invited-users .user-list-item').length, 'number of invited users').to.equal(0);
+                });
             });
 
-            // submit new invite with different role
-            click('.view-actions .gh-btn-green');
-            fillIn('.fullscreen-modal input[name="email"]', 'invite2@example.com');
-            fillIn('.fullscreen-modal select[name="role"]', '2');
-            click('.fullscreen-modal .gh-btn-green');
+            it('fails sending an invite correctly', function () {
+                server.create('user', {email: 'test1@example.com'});
+                server.create('user', {email: 'test2@example.com', status: 'invited'});
 
-            andThen(() => {
-                // number of invites increases
-                expect(
-                    find(testSelector('invite-id')).length,
-                    'number of invites after second invite'
-                ).to.equal(2);
+                visit('/team');
 
-                // invite has correct e-mail + role
-                expect(
-                    find(testSelector('invite-id', '3')).find(testSelector('email')).text().trim(),
-                    'displayed email of second invite'
-                ).to.equal('invite2@example.com');
+                // check our users lists are what we expect
+                andThen(() => {
+                    expect(find('.user-list.invited-users .user-list-item').length, 'number of invited users')
+                        .to.equal(1);
+                    // number of active users is 2 because of the logged-in user
+                    expect(find('.user-list.active-users .user-list-item').length, 'number of active users')
+                        .to.equal(2);
+                });
 
-                expect(
-                    find(testSelector('invite-id', '3')).find(testSelector('role-name')).text().trim(),
-                    'displayed role of second invite'
-                ).to.equal('Editor');
-            });
+                // click the "invite new user" button to open the modal
+                click('.view-actions .btn-green');
 
-            // submit invite form with existing user
-            click('.view-actions .gh-btn-green');
-            fillIn('.fullscreen-modal input[name="email"]', 'admin@example.com');
-            click('.fullscreen-modal .gh-btn-green');
+                // fill in and submit the invite user modal with an existing user
+                fillIn(emailInputField, 'test1@example.com');
+                click('.fullscreen-modal .btn-green');
 
-            andThen(() => {
-                // validation message is displayed
-                expect(
-                    find('.fullscreen-modal .error .response').text().trim(),
-                    'inviting existing user error'
-                ).to.equal('A user with that email address already exists.');
-            });
+                andThen(() => {
+                    // check the inline-validation
+                    expect(find('.fullscreen-modal .error .response').text().trim(), 'inviting existing user error')
+                        .to.equal('A user with that email address already exists.');
+                });
 
-            // submit invite form with existing invite
-            fillIn('.fullscreen-modal input[name="email"]', 'invite1@example.com');
-            click('.fullscreen-modal .gh-btn-green');
+                // fill in and submit the invite user modal with an invited user
+                fillIn(emailInputField, 'test2@example.com');
+                click('.fullscreen-modal .btn-green');
 
-            andThen(() => {
-                // validation message is displayed
-                expect(
-                    find('.fullscreen-modal .error .response').text().trim(),
-                    'inviting invited user error'
-                ).to.equal('A user with that email address was already invited.');
-            });
+                andThen(() => {
+                    // check the inline-validation
+                    expect(find('.fullscreen-modal .error .response').text().trim(), 'inviting invited user error')
+                        .to.equal('A user with that email address was already invited.');
 
-            // submit invite form with an invalid email
-            fillIn('.fullscreen-modal input[name="email"]', 'test');
-            click('.fullscreen-modal .gh-btn-green');
-
-            andThen(() => {
-                // validation message is displayed
-                expect(
-                    find('.fullscreen-modal .error .response').text().trim(),
-                    'inviting invalid email error'
-                ).to.equal('Invalid Email.');
-            });
-
-            click('.fullscreen-modal a.close');
-            // revoke latest invite
-            click(`${testSelector('invite-id', '3')} ${testSelector('revoke-button')}`);
-
-            andThen(() => {
-                // number of invites decreases
-                expect(
-                    find(testSelector('invite-id')).length,
-                    'number of invites after revoke'
-                ).to.equal(1);
-
-                // notification is displayed
-                expect(
-                    find('.gh-notification').text().trim(),
-                    'notifications contain revoke'
-                ).to.match(/Invitation revoked\. \(invite2@example\.com\)/);
-
-                // correct invite is removed
-                expect(
-                    find(testSelector('invite-id')).find(testSelector('email')).text().trim(),
-                    'displayed email of remaining invite'
-                ).to.equal('invite1@example.com');
-            });
-
-            // add another invite to test ordering on resend
-            click('.view-actions .gh-btn-green');
-            fillIn('.fullscreen-modal input[name="email"]', 'invite3@example.com');
-            click('.fullscreen-modal .gh-btn-green');
-
-            andThen(() => {
-                // new invite should be last in the list
-                expect(
-                    find(`${testSelector('invite-id')}:last`).find(testSelector('email')).text().trim(),
-                    'last invite email in list'
-                ).to.equal('invite3@example.com');
-            });
-
-            // resend first invite
-            click(`${testSelector('invite-id', '2')} ${testSelector('resend-button')}`);
-
-            andThen(() => {
-                // notification is displayed
-                expect(
-                    find('.gh-notification').text().trim(),
-                    'notifications contain resend'
-                ).to.match(/Invitation resent! \(invite1@example\.com\)/);
-
-                // first invite is still at the top
-                expect(
-                    find(`${testSelector('invite-id')}:first-of-type`).find(testSelector('email')).text().trim(),
-                    'first invite email in list'
-                ).to.equal('invite1@example.com');
-            });
-
-            // regression test: can revoke a resent invite
-            click(`${testSelector('invite-id')}:first-of-type ${testSelector('resend-button')}`);
-            click(`${testSelector('invite-id')}:first-of-type ${testSelector('revoke-button')}`);
-
-            andThen(() => {
-                // number of invites decreases
-                expect(
-                    find(testSelector('invite-id')).length,
-                    'number of invites after resend/revoke'
-                ).to.equal(1);
-
-                // notification is displayed
-                expect(
-                    find('.gh-notification').text().trim(),
-                    'notifications contain revoke after resend/revoke'
-                ).to.match(/Invitation revoked\. \(invite1@example\.com\)/);
-            });
-        });
-
-        it('can manage suspended users', function () {
-            visit('/team');
-            click(testSelector('user-id', suspendedUser.id));
-
-            andThen(() => {
-                expect(testSelector('suspended-badge')).to.exist;
-            });
-
-            click(testSelector('user-actions'));
-            click(testSelector('unsuspend-button'));
-            click(testSelector('modal-confirm'));
-
-            // NOTE: there seems to be a timing issue with this test - pausing
-            // here confirms that the badge is removed but the andThen is firing
-            // before the page is updated
-            // andThen(() => {
-            //     expect(testSelector('suspended-badge')).to.not.exist;
-            // });
-
-            click(testSelector('team-link'));
-
-            andThen(() => {
-                // suspendedUser is now in active list
-                expect(
-                    find(`${testSelector('active-users')} ${testSelector('user-id', suspendedUser.id)}`)
-                ).to.exist;
-
-                // no suspended users
-                expect(
-                    find(`${testSelector('suspended-users')} ${testSelector('user-id')}`).length
-                ).to.equal(0);
-            });
-
-            click(testSelector('user-id', suspendedUser.id));
-
-            click(testSelector('user-actions'));
-            click(testSelector('suspend-button'));
-            click(testSelector('modal-confirm'));
-
-            andThen(() => {
-                expect(testSelector('suspended-badge')).to.exist;
+                    // ensure that there's been no change in our user lists
+                    expect(find('.user-list.invited-users .user-list-item').length, 'number of invited users after failed invites')
+                        .to.equal(1);
+                    expect(find('.user-list.active-users .user-list-item').length, 'number of active users after failed invites')
+                        .to.equal(2);
+                });
             });
         });
 
         it('can delete users', function () {
+            /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
             let user1 = server.create('user');
             let user2 = server.create('user');
-            let post = server.create('post');
-
-            user2.posts = [post];
+            let post1 = server.create('post', {author_id: user2.id});
+            /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 
             visit('/team');
-            click(testSelector('user-id', user1.id));
+            click(`a.user-list-item:contains("${user1.name}")`);
 
             // user deletion displays modal
             click('button.delete');
@@ -477,7 +273,7 @@ describe('Acceptance: Team', function () {
 
             // deleting a user with posts
             visit('/team');
-            click(testSelector('user-id', user2.id));
+            click(`a.user-list-item:contains("${user2.name}")`);
 
             click('button.delete');
             andThen(() => {
@@ -495,7 +291,7 @@ describe('Acceptance: Team', function () {
 
                 // deleted user is not in list
                 expect(
-                    find(testSelector('user-id', user2.id)).length,
+                    find(`.user-list-item .name:contains("${user2.name}")`).length,
                     'deleted user is not in user list after deletion'
                 ).to.equal(0);
             });
@@ -511,6 +307,8 @@ describe('Acceptance: Team', function () {
                     facebook: 'test',
                     twitter: '@test'
                 });
+
+                server.loadFixtures();
             });
 
             it('input fields reset and validate correctly', function () {
@@ -772,15 +570,16 @@ describe('Acceptance: Team', function () {
                 andThen(() => {
                     // hits the endpoint
                     let [lastRequest] = server.pretender.handledRequests.slice(-1);
-                    let params = JSON.parse(lastRequest.requestBody);
+                    let params = $.deparam(lastRequest.requestBody);
 
                     expect(lastRequest.url, 'password request URL')
                         .to.match(/\/users\/password/);
 
-                    // eslint-disable-next-line camelcase
+                    /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
                     expect(params.password[0].user_id).to.equal(user.id.toString());
                     expect(params.password[0].newPassword).to.equal('password');
                     expect(params.password[0].ne2Password).to.equal('password');
+                    /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
 
                     // clears the fields
                     expect(
@@ -802,37 +601,11 @@ describe('Acceptance: Team', function () {
             });
         });
 
-        describe('using Ghost OAuth', function () {
-            beforeEach(function () {
-                enableGhostOAuth(server);
-            });
-
-            it('doesn\'t show the password reset form', function () {
-                visit(`/team/${admin.slug}`);
-
-                andThen(() => {
-                    // ensure that the normal form is displayed so we don't get
-                    // false positives
-                    expect(
-                        find('input#user-slug').length,
-                        'profile form is displayed'
-                    ).to.equal(1);
-
-                    // check that the password form is hidden
-                    expect(
-                        find('#password-reset').length,
-                        'presence of password reset form'
-                    ).to.equal(0);
-
-                    expect(
-                        find('#user-password-new').length,
-                        'presence of new password field'
-                    ).to.equal(0);
-                });
-            });
-        });
-
         describe('own user', function () {
+            beforeEach(function () {
+                server.loadFixtures();
+            });
+
             it('requires current password when changing password', function () {
                 visit(`/team/${admin.slug}`);
 
@@ -878,7 +651,7 @@ describe('Acceptance: Team', function () {
 
         it('redirects to 404 when user does not exist', function () {
             server.get('/users/slug/unknown/', function () {
-                return new Response(404, {'Content-Type': 'application/json'}, {errors: [{message: 'User not found.', errorType: 'NotFoundError'}]});
+                return new Mirage.Response(404, {'Content-Type': 'application/json'}, {errors: [{message: 'User not found.', errorType: 'NotFoundError'}]});
             });
 
             errorOverride();
@@ -889,42 +662,6 @@ describe('Acceptance: Team', function () {
                 errorReset();
                 expect(currentPath()).to.equal('error404');
                 expect(currentURL()).to.equal('/team/unknown');
-            });
-        });
-    });
-
-    describe('when logged in as author', function () {
-        let adminRole, authorRole;
-
-        beforeEach(function () {
-            adminRole = server.create('role', {name: 'Administrator'});
-            authorRole = server.create('role', {name: 'Author'});
-            server.create('user', {roles: [authorRole]});
-
-            server.get('/invites/', function () {
-                return new Response(403, {}, {
-                    errors: [{
-                        errorType: 'NoPermissionError',
-                        message: 'You do not have permission to perform this action'
-                    }]
-                });
-            });
-
-            return authenticateSession(application);
-        });
-
-        it('can access the team page', function () {
-            server.create('user', {roles: [adminRole]});
-            server.create('invite', {roles: [authorRole]});
-
-            errorOverride();
-
-            visit('/team');
-
-            andThen(() => {
-                errorReset();
-                expect(currentPath()).to.equal('team.index');
-                expect(find('.gh-alert').length).to.equal(0);
             });
         });
     });

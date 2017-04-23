@@ -1,15 +1,20 @@
 /* jshint expr:true */
-import {expect} from 'chai';
-import {describe, it} from 'mocha';
-import {setupTest} from 'ember-mocha';
+import { expect } from 'chai';
+import {
+    describeModule,
+    it
+} from 'ember-mocha';
 
-describe('Unit: Route: subscribers/new', function() {
-    setupTest('route:subscribers/new', {
+describeModule(
+    'route:subscribers/new',
+    'Unit: Route: subscribers/new',
+    {
         needs: ['service:notifications']
-    });
-
-    it('exists', function() {
-        let route = this.subject();
-        expect(route).to.be.ok;
-    });
-});
+    },
+    function() {
+        it('exists', function() {
+            let route = this.subject();
+            expect(route).to.be.ok;
+        });
+    }
+);

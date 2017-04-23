@@ -5,12 +5,11 @@ import {
   beforeEach,
   afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import $ from 'jquery';
 import startApp from '../../helpers/start-app';
 import destroyApp from '../../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
-import testSelector from 'ember-test-selectors';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
 
 describe('Acceptance: Settings - Code-Injection', function() {
     let application;
@@ -34,7 +33,7 @@ describe('Acceptance: Settings - Code-Injection', function() {
 
     it('redirects to team page when authenticated as author', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
         visit('/settings/code-injection');
@@ -46,7 +45,7 @@ describe('Acceptance: Settings - Code-Injection', function() {
 
     it('redirects to team page when authenticated as editor', function () {
         let role = server.create('role', {name: 'Editor'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
         visit('/settings/code-injection');
@@ -59,7 +58,9 @@ describe('Acceptance: Settings - Code-Injection', function() {
     describe('when logged in', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
+
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -72,13 +73,13 @@ describe('Acceptance: Settings - Code-Injection', function() {
                 expect(currentURL(), 'currentURL').to.equal('/settings/code-injection');
 
                 // has correct page title
-                expect(document.title, 'page title').to.equal('Settings - Code injection - Test Blog');
+                expect(document.title, 'page title').to.equal('Settings - Code Injection - Test Blog');
 
                 // highlights nav menu
                 expect($('.gh-nav-settings-code-injection').hasClass('active'), 'highlights nav menu item')
                     .to.be.true;
 
-                expect(find(testSelector('save-button')).text().trim(), 'save button text').to.equal('Save');
+                expect(find('.view-header .view-actions .btn-blue').text().trim(), 'save button text').to.equal('Save');
 
                 expect(find('#ghost-head .CodeMirror').length, 'ghost head codemirror element').to.equal(1);
                 expect($('#ghost-head .CodeMirror').hasClass('cm-s-xq-light'), 'ghost head editor theme').to.be.true;

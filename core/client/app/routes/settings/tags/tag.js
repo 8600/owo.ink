@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import AuthenticatedRoute from 'ghost-admin/routes/authenticated';
 
 export default AuthenticatedRoute.extend({

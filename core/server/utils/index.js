@@ -48,7 +48,7 @@ utils = {
             charlen = chars.length,
             i;
 
-        for (i = 0; i < len; i = i + 1) {
+        for (i = 1; i < len; i = i + 1) {
             buf.push(chars[getRandomInt(0, charlen - 1)]);
         }
 
@@ -106,13 +106,7 @@ utils = {
 
     readCSV: require('./read-csv'),
     removeOpenRedirectFromUrl: require('./remove-open-redirect-from-url'),
-    zipFolder: require('./zip-folder'),
-    generateAssetHash: require('./asset-hash'),
-    url: require('./url'),
-    tokens: require('./tokens'),
-    sequence: require('./sequence'),
-    ghostVersion: require('./ghost-version'),
-    mobiledocConverter: require('./mobiledoc-converter')
+    zipFolder: require('./zip-folder')
 };
 
 module.exports = utils;

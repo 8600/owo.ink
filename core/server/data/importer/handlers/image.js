@@ -2,21 +2,20 @@ var _       = require('lodash'),
     Promise = require('bluebird'),
     path    = require('path'),
     config  = require('../../../config'),
-    utils   = require('../../../utils'),
     storage = require('../../../storage'),
 
     ImageHandler;
 
 ImageHandler = {
     type: 'images',
-    extensions: config.get('uploads').images.extensions,
-    contentTypes: config.get('uploads').images.contentTypes,
+    extensions: config.uploads.images.extensions,
+    contentTypes: config.uploads.images.contentTypes,
     directories: ['images', 'content'],
 
     loadFile: function (files, baseDir) {
         var store = storage.getStorage(),
             baseDirRegex = baseDir ? new RegExp('^' + baseDir + '/') : new RegExp(''),
-            imageFolderRegexes = _.map(utils.url.STATIC_IMAGE_URL_PREFIX.split('/'), function (dir) {
+            imageFolderRegexes = _.map(config.paths.imagesRelPath.split('/'), function (dir) {
                 return new RegExp('^' + dir + '/');
             });
 
@@ -31,15 +30,15 @@ ImageHandler = {
 
             file.originalPath = noBaseDir;
             file.name = noGhostDirs;
-            file.targetDir = path.join(config.getContentPath('images'), path.dirname(noGhostDirs));
+            file.targetDir = path.join(config.paths.imagesPath, path.dirname(noGhostDirs));
             return file;
         });
 
         return Promise.map(files, function (image) {
             return store.getUniqueFileName(store, image, image.targetDir).then(function (targetFilename) {
-                image.newPath = utils.url.urlJoin('/', utils.url.getSubdir(), utils.url.STATIC_IMAGE_URL_PREFIX,
-                    path.relative(config.getContentPath('images'), targetFilename));
-
+                image.newPath = (config.paths.subdir + '/' +
+                    config.paths.imagesRelPath + '/' + path.relative(config.paths.imagesPath, targetFilename))
+                        .replace(new RegExp('\\' + path.sep, 'g'), '/');
                 return image;
             });
         });

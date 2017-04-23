@@ -1,11 +1,16 @@
 import Component from 'ember-component';
-import {invokeAction} from 'ember-invoke-action';
 
 export default Component.extend({
     actions: {
         update() {
             if (typeof this.attrs.update === 'function') {
                 this.attrs.update(...arguments);
+            }
+        },
+
+        onInput() {
+            if (typeof this.attrs.onInput === 'function') {
+                this.attrs.onInput(...arguments);
             }
         },
 
@@ -21,8 +26,10 @@ export default Component.extend({
             }
         },
 
-        remove() {
-            invokeAction(this, 'remove');
+        formChanged() {
+            if (typeof this.attrs.formChanged === 'function') {
+                this.attrs.formChanged(...arguments);
+            }
         }
     }
 });

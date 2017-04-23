@@ -1,10 +1,11 @@
 /* jshint expr:true */
-import {expect} from 'chai';
-import {describe, it} from 'mocha';
-import {setupModelTest} from 'ember-mocha';
+import { expect } from 'chai';
+import { describeModel, it } from 'ember-mocha';
 
-describe('Unit:Serializer: setting', function() {
-    setupModelTest('setting', {
+describeModel(
+    'setting',
+    'Unit:Serializer: setting',
+    {
         // Specify the other units that are required for this test.
         needs: [
             'transform:moment-utc',
@@ -13,14 +14,16 @@ describe('Unit:Serializer: setting', function() {
             'transform:navigation-settings',
             'transform:slack-settings'
         ]
-    });
+    },
 
-    // Replace this with your real tests.
-    it('serializes records', function() {
-        let record = this.subject();
+    function() {
+        // Replace this with your real tests.
+        it('serializes records', function() {
+            let record = this.subject();
 
-        let serializedRecord = record.serialize();
+            let serializedRecord = record.serialize();
 
-        expect(serializedRecord).to.be.ok;
-    });
-});
+            expect(record).to.be.ok;
+        });
+    }
+);

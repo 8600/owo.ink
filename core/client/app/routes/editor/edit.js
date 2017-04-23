@@ -1,6 +1,8 @@
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import AuthenticatedRoute from 'ghost-admin/routes/authenticated';
 import base from 'ghost-admin/mixins/editor-base-route';
+import isNumber from 'ghost-admin/utils/isNumber';
+import isFinite from 'ghost-admin/utils/isFinite';
 
 export default AuthenticatedRoute.extend(base, {
     titleToken: 'Editor',
@@ -12,13 +14,20 @@ export default AuthenticatedRoute.extend(base, {
     },
 
     model(params) {
-        /* eslint-disable camelcase */
-        let query = {
-            id: params.post_id,
+        let postId,
+            query;
+
+        postId = Number(params.post_id);
+
+        if (!isNumber(postId) || !isFinite(postId) || postId % 1 !== 0 || postId <= 0) {
+            return this.transitionTo('error404', `editor/${params.post_id}`);
+        }
+
+        query = {
+            id: postId,
             status: 'all',
             staticPages: 'all'
         };
-        /* eslint-enable camelcase */
 
         return this.store.query('post', query).then((records) => {
             let post = records.get('firstObject');
@@ -43,16 +52,13 @@ export default AuthenticatedRoute.extend(base, {
 
     setupController(controller) {
         this._super(...arguments);
+
         controller.set('shouldFocusEditor', this.get('_transitionedFromNew'));
     },
 
     actions: {
         authorizationFailed() {
             this.get('controller').send('toggleReAuthenticateModal');
-        },
-
-        redirectToContentScreen() {
-            this.transitionTo('posts');
         }
     }
 });

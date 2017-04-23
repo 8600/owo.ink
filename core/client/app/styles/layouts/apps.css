@@ -13,10 +13,6 @@
 /* Main Layout
 /* ---------------------------------------------------------- */
 
-.apps-grid-container {
-    margin: 2vw 0;
-}
-
 .apps-grid-title {
     display: block;
     margin-bottom: 5px;
@@ -28,7 +24,7 @@
     flex-flow: row wrap;
     align-items: flex-start;
     max-width: 1200px;
-    border: var(--lightgrey) 1px solid;
+    border: rgba(0,0,0,0.1) 1px solid;
     border-radius: 5px;
 }
 
@@ -47,54 +43,54 @@
     flex: 1 1 100%;
 }
 .apps-grid-cell:hover {
-    background: color(var(--lightgrey) l(+5%));
+    background: #f5f7f8;
 }
 
 .apps-card-app {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     overflow: hidden;
     padding: 14px;
     height: 75px;
-    border-top: var(--lightgrey) 1px solid;
+    border-top: rgba(0,0,0,0.1) 1px solid;
     transition: background 0.3s ease;
 }
 
-.apps-grid-cell:first-child .apps-card-app {
+.apps-card-app:not(last-child) {
+    border-bottom: rgba(0,0,0,0.1) 1px solid;
+}
+
+.apps-card-app:first-of-type {
     border-top: none;
 }
 
-.apps-card-left {
+.apps-card-content {
+    position: relative;
     display: flex;
-    align-items: center;
 }
 
-.apps-card-right {
-    display: flex;
-    align-items: center;
+.apps-card-content > .btn {
+    position: absolute;
+    top: 5px;
+    right: 20px;
 }
-
-.apps-configured {
+.apps-card-content > .apps-configured {
+    position: absolute;
+    top: 13px;
+    right: 29px;
     display: flex;
-    align-items: center;
     color: var(--midgrey);
-    font-weight: 300;
+    white-space: nowrap;
 }
 
-.apps-configured i {
-    margin-left: 15px;
-    color: var(--midgrey);
+.apps-configured > span {
+    padding-right: 14px;
+    font-size: 1.3rem;
 }
 
-.apps-configured a {
-    text-decoration: underline;
-}
-
-.apps-configured-action {
-    margin-left: 15px;
-    text-transform: uppercase;
-    font-size: 11px;
+.apps-configured > i {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    font-size: 1.1rem;
 }
 
 .apps-card-app-icon {
@@ -108,14 +104,15 @@
 }
 
 .apps-card-meta {
+    position: relative;
     display: flex;
     flex-direction: column;
-    padding: 0 70px 0 0;
 }
 
 .apps-card-app-title {
-    margin: 0;
     overflow: hidden;
+    margin: 4px 0 0 0;
+    padding: 0 70px 0 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 1.7rem;
@@ -183,31 +180,78 @@
 
 .app-cell h3 {
     margin: 0;
-    color: var(--darkgrey);
+    color: #393939;
     font-size: 2.4rem;
 }
 
 .app-cell p {
     margin: 0;
     margin-bottom: 5px;
-    color: var(--midgrey);
+    color: #a3a3a3;
     font-size: 1.6rem;
     line-height: 1.4em;
 }
 
 .app-subtitle {
     max-width: 550px;
-    color: var(--midgrey);
+    color: #666363;
     font-size: 1.6rem;
 }
-.app-config-form .gh-btn-grey {
+.app-config-form .btn-grey {
     margin-top: 1.6em;
     background-color: #e8e8e8;
     box-shadow: none;
     font-size: 1.1rem;
 }
 
-.app-config-form > .gh-btn-grey:hover,
-.app-config-form > .gh-btn-grey:focus {
+.app-config-form > .btn-grey:hover,
+.app-config-form > .btn-grey:focus {
     border-color: rgb(223, 225, 227);
+}
+/* Media Queries
+/* ---------------------------------------------------------- */
+
+@media (max-width: 800px) {
+    .apps-grid-apps {
+        overflow: hidden;
+        margin: 0 0 4vw 0;
+        border: #dfe1e3 1px solid;
+        border-radius: 5px;
+    }
+
+    .apps-card-app {
+        margin: 0;
+        border: none;
+        border-top: #dfe1e3 1px solid;
+        border-radius: 0;
+    }
+    .apps-grid-cell:first-of-type .apps-card-app {
+        border-top: none;
+    }
+}
+
+@media (max-width: 760px) {
+    .apps-card-app {
+        padding: 15px;
+    }
+    .apps-card-app .apps-card-footer {
+        justify-content: flex-end;
+    }
+    .apps-card-theme .apps-card-footer {
+        margin: 0;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 540px) {
+    .apps-card-footer {
+        justify-content: flex-end;
+    }
+    .apps-card-app .apps-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .apps-card-content > .apps-configured {
+        right: 15px;
+    }
 }

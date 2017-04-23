@@ -63,28 +63,27 @@ utils = {
         });
 
         // We now have a list of users we need to figure out what their email addresses are
-        // tableData.users has id's as numbers (see fixtures/export)
-        // userIdToMap === tableData.users, but it's already a string, because it's an object key and they are always strings
-        _.each(_.keys(userMap), function (userIdToMap) {
+        _.each(_.keys(userMap), function (userToMap) {
+            userToMap = parseInt(userToMap, 10);
             var foundUser = _.find(tableData.users, function (tableDataUser) {
-                return tableDataUser.id.toString() === userIdToMap;
+                return tableDataUser.id === userToMap;
             });
 
             // we now know that userToMap's email is foundUser.email - look them up in existing users
             if (foundUser && _.has(foundUser, 'email') && _.has(existingUsers, foundUser.email)) {
-                existingUsers[foundUser.email].importId = userIdToMap;
-                userMap[userIdToMap] = existingUsers[foundUser.email].realId;
-            } else if (models.User.isOwnerUser(userIdToMap)) {
-                existingUsers[owner.email].importId = userIdToMap;
-                userMap[userIdToMap] = existingUsers[owner.email].realId;
-            } else if (models.User.isExternalUser(userIdToMap)) {
-                userMap[userIdToMap] = models.User.externalUser;
+                existingUsers[foundUser.email].importId = userToMap;
+                userMap[userToMap] = existingUsers[foundUser.email].realId;
+            } else if (userToMap === 1) {
+                // if we don't have user data and the id is 1, we assume this means the owner
+                existingUsers[owner.email].importId = userToMap;
+                userMap[userToMap] = existingUsers[owner.email].realId;
+            } else if (userToMap === 0) {
+                // CASE: external context
+                userMap[userToMap] = '0';
             } else {
-                throw new errors.DataImportError({
-                    message: i18n.t('errors.data.import.utils.dataLinkedToUnknownUser', {userToMap: userIdToMap}),
-                    property: 'user.id',
-                    value: userIdToMap
-                });
+                throw new errors.DataImportError(
+                    i18n.t('errors.data.import.utils.dataLinkedToUnknownUser', {userToMap: userToMap}), 'user.id', userToMap
+                );
             }
         });
 
@@ -108,22 +107,21 @@ utils = {
 
     preProcessPostTags: function preProcessPostTags(tableData) {
         var postTags,
-            postsWithTags = new Map();
+            postsWithTags = {};
 
         postTags = tableData.posts_tags;
         _.each(postTags, function (postTag) {
-            if (!postsWithTags.get(postTag.post_id)) {
-                postsWithTags.set(postTag.post_id, []);
+            if (!postsWithTags.hasOwnProperty(postTag.post_id)) {
+                postsWithTags[postTag.post_id] = [];
             }
-            postsWithTags.get(postTag.post_id).push(postTag.tag_id);
+            postsWithTags[postTag.post_id].push(postTag.tag_id);
         });
 
-        postsWithTags.forEach(function (tagIds, postId) {
+        _.each(postsWithTags, function (tagIds, postId) {
             var post, tags;
             post = _.find(tableData.posts, function (post) {
-                return post.id === postId;
+                return post.id === parseInt(postId, 10);
             });
-
             if (post) {
                 tags = _.filter(tableData.tags, function (tag) {
                     return _.indexOf(tagIds, tag.id) !== -1;
@@ -165,7 +163,7 @@ utils = {
 
         _.each(tableData.roles_users, function (roleUser) {
             var user = _.find(tableData.users, function (user) {
-                return user.id === roleUser.user_id;
+                return user.id === parseInt(roleUser.user_id, 10);
             });
 
             // Map role_id to updated roles id
@@ -308,7 +306,7 @@ utils = {
         }
 
         var ops = [];
-        tableData = stripProperties(['id'], tableData);
+        tableData = stripProperties(['id', 'post_id'], tableData);
 
         _.each(tableData, function (subscriber) {
             ops.push(models.Subscriber.add(subscriber, _.extend({}, internalContext, {transacting: transaction}))

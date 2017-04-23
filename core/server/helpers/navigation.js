@@ -2,11 +2,12 @@
 // `{{navigation}}`
 // Outputs navigation menu of static urls
 
-var _ = require('lodash'),
-    hbs = require('express-hbs'),
-    i18n = require('../i18n'),
-    errors = require('../errors'),
-    template = require('./template'),
+var _               = require('lodash'),
+    hbs             = require('express-hbs'),
+    i18n            = require('../i18n'),
+
+    errors          = require('../errors'),
+    template        = require('./template'),
     navigation;
 
 navigation = function (options) {
@@ -18,17 +19,13 @@ navigation = function (options) {
         data;
 
     if (!_.isObject(navigationData) || _.isFunction(navigationData)) {
-        throw new errors.IncorrectUsageError({
-            message: i18n.t('warnings.helpers.navigation.invalidData')
-        });
+        return errors.logAndThrowError(i18n.t('warnings.helpers.navigation.invalidData'));
     }
 
     if (navigationData.filter(function (e) {
         return (_.isUndefined(e.label) || _.isUndefined(e.url));
     }).length > 0) {
-        throw new errors.IncorrectUsageError({
-            message: i18n.t('warnings.helpers.navigation.valuesMustBeDefined')
-        });
+        return errors.logAndThrowError(i18n.t('warnings.helpers.navigation.valuesMustBeDefined'));
     }
 
     // check for non-null string values
@@ -36,9 +33,7 @@ navigation = function (options) {
         return ((!_.isNull(e.label) && !_.isString(e.label)) ||
             (!_.isNull(e.url) && !_.isString(e.url)));
     }).length > 0) {
-        throw new errors.IncorrectUsageError({
-            message: i18n.t('warnings.helpers.navigation.valuesMustBeString')
-        });
+        return errors.logAndThrowError(i18n.t('warnings.helpers.navigation.valuesMustBeString'));
     }
 
     function _slugify(label) {

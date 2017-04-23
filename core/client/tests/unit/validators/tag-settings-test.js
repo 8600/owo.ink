@@ -1,9 +1,10 @@
 /* jshint expr:true */
-import {expect} from 'chai';
+import { expect } from 'chai';
 import {
     describe,
     it
 } from 'mocha';
+import sinon from 'sinon';
 import run from 'ember-runloop';
 import EmberObject from 'ember-object';
 // import validator from 'ghost-admin/validators/tag-settings';

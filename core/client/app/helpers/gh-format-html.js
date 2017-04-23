@@ -17,9 +17,9 @@ export default helper(function (params) {
         '<pre class="iframe-embed-placeholder">Embedded iFrame</pre>');
 
     // sanitize HTML
-    /* eslint-disable camelcase */
+    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
     escapedhtml = html_sanitize(escapedhtml, cajaSanitizers.url, cajaSanitizers.id);
-    /* eslint-enable camelcase */
+    // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 
     return htmlSafe(escapedhtml);
 });

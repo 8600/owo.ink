@@ -1,15 +1,13 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    rewire = require('rewire'),
-    path = require('path'),
-    Promise = require('bluebird'),
-
-    ampController = rewire('../lib/router'),
-    errors = require('../../../errors'),
-    configUtils = require('../../../../test/utils/configUtils'),
-    themes = require('../../../themes'),
-
-    sandbox = sinon.sandbox.create();
+/*globals describe, beforeEach, afterEach, it*/
+var rewire            = require('rewire'),
+    ampController     = rewire('../lib/router'),
+    path              = require('path'),
+    sinon             = require('sinon'),
+    Promise           = require('bluebird'),
+    errors            = require('../../../errors'),
+    should            = require('should'),
+    configUtils       = require('../../../../test/utils/configUtils'),
+    sandbox           = sinon.sandbox.create();
 
 // Helper function to prevent unit tests
 // from failing via timeout when they
@@ -24,17 +22,9 @@ describe('AMP Controller', function () {
     var res,
         req,
         defaultPath,
-        setResponseContextStub,
-        hasTemplateStub;
+        setResponseContextStub;
 
     beforeEach(function () {
-        hasTemplateStub = sandbox.stub().returns(false);
-        hasTemplateStub.withArgs('index').returns(true);
-
-        sandbox.stub(themes, 'getActive').returns({
-            hasTemplate: hasTemplateStub
-        });
-
         res = {
             render: sandbox.spy(),
             locals: {
@@ -43,18 +33,18 @@ describe('AMP Controller', function () {
         };
 
         req = {
+            app: {get: function () { return 'casper'; }},
             route: {path: '/'},
             query: {r: ''},
             params: {},
-            amp: {}
+            body: {}
         };
 
-        defaultPath = path.join(configUtils.config.get('paths').appRoot, '/core/server/apps/amp/lib/views/amp.hbs');
+        defaultPath = path.join(configUtils.config.paths.appRoot, '/core/server/apps/amp/lib/views/amp.hbs');
 
         configUtils.set({
             theme: {
-                permalinks: '/:slug/',
-                amp: true
+                permalinks: '/:slug/'
             }
         });
     });
@@ -65,6 +55,8 @@ describe('AMP Controller', function () {
     });
 
     it('should render default amp page when theme has no amp template', function (done) {
+        configUtils.set({paths: {availableThemes: {casper: {}}}});
+
         setResponseContextStub = sandbox.stub();
         ampController.__set__('setResponseContext', setResponseContextStub);
 
@@ -77,7 +69,9 @@ describe('AMP Controller', function () {
     });
 
     it('should render theme amp page when theme has amp template', function (done) {
-        hasTemplateStub.withArgs('amp').returns(true);
+        configUtils.set({paths: {availableThemes: {casper: {
+            'amp.hbs': '/content/themes/casper/amp.hbs'
+        }}}});
 
         setResponseContextStub = sandbox.stub();
         ampController.__set__('setResponseContext', setResponseContextStub);
@@ -91,6 +85,7 @@ describe('AMP Controller', function () {
     });
 
     it('should render with error when error is passed in', function (done) {
+        configUtils.set({paths: {availableThemes: {casper: {}}}});
         res.error = 'Test Error';
 
         setResponseContextStub = sandbox.stub();
@@ -107,6 +102,7 @@ describe('AMP Controller', function () {
 
     it('does not render amp page when amp context is missing', function (done) {
         var renderSpy;
+        configUtils.set({paths: {availableThemes: {casper: {}}}});
 
         setResponseContextStub = sandbox.stub();
         ampController.__set__('setResponseContext', setResponseContextStub);
@@ -124,6 +120,7 @@ describe('AMP Controller', function () {
 
     it('does not render amp page when context is other than amp and post', function (done) {
         var renderSpy;
+        configUtils.set({paths: {availableThemes: {casper: {}}}});
 
         setResponseContextStub = sandbox.stub();
         ampController.__set__('setResponseContext', setResponseContextStub);
@@ -151,7 +148,7 @@ describe('AMP getPostData', function () {
         };
 
         req = {
-            amp: {
+            body: {
                 post: {}
             }
         };
@@ -168,7 +165,8 @@ describe('AMP getPostData', function () {
         postLookupStub.returns(new Promise.resolve({
             post: {
                 id: '1',
-                slug: 'welcome-to-ghost'
+                slug: 'welcome-to-ghost',
+                isAmpURL: true
             }
         }));
 
@@ -177,16 +175,16 @@ describe('AMP getPostData', function () {
         ampController.getPostData(req, res, function () {
             req.body.post.should.be.eql({
                     id: '1',
-                    slug: 'welcome-to-ghost'
+                    slug: 'welcome-to-ghost',
+                    isAmpURL: true
                 }
             );
             done();
         });
     });
-
     it('should return error if postlookup returns NotFoundError', function (done) {
         postLookupStub = sandbox.stub();
-        postLookupStub.returns(new Promise.reject(new errors.NotFoundError({message: 'not found'})));
+        postLookupStub.returns(new Promise.reject(new errors.NotFoundError('not found')));
 
         ampController.__set__('postLookup', postLookupStub);
 
@@ -198,7 +196,7 @@ describe('AMP getPostData', function () {
             err.message.should.be.eql('not found');
             err.statusCode.should.be.eql(404);
             err.errorType.should.be.eql('NotFoundError');
-            req.body.should.be.eql({});
+            req.body.post.should.be.eql({});
             done();
         });
     });
@@ -211,7 +209,7 @@ describe('AMP getPostData', function () {
         ampController.getPostData(req, res, function (err) {
             should.exist(err);
             err.should.be.eql('not found');
-            req.body.should.be.eql({});
+            req.body.post.should.be.eql({});
             done();
         });
     });

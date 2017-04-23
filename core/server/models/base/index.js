@@ -9,13 +9,14 @@ var _          = require('lodash'),
     bookshelf  = require('bookshelf'),
     moment     = require('moment'),
     Promise    = require('bluebird'),
-    ObjectId   = require('bson-objectid'),
+    uuid       = require('uuid'),
     config     = require('../../config'),
     db         = require('../../data/db'),
     errors     = require('../../errors'),
     filters    = require('../../filters'),
     schema     = require('../../data/schema'),
     utils      = require('../../utils'),
+    labs       = require('../../utils/labs'),
     validation = require('../../data/validation'),
     plugins    = require('../plugins'),
     i18n       = require('../../i18n'),
@@ -42,6 +43,9 @@ ghostBookshelf.plugin(plugins.includeCount);
 // Load the Ghost pagination plugin, which gives us the `fetchPage` method on Models
 ghostBookshelf.plugin(plugins.pagination);
 
+// Update collision plugin
+ghostBookshelf.plugin(plugins.collision);
+
 // Cache an instance of the base model prototype
 proto = ghostBookshelf.Model.prototype;
 
@@ -59,7 +63,9 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
 
     // Bookshelf `defaults` - default values setup on every model creation
     defaults: function defaults() {
-        return {};
+        return {
+            uuid: uuid.v4()
+        };
     },
 
     // When loading an instance, subclasses can specify default to fetch
@@ -77,46 +83,25 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
             this.include = _.clone(options.include);
         }
 
-        ['fetching', 'fetched', 'creating', 'created', 'updating', 'updated', 'destroying', 'destroyed', 'saved']
-            .forEach(function (eventName) {
-                var functionName = 'on' + eventName[0].toUpperCase() + eventName.slice(1);
-
-                if (!self[functionName]) {
-                    return;
-                }
-
-                self.on(eventName, function eventTriggered() {
-                    return this[functionName].apply(this, arguments);
-                });
+        this.on('creating', this.creating, this);
+        this.on('saving', function onSaving(model, attributes, options) {
+            return Promise.resolve(self.saving(model, attributes, options)).then(function then() {
+                return self.validate(model, attributes, options);
             });
-
-        this.on('saving', function onSaving() {
-            var self = this,
-                args = arguments;
-
-            return Promise.resolve(self.onSaving.apply(self, args))
-                .then(function validated() {
-                    return Promise.resolve(self.onValidate.apply(self, args));
-                });
         });
     },
 
-    onValidate: function onValidate() {
+    validate: function validate() {
         return validation.validateSchema(this.tableName, this.toJSON());
     },
 
-    onCreating: function onCreating(newObj, attr, options) {
-        // id = 0 is still a valid value for external usage
-        if (_.isUndefined(newObj.id) || _.isNull(newObj.id)) {
-            newObj.setId();
-        }
-
-        if (schema.tables[this.tableName].hasOwnProperty('created_by') && !this.get('created_by')) {
+    creating: function creating(newObj, attr, options) {
+        if (!this.get('created_by')) {
             this.set('created_by', this.contextUser(options));
         }
     },
 
-    onSaving: function onSaving(newObj, attr, options) {
+    saving: function saving(newObj, attr, options) {
         // Remove any properties which don't belong on the model
         this.attributes = this.pick(this.permittedAttributes());
         // Store the previous attributes so we can tell what was updated later
@@ -182,22 +167,16 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
 
     // Get the user from the options object
     contextUser: function contextUser(options) {
-        options = options || {};
-        options.context = options.context || {};
-
-        if (options.context.user || ghostBookshelf.Model.isExternalUser(options.context.user)) {
+        // Default to context user
+        if ((options.context && options.context.user) || (options.context && options.context.user === 0)) {
             return options.context.user;
-        } else if (options.context.internal) {
-            return ghostBookshelf.Model.internalUser;
-        } else if (this.get('id')) {
-            return this.get('id');
-        } else if (options.context.external) {
-            return ghostBookshelf.Model.externalUser;
+        // Other wise use the internal override
+        } else if (options.context && options.context.internal) {
+            return 1;
+        } else if (options.context && options.context.external) {
+            return 0;
         } else {
-            throw new errors.NotFoundError({
-                message: i18n.t('errors.models.base.index.missingContext'),
-                level: '严重'
-            });
+            errors.logAndThrowError(new Error(i18n.t('errors.models.base.index.missingContext')));
         }
     },
 
@@ -249,40 +228,20 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
         return this.updatedAttributes()[attr];
     },
 
-    hasDateChanged: function (attr) {
-        return moment(this.get(attr)).diff(moment(this.updated(attr))) !== 0;
-    },
-
     /**
-     * we auto generate a GUID for each resource
-     * no auto increment
+     * There is difference between `updated` and `previous`:
+     * Depending on the hook (before or after writing into the db), both fields have a different meaning.
+     * e.g. onSaving  -> before db write (has to use previous)
+     *      onUpdated -> after db write  (has to use updated)
+     *
+     * hasDateChanged('attr', {beforeWrite: true})
      */
-    setId: function setId() {
-        this.set('id', ObjectId.generate());
+    hasDateChanged: function (attr, options) {
+        options = options || {};
+        return moment(this.get(attr)).diff(moment(options.beforeWrite ? this.previous(attr) : this.updated(attr))) !== 0;
     }
 }, {
     // ## Data Utility Functions
-
-    /**
-     * please use these static definitions when comparing id's
-     * we keep type number, because we have too many check's where we rely on
-     * context.user ? true : false (if context.user is 0 as number, this condition is false)
-     */
-    internalUser: 1,
-    ownerUser: 1,
-    externalUser: 0,
-
-    isOwnerUser: function isOwnerUser(id) {
-        return id === ghostBookshelf.Model.ownerUser || id === ghostBookshelf.Model.ownerUser.toString();
-    },
-
-    isInternalUser: function isInternalUser(id) {
-        return id === ghostBookshelf.Model.internalUser || id === ghostBookshelf.Model.internalUser.toString();
-    },
-
-    isExternalUser: function isExternalUser(id) {
-        return id === ghostBookshelf.Model.externalUser || id === ghostBookshelf.Model.externalUser.toString();
-    },
 
     /**
      * Returns an array of keys permitted in every method's `options` hash.
@@ -299,14 +258,51 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
 
     /**
      * Filters potentially unsafe model attributes, so you can pass them to Bookshelf / Knex.
+     * This filter should be called before each insert/update operation.
+     *
      * @param {Object} data Has keys representing the model's attributes/fields in the database.
      * @return {Object} The filtered results of the passed in data, containing only what's allowed in the schema.
      */
     filterData: function filterData(data) {
         var permittedAttributes = this.prototype.permittedAttributes(),
-            filteredData = _.pick(data, permittedAttributes);
+            filteredData = _.pick(data, permittedAttributes),
+            sanitizedData = this.sanitizeData(filteredData);
 
-        return filteredData;
+        return sanitizedData;
+    },
+
+    /**
+     * `sanitizeData` ensures that client data is in the correct format for further operations.
+     *
+     * Dates:
+     * - client dates are sent as ISO format (moment(..).format())
+     * - server dates are in JS Date format
+     *   >> when bookshelf fetches data from the database, all dates are in JS Dates
+     *   >> see `parse`
+     * - Bookshelf updates the model with the new client data via the `set` function
+     * - Bookshelf uses a simple `isEqual` function from lodash to detect real changes
+     * - .previous(attr) and .get(attr) returns false obviously
+     * - internally we use our `hasDateChanged` if we have to compare previous/updated dates
+     * - but Bookshelf is not in our control for this case
+     *
+     * @IMPORTANT
+     * Before the new client data get's inserted again, the dates get's retransformed into
+     * proper strings, see `format`.
+     */
+    sanitizeData: function sanitizeData(data) {
+        var tableName = _.result(this.prototype, 'tableName');
+
+        _.each(data, function (value, key) {
+            if (value !== null
+                && schema.tables[tableName].hasOwnProperty(key)
+                && schema.tables[tableName][key].type === 'dateTime'
+                && typeof value === 'string'
+            ) {
+                data[key] = moment(value).toDate();
+            }
+        });
+
+        return data;
     },
 
     /**
@@ -349,7 +345,6 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
                     item.include = options.include;
                 });
             }
-
             return result;
         });
     },
@@ -383,7 +378,7 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
             requestedColumns = options.columns;
 
         // Set this to true or pass ?debug=true as an API option to get output
-        itemCollection.debug = options.debug && config.get('env') !== 'production';
+        itemCollection.debug = options.debug && process.env.NODE_ENV !== 'production';
 
         // Filter options so that only permitted ones remain
         options = this.filterOptions(options, 'findPage');
@@ -442,7 +437,6 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
     findOne: function findOne(data, options) {
         data = this.filterData(data);
         options = this.filterOptions(options, 'findOne');
-
         // We pass include to forge so that toJSON has access
         return this.forge(data, {include: options.include}).fetch(options);
     },
@@ -450,6 +444,10 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
     /**
      * ### Edit
      * Naive edit
+     *
+     * We always forward the `method` option to Bookshelf, see http://bookshelfjs.org/#Model-instance-save.
+     * Based on the `method` option Bookshelf and Ghost can determine if a query is an insert or an update.
+     *
      * @param {Object} data
      * @param {Object} options (optional)
      * @return {Promise(ghostBookshelf.Model)} Edited Model
@@ -468,7 +466,7 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
 
         return model.fetch(options).then(function then(object) {
             if (object) {
-                return object.save(data, options);
+                return object.save(data, _.merge({method: 'update'}, options));
             }
         });
     },
@@ -490,10 +488,6 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
         if (options.importing) {
             model.hasTimestamps = false;
         }
-
-        // Bookshelf determines whether an operation is an update or an insert based on the id
-        // Ghost auto-generates Object id's, so we need to tell Bookshelf here that we are inserting data
-        options.method = 'insert';
         return model.save(null, options);
     },
 
@@ -530,12 +524,10 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
 
         checkIfSlugExists = function checkIfSlugExists(slugToFind) {
             var args = {slug: slugToFind};
-
             // status is needed for posts
             if (options && options.status) {
                 args.status = options.status;
             }
-
             return Model.findOne(args, options).then(function then(found) {
                 var trimSpace;
 
@@ -577,17 +569,18 @@ ghostBookshelf.Model = ghostBookshelf.Model.extend({
         }
 
         if (!_.has(options, 'importing') || !options.importing) {
+            // TODO: remove the labs requirement when internal tags is out of beta
             // This checks if the first character of a tag name is a #. If it is, this
             // is an internal tag, and as such we should add 'hash' to the beginning of the slug
-            if (baseName === 'tag' && /^#/.test(base)) {
+            if (labs.isSet('internalTags') && baseName === 'tag' && /^#/.test(base)) {
                 slug = 'hash-' + slug;
             }
         }
 
         // Check the filtered slug doesn't match any of the reserved keywords
-        return filters.doFilter('slug.reservedSlugs', config.get('slugs').reserved).then(function then(slugList) {
+        return filters.doFilter('slug.reservedSlugs', config.slugs.reserved).then(function then(slugList) {
             // Some keywords cannot be changed
-            slugList = _.union(slugList, utils.url.getProtectedSlugs());
+            slugList = _.union(slugList, config.slugs.protected);
 
             return _.includes(slugList, slug) ? slug + '-' + baseName : slug;
         }).then(function then(slug) {

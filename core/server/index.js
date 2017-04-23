@@ -13,51 +13,168 @@
 require('./overrides');
 
 // Module dependencies
-var debug = require('debug')('ghost:boot:init'),
-// Config should be first require, as it triggers the initial load of the config files
-    config = require('./config'),
+var express = require('express'),
+    _ = require('lodash'),
+    uuid = require('uuid'),
     Promise = require('bluebird'),
-    logging = require('./logging'),
     i18n = require('./i18n'),
+    api = require('./api'),
+    config = require('./config'),
+    errors = require('./errors'),
+    middleware = require('./middleware'),
+    migrations = require('./data/migration'),
+    versioning = require('./data/schema/versioning'),
     models = require('./models'),
     permissions = require('./permissions'),
     apps = require('./apps'),
-    auth = require('./auth'),
-    dbHealth = require('./data/db/health'),
     xmlrpc = require('./data/xml/xmlrpc'),
     slack = require('./data/slack'),
     GhostServer = require('./ghost-server'),
     scheduling = require('./scheduling'),
-    settings = require('./settings'),
-    settingsCache = require('./settings/cache'),
-    themes = require('./themes'),
-    utils = require('./utils');
+    dbHash;
+
+function initDbHashAndFirstRun() {
+    return api.settings.read({key: 'dbHash', context: {internal: true}}).then(function (response) {
+        var hash = response.settings[0].value,
+            initHash;
+
+        dbHash = hash;
+
+        if (dbHash === null) {
+            initHash = uuid.v4();
+            return api.settings.edit({settings: [{key: 'dbHash', value: initHash}]}, {context: {internal: true}})
+                .then(function (response) {
+                    dbHash = response.settings[0].value;
+                    return dbHash;
+                    // Use `then` here to do 'first run' actions
+                });
+        }
+
+        return dbHash;
+    });
+}
 
 // ## Initialise Ghost
-function init() {
-    debug('Init Start...');
+// Sets up the express server instances, runs init on a bunch of stuff, configures views, helpers, routes and more
+// Finally it returns an instance of GhostServer
+function init(options) {
+    options = options || {};
 
-    var ghostServer, parentApp;
+    var ghostServer = null, settingsMigrations, currentDatabaseVersion;
+
+    // ### Initialisation
+    // The server and its dependencies require a populated config
+    // It returns a promise that is resolved when the application
+    // has finished starting up.
 
     // Initialize Internationalization
     i18n.init();
-    debug('I18n done');
-    models.init();
-    debug('models done');
 
-    return dbHealth.check().then(function () {
-        debug('DB health check done');
-        // Populate any missing default settings
-        // Refresh the API settings cache
-        return settings.init();
+    // Load our config.js file from the local file system.
+    return config.load(options.config).then(function () {
+        return config.checkDeprecated();
     }).then(function () {
-        debug('Update settings cache done');
+        // Load models, no need to wait
+        models.init();
+
+        /**
+         * fresh install:
+         * - getDatabaseVersion will throw an error and we will create all tables (including populating settings)
+         * - this will run in one single transaction to avoid having problems with non existent settings
+         * - see https://github.com/TryGhost/Ghost/issues/7345
+         */
+        return versioning.getDatabaseVersion()
+            .then(function () {
+                /**
+                 * No fresh install:
+                 * - every time Ghost starts,  we populate the default settings before we run migrations
+                 * - important, because it can happen that a new added default property won't be existent
+                 */
+                return models.Settings.populateDefaults();
+            })
+            .catch(function (err) {
+                if (err instanceof errors.DatabaseNotPopulated) {
+                    return migrations.populate();
+                }
+
+                return Promise.reject(err);
+            });
+    }).then(function () {
+        /**
+         * a little bit of duplicated code, but:
+         * - ensure now we load the current database version and remember
+         */
+        return versioning.getDatabaseVersion()
+            .then(function (_currentDatabaseVersion) {
+                currentDatabaseVersion = _currentDatabaseVersion;
+            });
+    }).then(function () {
+        // ATTENTION:
+        // this piece of code was only invented for https://github.com/TryGhost/Ghost/issues/7351#issuecomment-250414759
+        if (currentDatabaseVersion !== '008') {
+            return;
+        }
+
+        if (config.database.client !== 'sqlite3') {
+            return;
+        }
+
+        return models.Settings.findOne({key: 'migrations'}, options)
+            .then(function fetchedMigrationsSettings(result) {
+                try {
+                    settingsMigrations = JSON.parse(result.attributes.value) || {};
+                } catch (err) {
+                    return;
+                }
+
+                if (settingsMigrations.hasOwnProperty('006/01')) {
+                    return;
+                }
+
+                // force them to re-run 008, because we have fixed the date fixture migration
+                currentDatabaseVersion = '007';
+                return versioning.setDatabaseVersion(null, '007');
+            });
+    }).then(function () {
+        var response = migrations.update.isDatabaseOutOfDate({
+            fromVersion: currentDatabaseVersion,
+            toVersion: versioning.getNewestDatabaseVersion(),
+            forceMigration: process.env.FORCE_MIGRATION
+        }), maintenanceState;
+
+        if (response.migrate === true) {
+            maintenanceState = config.maintenance.enabled || false;
+            config.maintenance.enabled = true;
+
+            migrations.update.execute({
+                fromVersion: currentDatabaseVersion,
+                toVersion: versioning.getNewestDatabaseVersion(),
+                forceMigration: process.env.FORCE_MIGRATION
+            }).then(function () {
+                config.maintenance.enabled = maintenanceState;
+            }).catch(function (err) {
+                if (!err) {
+                    return;
+                }
+
+                errors.logErrorAndExit(err, err.context, err.help);
+            });
+        } else if (response.error) {
+            return Promise.reject(response.error);
+        }
+    }).then(function () {
         // Initialize the permissions actions and objects
+        // NOTE: Must be done before initDbHashAndFirstRun calls
         return permissions.init();
     }).then(function () {
-        debug('Permissions done');
+        // Initialize the settings cache now,
+        // This is an optimisation, so that further reads from settings are fast.
+        // We do also do this after boot
+        return api.init();
+    }).then(function () {
         return Promise.join(
-            themes.init(),
+            // Check for or initialise a dbHash.
+            initDbHashAndFirstRun(),
             // Initialize apps
             apps.init(),
             // Initialize xmrpc ping
@@ -66,49 +183,20 @@ function init() {
             slack.listen()
         );
     }).then(function () {
-        debug('Apps, XMLRPC, Slack done');
+        // Get reference to an express app instance.
+        var parentApp = express();
 
-        // Setup our collection of express apps
-        parentApp = require('./app')();
+        // ## Middleware and Routing
+        middleware(parentApp);
 
-        debug('Express Apps done');
-    }).then(function () {
-        return auth.validation.switch({
-            authType: config.get('auth:type')
-        });
-    }).then(function () {
-        // runs asynchronous
-        auth.init({
-            authType: config.get('auth:type'),
-            ghostAuthUrl: config.get('auth:url'),
-            redirectUri: utils.url.urlFor('admin', true),
-            clientUri: utils.url.urlFor('home', true),
-            clientName: settingsCache.get('title'),
-            clientDescription: settingsCache.get('description')
-        }).then(function (response) {
-            parentApp.use(response.auth);
-        }).catch(function onAuthError(err) {
-            logging.error(err);
-        });
-    }).then(function () {
-        debug('Auth done');
         return new GhostServer(parentApp);
     }).then(function (_ghostServer) {
         ghostServer = _ghostServer;
 
         // scheduling can trigger api requests, that's why we initialize the module after the ghost server creation
         // scheduling module can create x schedulers with different adapters
-        debug('Server done');
-        return scheduling.init({
-            schedulerUrl: config.get('scheduling').schedulerUrl,
-            active: config.get('scheduling').active,
-            apiUrl: utils.url.urlFor('api', true),
-            internalPath: config.get('paths').internalSchedulingPath,
-            contentPath: config.getContentPath('scheduling')
-        });
+        return scheduling.init(_.extend(config.scheduling, {apiUrl: config.apiUrl()}));
     }).then(function () {
-        debug('Scheduling done');
-        debug('...Init End');
         return ghostServer;
     });
 }

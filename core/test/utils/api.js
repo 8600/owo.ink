@@ -4,8 +4,8 @@ var _               = require('lodash'),
     config          = require('../../server/config'),
     schema          = require('../../server/data/schema').tables,
     ApiRouteBase    = '/ghost/api/v0.1/',
-    host            = config.get('server').host,
-    port            = config.get('server').port,
+    host            = config.server.host,
+    port            = config.server.port,
     protocol        = 'http://',
     expectedProperties = {
         // API top level
@@ -22,7 +22,7 @@ var _               = require('lodash'),
         // Post API swaps author_id to author, and always returns a computed 'url' property
         post:        _(schema.posts).keys().without('author_id').concat('author', 'url').value(),
         // User API always removes the password field
-        user:        _(schema.users).keys().without('password').without('ghost_auth_access_token').value(),
+        user:        _(schema.users).keys().without('password').value(),
         // Tag API swaps parent_id to parent
         tag:         _(schema.tags).keys().without('parent_id').concat('parent').value(),
         setting:     _.keys(schema.settings),
@@ -31,9 +31,7 @@ var _               = require('lodash'),
         role:        _.keys(schema.roles),
         permission:  _.keys(schema.permissions),
         notification: ['type', 'message', 'status', 'id', 'dismissible', 'location'],
-        theme:        ['name', 'package', 'active'],
-        themes:       ['themes'],
-        invites:      _(schema.invites).keys().without('token').value()
+        theme:        ['uuid', 'name', 'version', 'active']
     };
 
 function getApiQuery(route) {

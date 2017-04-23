@@ -31,7 +31,9 @@ GhostRouter.map(function () {
     this.route('reset', {path: '/reset/:token'});
     this.route('about', {path: '/about'});
 
-    this.route('posts', {path: '/'}, function() {});
+    this.route('posts', {path: '/'}, function () {
+        this.route('post', {path: ':post_id'});
+    });
 
     this.route('editor', function () {
         this.route('new', {path: ''});
@@ -42,16 +44,16 @@ GhostRouter.map(function () {
         this.route('user', {path: ':user_slug'});
     });
 
-    this.route('settings.general', {path: '/settings/general'});
+    this.route('settings.general', {path: '/settings/general'}, function () {
+        this.route('uploadtheme');
+    });
     this.route('settings.tags', {path: '/settings/tags'}, function () {
         this.route('tag', {path: ':tag_slug'});
         this.route('new');
     });
     this.route('settings.labs', {path: '/settings/labs'});
     this.route('settings.code-injection', {path: '/settings/code-injection'});
-    this.route('settings.design', {path: '/settings/design'}, function () {
-        this.route('uploadtheme');
-    });
+    this.route('settings.navigation', {path: '/settings/navigation'});
     this.route('settings.apps', {path: '/settings/apps'}, function () {
         this.route('slack', {path: 'slack'});
         this.route('amp', {path: 'amp'});

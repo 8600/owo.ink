@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import Ember from 'ember';
 import ApplicationSerializer from 'ghost-admin/serializers/application';
 import EmbeddedRecordsMixin from 'ember-data/serializers/embedded-records-mixin';
@@ -29,10 +29,8 @@ export default ApplicationSerializer.extend(EmbeddedRecordsMixin, {
         let root = this.keyForAttribute(primaryModelClass.modelName);
         let pluralizedRoot = pluralize(primaryModelClass.modelName);
 
-        if (payload[pluralizedRoot]) {
-            payload[root] = payload[pluralizedRoot][0];
-            delete payload[pluralizedRoot];
-        }
+        payload[root] = payload[pluralizedRoot][0];
+        delete payload[pluralizedRoot];
 
         return this._super(...arguments);
     },

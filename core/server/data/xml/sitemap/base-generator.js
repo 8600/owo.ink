@@ -1,9 +1,9 @@
 var _         = require('lodash'),
     xml       = require('xml'),
     moment    = require('moment'),
-    utils     = require('../../../utils'),
+    config    = require('../../../config'),
     events    = require('../../../events'),
-    localUtils  = require('./utils'),
+    utils     = require('./utils'),
     Promise   = require('bluebird'),
     path      = require('path'),
     CHANGE_FREQ = 'weekly',
@@ -92,7 +92,7 @@ _.extend(BaseSiteMapGenerator.prototype, {
             };
 
         // Return the xml
-        return localUtils.getDeclarations() + xml(data);
+        return utils.getDeclarations() + xml(data);
     },
 
     updateXmlFromNodes: function (urlElements) {
@@ -133,11 +133,11 @@ _.extend(BaseSiteMapGenerator.prototype, {
     },
 
     getUrlForDatum: function () {
-        return utils.url.urlFor('home', true);
+        return config.urlFor('home', true);
     },
 
     getUrlForImage: function (image) {
-        return utils.url.urlFor('image', {image: image}, true);
+        return config.urlFor('image', {image: image}, true);
     },
 
     getPriorityForDatum: function () {

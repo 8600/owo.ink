@@ -5,11 +5,10 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
-import testSelector from 'ember-test-selectors';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
 
 describe('Acceptance: Subscribers', function() {
     let application;
@@ -33,7 +32,7 @@ describe('Acceptance: Subscribers', function() {
 
     it('redirects editors to posts', function () {
         let role = server.create('role', {name: 'Editor'});
-        server.create('user', {roles: [role]});
+        let user = server.create('user', {roles: [role]});
 
         authenticateSession(application);
         visit('/subscribers');
@@ -47,7 +46,7 @@ describe('Acceptance: Subscribers', function() {
 
     it('redirects authors to posts', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role]});
+        let user = server.create('user', {roles: [role]});
 
         authenticateSession(application);
         visit('/subscribers');
@@ -62,7 +61,9 @@ describe('Acceptance: Subscribers', function() {
     describe('an admin', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
+
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -87,8 +88,8 @@ describe('Acceptance: Subscribers', function() {
                     .to.equal(30);
 
                 // it shows the total number of subscribers
-                expect(find(testSelector('total-subscribers')).text().trim(), 'displayed subscribers total')
-                    .to.equal('(40)');
+                expect(find('#total-subscribers').text().trim(), 'displayed subscribers total')
+                    .to.equal('40');
 
                 // it defaults to sorting by created_at desc
                 let [lastRequest] = server.pretender.handledRequests.slice(-1);
@@ -112,28 +113,22 @@ describe('Acceptance: Subscribers', function() {
                 let createdAtHeader = find('.subscribers-table th:contains("Subscription Date")');
                 expect(createdAtHeader.find('.icon-ascending').length, 'createdAt column has ascending icon')
                     .to.equal(1);
+
+                // scroll to the bottom of the table to simulate infinite scroll
+                find('.subscribers-table').scrollTop(find('.subscribers-table .ember-light-table').height());
             });
 
-            // TODO: scroll test disabled as ember-light-table doesn't calculate
-            // the scroll trigger element's positioning against the scroll
-            // container - https://github.com/offirgolan/ember-light-table/issues/201
-            //
-            // andThen(() => {
-            //     // scroll to the bottom of the table to simulate infinite scroll
-            //     find('.subscribers-table').scrollTop(find('.subscribers-table .ember-light-table').height() - 50);
-            // });
-            //
-            // // trigger infinite scroll
-            // triggerEvent('.subscribers-table tbody', 'scroll');
-            //
-            // andThen(function () {
-            //     // it loads the next page
-            //     expect(find('.subscribers-table .lt-body .lt-row').length, 'number of subscriber rows after infinite-scroll')
-            //         .to.equal(40);
-            // });
+            // trigger infinite scroll
+            triggerEvent('.subscribers-table', 'scroll');
+
+            andThen(function () {
+                // it loads the next page
+                expect(find('.subscribers-table .lt-body .lt-row').length, 'number of subscriber rows after infinite-scroll')
+                    .to.equal(40);
+            });
 
             // click the add subscriber button
-            click('.gh-btn:contains("Add Subscriber")');
+            click('.btn:contains("Add Subscriber")');
 
             andThen(function () {
                 // it displays the add subscriber modal
@@ -142,7 +137,7 @@ describe('Acceptance: Subscribers', function() {
             });
 
             // cancel the modal
-            click('.fullscreen-modal .gh-btn:contains("Cancel")');
+            click('.fullscreen-modal .btn:contains("Cancel")');
 
             andThen(function () {
                 // it closes the add subscriber modal
@@ -151,9 +146,9 @@ describe('Acceptance: Subscribers', function() {
             });
 
             // save a new subscriber
-            click('.gh-btn:contains("Add Subscriber")');
+            click('.btn:contains("Add Subscriber")');
             fillIn('.fullscreen-modal input[name="email"]', 'test@example.com');
-            click('.fullscreen-modal .gh-btn:contains("Add")');
+            click('.fullscreen-modal .btn:contains("Add")');
 
             andThen(function () {
                 // the add subscriber modal is closed
@@ -170,14 +165,14 @@ describe('Acceptance: Subscribers', function() {
                 //     .to.equal(0);
 
                 // the subscriber total is updated
-                expect(find(testSelector('total-subscribers')).text().trim(), 'subscribers total after addition')
-                    .to.equal('(41)');
+                expect(find('#total-subscribers').text().trim(), 'subscribers total after addition')
+                    .to.equal('41');
             });
 
             // saving a duplicate subscriber
-            click('.gh-btn:contains("Add Subscriber")');
+            click('.btn:contains("Add Subscriber")');
             fillIn('.fullscreen-modal input[name="email"]', 'test@example.com');
-            click('.fullscreen-modal .gh-btn:contains("Add")');
+            click('.fullscreen-modal .btn:contains("Add")');
 
             andThen(function () {
                 // the validation error is displayed
@@ -189,12 +184,12 @@ describe('Acceptance: Subscribers', function() {
                     .to.equal(1);
 
                 // the subscriber total is unchanged
-                expect(find(testSelector('total-subscribers')).text().trim(), 'subscribers total after failed add')
-                    .to.equal('(41)');
+                expect(find('#total-subscribers').text().trim(), 'subscribers total after failed add')
+                    .to.equal('41');
             });
 
             // deleting a subscriber
-            click('.fullscreen-modal .gh-btn:contains("Cancel")');
+            click('.fullscreen-modal .btn:contains("Cancel")');
             click('.subscribers-table tbody tr:first-of-type button:last-of-type');
 
             andThen(function () {
@@ -204,16 +199,17 @@ describe('Acceptance: Subscribers', function() {
             });
 
             // cancel the modal
-            click('.fullscreen-modal .gh-btn:contains("Cancel")');
+            click('.fullscreen-modal .btn:contains("Cancel")');
 
             andThen(function () {
+                // return pauseTest();
                 // it closes the add subscriber modal
                 expect(find('.fullscreen-modal').length, 'delete subscriber modal displayed after cancel')
                     .to.equal(0);
             });
 
             click('.subscribers-table tbody tr:first-of-type button:last-of-type');
-            click('.fullscreen-modal .gh-btn:contains("Delete")');
+            click('.fullscreen-modal .btn:contains("Delete")');
 
             andThen(function () {
                 // the add subscriber modal is closed
@@ -225,12 +221,12 @@ describe('Acceptance: Subscribers', function() {
                     .to.not.equal('test@example.com');
 
                 // the subscriber total is updated
-                expect(find(testSelector('total-subscribers')).text().trim(), 'subscribers total after addition')
-                    .to.equal('(40)');
+                expect(find('#total-subscribers').text().trim(), 'subscribers total after addition')
+                    .to.equal('40');
             });
 
             // click the import subscribers button
-            click('.gh-btn:contains("Import CSV")');
+            click('.btn:contains("Import CSV")');
 
             andThen(function () {
                 // it displays the import subscribers modal
@@ -241,7 +237,7 @@ describe('Acceptance: Subscribers', function() {
             });
 
             // cancel the modal
-            click('.fullscreen-modal .gh-btn:contains("Cancel")');
+            click('.fullscreen-modal .btn:contains("Cancel")');
 
             andThen(function () {
                 // it closes the import subscribers modal
@@ -249,7 +245,7 @@ describe('Acceptance: Subscribers', function() {
                     .to.equal(0);
             });
 
-            click('.gh-btn:contains("Import CSV")');
+            click('.btn:contains("Import CSV")');
             fileUpload('.fullscreen-modal input[type="file"]', ['test'], {name: 'test.csv'});
 
             andThen(function () {
@@ -262,8 +258,8 @@ describe('Acceptance: Subscribers', function() {
                     .to.equal('Close');
 
                 // subscriber total is updated
-                expect(find(testSelector('total-subscribers')).text().trim(), 'subscribers total after import')
-                    .to.equal('(90)');
+                expect(find('#total-subscribers').text().trim(), 'subscribers total after import')
+                    .to.equal('90');
 
                 // table is reset
                 let [lastRequest] = server.pretender.handledRequests.slice(-1);

@@ -1,9 +1,9 @@
 <header>
-    <h1>发送邀请</h1>
+    <h1>告知好友</h1>
     <p>恭喜你，你的博客已经建立成功了!在下方输入框中填写收件人邮箱，我们会发送一封邮件给他们以分享您的喜悦</p>
 </header>
 
-<div><img class="gh-flow-faces" src="{{gh-path 'asset' 'img/users.png'}}" alt="" /></div>
+<div><img class="gh-flow-faces" src="{{gh-path 'admin' 'img/users.png'}}" alt="" /></div>
 
 <form class="gh-flow-invite">
     {{#gh-form-group errors=errors hasValidated=hasValidated property="users"}}
@@ -11,9 +11,9 @@
         {{gh-textarea users name="users" required="required" focusOut=(action "validate") update=(action (mut users))}}
     {{/gh-form-group}}
 
-    {{#gh-spin-button type="submit" action="invite" classNameBindings=":gh-btn :gh-btn-default :gh-btn-lg :gh-btn-block buttonClass" submitting=submitting autoWidth="false"}}<span>{{buttonText}}</span>{{/gh-spin-button}}
+    {{#gh-spin-button type="submit" action="invite" classNameBindings=":btn :btn-default :btn-lg :btn-block buttonClass" submitting=submitting autoWidth="false"}}{{buttonText}}{{/gh-spin-button}}
 </form>
 
 <button class="gh-flow-skip" {{action "skipInvite"}}>
-    直接进入博客管理
+    跳过告知好友
 </button>

@@ -1,8 +1,7 @@
 import Mixin from 'ember-metal/mixin';
+import computed from 'ember-computed';
 import {isEmpty} from 'ember-utils';
 import {A as emberA} from 'ember-array/utils';
-import observer from 'ember-metal/observer';
-import run from 'ember-runloop';
 
 export default Mixin.create({
 
@@ -10,36 +9,26 @@ export default Mixin.create({
     property: '',
     hasValidated: emberA(),
 
-    hasError: false,
-
-    setHasError() {
+    hasError: computed('errors.[]', 'property', 'hasValidated.[]', function () {
         let property = this.get('property');
         let errors = this.get('errors');
         let hasValidated = this.get('hasValidated');
 
         // if we aren't looking at a specific property we always want an error class
-        if (!property && errors && !errors.get('isEmpty')) {
-            this.set('hasError', true);
-            return;
+        if (!property && !isEmpty(errors)) {
+            return true;
         }
 
         // If we haven't yet validated this field, there is no validation class needed
-        if (!hasValidated || !hasValidated.includes(property)) {
-            this.set('hasError', false);
-            return;
+        if (!hasValidated || !hasValidated.contains(property)) {
+            return false;
         }
 
-        if (errors && !isEmpty(errors.errorsFor(property))) {
-            this.set('hasError', true);
-            return;
+        if (errors) {
+            return errors.get(property);
         }
 
-        this.set('hasError', false);
-    },
-
-    hasErrorObserver: observer('errors.[]', 'property', 'hasValidated.[]', function () {
-        run.once(this, 'setHasError');
-        // this.setHasError();
-    }).on('init')
+        return false;
+    })
 
 });

@@ -1,8 +1,10 @@
-var should = require('should'),
-    testUtils = require('../../utils'),
-    _ = require('lodash'),
-    RoleAPI = require('../../../server/api/roles'),
-    context = testUtils.context;
+var testUtils   = require('../../utils'),
+    should      = require('should'),
+    _           = require('lodash'),
+
+    // Stuff we are testing
+    RoleAPI     = require('../../../server/api/roles'),
+    context     = testUtils.context;
 
 describe('Roles API', function () {
     // Keep the DB clean

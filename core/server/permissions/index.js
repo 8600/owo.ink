@@ -56,14 +56,14 @@ function parseContext(context) {
 }
 
 function applyStatusRules(docName, method, opts) {
-    var err = new errors.NoPermissionError({message: i18n.t('errors.permissions.applyStatusRules.error', {docName: docName})});
+    var errorMsg = i18n.t('errors.permissions.applyStatusRules.error', {docName: docName});
 
     // Enforce status 'active' for users
     if (docName === 'users') {
         if (!opts.status) {
             return 'active';
         } else if (opts.status !== 'active') {
-            throw err;
+            throw errorMsg;
         }
     }
 
@@ -80,7 +80,7 @@ function applyStatusRules(docName, method, opts) {
             return opts.status;
         } else if (opts.status !== 'published') {
             // any other parameter would make this a permissions error
-            throw err;
+            throw errorMsg;
         }
     }
 
@@ -124,8 +124,7 @@ CanThisResult.prototype.buildObjectTypeHandlers = function (objTypes, actType, c
         user:       Models.User,
         permission: Models.Permission,
         setting:    Models.Settings,
-        subscriber: Models.Subscriber,
-        invite:     Models.Invite
+        subscriber: Models.Subscriber
     };
 
     // Iterate through the object types, i.e. ['post', 'tag', 'user']
@@ -203,7 +202,7 @@ CanThisResult.prototype.buildObjectTypeHandlers = function (objTypes, actType, c
                     return;
                 }
 
-                return Promise.reject(new errors.NoPermissionError({message: i18n.t('errors.permissions.noPermissionToAction')}));
+                return Promise.reject(new errors.NoPermissionError(i18n.t('errors.permissions.noPermissionToAction')));
             });
         };
 

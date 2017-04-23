@@ -10,16 +10,14 @@
 
 var hbs             = require('express-hbs'),
     errors          = require('../errors'),
-    i18n            = require('../i18n'),
     _               = require('lodash'),
+    i18n            = require('../i18n'),
     plural;
 
 plural = function (number, options) {
     if (_.isUndefined(options.hash) || _.isUndefined(options.hash.empty) ||
         _.isUndefined(options.hash.singular) || _.isUndefined(options.hash.plural)) {
-        throw new errors.IncorrectUsageError({
-            message: i18n.t('warnings.helpers.plural.valuesMustBeDefined')
-        });
+        return errors.logAndThrowError(i18n.t('warnings.helpers.plural.valuesMustBeDefined'));
     }
 
     if (number === 0) {

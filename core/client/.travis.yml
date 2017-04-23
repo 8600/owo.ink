@@ -9,15 +9,18 @@ env:
   global:
     - GITHUB_OAUTH_KEY=003a44d58f12089d0c0261338298af3813330949
 
+matrix:
+  include:
+    - node_js: "4"
+      env: TEST_SUITE=lint
+
 branches:
   except:
     - /^greenkeeper-.+$/
 
 cache:
-  yarn: true
   directories:
     - node_modules
-    - broccoli-persistent-cache
 
 addons:
   firefox: "latest"
@@ -27,19 +30,17 @@ addons:
     packages:
       - google-chrome-stable
 
+before_install:
+  - npm config --global set spin false
+  - npm install -g npm@^2
+
 install:
-  - npm i -g yarn
-  - yarn global add bower
-  - yarn
+  - npm install -g bower
+  - npm install
   - bower install
 
 before_script:
-  - yarn add --force node-sass # temporary, workaround for https://github.com/yarnpkg/yarn/issues/1981
   - export DISPLAY=:99; sh -e /etc/init.d/xvfb start; sleep 3;
-  - export BROCCOLI_PERSISTENT_FILTER_CACHE_ROOT=/home/travis/build/TryGhost/Ghost-Admin/broccoli-persistent-cache
 
 script:
-  - COVERAGE=true npm test
-
-after_success:
-  - npm run coverage
+  - if [ "$TEST_SUITE" == "lint" ]; then grunt lint; else npm test; fi

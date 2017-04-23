@@ -1,19 +1,26 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
-    helpers = require('../../../server/helpers'),
-    logging = require('../../../server/logging'),
+var should         = require('should'),
+    sinon          = require('sinon'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
-    sandbox = sinon.sandbox.create();
+// Stuff we are testing
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers'),
+    errors         = require('../../../server/errors');
 
 describe('{{#is}} helper', function () {
-    afterEach(function () {
-        sandbox.restore();
+    before(function () {
+        utils.loadHelpers();
+    });
+
+    it('has loaded is block helper', function () {
+        should.exist(handlebars.helpers.is);
     });
 
     // All positive tests
     it('should match single context "index"', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.is.call(
             {},
@@ -26,8 +33,8 @@ describe('{{#is}} helper', function () {
     });
 
     it('should match OR context "index, paged"', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.is.call(
             {},
@@ -40,8 +47,8 @@ describe('{{#is}} helper', function () {
     });
 
     it('should not match "paged"', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.is.call(
             {},
@@ -54,9 +61,9 @@ describe('{{#is}} helper', function () {
     });
 
     it('should log warning with no args', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy(),
-            logWarn = sandbox.stub(logging, 'warn');
+        var fn = sinon.spy(),
+            inverse = sinon.spy(),
+            logWarn = sinon.stub(errors, 'logWarn');
 
         helpers.is.call(
             {},

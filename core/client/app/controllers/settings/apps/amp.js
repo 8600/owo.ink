@@ -1,32 +1,37 @@
 import Controller from 'ember-controller';
 import injectService from 'ember-service/inject';
-import {task} from 'ember-concurrency';
-import {alias} from 'ember-computed';
 
 export default Controller.extend({
     notifications: injectService(),
-    settings: injectService(),
 
-    model: alias('settings.amp'),
+    // will be set by route
+    settings: null,
 
-    save: task(function* () {
-        let amp = this.get('model');
-        let settings = this.get('settings');
-
-        settings.set('amp', amp);
-
-        try {
-            return yield settings.save();
-
-        } catch (error) {
-            this.get('notifications').showAPIError(error);
-            throw error;
-        }
-    }).drop(),
+    isSaving: false,
 
     actions: {
         update(value) {
             this.set('model', value);
+        },
+
+        save() {
+            let amp = this.get('model');
+            let settings = this.get('settings');
+
+            if (this.get('isSaving')) {
+                return;
+            }
+
+            settings.set('amp', amp);
+
+            this.set('isSaving', true);
+
+            return settings.save().catch((err) => {
+                this.get('notifications').showAPIError(err);
+                throw err;
+            }).finally(() => {
+                this.set('isSaving', false);
+            });
         }
     }
 });

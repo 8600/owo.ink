@@ -1,10 +1,12 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
-    rewire = require('rewire'),
-    events = require('../../../../server/events/index'),
-    Models = require('../../../../server/models/index'),
+var should          = require('should'),
+    sinon           = require('sinon'),
+    rewire          = require('rewire'),
+    sandbox         = sinon.sandbox.create(),
+    events          = require('../../../../server/events/index'),
+    Models          = require('../../../../server/models/index');
 
-    sandbox = sinon.sandbox.create();
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('Models: listeners', function () {
     var eventsToRemember = {};
@@ -26,11 +28,7 @@ describe('Models: listeners', function () {
         it('calls User edit when event is emitted', function (done) {
             var userModelSpy = sandbox.spy(Models.User, 'edit');
 
-            eventsToRemember['token.added']({
-                get: function () {
-                    return 1;
-                }
-            });
+            eventsToRemember['token.added']({get: function () { return 1; }});
 
             userModelSpy.calledOnce.should.be.true();
             userModelSpy.calledWith(

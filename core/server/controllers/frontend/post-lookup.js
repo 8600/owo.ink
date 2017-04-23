@@ -3,7 +3,8 @@ var _          = require('lodash'),
     url        = require('url'),
     routeMatch = require('path-match')(),
     api        = require('../../api'),
-    settingsCache = require('../../settings/cache'),
+    config     = require('../../config'),
+
     optionsFormat = '/:options?';
 
 function getOptionsFormat(linkStructure) {
@@ -12,7 +13,7 @@ function getOptionsFormat(linkStructure) {
 
 function postLookup(postUrl) {
     var postPath = url.parse(postUrl).path,
-        postPermalink = settingsCache.get('permalinks'),
+        postPermalink = config.theme.permalinks,
         pagePermalink = '/:slug/',
         isEditURL = false,
         matchFuncPost,

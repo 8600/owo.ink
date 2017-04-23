@@ -1,16 +1,13 @@
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import Ember from 'ember';
 import computed, {equal, filterBy} from 'ember-computed';
 import injectService from 'ember-service/inject';
 
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
-import {belongsTo, hasMany} from 'ember-data/relationships';
+import { belongsTo, hasMany } from 'ember-data/relationships';
 
 import ValidationEngine from 'ghost-admin/mixins/validation-engine';
-import boundOneWay from 'ghost-admin/utils/bound-one-way';
-
-import {BLANK_DOC} from 'ghost-admin/components/gh-koenig';  // a blank mobile doc
 
 // ember-cli-shims doesn't export these so we must get them manually
 const {Comparable, compare} = Ember;
@@ -73,7 +70,6 @@ export default Model.extend(Comparable, ValidationEngine, {
     title: attr('string', {defaultValue: ''}),
     slug: attr('string'),
     markdown: attr('string', {defaultValue: ''}),
-    mobiledoc: attr('json-string', {defaultValue: () => BLANK_DOC}),
     html: attr('string'),
     image: attr('string'),
     featured: attr('boolean', {defaultValue: false}),
@@ -83,7 +79,7 @@ export default Model.extend(Comparable, ValidationEngine, {
     metaTitle: attr('string'),
     metaDescription: attr('string'),
     author: belongsTo('user', {async: true}),
-    authorId: attr('string'),
+    authorId: attr('number'),
     updatedAtUTC: attr('moment-utc'),
     updatedBy: attr(),
     publishedAtUTC: attr('moment-utc'),
@@ -98,6 +94,7 @@ export default Model.extend(Comparable, ValidationEngine, {
 
     config: injectService(),
     ghostPaths: injectService(),
+    timeZone: injectService(),
     clock: injectService(),
 
     absoluteUrl: computed('url', 'ghostPaths.url', 'config.blogUrl', function () {
@@ -119,8 +116,6 @@ export default Model.extend(Comparable, ValidationEngine, {
 
     scratch: null,
     titleScratch: null,
-    metaTitleScratch: boundOneWay('metaTitle'),
-    metaDescriptionScratch: boundOneWay('metaDescription'),
 
     // Computed post properties
 
@@ -151,7 +146,7 @@ export default Model.extend(Comparable, ValidationEngine, {
     },
 
     isAuthoredByUser(user) {
-        return user.get('id') === this.get('authorId');
+        return parseInt(user.get('id'), 10) === parseInt(this.get('authorId'), 10);
     },
 
     // a custom sort function is needed in order to sort the posts list the same way the server would:
@@ -177,8 +172,7 @@ export default Model.extend(Comparable, ValidationEngine, {
             return 1;
         }
 
-        // TODO: revisit the ID sorting because we no longer have auto-incrementing IDs
-        idResult = compare(postA.get('id'), postB.get('id'));
+        idResult = compare(parseInt(postA.get('id')), parseInt(postB.get('id')));
         statusResult = statusCompare(postA, postB);
         updatedAtResult = compare(updated1.valueOf(), updated2.valueOf());
         publishedAtResult = publishedAtCompare(postA, postB);

@@ -91,7 +91,7 @@ utils = {
                 }
 
                 // For now, we can only handle showing the first validation error
-                return Promise.reject(validationErrors[0]);
+                return errors.logAndRejectError(validationErrors[0]);
             }
 
             // If we got an object, check that too
@@ -110,7 +110,7 @@ utils = {
 
     validateOptions: function validateOptions(options) {
         var globalValidations = {
-                id: {matches: /^[a-f\d]{24}$|^1$|me/i},
+                id: {matches: /^\d+|me$/},
                 uuid: {isUUID: true},
                 slug: {isSlug: true},
                 page: {matches: /^\d+$/},
@@ -122,7 +122,7 @@ utils = {
                 name: {}
             },
             // these values are sanitised/validated separately
-            noValidation = ['data', 'context', 'include', 'filter'],
+            noValidation = ['data', 'context', 'include', 'filter', 'forUpdate', 'transacting'],
             errors = [];
 
         _.each(options, function (value, key) {
@@ -187,6 +187,8 @@ utils = {
 
             return permsPromise.then(function permissionGranted() {
                 return options;
+            }).catch(function handleError(error) {
+                return errors.formatAndRejectAPIError(error);
             });
         };
     },
@@ -211,15 +213,13 @@ utils = {
 
             return permsPromise.then(function permissionGranted() {
                 return options;
-            }).catch(function handleNoPermissionError(err) {
-                if (err instanceof errors.NoPermissionError) {
-                    err.message = i18n.t('errors.api.utils.noPermissionToCall', {method: method, docName: docName});
-                    return Promise.reject(err);
-                }
-
-                return Promise.reject(new errors.GhostError({
-                    err: err
-                }));
+            }).catch(errors.NoPermissionError, function handleNoPermissionError(error) {
+                // pimp error message
+                error.message = i18n.t('errors.api.utils.noPermissionToCall', {method: method, docName: docName});
+                // forward error to next catch()
+                return Promise.reject(error);
+            }).catch(function handleError(error) {
+                return errors.formatAndRejectAPIError(error);
             });
         };
     },
@@ -262,6 +262,7 @@ utils = {
                 options.columns = utils.prepareFields(options.fields);
                 delete options.fields;
             }
+
             return options;
         };
     },
@@ -275,9 +276,7 @@ utils = {
      */
     checkObject: function (object, docName, editId) {
         if (_.isEmpty(object) || _.isEmpty(object[docName]) || _.isEmpty(object[docName][0])) {
-            return Promise.reject(new errors.BadRequestError({
-                message: i18n.t('errors.api.utils.noRootKeyProvided', {docName: docName})
-            }));
+            return errors.logAndRejectError(new errors.BadRequestError(i18n.t('errors.api.utils.noRootKeyProvided', {docName: docName})));
         }
 
         // convert author property to author_id to match the name in the database
@@ -297,10 +296,8 @@ utils = {
             object[docName][index] = _.omitBy(object[docName][index], _.isNull);
         });
 
-        if (editId && object[docName][0].id && editId !== object[docName][0].id) {
-            return Promise.reject(new errors.BadRequestError({
-                message: i18n.t('errors.api.utils.invalidIdProvided')
-            }));
+        if (editId && object[docName][0].id && parseInt(editId, 10) !== parseInt(object[docName][0].id, 10)) {
+            return errors.logAndRejectError(new errors.BadRequestError(i18n.t('errors.api.utils.invalidIdProvided')));
         }
 
         return Promise.resolve(object);

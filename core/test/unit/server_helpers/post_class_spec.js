@@ -1,9 +1,20 @@
-var should = require('should'), // jshint ignore:line
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers');
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers');
 
 describe('{{post_class}} helper', function () {
+    before(function () {
+        utils.loadHelpers();
+    });
+
+    it('has loaded postclass helper', function () {
+        should.exist(handlebars.helpers.post_class);
+    });
+
     it('can render class string', function () {
         var rendered = helpers.post_class.call({});
 

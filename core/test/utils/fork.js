@@ -5,9 +5,7 @@ var cp         = require('child_process'),
     net        = require('net'),
     Promise    = require('bluebird'),
     path       = require('path'),
-    KnexMigrator  = require('knex-migrator'),
-    config        = require('../../server/config'),
-    knexMigrator     = new KnexMigrator();
+    config     = require('../../server/config');
 
 function findFreePort(port) {
     return new Promise(function (resolve, reject) {
@@ -40,41 +38,29 @@ function findFreePort(port) {
     });
 }
 
+// Get a copy of current config object from file, to be modified before
+// passing to forkGhost() method
+function forkConfig() {
+    // require caches values, and we want to read it fresh from the file
+    delete require.cache[config.paths.config];
+    return _.cloneDeep(require(config.paths.config)[process.env.NODE_ENV]);
+}
+
 // Creates a new fork of Ghost process with a given config
 // Useful for tests that want to verify certain config options
-function forkGhost(newConfig) {
-    var port;
+function forkGhost(newConfig, envName) {
+    envName = envName || 'forked';
 
-    return findFreePort()
-        .then(function (_port) {
-            port = _port;
+    return findFreePort(newConfig.server ? newConfig.server.port : undefined)
+        .then(function (port) {
+            newConfig.server = newConfig.server || {};
+            newConfig.server.port = port;
+            newConfig.url = url.format(_.extend({}, url.parse(newConfig.url), {port: port, host: null}));
 
-            return knexMigrator.reset();
-        })
-        .then(function () {
-            return knexMigrator.init();
-        })
-        .then(function () {
-            newConfig.server = _.merge({}, {
-                port: port
-            }, (newConfig.server || {}));
-
-            if (newConfig.url) {
-                newConfig.url = url.format(_.extend({}, url.parse(newConfig.url), {port: newConfig.server.port, host: null}));
-            } else {
-                newConfig.url = url.format(_.extend({}, url.parse(config.get('url')), {port: newConfig.server.port, host: null}));
-            }
-
-            newConfig.logging = {
-                level: 'fatal',
-                transports: ['stdout'],
-                rotation: false
-            };
-
-            var newConfigFile = path.join(config.get('paths').appRoot, 'config.' + config.get('env') + '.json');
+            var newConfigFile = path.join(config.paths.appRoot, 'config.test.' + envName + '.js');
 
             return new Promise(function (resolve, reject) {
-                fs.writeFile(newConfigFile, JSON.stringify(newConfig), function (err) {
+                fs.writeFile(newConfigFile, 'module.exports = {"' + process.env.NODE_ENV + '": ' + JSON.stringify(newConfig) + '}', function (err) {
                     if (err) {
                         return reject(err);
                     }
@@ -94,18 +80,15 @@ function forkGhost(newConfig) {
                             return false;
                         };
 
-                    env.NODE_ENV = config.get('env');
-                    child = cp.fork(path.join(config.get('paths').appRoot, 'index.js'), {env: env});
-
+                    env.GHOST_CONFIG = newConfigFile;
+                    child = cp.fork(path.join(config.paths.appRoot, 'index.js'), {env: env});
                     // return the port to make it easier to do requests
-                    child.port = newConfig.server.port;
-
+                    child.port = port;
                     // periodic check until forked Ghost is running and is listening on the port
                     pingCheck = setInterval(function () {
-                        var socket = net.connect(newConfig.server.port);
+                        var socket = net.connect(port);
                         socket.on('connect', function () {
                             socket.end();
-
                             if (pingStop()) {
                                 resolve(child);
                             }
@@ -113,7 +96,6 @@ function forkGhost(newConfig) {
                         socket.on('error', function (err) {
                             /*jshint unused:false*/
                             pingTries = pingTries + 1;
-
                             // continue checking
                             if (pingTries >= 100 && pingStop()) {
                                 child.kill();
@@ -161,3 +143,4 @@ function forkGhost(newConfig) {
 }
 
 module.exports.ghost = forkGhost;
+module.exports.config = forkConfig;

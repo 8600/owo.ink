@@ -1,55 +1,36 @@
 import Component from 'ember-component';
 import computed from 'ember-computed';
 import service from 'ember-service/inject';
-import {isNotFoundError} from 'ember-ajax/errors';
 
 export default Component.extend({
     tagName: '',
 
-    invite: null,
+    user: null,
     isSending: false,
 
     notifications: service(),
-    store: service(),
 
-    createdAt: computed('invite.createdAtUTC', function () {
-        let createdAtUTC = this.get('invite.createdAtUTC');
+    createdAtUTC: computed('user.createdAtUTC', function () {
+        let createdAtUTC = this.get('user.createdAtUTC');
 
         return createdAtUTC ? moment(createdAtUTC).fromNow() : '';
     }),
 
-    expiresAt: computed('invite.expires', function () {
-        let expires = this.get('invite.expires');
-
-        return expires ? moment(expires).fromNow() : '';
-    }),
-
-    isExpired: computed('invite.expires', function () {
-        let expires = this.get('invite.expires');
-        let now = (new Date()).valueOf();
-
-        return expires < now;
-    }),
-
     actions: {
         resend() {
-            let invite = this.get('invite');
+            let user = this.get('user');
             let notifications = this.get('notifications');
 
             this.set('isSending', true);
-            invite.resend().then((result) => {
-                let notificationText = `Invitation resent! (${invite.get('email')})`;
-
-                // the server deletes the old record and creates a new one when
-                // resending so we need to update the store accordingly
-                invite.unloadRecord();
-                this.get('store').pushPayload('invite', result);
+            user.resendInvite().then((result) => {
+                let notificationText = `Invitation resent! (${user.get('email')})`;
 
                 // If sending the invitation email fails, the API will still return a status of 201
-                // but the invite's status in the response object will be 'invited-pending'.
-                if (result.invites[0].status === 'invited-pending') {
+                // but the user's status in the response object will be 'invited-pending'.
+                if (result.users[0].status === 'invited-pending') {
                     notifications.showAlert('Invitation email was not sent.  Please try resending.', {type: 'error', key: 'invite.resend.not-sent'});
                 } else {
+                    user.set('status', result.users[0].status);
                     notifications.showNotification(notificationText, {key: 'invite.resend.success'});
                 }
             }).catch((error) => {
@@ -60,25 +41,23 @@ export default Component.extend({
         },
 
         revoke() {
-            let invite = this.get('invite');
-            let email = invite.get('email');
+            let user = this.get('user');
+            let email = user.get('email');
             let notifications = this.get('notifications');
 
-            // reload the invite to get the most up-to-date information
-            invite.reload().then(() => {
-                invite.destroyRecord().then(() => {
-                    let notificationText = `Invitation revoked. (${email})`;
-                    notifications.showNotification(notificationText, {key: 'invite.revoke.success'});
-                }).catch((error) => {
-                    notifications.showAPIError(error, {key: 'invite.revoke'});
-                });
-            }).catch((error) => {
-                if (isNotFoundError(error)) {
-                    // if the invite no longer exists, then show a warning and reload the route
-                    this.sendAction('reload');
-                    notifications.showAlert('This invite has been revoked or a user has already accepted the invitation.', {type: 'error', delayed: true, key: 'invite.revoke.already-accepted'});
+            // reload the user to get the most up-to-date information
+            user.reload().then(() => {
+                if (user.get('invited')) {
+                    user.destroyRecord().then(() => {
+                        let notificationText = `Invitation revoked. (${email})`;
+                        notifications.showNotification(notificationText, {key: 'invite.revoke.success'});
+                    }).catch((error) => {
+                        notifications.showAPIError(error, {key: 'invite.revoke'});
+                    });
                 } else {
-                    throw error;
+                    // if the user is no longer marked as "invited", then show a warning and reload the route
+                    this.sendAction('reload');
+                    notifications.showAlert('This user has already accepted the invitation.', {type: 'error', delayed: true, key: 'invite.revoke.already-accepted'});
                 }
             });
         }

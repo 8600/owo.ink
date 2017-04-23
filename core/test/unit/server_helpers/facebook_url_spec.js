@@ -1,13 +1,24 @@
-var should = require('should'), // jshint ignore:line
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers');
+    handlebars      = hbs.handlebars,
+    helpers         = require('../../../server/helpers');
 
 describe('{{facebook_url}} helper', function () {
     var options = {data: {blog: {}}};
 
+    before(function () {
+        utils.loadHelpers();
+    });
+
     beforeEach(function () {
         options.data.blog = {facebook: ''};
+    });
+
+    it('has loaded facebook_url helper', function () {
+        should.exist(handlebars.helpers.facebook_url);
     });
 
     it('should output the facebook url for @blog, if no other facebook username is provided', function () {

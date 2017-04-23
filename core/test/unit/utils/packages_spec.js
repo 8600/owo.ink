@@ -1,12 +1,19 @@
-var should = require('should'), // jshint ignore:line
+var should = require('should'),
     tmp = require('tmp'),
     join = require('path').join,
     fs = require('fs'),
 
     // Things we are testing
+    readThemes = require('../../../server/utils/read-themes'),
     packages = require('../../../server/utils/packages'),
     parsePackageJson = packages.parsePackageJSON,
     filterPackages = packages.filterPackages;
+
+// To stop jshint complaining
+should.equal(true, true);
+
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('Package Utils', function () {
     describe('Parse Package.json', function () {
@@ -377,6 +384,131 @@ describe('Package Utils', function () {
         });
     });
 
+    describe('Themes', function () {
+        // NOTE: this probably shouldn't be here, but it makes more sense than in
+        // The server utils spec.js and has its own home in 1.0/alpha already.
+        describe('Read Themes', function () {
+            it('should read directory and include folders, package.json & templates', function (done) {
+                var themePath = tmp.dirSync({unsafeCleanup: true});
+
+                // create trash
+                fs.writeFileSync(join(themePath.name, 'casper.zip'));
+                fs.writeFileSync(join(themePath.name, '.DS_Store'));
+
+                // create actual theme
+                fs.mkdirSync(join(themePath.name, 'casper'));
+                fs.mkdirSync(join(themePath.name, 'casper', 'partials'));
+                fs.writeFileSync(join(themePath.name, 'casper', 'index.hbs'));
+                fs.writeFileSync(join(themePath.name, 'casper', 'partials', 'navigation.hbs'));
+
+                readThemes(themePath.name)
+                    .then(function (themeList) {
+                        themeList.should.eql({
+                            casper: {
+                                name: 'casper',
+                                path: join(themePath.name, 'casper'),
+                                'package.json': null,
+                                'index.hbs': join(themePath.name, 'casper', 'index.hbs')
+                            }
+                        });
+
+                        done();
+                    })
+                    .catch(done)
+                    .finally(themePath.removeCallback);
+            });
+
+            it('should read directory and read package.json if present', function (done) {
+                var themePath = tmp.dirSync({unsafeCleanup: true});
+
+                // create trash
+                fs.writeFileSync(join(themePath.name, 'README.md'));
+                fs.writeFileSync(join(themePath.name, 'Thumbs.db'));
+
+                // create actual theme
+                fs.mkdirSync(join(themePath.name, 'casper'));
+                fs.mkdirSync(join(themePath.name, 'not-casper'));
+                fs.writeFileSync(
+                    join(themePath.name, 'casper', 'package.json'),
+                    JSON.stringify({name: 'casper', version: '0.1.2'})
+                );
+
+                readThemes(themePath.name)
+                    .then(function (themeList) {
+                        themeList.should.eql({
+                            casper: {
+                                name: 'casper',
+                                path: join(themePath.name, 'casper'),
+                                'package.json': {name: 'casper', version: '0.1.2'}
+                            },
+                            'not-casper': {
+                                name: 'not-casper',
+                                path: join(themePath.name, 'not-casper'),
+                                'package.json': null
+                            }
+                        });
+
+                        done();
+                    })
+                    .catch(done)
+                    .finally(themePath.removeCallback);
+            });
+        });
+
+        describe('Read Active Theme', function () {
+            it('should read directory and include only single requested theme', function (done) {
+                var themePath = tmp.dirSync({unsafeCleanup: true});
+
+                // create trash
+                fs.writeFileSync(join(themePath.name, 'casper.zip'));
+                fs.writeFileSync(join(themePath.name, '.DS_Store'));
+
+                // create actual theme
+                fs.mkdirSync(join(themePath.name, 'casper'));
+                fs.writeFileSync(join(themePath.name, 'casper', 'index.hbs'));
+                fs.writeFileSync(
+                    join(themePath.name, 'casper', 'package.json'),
+                    JSON.stringify({name: 'casper', version: '0.1.2'})
+                );
+                fs.mkdirSync(join(themePath.name, 'not-casper'));
+                fs.writeFileSync(join(themePath.name, 'not-casper', 'index.hbs'));
+
+                readThemes.active(themePath.name, 'casper')
+                    .then(function (themeList) {
+                        themeList.should.eql({
+                            casper: {
+                                name: 'casper',
+                                path: join(themePath.name, 'casper'),
+                                'package.json': {name: 'casper', version: '0.1.2'},
+                                'index.hbs': join(themePath.name, 'casper', 'index.hbs')
+                            }
+                        });
+
+                        done();
+                    })
+                    .catch(done)
+                    .finally(themePath.removeCallback);
+            });
+
+            it('should return empty object if theme cannot be found', function (done) {
+                var themePath = tmp.dirSync({unsafeCleanup: true});
+
+                // create trash
+                fs.writeFileSync(join(themePath.name, 'casper.zip'));
+                fs.writeFileSync(join(themePath.name, '.DS_Store'));
+
+                readThemes.active(themePath.name, 'casper')
+                    .then(function (themeList) {
+                        themeList.should.eql({});
+
+                        done();
+                    })
+                    .catch(done)
+                    .finally(themePath.removeCallback);
+            });
+        });
+    });
+
     describe('Filter Packages', function () {
         // @TODO: introduce some non-theme package examples
         var casper = {
@@ -419,11 +551,10 @@ describe('Package Utils', function () {
             result.should.be.an.Array().with.lengthOf(1);
             package1 = result[0];
 
-            package1.should.be.an.Object().with.properties('name', 'package', 'active');
-            Object.keys(package1).should.be.an.Array().with.lengthOf(3);
+            package1.should.be.an.Object().with.properties('name', 'package');
+            Object.keys(package1).should.be.an.Array().with.lengthOf(2);
             package1.name.should.eql('casper');
             package1.package.should.be.an.Object().with.properties('name', 'version');
-            package1.active.should.be.false();
         });
 
         it('should filter packages and handle a single active package string', function () {
@@ -440,11 +571,11 @@ describe('Package Utils', function () {
             package1.package.should.be.an.Object().with.properties('name', 'version');
             package1.active.should.be.true();
 
-            package2.should.be.an.Object().with.properties('name', 'package', 'active');
-            Object.keys(package2).should.be.an.Array().with.lengthOf(3);
+            package2.should.be.an.Object().with.properties('name', 'package');
+            Object.keys(package2).should.be.an.Array().with.lengthOf(2);
             package2.name.should.eql('simple');
             package2.package.should.be.an.Object().with.properties('name', 'version');
-            package2.active.should.be.false();
+            should.not.exist(package2.active);
         });
 
         it('should filter packages and handle an array of active packages', function () {
@@ -482,11 +613,11 @@ describe('Package Utils', function () {
             package1.package.should.be.an.Object().with.properties('name', 'version');
             package1.active.should.be.true();
 
-            package2.should.be.an.Object().with.properties('name', 'package', 'active');
-            Object.keys(package2).should.be.an.Array().with.lengthOf(3);
+            package2.should.be.an.Object().with.properties('name', 'package');
+            Object.keys(package2).should.be.an.Array().with.lengthOf(2);
             package2.name.should.eql('missing');
             package2.package.should.be.false();
-            package2.active.should.be.false();
+            should.not.exist(package2.active);
         });
 
         it('filters out things which are not packages', function () {

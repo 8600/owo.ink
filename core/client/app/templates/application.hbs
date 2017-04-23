@@ -17,7 +17,7 @@
 
         {{gh-content-cover onClick="closeMenus" onMouseEnter="closeAutoNav"}}
 
-        {{gh-mobile-nav-bar}}
+        {{outlet "settings-menu"}}
     </div>{{!gh-viewport}}
 {{/gh-app}}
 
@@ -26,5 +26,3 @@
                           close=(route-action "toggleMarkdownHelpModal")
                           modifier="wide"}}
 {{/if}}
-
-{{ember-load-remover}}

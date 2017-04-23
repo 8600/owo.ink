@@ -1,21 +1,17 @@
 import ModalComponent from 'ghost-admin/components/modals/base';
 import {invokeAction} from 'ember-invoke-action';
-import {task} from 'ember-concurrency';
 
 export default ModalComponent.extend({
     user: null,
-
-    transferOwnership: task(function* () {
-        try {
-            yield invokeAction(this, 'confirm');
-        } finally {
-            this.send('closeModal');
-        }
-    }).drop(),
+    submitting: false,
 
     actions: {
         confirm() {
-            this.get('transferOwnership').perform();
+            this.set('submitting', true);
+
+            invokeAction(this, 'confirm').finally(() => {
+                this.send('closeModal');
+            });
         }
     }
 });

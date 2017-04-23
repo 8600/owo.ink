@@ -1,22 +1,22 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
+
+var sinon = require('sinon'),
     rewire = require('rewire'),
+    /*jshint unused:false*/
+    should = require('should'),
     Promise = require('bluebird'),
     config = require(__dirname + '/../../../server/config'),
-    postScheduling = require(__dirname + '/../../../server/scheduling/post-scheduling'),
-
-    sandbox = sinon.sandbox.create();
+    postScheduling = require(__dirname + '/../../../server/scheduling/post-scheduling');
 
 describe('Scheduling', function () {
     var scope = {};
 
     before(function () {
-        sandbox.stub(postScheduling, 'init').returns(Promise.resolve());
-        scope.scheduling = rewire(config.get('paths').corePath + '/server/scheduling');
+        sinon.stub(postScheduling, 'init').returns(Promise.resolve());
+        scope.scheduling = rewire(config.paths.corePath + '/server/scheduling');
     });
 
     after(function () {
-        sandbox.restore();
+        postScheduling.init.restore();
     });
 
     describe('success', function () {

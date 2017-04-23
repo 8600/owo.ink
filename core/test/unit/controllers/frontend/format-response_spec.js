@@ -1,7 +1,10 @@
-var should = require('should'), // jshint ignore:line
+var should   = require('should'),
 
     // Stuff we are testing
     formatResponse = require('../../../../server/controllers/frontend/format-response');
+
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('formatResponse', function () {
     describe('single', function () {

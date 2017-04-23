@@ -5,17 +5,12 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
+import { expect } from 'chai';
 import $ from 'jquery';
-import {expect} from 'chai';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from '../helpers/ember-simple-auth';
-import {enableGhostOAuth} from '../helpers/configuration';
-import {Response} from 'ember-cli-mirage';
-import {
-    stubSuccessfulOAuthConnect,
-    stubFailedOAuthConnect
-} from '../helpers/oauth';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
+import Mirage from 'ember-cli-mirage';
 
 describe('Acceptance: Signin', function() {
     let application;
@@ -30,7 +25,7 @@ describe('Acceptance: Signin', function() {
 
     it('redirects if already authenticated', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
 
@@ -43,16 +38,16 @@ describe('Acceptance: Signin', function() {
     describe('when attempting to signin', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role], slug: 'test-user'});
+            let user = server.create('user', {roles: [role], slug: 'test-user'});
 
-            server.post('/authentication/token', function (schema, {requestBody}) {
-                /* eslint-disable camelcase */
+            server.post('/authentication/token', function (db, request) {
+                // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
                 let {
                     grant_type: grantType,
                     username,
                     password,
                     client_id: clientId
-                } = $.deparam(requestBody);
+                } = $.deparam(request.requestBody);
 
                 expect(grantType, 'grant type').to.equal('password');
                 expect(username, 'username').to.equal('test@example.com');
@@ -66,14 +61,14 @@ describe('Acceptance: Signin', function() {
                         token_type: 'Bearer'
                     };
                 } else {
-                    return new Response(401, {}, {
+                    return new Mirage.Response(401, {}, {
                         errors: [{
                             errorType: 'UnauthorizedError',
                             message: 'Invalid Password'
                         }]
                     });
                 }
-                /* eslint-enable camelcase */
+                // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
             });
         });
 
@@ -91,7 +86,7 @@ describe('Acceptance: Signin', function() {
                     .to.equal(1);
             });
 
-            click('.gh-btn-blue');
+            click('.btn-blue');
 
             andThen(() => {
                 expect(find('.form-group.error').length, 'number of invalid fields')
@@ -103,7 +98,7 @@ describe('Acceptance: Signin', function() {
 
             fillIn('[name="identification"]', 'test@example.com');
             fillIn('[name="password"]', 'invalid');
-            click('.gh-btn-blue');
+            click('.btn-blue');
 
             andThen(() => {
                 expect(currentURL(), 'current url').to.equal('/signin');
@@ -127,54 +122,10 @@ describe('Acceptance: Signin', function() {
 
             fillIn('[name="identification"]', 'test@example.com');
             fillIn('[name="password"]', 'testpass');
-            click('.gh-btn-blue');
+            click('.btn-blue');
 
             andThen(() => {
                 expect(currentURL(), 'currentURL').to.equal('/');
-            });
-        });
-    });
-
-    describe('using Ghost OAuth', function () {
-        beforeEach(function () {
-            enableGhostOAuth(server);
-        });
-
-        it('can sign in successfully', function () {
-            server.loadFixtures('roles');
-            stubSuccessfulOAuthConnect(application);
-
-            visit('/signin');
-
-            andThen(() => {
-                expect(currentURL(), 'current url').to.equal('/signin');
-
-                expect(
-                    find('button.login').text().trim(),
-                    'login button text'
-                ).to.equal('Sign in with Ghost');
-            });
-
-            click('button.login');
-
-            andThen(() => {
-                expect(currentURL(), 'url after connect').to.equal('/');
-            });
-        });
-
-        it('handles a failed connect', function () {
-            stubFailedOAuthConnect(application);
-
-            visit('/signin');
-            click('button.login');
-
-            andThen(() => {
-                expect(currentURL(), 'current url').to.equal('/signin');
-
-                expect(
-                    find('.main-error').text().trim(),
-                    'sign-in error'
-                ).to.match(/Authentication with Ghost\.org denied or failed/i);
             });
         });
     });

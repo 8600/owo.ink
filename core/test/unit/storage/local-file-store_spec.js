@@ -1,15 +1,16 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
-    fs = require('fs-extra'),
-    moment = require('moment'),
-    path = require('path'),
-    errors = require('../../../server/errors'),
-    LocalFileStore = require('../../../server/storage/local-file-store'),
+var fs              = require('fs-extra'),
+    moment          = require('moment'),
+    path            = require('path'),
+    should          = require('should'),
+    sinon           = require('sinon'),
+    _               = require('lodash'),
+    LocalFileStore  = require('../../../server/storage/local-file-store'),
     localFileStore,
 
-    configUtils = require('../../utils/configUtils'),
+    configUtils     = require('../../utils/configUtils');
 
-    sandbox = sinon.sandbox.create();
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('Local File System Storage', function () {
     var image,
@@ -24,25 +25,18 @@ describe('Local File System Storage', function () {
     }
 
     before(function () {
-        // Fake a date, do this once for all tests in this file
         momentStub = sinon.stub(moment.fn, 'format');
     });
 
     after(function () {
-        // Moment stub requires it's own restore after all the tests
         momentStub.restore();
     });
 
-    afterEach(function () {
-        sandbox.restore();
-        configUtils.restore();
-    });
-
     beforeEach(function () {
-        sandbox.stub(fs, 'mkdirs').yields();
-        sandbox.stub(fs, 'copy').yields();
-        sandbox.stub(fs, 'stat').yields(true);
-        sandbox.stub(fs, 'unlink').yields();
+        sinon.stub(fs, 'mkdirs').yields();
+        sinon.stub(fs, 'copy').yields();
+        sinon.stub(fs, 'stat').yields(true);
+        sinon.stub(fs, 'unlink').yields();
 
         image = {
             path: 'tmp/123456.jpg',
@@ -53,6 +47,14 @@ describe('Local File System Storage', function () {
         localFileStore = new LocalFileStore();
 
         fakeDate(9, 2013);
+    });
+
+    afterEach(function () {
+        fs.mkdirs.restore();
+        fs.copy.restore();
+        fs.stat.restore();
+        fs.unlink.restore();
+        configUtils.restore();
     });
 
     it('should send correct path to image when date is in Sep 2013', function (done) {
@@ -147,41 +149,6 @@ describe('Local File System Storage', function () {
         }).catch(done);
     });
 
-    describe('read image', function () {
-        beforeEach(function () {
-            // we have some example images in our test utils folder
-            configUtils.set('paths:contentPath', path.join(__dirname, '../../utils/fixtures'));
-        });
-
-        it('success', function (done) {
-            localFileStore.read({path: 'ghost-logo.png'})
-                .then(function (bytes) {
-                    bytes.length.should.eql(8638);
-                    done();
-                });
-        });
-
-        it('success', function (done) {
-            localFileStore.read({path: '/ghost-logo.png/'})
-                .then(function (bytes) {
-                    bytes.length.should.eql(8638);
-                    done();
-                });
-        });
-
-        it('image does not exist', function (done) {
-            localFileStore.read({path: 'does-not-exist.png'})
-                .then(function () {
-                    done(new Error('image should not exist'));
-                })
-                .catch(function (err) {
-                    (err instanceof errors.GhostError).should.eql(true);
-                    err.code.should.eql('ENOENT');
-                    done();
-                });
-        });
-    });
-
     describe('validate extentions', function () {
         it('name contains a .\d as extension', function (done) {
             localFileStore.save({
@@ -214,7 +181,13 @@ describe('Local File System Storage', function () {
     describe('when a custom content path is used', function () {
         beforeEach(function () {
             var configPaths = configUtils.defaultConfig.paths;
-            configUtils.set('paths:contentPath', configPaths.appRoot + '/var/ghostcms');
+
+            configUtils.set({
+                paths: _.merge({}, configPaths, {
+                    contentPath: configPaths.appRoot + '/var/ghostcms',
+                    imagesPath: configPaths.appRoot + '/var/ghostcms/' + configPaths.imagesRelPath
+                })
+            });
         });
 
         it('should send the correct path to image', function (done) {
@@ -226,23 +199,21 @@ describe('Local File System Storage', function () {
         });
     });
 
-    // @TODO: remove path.join mock...
     describe('on Windows', function () {
         var truePathSep = path.sep;
 
         beforeEach(function () {
-            sandbox.stub(path, 'join');
-            sandbox.stub(configUtils.config, 'getContentPath').returns('content/images/');
+            sinon.stub(path, 'join');
         });
 
         afterEach(function () {
+            path.join.restore();
             path.sep = truePathSep;
         });
 
         it('should return url in proper format for windows', function (done) {
             path.sep = '\\';
             path.join.returns('content\\images\\2013\\09\\IMAGE.jpg');
-
             localFileStore.save(image).then(function (url) {
                 if (truePathSep === '\\') {
                     url.should.equal('/content/images/2013/09/IMAGE.jpg');

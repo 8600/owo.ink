@@ -1,5 +1,4 @@
-var should = require('should'), // jshint ignore:line
-    getCanonicalUrl = require('../../../server/data/meta/canonical_url');
+var getCanonicalUrl = require('../../../server/data/meta/canonical_url');
 
 describe('getCanonicalUrl', function () {
     it('should return absolute canonical url for post', function () {

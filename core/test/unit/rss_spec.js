@@ -1,16 +1,18 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    rewire = require('rewire'),
-    _ = require('lodash'),
-    Promise = require('bluebird'),
-    testUtils = require('../utils'),
-    channelConfig = require('../../server/controllers/frontend/channel-config'),
-    api = require('../../server/api'),
-    settingsCache = require('../../server/settings/cache'),
-    rss = rewire('../../server/data/xml/rss'),
-    configUtils = require('../utils/configUtils'),
+var should          = require('should'),
+    sinon           = require('sinon'),
+    rewire          = require('rewire'),
+    _               = require('lodash'),
+    Promise         = require('bluebird'),
+    testUtils       = require('../utils'),
+    labs            = require('../../server/utils/labs'),
 
-    sandbox = sinon.sandbox.create();
+    channelConfig   = require('../../server/controllers/frontend/channel-config'),
+
+    // Things that get overridden
+    api             = require('../../server/api'),
+    rss             = rewire('../../server/data/xml/rss'),
+
+    configUtils     = require('../utils/configUtils');
 
 // Helper function to prevent unit tests
 // from failing via timeout when they
@@ -22,7 +24,7 @@ function failTest(done) {
 }
 
 describe('RSS', function () {
-    var req, res, posts;
+    var sandbox, req, res, posts;
 
     before(function () {
         posts = _.cloneDeep(testUtils.DataGenerator.forKnex.posts);
@@ -30,11 +32,14 @@ describe('RSS', function () {
             return post.status === 'published' && post.page === false;
         });
 
-        _.each(posts, function (post, i) {
-            post.id = i;
+        _.each(posts, function (post) {
             post.url = '/' + post.slug + '/';
             post.author = {name: 'Joe Bloggs'};
         });
+    });
+
+    beforeEach(function () {
+        sandbox = sinon.sandbox.create();
     });
 
     afterEach(function () {
@@ -143,7 +148,8 @@ describe('RSS', function () {
             rss(req, res, failTest(done));
         });
 
-        it('should only return visible tags', function (done) {
+        it('should only return visible tags if internal tags are enabled in labs', function (done) {
+            sandbox.stub(labs, 'isSet').returns(true);
             var postWithTags = posts[2];
             postWithTags.tags = [
                 {name: 'public', visibility: 'public'},
@@ -171,6 +177,43 @@ describe('RSS', function () {
                 xmlData.should.match(/<category><!\[CDATA\[public\]\]/);
                 xmlData.should.match(/<category><!\[CDATA\[visibility\]\]/);
                 xmlData.should.not.match(/<category><!\[CDATA\[internal\]\]/);
+                done();
+            };
+
+            req.channelConfig = channelConfig.get('index');
+            req.channelConfig.isRSS = true;
+            rss(req, res, failTest(done));
+        });
+
+        it('should return all tags if internal tags are not enabled in labs', function (done) {
+            sandbox.stub(labs, 'isSet').returns(false);
+            var postWithTags = posts[2];
+            postWithTags.tags = [
+                {name: 'public', visibility: 'public'},
+                {name: 'internal', visibility: 'internal'},
+                {name: 'visibility'}
+            ];
+
+            rss.__set__('getData', function () {
+                return Promise.resolve({
+                    title: 'Test Title',
+                    description: 'Testing Desc',
+                    permalinks: '/:slug/',
+                    results: {posts: [postWithTags], meta: {pagination: {pages: 1}}}
+                });
+            });
+
+            res.send = function send(xmlData) {
+                should.exist(xmlData);
+                // item tags
+                xmlData.should.match(/<title><!\[CDATA\[Short and Sweet\]\]>/);
+                xmlData.should.match(/<description><!\[CDATA\[test stuff/);
+                xmlData.should.match(/<content:encoded><!\[CDATA\[<h2 id="testing">testing<\/h2>\n\n/);
+                xmlData.should.match(/<img src="http:\/\/placekitten.com\/500\/200"/);
+                xmlData.should.match(/<media:content url="http:\/\/placekitten.com\/500\/200" medium="image"\/>/);
+                xmlData.should.match(/<category><!\[CDATA\[public\]\]/);
+                xmlData.should.match(/<category><!\[CDATA\[visibility\]\]/);
+                xmlData.should.match(/<category><!\[CDATA\[internal\]\]/);
                 done();
             };
 
@@ -276,7 +319,6 @@ describe('RSS', function () {
 
     describe('dataBuilder', function () {
         var apiBrowseStub, apiTagStub, apiUserStub;
-
         beforeEach(function () {
             apiBrowseStub = sandbox.stub(api.posts, 'browse', function () {
                 return Promise.resolve({posts: [], meta: {pagination: {pages: 3}}});
@@ -302,19 +344,11 @@ describe('RSS', function () {
                 set: sinon.stub()
             };
 
-            sandbox.stub(settingsCache, 'get', function (key) {
-                var obj = {
-                    title: 'Test',
-                    description: 'Some Text',
-                    permalinks: '/:slug/'
-                };
-
-                return obj[key];
-            });
-
-            configUtils.set({
-                url: 'http://my-ghost-blog.com'
-            });
+            configUtils.set({url: 'http://my-ghost-blog.com', theme: {
+                title: 'Test',
+                description: 'Some Text',
+                permalinks: '/:slug/'
+            }});
         });
 
         it('should process the data correctly for the index feed', function (done) {
@@ -340,11 +374,7 @@ describe('RSS', function () {
             // test
             res.send = function send(xmlData) {
                 apiBrowseStub.calledOnce.should.be.true();
-                apiBrowseStub.calledWith({
-                    page: 1,
-                    filter: 'tags:\'magic\'+tags.visibility:\'public\'',
-                    include: 'author,tags'
-                }).should.be.true();
+                apiBrowseStub.calledWith({page: 1, filter: 'tags:\'magic\'', include: 'author,tags'}).should.be.true();
                 apiTagStub.calledOnce.should.be.true();
                 xmlData.should.match(/<channel><title><!\[CDATA\[Magic - Test\]\]><\/title>/);
                 done();

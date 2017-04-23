@@ -1,16 +1,17 @@
-const parseDateFormats = [
-    'DD MMM YY @ HH:mm', 'DD MMM YY HH:mm',
-    'D MMM YY @ HH:mm', 'D MMM YY HH:mm',
-    'DD MMM YYYY @ HH:mm', 'DD MMM YYYY HH:mm',
-    'D MMM YYYY @ HH:mm', 'D MMM YYYY HH:mm',
-    'DD/MM/YY @ HH:mm', 'DD/MM/YY HH:mm',
-    'DD/MM/YYYY @ HH:mm', 'DD/MM/YYYY HH:mm',
-    'DD-MM-YY @ HH:mm', 'DD-MM-YY HH:mm',
-    'DD-MM-YYYY @ HH:mm', 'DD-MM-YYYY HH:mm',
-    'YYYY-MM-DD @ HH:mm', 'YYYY-MM-DD HH:mm',
-    'DD MMM @ HH:mm', 'DD MMM HH:mm',
-    'D MMM @ HH:mm', 'D MMM HH:mm'
-];
+/* global moment */
+// jscs: disable disallowSpacesInsideParentheses
+
+const parseDateFormats = ['DD MMM YY @ HH:mm', 'DD MMM YY HH:mm',
+                          'D MMM YY @ HH:mm', 'D MMM YY HH:mm',
+                          'DD MMM YYYY @ HH:mm', 'DD MMM YYYY HH:mm',
+                          'D MMM YYYY @ HH:mm', 'D MMM YYYY HH:mm',
+                          'DD/MM/YY @ HH:mm', 'DD/MM/YY HH:mm',
+                          'DD/MM/YYYY @ HH:mm', 'DD/MM/YYYY HH:mm',
+                          'DD-MM-YY @ HH:mm', 'DD-MM-YY HH:mm',
+                          'DD-MM-YYYY @ HH:mm', 'DD-MM-YYYY HH:mm',
+                          'YYYY-MM-DD @ HH:mm', 'YYYY-MM-DD HH:mm',
+                          'DD MMM @ HH:mm', 'DD MMM HH:mm',
+                          'D MMM @ HH:mm', 'D MMM HH:mm'];
 
 const displayDateFormat = 'DD MMM YY @ HH:mm';
 

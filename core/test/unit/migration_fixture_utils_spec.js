@@ -1,16 +1,15 @@
-var should = require('should'),
-    sinon = require('sinon'),
+var should  = require('should'),
+    sinon   = require('sinon'),
     Promise = require('bluebird'),
-    rewire = require('rewire'),
+    rewire  = require('rewire'),
 
-    models = require('../../server/models'),
-    baseUtils = require('../../server/models/base/utils'),
-    fixtureUtils = rewire('../../server/data/schema/fixtures/utils'),
-    fixtures = require('../../server/data/schema/fixtures/fixtures'),
+    models  = require('../../server/models'),
 
+    fixtureUtils = rewire('../../server/data/migration/fixtures/utils'),
+    fixtures     = require('../../server/data/migration/fixtures/fixtures'),
     sandbox = sinon.sandbox.create();
 
-describe('Migration Fixture Utils', function () {
+describe('Utils', function () {
     var loggerStub;
 
     beforeEach(function () {
@@ -106,14 +105,14 @@ describe('Migration Fixture Utils', function () {
             fixtureUtils.addFixturesForModel(fixtures.models[0]).then(function (result) {
                 should.exist(result);
                 result.should.be.an.Object();
-                result.should.have.property('expected', 1);
-                result.should.have.property('done', 1);
+                result.should.have.property('expected',  1);
+                result.should.have.property('done',  1);
 
                 postOneStub.calledOnce.should.be.true();
                 postAddStub.calledOnce.should.be.true();
 
                 done();
-            }).catch(done);
+            });
         });
 
         it('should not call add for main post fixture if it is already found', function (done) {
@@ -122,14 +121,14 @@ describe('Migration Fixture Utils', function () {
             fixtureUtils.addFixturesForModel(fixtures.models[0]).then(function (result) {
                 should.exist(result);
                 result.should.be.an.Object();
-                result.should.have.property('expected', 1);
-                result.should.have.property('done', 0);
+                result.should.have.property('expected',  1);
+                result.should.have.property('done',  0);
 
                 postOneStub.calledOnce.should.be.true();
                 postAddStub.calledOnce.should.be.false();
 
                 done();
-            }).catch(done);
+            });
         });
     });
 
@@ -137,33 +136,37 @@ describe('Migration Fixture Utils', function () {
         it('should call attach for permissions-roles', function (done) {
             var fromItem = {
                     related: sandbox.stub().returnsThis(),
-                    findWhere: sandbox.stub().returns()
+                    findWhere: sandbox.stub().returns(),
+                    permissions: sandbox.stub().returnsThis(),
+                    attach: sandbox.stub().returns(Promise.resolve([{}]))
                 },
                 toItem = [{get: sandbox.stub()}],
                 dataMethodStub = {
                     filter: sandbox.stub().returns(toItem),
                     find: sandbox.stub().returns(fromItem)
                 },
-                baseUtilAttachStub = sandbox.stub(baseUtils, 'attach').returns(Promise.resolve([{}])),
                 permsAllStub = sandbox.stub(models.Permission, 'findAll').returns(Promise.resolve(dataMethodStub)),
                 rolesAllStub = sandbox.stub(models.Role, 'findAll').returns(Promise.resolve(dataMethodStub));
 
             fixtureUtils.addFixturesForRelation(fixtures.relations[0]).then(function (result) {
                 should.exist(result);
                 result.should.be.an.Object();
-                result.should.have.property('expected', 30);
-                result.should.have.property('done', 30);
+                result.should.have.property('expected',  28);
+                result.should.have.property('done',  28);
 
                 // Permissions & Roles
                 permsAllStub.calledOnce.should.be.true();
                 rolesAllStub.calledOnce.should.be.true();
-                dataMethodStub.filter.callCount.should.eql(30);
+                dataMethodStub.filter.callCount.should.eql(28);
                 dataMethodStub.find.callCount.should.eql(3);
-                baseUtilAttachStub.callCount.should.eql(30);
 
-                fromItem.related.callCount.should.eql(30);
-                fromItem.findWhere.callCount.should.eql(30);
-                toItem[0].get.callCount.should.eql(60);
+                fromItem.related.callCount.should.eql(28);
+                fromItem.findWhere.callCount.should.eql(28);
+                toItem[0].get.callCount.should.eql(56);
+
+                fromItem.permissions.callCount.should.eql(28);
+                fromItem.attach.callCount.should.eql(28);
+                fromItem.attach.calledWith(toItem).should.be.true();
 
                 done();
             }).catch(done);
@@ -172,32 +175,38 @@ describe('Migration Fixture Utils', function () {
         it('should call attach for posts-tags', function (done) {
             var fromItem = {
                     related: sandbox.stub().returnsThis(),
-                    findWhere: sandbox.stub().returns()
+                    findWhere: sandbox.stub().returns(),
+                    tags: sandbox.stub().returnsThis(),
+                    attach: sandbox.stub().returns(Promise.resolve([{}]))
                 },
                 toItem = [{get: sandbox.stub()}],
                 dataMethodStub = {
                     filter: sandbox.stub().returns(toItem),
                     find: sandbox.stub().returns(fromItem)
                 },
-                baseUtilAttachStub = sandbox.stub(baseUtils, 'attach').returns(Promise.resolve([{}])),
+
                 postsAllStub = sandbox.stub(models.Post, 'findAll').returns(Promise.resolve(dataMethodStub)),
                 tagsAllStub = sandbox.stub(models.Tag, 'findAll').returns(Promise.resolve(dataMethodStub));
 
             fixtureUtils.addFixturesForRelation(fixtures.relations[1]).then(function (result) {
                 should.exist(result);
                 result.should.be.an.Object();
-                result.should.have.property('expected', 1);
-                result.should.have.property('done', 1);
+                result.should.have.property('expected',  1);
+                result.should.have.property('done',  1);
 
                 // Posts & Tags
                 postsAllStub.calledOnce.should.be.true();
                 tagsAllStub.calledOnce.should.be.true();
                 dataMethodStub.filter.calledOnce.should.be.true();
                 dataMethodStub.find.calledOnce.should.be.true();
+
                 fromItem.related.calledOnce.should.be.true();
                 fromItem.findWhere.calledOnce.should.be.true();
                 toItem[0].get.calledOnce.should.be.true();
-                baseUtilAttachStub.callCount.should.eql(1);
+
+                fromItem.tags.calledOnce.should.be.true();
+                fromItem.attach.calledOnce.should.be.true();
+                fromItem.attach.calledWith(toItem).should.be.true();
 
                 done();
             }).catch(done);
@@ -222,8 +231,8 @@ describe('Migration Fixture Utils', function () {
             fixtureUtils.addFixturesForRelation(fixtures.relations[1]).then(function (result) {
                 should.exist(result);
                 result.should.be.an.Object();
-                result.should.have.property('expected', 1);
-                result.should.have.property('done', 0);
+                result.should.have.property('expected',  1);
+                result.should.have.property('done',  0);
 
                 // Posts & Tags
                 postsAllStub.calledOnce.should.be.true();
@@ -248,9 +257,9 @@ describe('Migration Fixture Utils', function () {
             var foundFixture = fixtureUtils.findModelFixtureEntry('Client', {slug: 'ghost-admin'});
             foundFixture.should.be.an.Object();
             foundFixture.should.eql({
-                name: 'Ghost Admin',
-                slug: 'ghost-admin',
-                status: 'enabled'
+                name:             'Ghost Admin',
+                slug:             'ghost-admin',
+                status:           'enabled'
             });
         });
     });

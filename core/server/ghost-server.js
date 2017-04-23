@@ -1,20 +1,16 @@
-"use strict";
 // # Ghost Server
 // Handles the creation of an HTTP Server for Ghost
-const debug = require('debug')('ghost:server'),
-      Promise = require('bluebird'),
-      chalk = require('chalk'),
-      fs = require('fs'),
-      path = require('path'),
-      errors = require('./errors'),
-      events = require('./events'),
-      config = require('./config'),
-      utils = require('./utils'),
-      i18n   = require('./i18n'),
-      moment = require('moment');
+var Promise = require('bluebird'),
+    chalk = require('chalk'),
+    fs = require('fs'),
+    errors = require('./errors'),
+    events = require('./events'),
+    config = require('./config'),
+    i18n   = require('./i18n'),
+    moment = require('moment');
 
 /**
- * ## 博客服务
+ * ## GhostServer
  * @constructor
  * @param {Object} rootApp - parent express instance
  */
@@ -23,76 +19,64 @@ function GhostServer(rootApp) {
     this.httpServer = null;
     this.connections = {};
     this.connectionId = 0;
-    // 导入配置项.
+
+    // Expose config module for use externally.
     this.config = config;
 }
 
 /**
- * ## 公共API方法
+ * ## Public API methods
  *
- * ### 启动
- * 启动博客服务并监听配置端口,或者一个express实例
- * @param  {Object} externalApp - 可选的express实例.
+ * ### Start
+ * Starts the ghost server listening on the configured port.
+ * Alternatively you can pass in your own express instance and let Ghost
+ * start listening for you.
+ * @param  {Object} externalApp - Optional express app instance.
  * @return {Promise} Resolves once Ghost has started
  */
 GhostServer.prototype.start = function (externalApp) {
-    debug('正在启动...');
-    const self = this,
-          rootApp = externalApp ? externalApp : self.rootApp
-    let   socketConfig, socketValues = {
-              path: path.join(config.get('paths').contentPath, config.get('env') + '.socket'),
-              permissions: '660'
-          };
+    var self = this,
+        rootApp = externalApp ? externalApp : self.rootApp;
 
-    return new Promise(function (resolve, reject) {
-        if (config.get('server').hasOwnProperty('socket')) {
-            socketConfig = config.get('server').socket;
-            switch(typeof socketConfig){
-                case 'string':
-                    socketValues.path = socketConfig;
-                    break;
-                case 'object':
-                    socketValues.path = socketConfig.path || socketValues.path;
-                    socketValues.permissions = socketConfig.permissions || socketValues.permissions;
-                    break;
-                default:
-                    console.error("socketConfig格式错误!")
+    return new Promise(function (resolve) {
+        var socketConfig = config.getSocket();
+
+        if (socketConfig) {
+            // Make sure the socket is gone before trying to create another
+            try {
+                fs.unlinkSync(socketConfig.path);
+            } catch (e) {
+                // We can ignore this.
             }
-            // 创建前保证这个文件不存在
-            fs.unlinkSync(socketValues.path);
 
-            self.httpServer = rootApp.listen(socketValues.path);
-            fs.chmod(socketValues.path, socketValues.permissions);
-            config.set('server:socket', socketValues);
+            self.httpServer = rootApp.listen(socketConfig.path);
+
+            fs.chmod(socketConfig.path, socketConfig.permissions);
         } else {
             self.httpServer = rootApp.listen(
-                config.get('server').port,
-                config.get('server').host
+                config.server.port,
+                config.server.host
             );
         }
 
         self.httpServer.on('error', function (error) {
-            var ghostError;
-
             if (error.errno === 'EADDRINUSE') {
-                ghostError = new errors.GhostError({
-                    message: i18n.t('errors.httpServer.addressInUse.error'),
-                    context: i18n.t('errors.httpServer.addressInUse.context', {port: config.get('server').port}),
-                    help: i18n.t('errors.httpServer.addressInUse.help')
-                });
+                errors.logError(
+                    i18n.t('errors.httpServer.addressInUse.error'),
+                    i18n.t('errors.httpServer.addressInUse.context', {port: config.server.port}),
+                    i18n.t('errors.httpServer.addressInUse.help')
+                );
             } else {
-                ghostError = new errors.GhostError({
-                    message: i18n.t('errors.httpServer.otherError.error', {errorNumber: error.errno}),
-                    context: i18n.t('errors.httpServer.otherError.context'),
-                    help: i18n.t('errors.httpServer.otherError.help')
-                });
+                errors.logError(
+                    i18n.t('errors.httpServer.otherError.error', {errorNumber: error.errno}),
+                    i18n.t('errors.httpServer.otherError.context'),
+                    i18n.t('errors.httpServer.otherError.help')
+                );
             }
-
-            reject(ghostError);
+            process.exit(-1);
         });
         self.httpServer.on('connection', self.connection.bind(self));
         self.httpServer.on('listening', function () {
-            debug('...Started');
             events.emit('server:start');
             self.logStartMessages();
             resolve(self);
@@ -114,7 +98,6 @@ GhostServer.prototype.stop = function () {
             resolve(self);
         } else {
             self.httpServer.close(function () {
-                events.emit('server:stop');
                 self.httpServer = null;
                 self.logShutdownMessages();
                 resolve(self);
@@ -149,11 +132,12 @@ GhostServer.prototype.hammertime = function () {
 /**
  * ## Private (internal) methods
  *
- * ### 连接
+ * ### Connection
  * @param {Object} socket
  */
 GhostServer.prototype.connection = function (socket) {
-    const self = this;
+    var self = this;
+
     self.connectionId += 1;
     socket._ghostId = self.connectionId;
 
@@ -165,13 +149,16 @@ GhostServer.prototype.connection = function (socket) {
 };
 
 /**
- * ### 关闭连接
- * 大多数浏览器会保持和服务器的持续连接，所以我们要手动关闭连接
+ * ### Close Connections
+ * Most browsers keep a persistent connection open to the server, which prevents the close callback of
+ * httpServer from returning. We need to destroy all connections manually.
  */
 GhostServer.prototype.closeConnections = function () {
-    const self = this;
+    var self = this;
+
     Object.keys(self.connections).forEach(function (socketId) {
-        const socket = self.connections[socketId];
+        var socket = self.connections[socketId];
+
         if (socket) {
             socket.destroy();
         }
@@ -179,25 +166,29 @@ GhostServer.prototype.closeConnections = function () {
 };
 
 /**
- * ### 消息/日志
+ * ### Log Start Messages
  */
 GhostServer.prototype.logStartMessages = function () {
-    // 博客系统欢迎提示
-    console.log(
-        chalk.blue('----------欢迎使用owo博客系统!----------')
-    );
-    console.log(
-        chalk.green(i18n.t('notices.httpServer.ghostIsRunningIn', {env: config.get('env')})),
-        i18n.t('notices.httpServer.listeningOn'),
-        config.get('server').socket || config.get('server').host + ':' + config.get('server').port,
-        i18n.t('notices.httpServer.urlConfiguredAs', {url: utils.url.urlFor('home', true)}),
-        chalk.gray(i18n.t('notices.httpServer.ctrlCToShutDown'))
-    );
+    // Startup & Shutdown messages
+    if (process.env.NODE_ENV === 'production') {
+        console.log(
+            chalk.green(i18n.t('notices.httpServer.ghostIsRunningIn', {env: process.env.NODE_ENV})),
+            i18n.t('notices.httpServer.yourBlogIsAvailableOn', {url: config.url}),
+            chalk.gray(i18n.t('notices.httpServer.ctrlCToShutDown'))
+        );
+    } else {
+        console.log(
+            chalk.green(i18n.t('notices.httpServer.ghostIsRunningIn', {env: process.env.NODE_ENV})),
+            i18n.t('notices.httpServer.listeningOn'),
+            config.getSocket() || config.server.host + ':' + config.server.port,
+            i18n.t('notices.httpServer.urlConfiguredAs', {url: config.url}),
+            chalk.gray(i18n.t('notices.httpServer.ctrlCToShutDown'))
+        );
+    }
 
     function shutdown() {
         console.log(chalk.red(i18n.t('notices.httpServer.ghostHasShutdown')));
-        //如果是生产环境 提示博客已离线 否则 提示博客运行时长
-        if (config.get('env') === 'production') {
+        if (process.env.NODE_ENV === 'production') {
             console.log(
                 i18n.t('notices.httpServer.yourBlogIsNowOffline')
             );
@@ -209,7 +200,7 @@ GhostServer.prototype.logStartMessages = function () {
         }
         process.exit(0);
     }
-    // 确保用户下达终止命令后博客正常退出
+    // ensure that Ghost exits correctly on Ctrl+C and SIGTERM
     process.
         removeAllListeners('SIGINT').on('SIGINT', shutdown).
         removeAllListeners('SIGTERM').on('SIGTERM', shutdown);

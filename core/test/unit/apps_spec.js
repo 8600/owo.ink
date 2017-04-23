@@ -1,27 +1,27 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    path = require('path'),
+var path         = require('path'),
     EventEmitter = require('events').EventEmitter,
-    _ = require('lodash'),
-    Promise = require('bluebird'),
-    helpers = require('../../server/helpers'),
-    filters = require('../../server/filters'),
-    i18n = require('../../server/i18n'),
+    should       = require('should'),
+    sinon        = require('sinon'),
+    _            = require('lodash'),
+    Promise      = require('bluebird'),
+    helpers      = require('../../server/helpers'),
+    filters      = require('../../server/filters'),
+    i18n         = require('../../server/i18n'),
 
     // Stuff we are testing
-    AppProxy = require('../../server/apps/proxy'),
-    AppSandbox = require('../../server/apps/sandbox'),
+    AppProxy        = require('../../server/apps/proxy'),
+    AppSandbox      = require('../../server/apps/sandbox'),
     AppDependencies = require('../../server/apps/dependencies'),
-    AppPermissions = require('../../server/apps/permissions'),
-
-    sandbox = sinon.sandbox.create();
-
+    AppPermissions  = require('../../server/apps/permissions');
 i18n.init();
 
 describe('Apps', function () {
-    var fakeApi;
+    var sandbox,
+        fakeApi;
 
     beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+
         fakeApi = {
             posts: {
                 browse: sandbox.stub(),

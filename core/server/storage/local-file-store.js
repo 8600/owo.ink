@@ -7,9 +7,8 @@ var serveStatic = require('express').static,
     path = require('path'),
     util = require('util'),
     Promise = require('bluebird'),
-    config = require('../config'),
     errors = require('../errors'),
-    i18n = require('../i18n'),
+    config = require('../config'),
     utils = require('../utils'),
     BaseStore = require('./base'),
     remove = Promise.promisify(fs.remove);
@@ -24,8 +23,8 @@ util.inherits(LocalFileStore, BaseStore);
 // Saves the image to storage (the file system)
 // - image is the express image object
 // - returns a promise which ultimately returns the full url to the uploaded image
-LocalFileStore.prototype.save = function save(image, targetDir) {
-    targetDir = targetDir || this.getTargetDir(config.getContentPath('images'));
+LocalFileStore.prototype.save = function (image, targetDir) {
+    targetDir = targetDir || this.getTargetDir(config.paths.imagesPath);
     var targetFilename;
 
     return this.getUniqueFileName(this, image, targetDir).then(function (filename) {
@@ -36,19 +35,16 @@ LocalFileStore.prototype.save = function save(image, targetDir) {
     }).then(function () {
         // The src for the image must be in URI format, not a file system path, which in Windows uses \
         // For local file system storage can use relative path so add a slash
-        var fullUrl = (
-            utils.url.urlJoin('/', utils.url.getSubdir(),
-            utils.url.STATIC_IMAGE_URL_PREFIX,
-            path.relative(config.getContentPath('images'), targetFilename))
-        ).replace(new RegExp('\\' + path.sep, 'g'), '/');
-
+        var fullUrl = (config.paths.subdir + '/' + config.paths.imagesRelPath + '/' +
+        path.relative(config.paths.imagesPath, targetFilename)).replace(new RegExp('\\' + path.sep, 'g'), '/');
         return fullUrl;
     }).catch(function (e) {
+        errors.logError(e);
         return Promise.reject(e);
     });
 };
 
-LocalFileStore.prototype.exists = function exists(filename) {
+LocalFileStore.prototype.exists = function (filename) {
     return new Promise(function (resolve) {
         fs.stat(filename, function (err) {
             var exists = !err;
@@ -58,7 +54,7 @@ LocalFileStore.prototype.exists = function exists(filename) {
 };
 
 // middleware for serving the files
-LocalFileStore.prototype.serve = function serve(options) {
+LocalFileStore.prototype.serve = function (options) {
     options = options || {};
 
     // CASE: serve themes
@@ -67,7 +63,7 @@ LocalFileStore.prototype.serve = function serve(options) {
     if (options.isTheme) {
         return function downloadTheme(req, res, next) {
             var themeName = options.name,
-                themePath = path.join(config.getContentPath('themes'), themeName),
+                themePath = path.join(config.paths.themePath, themeName),
                 zipName = themeName + '.zip',
                 // store this in a unique temporary folder
                 zipBasePath = path.join(os.tmpdir(), utils.uid(10)),
@@ -99,54 +95,15 @@ LocalFileStore.prototype.serve = function serve(options) {
         // CASE: serve images
         // For some reason send divides the max age number by 1000
         // Fallthrough: false ensures that if an image isn't found, it automatically 404s
-        // Wrap server static errors
-        return function serveStaticContent(req, res, next) {
-            return serveStatic(config.getContentPath('images'), {maxAge: utils.ONE_YEAR_MS, fallthrough: false})(req, res, function (err) {
-                if (err) {
-                    if (err.statusCode === 404) {
-                        return next(new errors.NotFoundError({message: i18n.t('errors.errors.pageNotFound')}));
-                    }
-
-                    return next(new errors.GhostError({err: err}));
-                }
-
-                next();
-            });
-        };
+        return serveStatic(config.paths.imagesPath, {maxAge: utils.ONE_YEAR_MS, fallthrough: false});
     }
 };
 
-LocalFileStore.prototype.delete = function deleteFile(fileName, targetDir) {
-    targetDir = targetDir || this.getTargetDir(config.getContentPath('images'));
+LocalFileStore.prototype.delete = function (fileName, targetDir) {
+    targetDir = targetDir || this.getTargetDir(config.paths.imagesPath);
 
     var pathToDelete = path.join(targetDir, fileName);
     return remove(pathToDelete);
-};
-
-/**
- * Reads bytes from disk for a target image
- * path: path of target image (without content path!)
- */
-LocalFileStore.prototype.read = function read(options) {
-    options = options || {};
-
-    // remove trailing slashes
-    options.path = (options.path || '').replace(/\/$|\\$/, '');
-
-    var targetPath = path.join(config.getContentPath('images'), options.path);
-
-    return new Promise(function (resolve, reject) {
-        fs.readFile(targetPath, function (err, bytes) {
-            if (err) {
-                return reject(new errors.GhostError({
-                    err: err,
-                    message: 'Could not read image: ' + targetPath
-                }));
-            }
-
-            resolve(bytes);
-        });
-    });
 };
 
 module.exports = LocalFileStore;

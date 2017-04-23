@@ -1,13 +1,13 @@
-var utils  = require('../../utils'),
+var config = require('../../config'),
     getUrl = require('./url');
 
 function getCanonicalUrl(data) {
-    var url = utils.url.urlJoin(utils.url.urlFor('home', true), getUrl(data, false));
+    var url = config.urlJoin(config.getBaseUrl(false),
+        getUrl(data, false));
 
     if (url.indexOf('/amp/')) {
         url = url.replace(/\/amp\/$/i, '/');
     }
-
     return url;
 }
 

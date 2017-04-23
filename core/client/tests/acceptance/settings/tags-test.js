@@ -1,19 +1,19 @@
 /* jshint expr:true */
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import {
     describe,
     it,
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import $ from 'jquery';
 import run from 'ember-runloop';
 import startApp from '../../helpers/start-app';
 import destroyApp from '../../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
-import {errorOverride, errorReset} from 'ghost-admin/tests/helpers/adapter-error';
-import {Response} from 'ember-cli-mirage';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
+import { errorOverride, errorReset } from 'ghost-admin/tests/helpers/adapter-error';
+import Mirage from 'ember-cli-mirage';
 
 // Grabbed from keymaster's testing code because Ember's `keyEvent` helper
 // is for some reason not triggering the events in a way that keymaster detects:
@@ -64,10 +64,10 @@ describe('Acceptance: Settings - Tags', function () {
 
     it('redirects to team page when authenticated as author', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
-        visit('/settings/design');
+        visit('/settings/navigation');
 
         andThen(() => {
             expect(currentURL(), 'currentURL').to.equal('/team/test-user');
@@ -77,7 +77,11 @@ describe('Acceptance: Settings - Tags', function () {
     describe('when logged in', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
+
+            // load the settings fixtures
+            // TODO: this should always be run for acceptance tests
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -178,7 +182,7 @@ describe('Acceptance: Settings - Tags', function () {
             });
 
             // start new tag
-            click('.view-actions .gh-btn-green');
+            click('.view-actions .btn-green');
 
             andThen(() => {
                 // it navigates to the new tag route
@@ -214,7 +218,7 @@ describe('Acceptance: Settings - Tags', function () {
 
             // delete tag
             click('.tag-delete-button');
-            click('.fullscreen-modal .gh-btn-red');
+            click('.fullscreen-modal .btn-red');
 
             andThen(() => {
                 // it redirects to the first tag
@@ -271,16 +275,13 @@ describe('Acceptance: Settings - Tags', function () {
                 find('.tag-list').scrollTop(find('.tag-list-content').height());
             });
 
-            // NOTE: FF has issues with scrolling further in acceptance tests
-            // but works fine outside of tests
-            //
-            // triggerEvent('.tag-list', 'scroll');
-            //
-            // andThen(() => {
-            //     // it loads the final page
-            //     expect(find('.settings-tags .settings-tag').length, 'tag list count on third load')
-            //         .to.equal(32);
-            // });
+            triggerEvent('.tag-list', 'scroll');
+
+            andThen(() => {
+                // it loads the final page
+                expect(find('.settings-tags .settings-tag').length, 'tag list count on third load')
+                    .to.equal(32);
+            });
         });
 
         it('shows the internal tag label', function () {
@@ -304,7 +305,7 @@ describe('Acceptance: Settings - Tags', function () {
 
         it('redirects to 404 when tag does not exist', function () {
             server.get('/tags/slug/unknown/', function () {
-                return new Response(404, {'Content-Type': 'application/json'}, {errors: [{message: 'Tag not found.', errorType: 'NotFoundError'}]});
+                return new Mirage.Response(404, {'Content-Type': 'application/json'}, {errors: [{message: 'Tag not found.', errorType: 'NotFoundError'}]});
             });
 
             errorOverride();

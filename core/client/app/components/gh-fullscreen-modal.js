@@ -2,42 +2,51 @@ import RSVP from 'rsvp';
 import injectService from 'ember-service/inject';
 import {A as emberA} from 'ember-array/utils';
 import {isBlank} from 'ember-utils';
+import on from 'ember-evented/on';
 import run from 'ember-runloop';
+
+import LiquidTether from 'liquid-tether/components/liquid-tether';
 import {invokeAction} from 'ember-invoke-action';
-import computed from 'ember-computed';
-import Component from 'ember-component';
 
-const FullScreenModalComponent = Component.extend({
+const {Promise} = RSVP;
 
-    model: null,
-    modifier: null,
+const FullScreenModalComponent = LiquidTether.extend({
+    to: 'fullscreen-modal',
+    target: 'document.body',
+    targetModifier: 'visible',
+    targetAttachment: 'top center',
+    attachment: 'top center',
+    tetherClass: 'fullscreen-modal',
+    overlayClass: 'fullscreen-modal-background',
+    modalPath: 'unknown',
 
     dropdown: injectService(),
 
-    modalPath: computed('modal', function () {
-        return `modals/${this.get('modal') || 'unknown'}`;
-    }),
+    init() {
+        this._super(...arguments);
+        this.modalPath = `modals/${this.get('modal')}`;
+    },
 
-    modalClasses: computed('modifiers', function () {
-        let modalClass = 'fullscreen-modal';
+    setTetherClass: on('init', function () {
+        let tetherClass = this.get('tetherClass');
         let modifiers = (this.get('modifier') || '').split(' ');
-        let modalClasses = emberA([modalClass]);
+        let tetherClasses = emberA([tetherClass]);
 
         modifiers.forEach((modifier) => {
             if (!isBlank(modifier)) {
-                let className = `${modalClass}-${modifier}`;
-                modalClasses.push(className);
+                let className = `${tetherClass}-${modifier}`;
+                tetherClasses.push(className);
             }
         });
 
-        return modalClasses.join(' ');
+        this.set('tetherClass', tetherClasses.join(' '));
     }),
 
-    didInsertElement() {
+    closeDropdowns: on('didInsertElement', function () {
         run.schedule('afterRender', this, function () {
             this.get('dropdown').closeDropdowns();
         });
-    },
+    }),
 
     actions: {
         close() {
@@ -47,7 +56,9 @@ const FullScreenModalComponent = Component.extend({
                 return invokeAction(this, 'close');
             }
 
-            return RSVP.resolve();
+            return new Promise((resolve) => {
+                resolve();
+            });
         },
 
         confirm() {
@@ -55,7 +66,9 @@ const FullScreenModalComponent = Component.extend({
                 return invokeAction(this, 'confirm');
             }
 
-            return RSVP.resolve();
+            return new Promise((resolve) => {
+                resolve();
+            });
         },
 
         clickOverlay() {

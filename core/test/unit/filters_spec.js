@@ -1,18 +1,17 @@
-var should = require('should'),
-    sinon = require('sinon'),
+var should  = require('should'),
+    sinon   = require('sinon'),
     Promise = require('bluebird'),
-    _ = require('lodash'),
+    _       = require('lodash'),
 
     // Stuff we are testing
-    Filters = require('../../server/filters').Filters,
-
-    sandbox = sinon.sandbox.create();
+    Filters = require('../../server/filters').Filters;
 
 describe('Filters', function () {
-    var filters;
+    var filters, sandbox;
 
     beforeEach(function () {
         filters = new Filters();
+        sandbox = sinon.sandbox.create();
     });
 
     afterEach(function () {

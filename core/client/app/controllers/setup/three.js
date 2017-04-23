@@ -88,8 +88,8 @@ export default Controller.extend({
         validationResult.forEach((error) => {
             // Only one error type here so far, but one day the errors might be more detailed
             switch (error.error) {
-            case 'email':
-                errors.add(property, `${error.user} is not a valid email.`);
+                case 'email':
+                    errors.add(property, `${error.user} is not a valid email.`);
             }
         });
 
@@ -123,9 +123,9 @@ export default Controller.extend({
 
     buttonClass: computed('validationResult', 'usersArray.length', function () {
         if (this.get('validationResult') === true && this.get('usersArray.length') > 0) {
-            return 'gh-btn-green';
+            return 'btn-green';
         } else {
-            return 'gh-btn-minor';
+            return 'btn-minor';
         }
     }),
 
@@ -164,15 +164,16 @@ export default Controller.extend({
                 this.get('authorRole').then((authorRole) => {
                     RSVP.Promise.all(
                         users.map((user) => {
-                            let invite = this.store.createRecord('invite', {
+                            let newUser = this.store.createRecord('user', {
                                 email: user,
+                                status: 'invited',
                                 role: authorRole
                             });
 
-                            return invite.save().then(() => {
+                            return newUser.save().then(() => {
                                 return {
                                     email: user,
-                                    success: invite.get('status') === 'sent'
+                                    success: newUser.get('status') === 'invited'
                                 };
                             }).catch(() => {
                                 return {

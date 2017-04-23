@@ -1,24 +1,26 @@
-/* eslint-env node */
-'use strict';
+/* jscs:disable */
+/* global require, module */
 
-const EmberApp = require('ember-cli/lib/broccoli/ember-app');
-const concat = require('broccoli-concat');
-const mergeTrees = require('broccoli-merge-trees');
-const uglify = require('broccoli-uglify-js');
-const CleanCSS = require('broccoli-clean-css');
-const environment = EmberApp.env();
-const isProduction = environment === 'production';
-let assetLocation, codemirrorAssets;
+var EmberApp = require('ember-cli/lib/broccoli/ember-app'),
+    concat = require('broccoli-concat'),
+    mergeTrees = require('broccoli-merge-trees'),
+    uglify = require('broccoli-uglify-js'),
+    cleanCSS = require('broccoli-clean-css'),
+    environment = EmberApp.env(),
+    isProduction = environment === 'production',
+    mythCompress = isProduction || environment === 'test',
+    disabled = {enabled: false},
+    assetLocation, codemirrorAssets;
 
 assetLocation = function (fileName) {
     if (isProduction) {
         fileName = fileName.replace('.', '.min.');
     }
-    return `/assets/${fileName}`;
+    return '/assets/' + fileName;
 };
 
 codemirrorAssets = function () {
-    let codemirrorFiles = [
+    var codemirrorFiles = [
         'lib/codemirror.css',
         'theme/xq-light.css',
         'lib/codemirror.js',
@@ -32,104 +34,67 @@ codemirrorAssets = function () {
         return {import: codemirrorFiles};
     }
 
-    let config = {};
+    return {
+        public: {
+            include: codemirrorFiles,
+            destDir: '/',
+            processTree: function (tree) {
+                var jsTree = concat(tree, {
+                    outputFile: 'assets/codemirror/codemirror.js',
+                    headerFiles: ['lib/codemirror.js'],
+                    inputFiles: ['mode/**/*']
+                });
 
-    config.public = {
-        include: codemirrorFiles,
-        destDir: '/',
-        processTree(tree) {
-            let jsTree = concat(tree, {
-                outputFile: 'assets/codemirror/codemirror.js',
-                headerFiles: ['lib/codemirror.js'],
-                inputFiles: ['mode/**/*'],
-                sourceMapConfig: {enabled: false}
-            });
+                var cssTree = concat(tree, {
+                    outputFile: 'assets/codemirror/codemirror.css',
+                    inputFiles: ['**/*.css']
+                });
 
-            let cssTree = concat(tree, {
-                outputFile: 'assets/codemirror/codemirror.css',
-                inputFiles: ['**/*.css']
-            });
+                if (isProduction) {
+                    jsTree = uglify(jsTree);
+                    cssTree = cleanCSS(cssTree);
+                }
 
-            if (isProduction) {
-                jsTree = uglify(jsTree);
-                cssTree = new CleanCSS(cssTree);
+                return mergeTrees([jsTree, cssTree]);
             }
-
-            return mergeTrees([tree, jsTree, cssTree]);
         }
     };
-
-    // put the files in vendor ready for importing into the test-support file
-    if (environment === 'development') {
-        config.vendor =  codemirrorFiles;
-    }
-
-    return config;
 };
 
-function postcssPlugins() {
-    let plugins = [{
-        module: require('postcss-easy-import')
-    }, {
-        module: require('postcss-custom-properties')
-    }, {
-        module: require('postcss-color-function')
-    }, {
-        module: require('autoprefixer'),
-        options: {
-            browsers: ['last 2 versions']
-        }
-    }];
-
-    if (isProduction) {
-        plugins.push({
-            module: require('cssnano')
-        });
-    }
-
-    return plugins;
-}
-
 module.exports = function (defaults) {
-    let app = new EmberApp(defaults, {
-        'ember-cli-babel': {
+    var app = new EmberApp(defaults, {
+        babel: {
             optional: ['es6.spec.symbols'],
             includePolyfill: true
         },
-        'ember-composable-helpers': {
-            only: ['toggle']
-        },
         outputPaths: {
             app: {
-                html: isProduction ? 'index.min.html' : 'index.html',
-                js: assetLocation('ghost.js'),
-                css: {
-                    app: assetLocation('ghost.css'),
-                    'app-dark': assetLocation('ghost-dark.css')
-                }
+                js: assetLocation('ghost.js')
             },
             vendor: {
                 js:  assetLocation('vendor.js'),
                 css: assetLocation('vendor.css')
             }
         },
-        postcssOptions: {
-            compile: {
-                enabled: true,
-                plugins: postcssPlugins()
-            }
+        mythOptions: {
+            source: './app/styles/app.css',
+            inputFile: 'app.css',
+            browsers: 'last 2 versions',
+            // @TODO: enable sourcemaps for development without including them in the release
+            sourcemap: false,
+            compress: mythCompress,
+            outputFile: isProduction ? 'ghost.min.css' : 'ghost.css'
         },
-        fingerprint: {enabled: true},
+        hinting: false,
+        fingerprint: disabled,
         nodeAssets: {
             'blueimp-md5': {
                 import: ['js/md5.js']
             },
             codemirror: codemirrorAssets(),
             'jquery-deparam': {
+                enabled: EmberApp.env() === 'test',
                 import: ['jquery-deparam.js']
-            },
-            'mobiledoc-kit': {
-                import: ['dist/amd/mobiledoc-kit.js', 'dist/amd/mobiledoc-kit.map']
             },
             moment: {
                 import: ['moment.js']
@@ -143,18 +108,6 @@ module.exports = function (defaults) {
         },
         'ember-cli-selectize': {
             theme: false
-        },
-        svg: {
-            paths: [
-                'public/assets/icons'
-            ],
-            optimize: {
-                plugins: [
-                    {removeDimensions: true},
-                    {removeTitle: true},
-                    {removeXMLNS: true}
-                ]
-            }
         }
     });
 
@@ -184,14 +137,8 @@ module.exports = function (defaults) {
     app.import('bower_components/google-caja/html-css-sanitizer-bundle.js');
     app.import('bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.js');
 
-    if (app.env !== 'production') {
-        app.import(`${app.bowerDirectory}/jquery.simulate.drag-sortable/jquery.simulate.drag-sortable.js`, {type: 'test'});
-    }
-
-    // pull things we rely on via lazy-loading into the test-support.js file so
-    // that tests don't break when running via http://localhost:4200/tests
-    if (app.env === 'development') {
-        app.import('vendor/codemirror/lib/codemirror.js', {type: 'test'});
+    if (app.env === 'test') {
+        app.import(app.bowerDirectory + '/jquery.simulate.drag-sortable/jquery.simulate.drag-sortable.js', {type: 'test'});
     }
 
     return app.toTree();

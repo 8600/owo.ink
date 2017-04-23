@@ -2,15 +2,19 @@ var _ = require('lodash'),
     Promise = require('bluebird'),
     moment = require('moment'),
     config = require('../config'),
-    pipeline = require(config.get('paths').corePath + '/server/utils/pipeline'),
-    dataProvider = require(config.get('paths').corePath + '/server/models'),
-    i18n = require(config.get('paths').corePath + '/server/i18n'),
-    errors = require(config.get('paths').corePath + '/server/errors'),
-    apiPosts = require(config.get('paths').corePath + '/server/api/posts'),
+    pipeline = require(config.paths.corePath + '/server/utils/pipeline'),
+    dataProvider = require(config.paths.corePath + '/server/models'),
+    i18n = require(config.paths.corePath + '/server/i18n'),
+    errors = require(config.paths.corePath + '/server/errors'),
+    apiPosts = require(config.paths.corePath + '/server/api/posts'),
     utils = require('./utils');
 
 /**
- * publish a scheduled post
+ * Publish a scheduled post
+ *
+ * `apiPosts.read` and `apiPosts.edit` must happen in one transaction.
+ * We lock the target row on fetch by using the `forUpdate` option.
+ * Read more in models/post.js - `onFetching`
  *
  * object.force: you can force publishing a post in the past (for example if your service was down)
  */
@@ -21,11 +25,11 @@ exports.publishPost = function publishPost(object, options) {
     }
 
     var post, publishedAtMoment,
-        publishAPostBySchedulerToleranceInMinutes = config.get('times').publishAPostBySchedulerToleranceInMinutes;
+        publishAPostBySchedulerToleranceInMinutes = config.times.publishAPostBySchedulerToleranceInMinutes;
 
     // CASE: only the scheduler client is allowed to publish (hardcoded because of missing client permission system)
     if (!options.context || !options.context.client || options.context.client !== 'ghost-scheduler') {
-        return Promise.reject(new errors.NoPermissionError({message: i18n.t('errors.permissions.noPermissionToAction')}));
+        return Promise.reject(new errors.NoPermissionError(i18n.t('errors.permissions.noPermissionToAction')));
     }
 
     options.context = {internal: true};
@@ -35,21 +39,32 @@ exports.publishPost = function publishPost(object, options) {
         function (cleanOptions) {
             cleanOptions.status = 'scheduled';
 
-            return apiPosts.read(cleanOptions)
-                .then(function (result) {
-                    post = result.posts[0];
-                    publishedAtMoment = moment(post.published_at);
+            return dataProvider.Base.transaction(function (transacting) {
+                cleanOptions.transacting = transacting;
+                cleanOptions.forUpdate = true;
 
-                    if (publishedAtMoment.diff(moment(), 'minutes') > publishAPostBySchedulerToleranceInMinutes) {
-                        return Promise.reject(new errors.NotFoundError({message: i18n.t('errors.api.job.notFound')}));
-                    }
+                // CASE: extend allowed options, see api/utils.js
+                cleanOptions.opts = ['forUpdate', 'transacting'];
 
-                    if (publishedAtMoment.diff(moment(), 'minutes') < publishAPostBySchedulerToleranceInMinutes * -1 && object.force !== true) {
-                        return Promise.reject(new errors.NotFoundError({message: i18n.t('errors.api.job.publishInThePast')}));
-                    }
+                return apiPosts.read(cleanOptions)
+                    .then(function (result) {
+                        post = result.posts[0];
+                        publishedAtMoment = moment(post.published_at);
 
-                    return apiPosts.edit({posts: [{status: 'published'}]}, _.pick(cleanOptions, ['context', 'id']));
-                });
+                        if (publishedAtMoment.diff(moment(), 'minutes') > publishAPostBySchedulerToleranceInMinutes) {
+                            return Promise.reject(new errors.NotFoundError(i18n.t('errors.api.job.notFound')));
+                        }
+
+                        if (publishedAtMoment.diff(moment(), 'minutes') < publishAPostBySchedulerToleranceInMinutes * -1 && object.force !== true) {
+                            return Promise.reject(new errors.NotFoundError(i18n.t('errors.api.job.publishInThePast')));
+                        }
+
+                        return apiPosts.edit({
+                            posts: [{status: 'published'}]},
+                            _.pick(cleanOptions, ['context', 'id', 'transacting', 'forUpdate', 'opts'])
+                        );
+                    });
+            });
         }
     ], options);
 };

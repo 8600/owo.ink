@@ -1,19 +1,24 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
+var should         = require('should'),
+    sinon          = require('sinon'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers'),
-
-    sandbox = sinon.sandbox.create();
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers');
 
 describe('{{#has}} helper', function () {
-    afterEach(function () {
-        sandbox.restore();
+    before(function () {
+        utils.loadHelpers();
+    });
+
+    it('has loaded has block helper', function () {
+        should.exist(handlebars.helpers.has);
     });
 
     it('should handle tag list that validates true', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'foo'}, {name: 'bar'}, {name: 'baz'}]},
@@ -25,8 +30,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle tags with case-insensitivity', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'ghost'}]},
@@ -38,8 +43,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should match exact tags, not superstrings', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'magical'}]},
@@ -51,8 +56,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should match exact tags, not substrings', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'magic'}]},
@@ -64,8 +69,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle tag list that validates false', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'foo'}, {name: 'bar'}, {name: 'baz'}]},
@@ -77,8 +82,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should not do anything if there are no attributes', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'foo'}, {name: 'bar'}, {name: 'baz'}]},
@@ -90,8 +95,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should not do anything when an invalid attribute is given', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {tags: [{name: 'foo'}, {name: 'bar'}, {name: 'baz'}]},
@@ -103,8 +108,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle author list that evaluates to true', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {author: {name: 'sam'}},
@@ -116,8 +121,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle author list that evaluates to false', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {author: {name: 'jamie'}},
@@ -129,8 +134,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle authors with case-insensitivity', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {author: {name: 'Sam'}},
@@ -142,8 +147,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle tags and authors like an OR query (pass)', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {author: {name: 'sam'}, tags: [{name: 'foo'}, {name: 'bar'}, {name: 'baz'}]},
@@ -155,8 +160,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle tags and authors like an OR query (pass)', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {author: {name: 'sam'}, tags: [{name: 'much'}, {name: 'bar'}, {name: 'baz'}]},
@@ -168,8 +173,8 @@ describe('{{#has}} helper', function () {
     });
 
     it('should handle tags and authors like an OR query (fail)', function () {
-        var fn = sandbox.spy(),
-            inverse = sandbox.spy();
+        var fn = sinon.spy(),
+            inverse = sinon.spy();
 
         helpers.has.call(
             {author: {name: 'fred'}, tags: [{name: 'foo'}, {name: 'bar'}, {name: 'baz'}]},

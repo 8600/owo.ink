@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import Mixin from 'ember-metal/mixin';
+import RSVP from 'rsvp';
 import run from 'ember-runloop';
 
 import ShortcutsRoute from 'ghost-admin/mixins/shortcuts-route';
@@ -51,19 +52,21 @@ export default Mixin.create(styleBody, ShortcutsRoute, {
             // so we abort the transition and retry after the save has completed.
             if (state.isSaving) {
                 transition.abort();
-                controller.get('generateSlug.last').then(() => {
-                    transition.retry();
-                });
+                return run.later(this, function () {
+                    RSVP.resolve(controller.get('lastPromise')).then(() => {
+                        transition.retry();
+                    });
+                }, 100);
             }
 
-            fromNewToEdit = this.get('routeName') === 'editor.new'
-                && transition.targetName === 'editor.edit'
-                && transition.intent.contexts
-                && transition.intent.contexts[0]
-                && transition.intent.contexts[0].id === model.get('id');
+            fromNewToEdit = this.get('routeName') === 'editor.new' &&
+                transition.targetName === 'editor.edit' &&
+                transition.intent.contexts &&
+                transition.intent.contexts[0] &&
+                transition.intent.contexts[0].id === model.get('id');
 
-            deletedWithoutChanges = state.isDeleted
-                && (state.isSaving || !state.hasDirtyAttributes);
+            deletedWithoutChanges = state.isDeleted &&
+                (state.isSaving || !state.hasDirtyAttributes);
 
             if (!fromNewToEdit && !deletedWithoutChanges && controllerIsDirty) {
                 transition.abort();
@@ -74,8 +77,8 @@ export default Mixin.create(styleBody, ShortcutsRoute, {
             // The controller may hold model state that will be lost in the transition,
             // so we need to apply it now.
             if (fromNewToEdit && controllerIsDirty) {
-                if (scratch !== model.get('mobiledoc')) {
-                    model.set('mobiledoc', scratch);
+                if (scratch !== model.get('markdown')) {
+                    model.set('markdown', scratch);
                 }
             }
 
@@ -89,6 +92,16 @@ export default Mixin.create(styleBody, ShortcutsRoute, {
             // remove model-related listeners created in editor-base-route
             this.detachModelHooks(controller, model);
         }
+    },
+
+    renderTemplate(controller, model) {
+        this._super(controller, model);
+
+        this.render('post-settings-menu', {
+            model,
+            into: 'application',
+            outlet: 'settings-menu'
+        });
     },
 
     attachModelHooks(controller, model) {
@@ -114,7 +127,7 @@ export default Mixin.create(styleBody, ShortcutsRoute, {
     setupController(controller, model) {
         let tags = model.get('tags');
 
-        model.set('scratch', model.get('mobiledoc'));
+        model.set('scratch', model.get('markdown'));
         model.set('titleScratch', model.get('title'));
 
         this._super(...arguments);

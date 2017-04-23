@@ -1,9 +1,20 @@
-var should = require('should'), // jshint ignore:line
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers');
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers');
 
 describe('{{author}} helper', function () {
+    before(function () {
+        utils.loadHelpers();
+    });
+
+    it('has loaded author helper', function () {
+        should.exist(handlebars.helpers.author);
+    });
+
     it('Returns the link to the author from the context', function () {
         var data = {author: {name: 'abc 123', slug: 'abc123', bio: '', website: '', status: '', location: ''}},
             result = helpers.author.call(data, {hash: {}});
@@ -27,12 +38,8 @@ describe('{{author}} helper', function () {
 
     it('Functions as block helper if called with #', function () {
         var data = {author: {name: 'abc 123', slug: 'abc123'}},
-            // including fn emulates the #
-            result = helpers.author.call(data, {
-                hash: {}, fn: function () {
-                    return 'FN';
-                }
-            });
+        // including fn emulates the #
+            result = helpers.author.call(data, {hash: {}, fn: function () { return 'FN'; }});
 
         // It outputs the result of fn
         String(result).should.equal('FN');

@@ -5,13 +5,13 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import $ from 'jquery';
 import run from 'ember-runloop';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-import {authenticateSession, invalidateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
-import {Response} from 'ember-cli-mirage';
+import { authenticateSession, currentSession, invalidateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
+import Mirage from 'ember-cli-mirage';
 import windowProxy from 'ghost-admin/utils/window-proxy';
 import ghostPaths from 'ghost-admin/utils/ghost-paths';
 import OAuth2Authenticator from 'ghost-admin/authenticators/oauth2';
@@ -30,22 +30,6 @@ describe('Acceptance: Authentication', function () {
         destroyApp(application);
     });
 
-    describe('setup redirect', function () {
-        beforeEach(function () {
-            server.get('authentication/setup', function () {
-                return {setup: [{status: false}]};
-            });
-        });
-
-        it('redirects to setup when setup isn\'t complete', function () {
-            visit('settings/labs');
-
-            andThen(() => {
-                expect(currentURL()).to.equal('/setup/one');
-            });
-        });
-    });
-
     describe('token handling', function () {
         beforeEach(function () {
             // replace the default test authenticator with our own authenticator
@@ -56,12 +40,11 @@ describe('Acceptance: Authentication', function () {
         });
 
         it('refreshes app tokens on boot', function () {
-            /* eslint-disable camelcase */
+            /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
             authenticateSession(application, {
                 access_token: 'testAccessToken',
                 refresh_token: 'refreshAccessToken'
             });
-            /* eslint-enable camelcase */
 
             visit('/');
 
@@ -76,8 +59,8 @@ describe('Acceptance: Authentication', function () {
                 expect(requestBody.grant_type, 'grant_type').to.equal('password');
                 expect(requestBody.username.access_token, 'access_token').to.equal('testAccessToken');
                 expect(requestBody.username.refresh_token, 'refresh_token').to.equal('refreshAccessToken');
-
             });
+            /* jscs:enable requireCamelCaseOrUpperCaseIdentifiers */
         });
     });
 
@@ -85,12 +68,12 @@ describe('Acceptance: Authentication', function () {
         beforeEach(function () {
             originalReplaceLocation = windowProxy.replaceLocation;
             windowProxy.replaceLocation = function (url) {
-                url = url.replace(/^\/ghost\//, '/');
                 visit(url);
             };
 
+            server.loadFixtures();
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role], slug: 'test-user'});
+            let user = server.create('user', {roles: [role], slug: 'test-user'});
         });
 
         afterEach(function () {
@@ -99,8 +82,8 @@ describe('Acceptance: Authentication', function () {
 
         it('invalidates session on 401 API response', function () {
             // return a 401 when attempting to retrieve users
-            server.get('/users/', () => {
-                return new Response(401, {}, {
+            server.get('/users/', (db, request) => {
+                return new Mirage.Response(401, {}, {
                     errors: [
                         {message: 'Access denied.', errorType: 'UnauthorizedError'}
                     ]
@@ -109,11 +92,6 @@ describe('Acceptance: Authentication', function () {
 
             authenticateSession(application);
             visit('/team');
-
-            andThen(() => {
-                // NOTE: seems to be a test issue where this is running
-                // mid transition
-            });
 
             andThen(() => {
                 expect(currentURL(), 'url after 401').to.equal('/signin');
@@ -151,8 +129,7 @@ describe('Acceptance: Authentication', function () {
         });
     });
 
-    // TODO: re-enable once modal reappears correctly
-    describe.skip('editor', function () {
+    describe('editor', function () {
         let origDebounce = run.debounce;
         let origThrottle = run.throttle;
 
@@ -164,31 +141,34 @@ describe('Acceptance: Authentication', function () {
 
         it('displays re-auth modal attempting to save with invalid session', function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
 
             // simulate an invalid session when saving the edited post
-            server.put('/posts/:id/', function ({posts}, {params}) {
-                let post = posts.find(params.id);
-                let attrs = this.normalizedRequestAttrs();
+            server.put('/posts/:id/', (db, request) => {
+                let post = db.posts.find(request.params.id);
+                let [attrs] = JSON.parse(request.requestBody).posts;
 
                 if (attrs.markdown === 'Edited post body') {
-                    return new Response(401, {}, {
+                    return new Mirage.Response(401, {}, {
                         errors: [
                             {message: 'Access denied.', errorType: 'UnauthorizedError'}
                         ]
                     });
                 } else {
-                    return post.update(attrs);
+                    return {
+                        posts: [post]
+                    };
                 }
             });
 
+            server.loadFixtures();
             authenticateSession(application);
 
             visit('/editor');
 
             // create the post
             fillIn('#entry-title', 'Test Post');
-            fillIn('.__mobiledoc-editor', 'Test post body');
+            fillIn('textarea.markdown-editor', 'Test post body');
             click('.js-publish-button');
 
             andThen(() => {
@@ -199,7 +179,7 @@ describe('Acceptance: Authentication', function () {
             });
 
             // update the post
-            fillIn('.__mobiledoc-editor', 'Edited post body');
+            fillIn('textarea.markdown-editor', 'Edited post body');
             click('.js-publish-button');
 
             andThen(() => {
@@ -217,19 +197,20 @@ describe('Acceptance: Authentication', function () {
 
     it('adds auth headers to jquery ajax', function (done) {
         let role = server.create('role', {name: 'Administrator'});
-        server.create('user', {roles: [role]});
+        let user = server.create('user', {roles: [role]});
 
-        server.post('/uploads', (schema, request) => {
+        server.post('/uploads', (db, request) => {
             return request;
         });
+        server.loadFixtures();
 
-        /* eslint-disable camelcase */
+        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
         authenticateSession(application, {
             access_token: 'test_token',
             expires_in: 3600,
             token_type: 'Bearer'
         });
-        /* eslint-enable camelcase */
+        // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 
         // necessary to visit a page to fully boot the app in testing
         visit('/').andThen(() => {

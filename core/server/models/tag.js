@@ -12,23 +12,26 @@ Tag = ghostBookshelf.Model.extend({
         events.emit('tag' + '.' + event, this);
     },
 
-    onCreated: function onCreated(model) {
-        model.emitChange('added');
+    initialize: function initialize() {
+        ghostBookshelf.Model.prototype.initialize.apply(this, arguments);
+
+        this.on('created', function onCreated(model) {
+            model.emitChange('added');
+        });
+        this.on('updated', function onUpdated(model) {
+            model.emitChange('edited');
+        });
+        this.on('destroyed', function onDestroyed(model) {
+            model.emitChange('deleted');
+        });
     },
 
-    onUpdated: function onUpdated(model) {
-        model.emitChange('edited');
-    },
-
-    onDestroyed: function onDestroyed(model) {
-        model.emitChange('deleted');
-    },
-
-    onSaving: function onSaving(newPage, attr, options) {
+    saving: function saving(newPage, attr, options) {
         /*jshint unused:false*/
+
         var self = this;
 
-        ghostBookshelf.Model.prototype.onSaving.apply(this, arguments);
+        ghostBookshelf.Model.prototype.saving.apply(this, arguments);
 
         if (this.hasChanged('slug') || !this.get('slug')) {
             // Pass the new slug through the generator to strip illegal characters, detect duplicates

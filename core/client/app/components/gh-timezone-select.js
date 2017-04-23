@@ -17,7 +17,7 @@ export default Component.extend({
         let activeTimezone = this.get('activeTimezone');
         let availableTimezoneNames = this.get('availableTimezoneNames');
 
-        return !availableTimezoneNames.includes(activeTimezone);
+        return !availableTimezoneNames.contains(activeTimezone);
     }),
 
     selectedTimezone: computed('activeTimezone', 'availableTimezones', 'hasTimezoneOverride', function () {

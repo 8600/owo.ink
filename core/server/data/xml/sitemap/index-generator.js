@@ -1,8 +1,8 @@
 var _       = require('lodash'),
     xml     = require('xml'),
     moment  = require('moment'),
-    utils  = require('../../../utils'),
-    localUtils   = require('./utils'),
+    config  = require('../../../config'),
+    utils   = require('./utils'),
     RESOURCES,
     XMLNS_DECLS;
 
@@ -28,14 +28,14 @@ _.extend(SiteMapIndexGenerator.prototype, {
             };
 
         // Return the xml
-        return localUtils.getDeclarations() + xml(data);
+        return utils.getDeclarations() + xml(data);
     },
 
     generateSiteMapUrlElements: function () {
         var self = this;
 
         return _.map(RESOURCES, function (resourceType) {
-            var url = utils.url.urlFor({
+            var url = config.urlFor({
                     relativeUrl: '/sitemap-' + resourceType + '.xml'
                 }, true),
                 lastModified = self[resourceType].lastModified;

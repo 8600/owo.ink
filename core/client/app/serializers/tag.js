@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import Ember from 'ember';
 import ApplicationSerializer from 'ghost-admin/serializers/application';
 
@@ -19,6 +19,7 @@ export default ApplicationSerializer.extend({
 
         // Properties that exist on the model but we don't want sent in the payload
 
+        delete data.uuid;
         delete data.count;
 
         hash[root] = [data];

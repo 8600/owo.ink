@@ -19,7 +19,6 @@ node_modules/**
 .git*
 .groc*
 .jshintrc
-.jscsrc
 *.iml
 config.js
 core/built/**/*.map
@@ -30,8 +29,6 @@ CONTRIBUTING.md
 SECURITY.md
 .travis.yml
 *.html
-!core/server/admin/views/**
 !core/server/mail/templates/**
 bower_components/**
 .editorconfig
-gulpfile.js

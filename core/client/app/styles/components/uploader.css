@@ -10,11 +10,10 @@
     margin: 1.6em 0;
     min-height: 130px;
     width: 100%;
-    background: #fff;
+    background: #f6f7f8;
     border-radius: 4px;
-    color: color(var(--midgrey) l(-18%));
+    color: #808284;
     text-align: center;
-    border-radius: 4px;
 }
 
 .gh-image-uploader.-drag-over {
@@ -64,7 +63,6 @@
     flex-grow: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
     outline: none;
 }
 
@@ -72,6 +70,51 @@
     width: 100%;
     text-align: center;
     font-size: 1.6rem;
+}
+
+.gh-image-uploader .image-upload,
+.gh-image-uploader .image-url {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    padding: 10px;
+    color: var(--midgrey);
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 12px;
+}
+
+.gh-image-uploader a {
+    color: var(--midgrey);
+    text-decoration: none;
+}
+
+.gh-image-uploader a:hover {
+    color: var(--darkgrey);
+}
+.gh-image-uploader .image-upload:hover,
+.gh-image-uploader .image-url:hover {
+    cursor: pointer;
+}
+
+.gh-image-uploader form {
+    padding: 55px 60px;
+    width: 100%;
+}
+
+.gh-image-uploader input.url {
+    margin: 0 0 10px 0;
+    padding: 9px 7px;
+    outline: 0;
+    background: #fff;
+    vertical-align: middle;
+    font: -webkit-small-control;
+    font-size: 1.4rem;
+}
+
+.gh-image-uploader input.url + .btn.btn-blue {
+    color: #fff;
 }
 
 .gh-image-uploader .image-cancel:hover {
@@ -113,7 +156,7 @@
 }
 
 /* Try Again button */
-.gh-image-uploader .gh-btn-green:last-child {
+.gh-image-uploader .btn-green:last-child {
     margin-top: 1em;
     margin-bottom: 3em;
 }

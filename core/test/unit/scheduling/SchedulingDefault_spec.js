@@ -1,13 +1,12 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    config = require(__dirname + '/../../../server/config'),
+var config = require(__dirname + '/../../../server/config'),
     moment = require('moment'),
     _ = require('lodash'),
+    should = require('should'),
     express = require('express'),
     bodyParser = require('body-parser'),
     http = require('http'),
-    SchedulingDefault = require(config.get('paths').corePath + '/server/scheduling/SchedulingDefault'),
-
+    sinon = require('sinon'),
+    SchedulingDefault = require(config.paths.corePath + '/server/scheduling/SchedulingDefault'),
     sandbox = sinon.sandbox.create();
 
 describe('Scheduling Default Adapter', function () {

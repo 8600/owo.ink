@@ -27,14 +27,12 @@
         <div class="form-group for-select">
             <label for="new-user-role">Role</label>
             <span class="gh-select" tabindex="0">
-                {{one-way-select
-                    id="new-user-role"
-                    name="role"
-                    options=roles
+                {{gh-select-native id="new-user-role"
+                    content=roles
                     optionValuePath="id"
                     optionLabelPath="name"
-                    value=role
-                    update=(action "setRole")
+                    selection=role
+                    action="setRole"
                 }}
             </span>
         </div>
@@ -42,5 +40,5 @@
 </div>
 
 <div class="modal-footer">
-    {{gh-task-button "Send invitation now" successText="Sent" task=sendInvitation class="gh-btn gh-btn-green"}}
+    {{#gh-spin-button action="confirm" class="btn btn-green" submitting=submitting}}Send invitation now{{/gh-spin-button}}
 </div>

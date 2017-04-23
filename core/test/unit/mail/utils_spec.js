@@ -1,5 +1,4 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
+var sinon = require('sinon'),
     mail = require('../../../server/mail'),
     sandbox = sinon.sandbox.create();
 
@@ -30,11 +29,11 @@ describe('Mail: Utils', function () {
         mail.utils.generateContent({
             template: 'welcome',
             data: {
-                ownerEmail: 'test@example.com'
+                ownerEmail: 'kate@ghost.org'
             }
         }).then(function (result) {
             return scope.ghostMailer.send({
-                to: 'test@example.com',
+                to: 'kate@ghost.org',
                 subject: 'lol',
                 html: result.html,
                 text: result.text
@@ -105,7 +104,7 @@ describe('Mail: Utils', function () {
             }
         }).then(function (result) {
             return scope.ghostMailer.send({
-                to: 'jbloggs@example.com',
+                to: 'aileen@ghost.org',
                 subject: 'The Newsletter Blog',
                 html: result.html,
                 text: result.text

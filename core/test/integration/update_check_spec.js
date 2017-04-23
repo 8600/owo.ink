@@ -1,25 +1,25 @@
-var should      = require('should'),
-    _           = require('lodash'),
+var _           = require('lodash'),
+    testUtils   = require('../utils'),
+    should      = require('should'),
     rewire      = require('rewire'),
     uuid        = require('uuid'),
-    testUtils   = require('../utils'),
-    configUtils      = require('../utils/configUtils'),
+
+    // Stuff we are testing
     packageInfo      = require('../../../package'),
     updateCheck      = rewire('../../server/update-check'),
     NotificationsAPI = require('../../server/api/notifications');
 
 describe('Update Check', function () {
-    after(function () {
-        return NotificationsAPI.destroyAll(testUtils.context.internal);
-    });
-
     describe('Reporting to UpdateCheck', function () {
+        var environmentsOrig;
+
         before(function () {
-            configUtils.set('privacy:useUpdateCheck', true);
+            environmentsOrig = updateCheck.__get__('allowedCheckEnvironments');
+            updateCheck.__set__('allowedCheckEnvironments', ['development', 'production', 'testing']);
         });
 
         after(function () {
-            configUtils.restore();
+            updateCheck.__set__('allowedCheckEnvironments', environmentsOrig);
         });
 
         beforeEach(testUtils.setup('owner', 'posts', 'perms:setting', 'perms:user', 'perms:init'));
@@ -34,7 +34,7 @@ describe('Update Check', function () {
                 data.ghost_version.should.equal(packageInfo.version);
                 data.node_version.should.equal(process.versions.node);
                 data.env.should.equal(process.env.NODE_ENV);
-                data.database_type.should.match(/sqlite3|mysql/);
+                data.database_type.should.match(/sqlite3|pg|mysql/);
                 data.blog_id.should.be.a.String();
                 data.blog_id.should.not.be.empty();
                 data.theme.should.be.equal('casper');
@@ -44,7 +44,6 @@ describe('Update Check', function () {
                 data.post_count.should.be.above(0);
                 data.npm_version.should.be.a.String();
                 data.npm_version.should.not.be.empty();
-                data.lts.should.eql(false);
 
                 done();
             }).catch(done);

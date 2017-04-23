@@ -1,23 +1,20 @@
-var should = require('should'),
-    supertest = require('supertest'),
-    testUtils = require('../../../utils'),
-    _ = require('lodash'),
-    ObjectId = require('bson-objectid'),
-    config = require('../../../../../core/server/config'),
-    ghost = testUtils.startGhost,
+var testUtils     = require('../../../utils'),
+    should        = require('should'),
+    supertest     = require('supertest'),
+    _             = require('lodash'),
+
+    ghost         = require('../../../../../core'),
+
     request;
 
 describe('Post API', function () {
-    var accesstoken = '', ghostServer;
+    var accesstoken = '';
 
     before(function (done) {
         // starting ghost automatically populates the db
         // TODO: prevent db init, and manage bringing up the DB with fixtures ourselves
-        ghost().then(function (_ghostServer) {
-            ghostServer = _ghostServer;
-            return ghostServer.start();
-        }).then(function () {
-            request = supertest.agent(config.get('url'));
+        ghost().then(function (ghostServer) {
+            request = supertest.agent(ghostServer.rootApp);
         }).then(function () {
             return testUtils.doAuth(request, 'posts');
         }).then(function (token) {
@@ -26,11 +23,10 @@ describe('Post API', function () {
         }).catch(done);
     });
 
-    after(function () {
-        return testUtils.clearData()
-            .then(function () {
-                return ghostServer.stop();
-            });
+    after(function (done) {
+        testUtils.clearData().then(function () {
+            done();
+        }).catch(done);
     });
 
     describe('Browse', function () {
@@ -196,7 +192,7 @@ describe('Post API', function () {
     // ## Read
     describe('Read', function () {
         it('can retrieve a post by id', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/1/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -211,13 +207,13 @@ describe('Post API', function () {
                     should.exist(jsonResponse);
                     should.exist(jsonResponse.posts);
                     testUtils.API.checkResponse(jsonResponse.posts[0], 'post');
-                    jsonResponse.posts[0].id.should.equal(testUtils.DataGenerator.Content.posts[0].id);
+                    jsonResponse.posts[0].id.should.equal(1);
                     jsonResponse.posts[0].page.should.not.be.ok();
                     _.isBoolean(jsonResponse.posts[0].featured).should.eql(true);
                     _.isBoolean(jsonResponse.posts[0].page).should.eql(true);
-                    jsonResponse.posts[0].author.should.be.a.String();
+                    jsonResponse.posts[0].author.should.be.a.Number();
                     testUtils.API.isISO8601(jsonResponse.posts[0].created_at).should.be.true();
-                    jsonResponse.posts[0].created_by.should.be.a.String();
+                    jsonResponse.posts[0].created_by.should.be.a.Number();
                     // Tags aren't included by default
                     should.not.exist(jsonResponse.posts[0].tags);
                     done();
@@ -244,8 +240,8 @@ describe('Post API', function () {
                     jsonResponse.posts[0].page.should.not.be.ok();
                     _.isBoolean(jsonResponse.posts[0].featured).should.eql(true);
                     _.isBoolean(jsonResponse.posts[0].page).should.eql(true);
-                    jsonResponse.posts[0].author.should.be.a.String();
-                    jsonResponse.posts[0].created_by.should.be.a.String();
+                    jsonResponse.posts[0].author.should.be.a.Number();
+                    jsonResponse.posts[0].created_by.should.be.a.Number();
                     // Tags aren't included by default
                     should.not.exist(jsonResponse.posts[0].tags);
                     done();
@@ -253,7 +249,7 @@ describe('Post API', function () {
         });
 
         it('can retrieve a post with author, created_by, and tags', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/?include=author,tags,created_by'))
+            request.get(testUtils.API.getApiQuery('posts/1/?include=author,tags,created_by'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -279,7 +275,7 @@ describe('Post API', function () {
         });
 
         it('can retrieve next and previous posts', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[2].id + '/?include=next,previous'))
+            request.get(testUtils.API.getApiQuery('posts/3/?include=next,previous'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -305,7 +301,7 @@ describe('Post API', function () {
         });
 
         it('can retrieve a static page', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[5].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/7/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -329,7 +325,6 @@ describe('Post API', function () {
         it('can\'t retrieve non existent post', function (done) {
             request.get(testUtils.API.getApiQuery('posts/99/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
-                .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
                 .expect(404)
@@ -350,7 +345,6 @@ describe('Post API', function () {
         it('can\'t retrieve a draft post', function (done) {
             request.get(testUtils.API.getApiQuery('posts/5/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
-                .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
                 .expect(404)
@@ -371,7 +365,6 @@ describe('Post API', function () {
         it('can\'t retrieve a draft page', function (done) {
             request.get(testUtils.API.getApiQuery('posts/8/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
-                .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
                 .expect(404)
@@ -535,7 +528,7 @@ describe('Post API', function () {
     // ## edit
     describe('Edit', function () {
         it('can edit a post', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/?include=tags'))
+            request.get(testUtils.API.getApiQuery('posts/1/?include=tags'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -546,13 +539,12 @@ describe('Post API', function () {
 
                     var jsonResponse = res.body,
                         changedTitle = 'My new Title',
-                        changedAuthor = ObjectId.generate();
-
+                        changedAuthor = 2;
                     should.exist(jsonResponse.posts[0]);
                     jsonResponse.posts[0].title = changedTitle;
                     jsonResponse.posts[0].author = changedAuthor;
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/1/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -666,7 +658,7 @@ describe('Post API', function () {
         });
 
         it('can change a post to a static page', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/?include=tags'))
+            request.get(testUtils.API.getApiQuery('posts/1/?include=tags'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -681,7 +673,7 @@ describe('Post API', function () {
                     jsonResponse.posts[0].page.should.not.be.ok();
                     jsonResponse.posts[0].page = true;
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/1/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -704,7 +696,7 @@ describe('Post API', function () {
         });
 
         it('can change a static page to a post', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[5].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/7/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -719,7 +711,7 @@ describe('Post API', function () {
                     jsonResponse.posts[0].page.should.be.ok();
                     jsonResponse.posts[0].page = false;
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[5].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/7/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -742,7 +734,7 @@ describe('Post API', function () {
         });
 
         it('can\'t edit post with invalid page field', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[5].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/7/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -757,7 +749,7 @@ describe('Post API', function () {
                     jsonResponse.posts[0].page.should.eql(false);
                     jsonResponse.posts[0].page = changedValue;
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[5].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/7/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -778,7 +770,7 @@ describe('Post API', function () {
         });
 
         it('can\'t edit a post with invalid accesstoken', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/1/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -789,7 +781,7 @@ describe('Post API', function () {
                     }
 
                     var jsonResponse = res.body;
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/1/'))
                         .set('Authorization', 'Bearer ' + 'invalidtoken')
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -807,7 +799,7 @@ describe('Post API', function () {
         });
 
         it('throws an error if there is an id mismatch', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/1/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -819,7 +811,7 @@ describe('Post API', function () {
                     var jsonResponse = res.body;
                     should.exist(jsonResponse);
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[1].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/2/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -837,7 +829,7 @@ describe('Post API', function () {
         });
 
         it('published_at = null', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/?include=tags'))
+            request.get(testUtils.API.getApiQuery('posts/1/?include=tags'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -852,7 +844,7 @@ describe('Post API', function () {
                     jsonResponse.title = changedValue;
                     jsonResponse.published_at = null;
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/1/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -879,7 +871,7 @@ describe('Post API', function () {
         });
 
         it('can\'t edit non existent post', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[0].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/1/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -892,9 +884,8 @@ describe('Post API', function () {
                         changedValue = 'My new Title';
                     should.exist(jsonResponse.posts[0].title);
                     jsonResponse.posts[0].testvalue = changedValue;
-                    jsonResponse.posts[0].id = ObjectId.generate();
-
-                    request.put(testUtils.API.getApiQuery('posts/' + jsonResponse.posts[0].id + '/'))
+                    jsonResponse.posts[0].id = 99;
+                    request.put(testUtils.API.getApiQuery('posts/99/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .send(jsonResponse)
                         .expect('Content-Type', /json/)
@@ -918,8 +909,7 @@ describe('Post API', function () {
     // ## delete
     describe('Delete', function () {
         it('can delete a post', function (done) {
-            var deletePostId = testUtils.DataGenerator.Content.posts[0].id;
-
+            var deletePostId = 1;
             request.del(testUtils.API.getApiQuery('posts/' + deletePostId + '/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -937,9 +927,8 @@ describe('Post API', function () {
         });
 
         it('can\'t delete a non existent post', function (done) {
-            request.del(testUtils.API.getApiQuery('posts/' + ObjectId.generate() + '/'))
+            request.del(testUtils.API.getApiQuery('posts/99/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
-                .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
                 .expect(404)
@@ -1057,7 +1046,7 @@ describe('Post API', function () {
 
         it('Can read a post', function (done) {
             // nothing should have changed here
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[1].id + '/'))
+            request.get(testUtils.API.getApiQuery('posts/2/'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -1080,7 +1069,7 @@ describe('Post API', function () {
         });
 
         it('Can edit a post', function (done) {
-            request.get(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[1].id + '/?include=tags'))
+            request.get(testUtils.API.getApiQuery('posts/2/?include=tags'))
                 .set('Authorization', 'Bearer ' + accesstoken)
                 .expect('Content-Type', /json/)
                 .expect('Cache-Control', testUtils.cacheRules.private)
@@ -1095,7 +1084,7 @@ describe('Post API', function () {
                     should.exist(jsonResponse.posts);
                     jsonResponse.posts[0].title = changedValue;
 
-                    request.put(testUtils.API.getApiQuery('posts/' + testUtils.DataGenerator.Content.posts[1].id + '/'))
+                    request.put(testUtils.API.getApiQuery('posts/2/'))
                         .set('Authorization', 'Bearer ' + accesstoken)
                         .expect('Content-Type', /json/)
                         .expect('Cache-Control', testUtils.cacheRules.private)

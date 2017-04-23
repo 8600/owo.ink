@@ -1,6 +1,8 @@
-import {expect} from 'chai';
-import {describe, it} from 'mocha';
-import {setupTest} from 'ember-mocha';
+import { expect } from 'chai';
+import {
+    describeModule,
+    it
+} from 'ember-mocha';
 import Pretender from 'pretender';
 import {dasherize} from 'ember-string';
 
@@ -17,39 +19,42 @@ function stubSlugEndpoint(server, type, slug) {
     });
 }
 
-describe('Integration: Service: slug-generator', function () {
-    setupTest('service:slug-generator', {
+describeModule(
+    'service:slug-generator',
+    'Integration: Service: slug-generator',
+    {
         integration: true
-    });
+    },
+    function () {
+        let server;
 
-    let server;
-
-    beforeEach(function () {
-        server = new Pretender();
-    });
-
-    afterEach(function () {
-        server.shutdown();
-    });
-
-    it('returns empty if no slug is provided', function (done) {
-        let service = this.subject();
-
-        service.generateSlug('post', '').then(function (slug) {
-            expect(slug).to.equal('');
-            done();
+        beforeEach(function () {
+            server = new Pretender();
         });
-    });
 
-    it('calls correct endpoint and returns correct data', function (done) {
-        let rawSlug = 'a test post';
-        stubSlugEndpoint(server, 'post', rawSlug);
-
-        let service = this.subject();
-
-        service.generateSlug('post', rawSlug).then(function (slug) {
-            expect(slug).to.equal(dasherize(rawSlug));
-            done();
+        afterEach(function () {
+            server.shutdown();
         });
-    });
-});
+
+        it('returns empty if no slug is provided', function (done) {
+            let service = this.subject();
+
+            service.generateSlug('post', '').then(function (slug) {
+                expect(slug).to.equal('');
+                done();
+            });
+        });
+
+        it('calls correct endpoint and returns correct data', function (done) {
+            let rawSlug = 'a test post';
+            stubSlugEndpoint(server, 'post', rawSlug);
+
+            let service = this.subject();
+
+            service.generateSlug('post', rawSlug).then(function (slug) {
+                expect(slug).to.equal(dasherize(rawSlug));
+                done();
+            });
+        });
+    }
+);

@@ -14,14 +14,13 @@ export default ModalComponent.extend({
 
     accept: ['application/zip', 'application/x-zip-compressed'],
     extensions: ['zip'],
-    themes: null,
+    availableThemes: null,
     closeDisabled: false,
     file: null,
     theme: false,
     displayOverwriteWarning: false,
 
     eventBus: injectService(),
-    store: injectService(),
 
     hideUploader: or('theme', 'displayOverwriteWarning'),
 
@@ -30,13 +29,12 @@ export default ModalComponent.extend({
     }),
 
     themeName: computed('theme.{name,package.name}', function () {
-        let themePackage = this.get('theme.package');
-        let name = this.get('theme.name');
+        let t = this.get('theme');
 
-        return themePackage ? `${themePackage.name} - ${themePackage.version}` : name;
+        return t.package ? `${t.package.name} - ${t.package.version}` : t.name;
     }),
 
-    currentThemeNames: mapBy('model.themes', 'name'),
+    availableThemeNames: mapBy('model.availableThemes', 'name'),
 
     fileThemeName: computed('file', function () {
         let file = this.get('file');
@@ -45,14 +43,14 @@ export default ModalComponent.extend({
 
     canActivateTheme: computed('theme', function () {
         let theme = this.get('theme');
-        return theme && !theme.get('active');
+        return theme && !theme.active;
     }),
 
     actions: {
         validateTheme(file) {
-            let themeName = file.name.replace(/\.zip$/, '').replace(/[^\w@.]/gi, '-').toLowerCase();
+            let themeName = file.name.replace(/\.zip$/, '').replace(/[^\w@.]/gi, '-');
 
-            let currentThemeNames = this.get('currentThemeNames');
+            let availableThemeNames = this.get('availableThemeNames');
 
             this.set('file', file);
 
@@ -67,7 +65,7 @@ export default ModalComponent.extend({
                 return {errors: [{message: 'Sorry, the default Casper theme cannot be overwritten.<br>Please rename your zip file and try again.'}]};
             }
 
-            if (!this._allowOverwrite && currentThemeNames.includes(themeName)) {
+            if (!this._allowOverwrite && availableThemeNames.includes(themeName)) {
                 this.set('displayOverwriteWarning', true);
                 return false;
             }
@@ -95,18 +93,16 @@ export default ModalComponent.extend({
         },
 
         uploadSuccess(response) {
-            this.get('store').pushPayload(response);
-
-            let theme = this.get('store').peekRecord('theme', response.themes[0].name);
+            let [theme] = response.themes;
 
             this.set('theme', theme);
 
             if (get(theme, 'warnings.length') > 0) {
-                this.set('validationWarnings', get(theme, 'warnings'));
+                this.set('validationWarnings', theme.warnings);
             }
 
             // invoke the passed in confirm action
-            invokeAction(this, 'model.uploadSuccess', theme);
+            invokeAction(this, 'model.uploadSuccess', this.get('theme'));
         },
 
         uploadFailed(error) {

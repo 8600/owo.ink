@@ -5,11 +5,20 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-import {authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
-import {versionMismatchResponse} from 'ghost-admin/mirage/utils';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
+import Mirage from 'ember-cli-mirage';
+
+let versionMismatchResponse = function () {
+    return new Mirage.Response(400, {}, {
+        errors: [{
+            errorType: 'VersionMismatchError',
+            statusCode: 400
+        }]
+    });
+};
 
 describe('Acceptance: Version Mismatch', function() {
     let application;
@@ -25,7 +34,9 @@ describe('Acceptance: Version Mismatch', function() {
     describe('logged in', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
+
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -38,6 +49,7 @@ describe('Acceptance: Version Mismatch', function() {
 
             visit('/');
             click('.posts-list li:nth-of-type(2) a'); // select second post
+            click('.post-edit'); // preview edit button
             click('.js-publish-button'); // "Save post"
 
             andThen(() => {
@@ -55,18 +67,15 @@ describe('Acceptance: Version Mismatch', function() {
         });
 
         it('displays alert and aborts the transition when navigating', function () {
+            // mock the tags endpoint to return version mismatch
+            server.get('/tags/', versionMismatchResponse);
+
             visit('/');
-
-            andThen(() => {
-                // mock the tags endpoint to return version mismatch
-                server.get('/tags/', versionMismatchResponse);
-            });
-
             click('.gh-nav-settings-tags');
 
             andThen(() => {
-                // navigation is blocked on loading screen
-                expect(currentPath()).to.equal('settings.tags_loading');
+                // navigation is blocked
+                expect(currentPath()).to.equal('posts.index');
 
                 // has the refresh to update alert
                 expect(find('.gh-alert').length).to.equal(1);
@@ -82,7 +91,7 @@ describe('Acceptance: Version Mismatch', function() {
 
             andThen(() => {
                 // navigation is blocked
-                expect(currentPath()).to.equal('settings.general_loading');
+                expect(currentPath()).to.equal('settings.tags.index');
 
                 // has the refresh to update alert
                 expect(find('.gh-alert').length).to.equal(1);
@@ -94,7 +103,7 @@ describe('Acceptance: Version Mismatch', function() {
             server.post('/subscribers/csv/', versionMismatchResponse);
 
             visit('/subscribers');
-            click('.gh-btn:contains("Import CSV")');
+            click('.btn:contains("Import CSV")');
             fileUpload('.fullscreen-modal input[type="file"]', ['test'], {name: 'test.csv'});
 
             andThen(() => {
@@ -112,7 +121,7 @@ describe('Acceptance: Version Mismatch', function() {
             visit('/signin');
             fillIn('[name="identification"]', 'test@example.com');
             fillIn('[name="password"]', 'password');
-            click('.gh-btn-blue');
+            click('.btn-blue');
 
             andThen(() => {
                 // has the refresh to update alert

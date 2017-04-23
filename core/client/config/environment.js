@@ -1,12 +1,12 @@
-/* eslint-env node */
-'use strict';
+/* jshint node: true */
+/* jscs:disable */
 
 module.exports = function (environment) {
-    let ENV = {
+    var ENV = {
         modulePrefix: 'ghost-admin',
-        environment,
+        environment: environment,
         rootURL: '/',
-        locationType: 'trailing-hash',
+        locationType: 'trailing-history',
         EmberENV: {
             FEATURES: {
                 // Here you can enable experimental features on an ember canary build
@@ -32,11 +32,9 @@ module.exports = function (environment) {
         },
 
         'ember-simple-auth': {
-
-        },
-
-        torii: {
-
+            authenticationRoute: 'signin',
+            routeAfterAuthentication: 'posts',
+            routeIfAlreadyAuthenticated: 'posts'
         }
     };
 

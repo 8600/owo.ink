@@ -1,4 +1,5 @@
 import Component from 'ember-component';
+import RSVP from 'rsvp';
 import injectService from 'ember-service/inject';
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
 import {formatDate} from 'ghost-admin/utils/date-formatting';
@@ -12,17 +13,21 @@ export default Component.extend(InvokeActionMixin, {
     inputClass: null,
     inputId: null,
     inputName: null,
-    settings: injectService(),
+    timeZone: injectService(),
 
     didReceiveAttrs() {
-        let datetime = this.get('datetime') || moment.utc();
-        let blogTimezone = this.get('settings.activeTimezone');
+        let promises = {
+            datetime: RSVP.resolve(this.get('datetime') || moment.utc()),
+            blogTimezone: RSVP.resolve(this.get('timeZone.blogTimezone'))
+        };
 
         if (!this.get('update')) {
             throw new Error(`You must provide an \`update\` action to \`{{${this.templateName}}}\`.`);
         }
 
-        this.set('datetime', formatDate(datetime || moment.utc(), blogTimezone));
+        RSVP.hash(promises).then((hash) => {
+            this.set('datetime', formatDate(hash.datetime || moment.utc(), hash.blogTimezone));
+        });
     },
 
     focusOut() {

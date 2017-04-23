@@ -1,21 +1,19 @@
-var should = require('should'),
-    supertest = require('supertest'),
-    testUtils = require('../../../utils'),
-    config = require('../../../../../core/server/config'),
-    ghost = testUtils.startGhost,
+var testUtils     = require('../../../utils'),
+    should        = require('should'),
+    supertest     = require('supertest'),
+
+    ghost         = require('../../../../../core'),
+
     request;
 
 describe('Tag API', function () {
-    var accesstoken = '', ghostServer;
+    var accesstoken = '';
 
     before(function (done) {
         // starting ghost automatically populates the db
         // TODO: prevent db init, and manage bringing up the DB with fixtures ourselves
-        ghost().then(function (_ghostServer) {
-            ghostServer = _ghostServer;
-            return ghostServer.start();
-        }).then(function () {
-            request = supertest.agent(config.get('url'));
+        ghost().then(function (ghostServer) {
+            request = supertest.agent(ghostServer.rootApp);
         }).then(function () {
             return testUtils.doAuth(request, 'posts');
         }).then(function (token) {
@@ -24,11 +22,10 @@ describe('Tag API', function () {
         }).catch(done);
     });
 
-    after(function () {
-        return testUtils.clearData()
-            .then(function () {
-                return ghostServer.stop();
-            });
+    after(function (done) {
+        testUtils.clearData().then(function () {
+            done();
+        }).catch(done);
     });
 
     it('can retrieve all tags', function (done) {

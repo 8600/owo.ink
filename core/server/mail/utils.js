@@ -3,7 +3,7 @@ var _ = require('lodash').runInContext(),
     Promise = require('bluebird'),
     path = require('path'),
     htmlToText = require('html-to-text'),
-    utils = require('../utils'),
+    config = require('../config'),
     templatesDir = path.resolve(__dirname, '..', 'mail', 'templates');
 
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
@@ -13,7 +13,7 @@ exports.generateContent = function generateContent(options) {
         data;
 
     defaults = {
-        siteUrl: utils.url.urlFor('home', true)
+        siteUrl: config.forceAdminSSL ? (config.urlSSL || config.url) : config.url
     };
 
     data = _.defaults(defaults, options.data);

@@ -8,8 +8,10 @@ var Promise       = require('bluebird'),
     Models        = require('../models'),
     utils         = require('./utils'),
     notifications = require('./notifications'),
-    i18n          = require('../i18n'),
     docName       = 'mail',
+    i18n          = require('../i18n'),
+    mode          = process.env.NODE_ENV,
+    testing       = mode !== 'production' && mode !== 'development',
     mailer,
     apiMail;
 
@@ -17,7 +19,7 @@ var Promise       = require('bluebird'),
  * Send mail helper
  */
 function sendMail(object) {
-    if (!(mailer instanceof mail.GhostMailer)) {
+    if (!(mailer instanceof mail.GhostMailer) || testing) {
         mailer = new mail.GhostMailer();
     }
 
@@ -36,7 +38,7 @@ function sendMail(object) {
             );
         }
 
-        return Promise.reject(new errors.EmailError({err: err}));
+        return Promise.reject(new errors.EmailError(err.message));
     });
 }
 

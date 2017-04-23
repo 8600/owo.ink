@@ -1,15 +1,16 @@
 /* jshint expr:true */
-import {expect} from 'chai';
+import { expect } from 'chai';
 import {
     describe,
     it
 } from 'mocha';
 import EmberObject from 'ember-object';
 import RSVP from 'rsvp';
-import run from 'ember-runloop';
+import run, {later} from 'ember-runloop';
 import {task} from 'ember-concurrency';
 import EditorBaseControllerMixin from 'ghost-admin/mixins/editor-base-controller';
-import wait from 'ember-test-helpers/wait';
+
+const {resolve} = RSVP;
 
 describe('Unit: Mixin: editor-base-controller', function() {
     describe('generateSlug', function () {
@@ -25,15 +26,16 @@ describe('Unit: Mixin: editor-base-controller', function() {
 
             object.set('model.titleScratch', 'title');
 
-            expect(object.get('model.slug')).to.equal('');
-
             run(() => {
-                object.get('generateSlug').perform();
-            });
+                let promise = object.get('generateSlug').perform();
 
-            wait().then(() => {
-                expect(object.get('model.slug')).to.equal('title-slug');
-                done();
+                expect(object.get('model.slug')).to.equal('');
+
+                promise.then(() => {
+                    expect(object.get('model.slug')).to.equal('title-slug');
+
+                    done();
+                }).catch(done);
             });
         });
 
@@ -54,12 +56,11 @@ describe('Unit: Mixin: editor-base-controller', function() {
             object.set('model.titleScratch', '(Untitled)');
 
             run(() => {
-                object.get('generateSlug').perform();
-            });
+                object.get('generateSlug').perform().then(() => {
+                    expect(object.get('model.slug')).to.equal('whatever');
 
-            wait().then(() => {
-                expect(object.get('model.slug')).to.equal('whatever');
-                done();
+                    done();
+                }).catch(done);
             });
         });
     });
@@ -70,7 +71,7 @@ describe('Unit: Mixin: editor-base-controller', function() {
                 model: EmberObject.create({isNew: true}),
                 generateSlug: task(function* () {
                     this.set('model.slug', 'test-slug');
-                    yield RSVP.resolve();
+                    yield resolve();
                 })
             }).create();
 
@@ -79,12 +80,13 @@ describe('Unit: Mixin: editor-base-controller', function() {
 
             run(() => {
                 object.get('updateTitle').perform('test');
-            });
 
-            wait().then(() => {
-                expect(object.get('model.titleScratch')).to.equal('test');
-                expect(object.get('model.slug')).to.equal('test-slug');
-                done();
+                later(() => {
+                    expect(object.get('model.titleScratch')).to.equal('test');
+                    expect(object.get('model.slug')).to.equal('test-slug');
+
+                    done();
+                }, 800);
             });
         });
 
@@ -93,7 +95,7 @@ describe('Unit: Mixin: editor-base-controller', function() {
                 model: EmberObject.create({isNew: false}),
                 generateSlug: task(function* () {
                     this.set('model.slug', 'test-slug');
-                    yield RSVP.resolve();
+                    yield resolve();
                 })
             }).create();
 
@@ -102,12 +104,13 @@ describe('Unit: Mixin: editor-base-controller', function() {
 
             run(() => {
                 object.get('updateTitle').perform('(Untitled)');
-            });
 
-            wait().then(() => {
-                expect(object.get('model.titleScratch')).to.equal('(Untitled)');
-                expect(object.get('model.slug')).to.equal('test-slug');
-                done();
+                later(() => {
+                    expect(object.get('model.titleScratch')).to.equal('(Untitled)');
+                    expect(object.get('model.slug')).to.equal('test-slug');
+
+                    done();
+                }, 800);
             });
         });
 
@@ -120,7 +123,7 @@ describe('Unit: Mixin: editor-base-controller', function() {
                 generateSlug: task(function* () {
                     expect(false, 'generateSlug should not be called').to.equal(true);
 
-                    yield RSVP.resolve();
+                    yield resolve();
                 })
             }).create();
 
@@ -130,12 +133,13 @@ describe('Unit: Mixin: editor-base-controller', function() {
 
             run(() => {
                 object.get('updateTitle').perform('test');
-            });
 
-            wait().then(() => {
-                expect(object.get('model.titleScratch')).to.equal('test');
-                expect(object.get('model.slug')).to.not.be.ok;
-                done();
+                later(() => {
+                    expect(object.get('model.titleScratch')).to.equal('test');
+                    expect(object.get('model.slug')).to.not.be.ok;
+
+                    done();
+                }, 800);
             });
         });
 
@@ -145,7 +149,7 @@ describe('Unit: Mixin: editor-base-controller', function() {
                 generateSlug: task(function* () {
                     expect(false, 'generateSlug should not be called').to.equal(true);
 
-                    yield RSVP.resolve();
+                    yield resolve();
                 })
             }).create();
 
@@ -154,12 +158,13 @@ describe('Unit: Mixin: editor-base-controller', function() {
 
             run(() => {
                 object.get('updateTitle').perform('title');
-            });
 
-            wait().then(() => {
-                expect(object.get('model.titleScratch')).to.equal('title');
-                expect(object.get('model.slug')).to.not.be.ok;
-                done();
+                later(() => {
+                    expect(object.get('model.titleScratch')).to.equal('title');
+                    expect(object.get('model.slug')).to.not.be.ok;
+
+                    done();
+                }, 800);
             });
         });
     });

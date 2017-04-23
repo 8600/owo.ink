@@ -25,8 +25,8 @@ legend {
     display: block;
     margin: 2em 0;
     width: 100%;
-    border-bottom: color(var(--lightgrey) l(-5%) s(-10%)) 1px solid;
-    color: var(--midgrey);
+    border-bottom: #dfe1e3 1px solid;
+    color: #b1b1b1;
     font-size: 1.2em;
     line-height: 2.0em;
     user-select: text;
@@ -34,16 +34,6 @@ legend {
 
 input {
     user-select: text;
-}
-
-::-webkit-input-placeholder {
-    color: color(var(--midgrey) l(+18%));
-    font-weight: 200;
-}
-
-:-ms-input-placeholder {
-    color: color(var(--midgrey) l(+18%));
-    font-weight: 200;
 }
 
 .error .response {
@@ -57,14 +47,14 @@ input {
 .form-group {
     position: relative;
     margin-bottom: 1.6em;
-    max-width: 700px;
+    max-width: 500px;
     width: 100%;
     user-select: text;
 }
 
 .form-group p {
     margin: 4px 0 0 0;
-    color: var(--midgrey);
+    color: #b1b1b1;
     font-size: 1.3rem;
 }
 
@@ -124,15 +114,13 @@ input {
 .gh-select,
 select {
     display: block;
-    padding: 10px 12px;
+    padding: 8px 10px;
     width: 100%;
-    height: 40px;
-    border: color(var(--lightgrey) l(-5%) s(-10%)) 1px solid;
+    border: 1px solid #dfe1e3;
     border-radius: var(--border-radius);
-    color: color(var(--midgrey) l(-18%));
-    font-size: 1.6rem;
-    line-height: 1em;
-    font-weight: 300;
+    color: #666;
+    font-size: 1.4rem;
+    font-weight: normal;
     user-select: text;
     transition: border-color 0.15s linear;
 
@@ -156,7 +144,7 @@ select.error {
 .gh-select:focus,
 select:focus {
     outline: 0;
-    border-color: color(var(--lightgrey) l(-15%) s(-10%));
+    border-color: #b1b1b1;
 }
 
 textarea {
@@ -188,6 +176,11 @@ textarea {
     font-weight: normal;
 }
 
+.for-radio label:hover p,
+.for-checkbox label:hover p {
+    color: var(--midgrey);
+}
+
 .for-radio input,
 .for-checkbox input {
     position: absolute;
@@ -206,17 +199,17 @@ textarea {
     margin-right: 7px;
     width: 18px;
     height: 18px;
-    border: 1px solid color(var(--lightgrey) l(-5%) s(-10%));
-    background: #fff;
+    border: 1px solid #dfe1e3;
+    background: #f7f7f7;
 }
 
 .for-checkbox label:hover input:not(:checked) + .input-toggle-component,
 .for-radio label:hover input:not(:checked) + .input-toggle-component {
-    border-color: color(var(--lightgrey) l(-15%) s(-10%));
+    border-color: var(--lightgrey);
 }
 
 .for-checkbox .input-toggle-component {
-    border-radius: 4px;
+    border-radius: var(--border-radius);
 }
 
 .for-checkbox .input-toggle-component {
@@ -284,6 +277,7 @@ textarea {
 .gh-select {
     position: relative;
     display: block;
+    overflow: hidden;
     padding: 0;
     max-width: 100%;
     width: 100%;
@@ -311,7 +305,7 @@ textarea {
 }
 
 .gh-select select {
-    padding: 10px 12px;
+    padding: 8px 10px;
     outline: none;
     background: #fff;
     text-indent: 0.01px;
@@ -333,18 +327,6 @@ textarea {
 }
 
 
-/* File Uploads
-/* ---------------------------------------------------------- */
-
-.gh-input-file {
-    font-size: 1.2rem;
-    width: auto;
-}
-
-.gh-input-file + .gh-btn {
-    margin-left: 10px;
-}
-
 /* FFF: Fucking Firefox Fixes
 /* ---------------------------------------------------------- */
 
@@ -356,6 +338,6 @@ textarea {
         padding: 7px 10px 7px 8px;
     }
     .gh-select:focus {
-        border-color: color(var(--lightgrey) l(-15%) s(-10%));
+        border-color: #b1b1b1;
     }
 }

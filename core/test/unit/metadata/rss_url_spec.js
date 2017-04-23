@@ -1,5 +1,5 @@
-var should = require('should'),
-    getRssUrl = require('../../../server/data/meta/rss_url');
+var getRssUrl = require('../../../server/data/meta/rss_url'),
+    should = require('should');
 
 describe('getRssUrl', function () {
     it('should return rss url', function () {

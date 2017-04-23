@@ -29,6 +29,7 @@ export default Component.extend({
 
     validEmail: '',
     hasUploadedImage: false,
+    fileStorage: true,
     ajax: AjaxService.create(),
 
     config: injectService(),
@@ -43,7 +44,7 @@ export default Component.extend({
     },
 
     defaultImage: computed('ghostPaths', function () {
-        let url = `${this.get('ghostPaths.assetRoot')}/img/user-image.png`;
+        let url = `${this.get('ghostPaths.subdir')}/ghost/img/user-image.png`;
         return htmlSafe(`background-image: url(${url})`);
     }),
 
@@ -54,9 +55,9 @@ export default Component.extend({
         }
     },
 
-    didReceiveAttrs() {
+    didReceiveAttrs(attrs) {
         this._super(...arguments);
-        let timeout = parseInt(this.get('throttle') || this.get('debounce'));
+        let timeout = parseInt(attrs.newAttrs.throttle || this.get('debounce'));
         run.debounce(this, 'trySetValidEmail', timeout);
     },
 
@@ -70,7 +71,7 @@ export default Component.extend({
 
             this.get('ajax').request(gravatarUrl)
                 .catch((error) => {
-                    let defaultImageUrl = `url("${this.get('ghostPaths.assetRoot')}/img/user-image.png")`;
+                    let defaultImageUrl = `url("${this.get('ghostPaths.subdir')}/ghost/img/user-image.png")`;
 
                     if (isNotFoundError(error)) {
                         this.$('.placeholder-img')[0].style.backgroundImage = htmlSafe(defaultImageUrl);

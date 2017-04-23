@@ -5,12 +5,12 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
+import run from 'ember-runloop';
 import startApp from '../../helpers/start-app';
 import destroyApp from '../../helpers/destroy-app';
 import Mirage from 'ember-cli-mirage';
-import {invalidateSession, authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
-import testSelector from 'ember-test-selectors';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
 
 describe('Acceptance: Settings - Apps - Slack', function () {
     let application;
@@ -34,7 +34,7 @@ describe('Acceptance: Settings - Apps - Slack', function () {
 
     it('redirects to team page when authenticated as author', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
         visit('/settings/apps/slack');
@@ -46,7 +46,7 @@ describe('Acceptance: Settings - Apps - Slack', function () {
 
     it('redirects to team page when authenticated as editor', function () {
         let role = server.create('role', {name: 'Editor'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
         visit('/settings/apps/slack');
@@ -59,7 +59,9 @@ describe('Acceptance: Settings - Apps - Slack', function () {
     describe('when logged in', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
+
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -74,7 +76,7 @@ describe('Acceptance: Settings - Apps - Slack', function () {
             });
 
             fillIn('#slack-settings input[name="slack[url]"]', 'notacorrecturl');
-            click(testSelector('save-button'));
+            click('#saveSlackIntegration');
 
             andThen(() => {
                 expect(find('#slack-settings .error .response').text().trim(), 'inline validation response')
@@ -82,7 +84,7 @@ describe('Acceptance: Settings - Apps - Slack', function () {
             });
 
             fillIn('#slack-settings input[name="slack[url]"]', 'https://hooks.slack.com/services/1275958430');
-            click(testSelector('send-notification-button'));
+            click('#sendTestNotification');
 
             andThen(() => {
                 expect(find('.gh-alert-blue').length, 'modal element').to.equal(1);
@@ -91,8 +93,8 @@ describe('Acceptance: Settings - Apps - Slack', function () {
             });
 
             andThen(() => {
-                server.put('/settings/', function () {
-                    return new Mirage.Response(422, {}, {
+                server.put('/settings/', function (db, request) {
+                    return new Mirage.Response(402, {}, {
                         errors: [
                             {
                                 errorType: 'ValidationError',
@@ -104,7 +106,7 @@ describe('Acceptance: Settings - Apps - Slack', function () {
             });
 
             click('.gh-alert-blue .gh-alert-close');
-            click(testSelector('send-notification-button'));
+            click('#sendTestNotification');
 
             // we shouldn't try to send the test request if the save fails
             andThen(() => {

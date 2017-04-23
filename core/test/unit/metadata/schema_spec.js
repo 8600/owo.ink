@@ -1,5 +1,5 @@
-var should = require('should'),
-    getSchema = require('../../../server/data/meta/schema');
+var getSchema = require('../../../server/data/meta/schema'),
+    should = require('should');
 
 describe('getSchema', function () {
     it('should return post schema if context starts with post', function (done) {

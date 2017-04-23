@@ -5,18 +5,8 @@
 /* Fullscreen Modal
 /* ---------------------------------------------------------- */
 
-/* explicit modal container so that background and content can be animated individually */
-.fullscreen-modal-container {
-    display: flex;
-    justify-content: center;
-    visibility: hidden;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 10000;
-    overflow: auto;
+.fullscreen-modal-liquid-target {
+    overflow-y: auto;
     height: 100vh;
 }
 
@@ -26,19 +16,15 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 50;
-    height: 100vh;
-    background: #324750;
-    opacity: 0.86;
+    z-index: 0;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .fullscreen-modal {
-    position: relative;
-    z-index: 100;
-    margin: auto;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     max-width: 550px;
+    width: 100%;
     pointer-events: auto;
 }
 
@@ -52,12 +38,23 @@
 /* ---------------------------------------------------------- */
 
 .fullscreen-modal-wide {
-    width: 100%;
-    max-width: 550px;
+    width: 550px;
+}
+
+@media (max-width: 900px) {
+    .fullscreen-modal-wide {
+        width: 100%;
+    }
 }
 
 .fullscreen-modal-action {
-    margin: 6vw 0;
+    padding: 60px 0 30px;
+}
+
+@media (max-width: 900px) {
+    .fullscreen-modal-action {
+        padding: 30px 0;
+    }
 }
 
 
@@ -70,11 +67,11 @@
 
 .modal-content {
     position: relative;
-    padding: 40px;
+    padding: 18px;
     background-color: #fff;
     background-clip: padding-box;
-    border-radius: 6px;
-    box-shadow: 1px 3px 8px rgba(0,0,0,.09), 8px 14px 38px rgba(0,0,0,.15);
+    border-radius: var(--border-radius);
+    box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 6px;
 }
 
 .modal-content * {
@@ -104,11 +101,9 @@
 
 .modal-header h1 {
     display: inline-block;
-    margin: -5px 25px 0 0;
-    font-size: 2.2rem;
-    line-height: 1.15em;
-    font-weight: 600;
-    letter-spacing: 0.4px;
+    margin: 0 25px 0 0;
+    font-size: 1.85em;
+    font-weight: 100;
 }
 
 .modal-body {
@@ -116,8 +111,16 @@
     overflow-y: auto;
 }
 
-.modal-body p {
-    font-size: 1.4rem;
+.modal-body .red {
+    color: var(--red);
+}
+
+.modal-body > *:first-child {
+    margin-top: 0;
+}
+
+.modal-body > *:last-child {
+    margin-bottom: 0;
 }
 
 .modal-footer {
@@ -127,7 +130,7 @@
 }
 
 .modal-footer button {
-    margin-left: 12px;
+    margin-left: 8px;
     min-width: 100px;
     text-align: center;
 }
@@ -138,16 +141,12 @@
 
 .modal-body .gh-image-uploader {
     margin: 0;
-    background: color(var(--lightgrey) l(+4%));
 }
 
 
 /* Content Modifiers
 /* ---------------------------------------------------------- */
 
-.modal-body fieldset {
-    margin: 0;
-}
 
 /* Login styles */
 .modal-body .login-form {
@@ -167,7 +166,7 @@
         margin: 0 auto 1em;
         width: 100%;
     }
-    .modal-body .login-form .gh-btn {
+    .modal-body .login-form .btn {
         margin: 0;
         margin-bottom: 1em;
         width: 100%;

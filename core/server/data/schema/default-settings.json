@@ -1,5 +1,8 @@
 {
     "core": {
+        "databaseVersion": {
+            "defaultValue": "009"
+        },
         "dbHash": {
             "defaultValue": null
         },
@@ -11,6 +14,9 @@
         },
         "seenNotifications": {
             "defaultValue": "[]"
+        },
+        "migrations": {
+            "defaultValue": "{}"
         }
     },
     "blog": {
@@ -26,13 +32,18 @@
         "cover": {
             "defaultValue": ""
         },
-        "icon": {
-            "defaultValue": ""
-        },
         "defaultLang": {
             "defaultValue": "en_US",
             "validations": {
                 "isEmpty": false
+            }
+        },
+        "postsPerPage": {
+            "defaultValue": "5",
+            "validations": {
+                "isEmpty": false,
+                "isInt": true,
+                "isLength": [1, 1000]
             }
         },
         "activeTimezone": {
@@ -58,7 +69,7 @@
             }
         },
         "amp": {
-            "defaultValue" : "true"
+            "defaultValue": "true"
         },
         "ghost_head": {
             "defaultValue" : ""

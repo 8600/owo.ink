@@ -1,13 +1,24 @@
-var should = require('should'), // jshint ignore:line
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers');
+    handlebars      = hbs.handlebars,
+    helpers         = require('../../../server/helpers');
 
 describe('{{twitter_url}} helper', function () {
     var options = {data: {blog: {}}};
 
+    before(function () {
+        utils.loadHelpers();
+    });
+
     beforeEach(function () {
         options.data.blog = {twitter: ''};
+    });
+
+    it('has loaded twitter_url helper', function () {
+        should.exist(handlebars.helpers.twitter_url);
     });
 
     it('should output the twitter url for @blog, if no other twitter username is provided', function () {

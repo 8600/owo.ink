@@ -1,13 +1,13 @@
-var utils = require('../../../utils'),
-    sitemapsUtils;
+var config = require('../../../config'),
+    utils;
 
-sitemapsUtils = {
+utils = {
     getDeclarations: function () {
-        var baseUrl = utils.url.urlFor('sitemap_xsl', true);
+        var baseUrl = config.urlFor('sitemap_xsl', true);
         baseUrl = baseUrl.replace(/^(http:|https:)/, '');
         return '<?xml version="1.0" encoding="UTF-8"?>' +
             '<?xml-stylesheet type="text/xsl" href="' + baseUrl + '"?>';
     }
 };
 
-module.exports = sitemapsUtils;
+module.exports = utils;

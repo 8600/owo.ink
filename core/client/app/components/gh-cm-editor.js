@@ -2,7 +2,6 @@
 import Component from 'ember-component';
 import run, {bind, scheduleOnce} from 'ember-runloop';
 import injectService from 'ember-service/inject';
-import RSVP from 'rsvp';
 
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
 import {InvokeActionMixin} from 'ember-invoke-action';
@@ -26,12 +25,9 @@ const CmEditorComponent =  Component.extend(InvokeActionMixin, {
     didInsertElement() {
         this._super(...arguments);
 
-        let loader = this.get('lazyLoader');
+        this.get('lazyLoader').loadStyle('codemirror', 'codemirror/codemirror.css');
 
-        RSVP.all([
-            loader.loadStyle('codemirror', 'assets/codemirror/codemirror.css'),
-            loader.loadScript('codemirror', 'assets/codemirror/codemirror.js')
-        ]).then(() => {
+        this.get('lazyLoader').loadScript('codemirror', 'codemirror/codemirror.js').then(() => {
             scheduleOnce('afterRender', this, function () {
                 this._initCodeMirror();
             });
@@ -45,13 +41,7 @@ const CmEditorComponent =  Component.extend(InvokeActionMixin, {
         editor.getDoc().setValue(this.get('_value'));
 
         // events
-        editor.on('focus', () => {
-
-            run(this, function() {
-                this.set('isFocused', true);
-                this.invokeAction('focus-in', editor.getDoc().getValue());
-            });
-        });
+        editor.on('focus', bind(this, 'set', 'isFocused', true));
         editor.on('blur', bind(this, 'set', 'isFocused', false));
         editor.on('change', () => {
             run(this, function () {
@@ -65,14 +55,9 @@ const CmEditorComponent =  Component.extend(InvokeActionMixin, {
     willDestroyElement() {
         this._super(...arguments);
 
-        // Ensure the editor exists before trying to destroy it. This fixes
-        // an error that occurs if codemirror hasn't finished loading before
-        // the component is destroyed.
-        if (this._editor) {
-            let editor = this._editor.getWrapperElement();
-            editor.parentNode.removeChild(editor);
-            this._editor = null;
-        }
+        let editor = this._editor.getWrapperElement();
+        editor.parentNode.removeChild(editor);
+        this._editor = null;
     }
 });
 

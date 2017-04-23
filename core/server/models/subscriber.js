@@ -3,6 +3,7 @@ var ghostBookshelf = require('./base'),
     events = require('../events'),
     i18n = require('../i18n'),
     Promise = require('bluebird'),
+    uuid = require('uuid'),
     Subscriber,
     Subscribers;
 
@@ -12,23 +13,23 @@ Subscriber = ghostBookshelf.Model.extend({
     emitChange: function emitChange(event) {
         events.emit('subscriber' + '.' + event, this);
     },
-
     defaults: function defaults() {
         return {
+            uuid: uuid.v4(),
             status: 'subscribed'
         };
     },
-
-    onCreated: function onCreated(model) {
-        model.emitChange('added');
-    },
-
-    onUpdated: function onUpdated(model) {
-        model.emitChange('edited');
-    },
-
-    onDestroyed: function onDestroyed(model) {
-        model.emitChange('deleted');
+    initialize: function initialize() {
+        ghostBookshelf.Model.prototype.initialize.apply(this, arguments);
+        this.on('created', function onCreated(model) {
+            model.emitChange('added');
+        });
+        this.on('updated', function onUpdated(model) {
+            model.emitChange('edited');
+        });
+        this.on('destroyed', function onDestroyed(model) {
+            model.emitChange('deleted');
+        });
     }
 }, {
 
@@ -71,7 +72,7 @@ Subscriber = ghostBookshelf.Model.extend({
             return Promise.resolve();
         }
 
-        return Promise.reject(new errors.NoPermissionError({message: i18n.t('errors.models.subscriber.notEnoughPermission')}));
+        return Promise.reject(new errors.NoPermissionError(i18n.t('errors.models.subscriber.notEnoughPermission')));
     },
 
     // TODO: This is a copy paste of models/user.js!

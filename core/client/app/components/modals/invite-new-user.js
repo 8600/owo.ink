@@ -4,7 +4,6 @@ import {A as emberA} from 'ember-array/utils';
 import run from 'ember-runloop';
 import ModalComponent from 'ghost-admin/components/modals/base';
 import ValidationEngine from 'ghost-admin/mixins/validation-engine';
-import {task} from 'ember-concurrency';
 
 const {Promise} = RSVP;
 
@@ -14,6 +13,7 @@ export default ModalComponent.extend(ValidationEngine, {
     role: null,
     roles: null,
     authorRole: null,
+    submitting: false,
 
     validationType: 'inviteUser',
 
@@ -53,19 +53,15 @@ export default ModalComponent.extend(ValidationEngine, {
         // the API should return an appropriate error when attempting to save
         return new Promise((resolve, reject) => {
             return this._super().then(() => {
-                return RSVP.hash({
-                    users: this.get('store').findAll('user', {reload: true}),
-                    invites: this.get('store').findAll('invite', {reload: true})
-                }).then((data) => {
-                    let existingUser = data.users.findBy('email', email);
-                    let existingInvite = data.invites.findBy('email', email);
+                this.get('store').findAll('user', {reload: true}).then((result) => {
+                    let invitedUser = result.findBy('email', email);
 
-                    if (existingUser || existingInvite) {
+                    if (invitedUser) {
                         this.get('errors').clear('email');
-                        if (existingUser) {
-                            this.get('errors').add('email', 'A user with that email address already exists.');
-                        } else {
+                        if (invitedUser.get('status') === 'invited' || invitedUser.get('status') === 'invited-pending') {
                             this.get('errors').add('email', 'A user with that email address was already invited.');
+                        } else {
+                            this.get('errors').add('email', 'A user with that email address already exists.');
                         }
 
                         // TODO: this shouldn't be needed, ValidationEngine doesn't mark
@@ -85,49 +81,43 @@ export default ModalComponent.extend(ValidationEngine, {
         });
     },
 
-    sendInvitation: task(function* () {
-        let email = this.get('email');
-        let role = this.get('role');
-        let notifications = this.get('notifications');
-        let notificationText = `Invitation sent! (${email})`;
-        let invite;
-
-        try {
-            yield this.validate();
-
-            invite = this.get('store').createRecord('invite', {
-                email,
-                role
-            });
-
-            yield invite.save();
-
-            // If sending the invitation email fails, the API will still return a status of 201
-            // but the invite's status in the response object will be 'invited-pending'.
-            if (invite.get('status') === 'pending') {
-                notifications.showAlert('Invitation email was not sent.  Please try resending.', {type: 'error', key: 'invite.send.failed'});
-            } else {
-                notifications.showNotification(notificationText, {key: 'invite.send.success'});
-            }
-
-            this.send('closeModal');
-        } catch (error) {
-            // validation will reject and cause this to be called with no error
-            if (error) {
-                invite.deleteRecord();
-                notifications.showAPIError(error, {key: 'invite.send'});
-                this.send('closeModal');
-            }
-        }
-    }).drop(),
-
     actions: {
         setRole(role) {
             this.set('role', role);
         },
 
         confirm() {
-            this.get('sendInvitation').perform();
+            let email = this.get('email');
+            let role = this.get('role');
+            let notifications = this.get('notifications');
+            let newUser;
+
+            this.validate().then(() => {
+                this.set('submitting', true);
+
+                newUser = this.get('store').createRecord('user', {
+                    email,
+                    role,
+                    status: 'invited'
+                });
+
+                newUser.save().then(() => {
+                    let notificationText = `Invitation sent! (${email})`;
+
+                    // If sending the invitation email fails, the API will still return a status of 201
+                    // but the user's status in the response object will be 'invited-pending'.
+                    if (newUser.get('status') === 'invited-pending') {
+                        notifications.showAlert('Invitation email was not sent.  Please try resending.', {type: 'error', key: 'invite.send.failed'});
+                    } else {
+                        notifications.showNotification(notificationText, {key: 'invite.send.success'});
+                    }
+                }).catch((error) => {
+                    newUser.deleteRecord();
+                    notifications.showAPIError(error, {key: 'invite.send'});
+                }).finally(() => {
+                    this.send('closeModal');
+                });
+            });
         }
     }
 });

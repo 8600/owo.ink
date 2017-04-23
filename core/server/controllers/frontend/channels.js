@@ -2,16 +2,17 @@ var express = require('express'),
     _       = require('lodash'),
     config  = require('../../config'),
     errors  = require('../../errors'),
-    i18n    = require('../../i18n'),
     rss     = require('../../data/xml/rss'),
     utils   = require('../../utils'),
+
     channelConfig = require('./channel-config'),
     renderChannel = require('./render-channel'),
+
     rssRouter,
     channelRouter;
 
 function handlePageParam(req, res, next, page) {
-    var pageRegex = new RegExp('/' + config.get('routeKeywords').page + '/(.*)?/'),
+    var pageRegex = new RegExp('/' + config.routeKeywords.page + '/(.*)?/'),
         rssRegex = new RegExp('/rss/(.*)?/');
 
     page = parseInt(page, 10);
@@ -25,7 +26,7 @@ function handlePageParam(req, res, next, page) {
         }
     } else if (page < 1 || isNaN(page)) {
         // Nothing less than 1 is a valid page number, go straight to a 404
-        return next(new errors.NotFoundError({message: i18n.t('errors.errors.pageNotFound')}));
+        return next(new errors.NotFoundError());
     } else {
         // Set req.params.page to the already parsed number, and continue
         req.params.page = page;
@@ -45,12 +46,12 @@ rssRouter = function rssRouter(channelConfig) {
         baseRoute = '/rss/';
 
     router.get(baseRoute, stack);
-    router.get(utils.url.urlJoin(baseRoute, ':page/'), stack);
+    router.get(baseRoute + ':page/', stack);
     router.get('/feed/', function redirectToRSS(req, res) {
-        return utils.redirect301(res, utils.url.urlJoin(utils.url.getSubdir(), req.baseUrl, baseRoute));
+        return utils.redirect301(res, config.paths.subdir + req.baseUrl + baseRoute);
     });
-
     router.param('page', handlePageParam);
+
     return router;
 };
 
@@ -64,7 +65,7 @@ channelRouter = function router() {
 
     var channelsRouter = express.Router({mergeParams: true}),
         baseRoute = '/',
-        pageRoute = utils.url.urlJoin('/', config.get('routeKeywords').page, ':page/');
+        pageRoute = '/' + config.routeKeywords.page + '/:page/';
 
     _.each(channelConfig.list(), function (channel) {
         var channelRouter = express.Router({mergeParams: true}),
@@ -78,7 +79,7 @@ channelRouter = function router() {
 
         if (channel.editRedirect) {
             channelRouter.get('/edit/', function redirect(req, res) {
-                res.redirect(utils.url.urlJoin(utils.url.getSubdir(), channel.editRedirect.replace(':slug', req.params.slug)));
+                res.redirect(config.paths.subdir + channel.editRedirect.replace(':slug', req.params.slug));
             });
         }
 

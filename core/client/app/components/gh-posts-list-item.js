@@ -1,21 +1,24 @@
+import $ from 'jquery';
 import Ember from 'ember';
 import Component from 'ember-component';
 import {htmlSafe} from 'ember-string';
 import computed, {alias, equal} from 'ember-computed';
 import injectService from 'ember-service/inject';
-import $ from 'jquery';
-import {isBlank} from 'ember-utils';
+
+import ActiveLinkWrapper from 'ghost-admin/mixins/active-link-wrapper';
+import {invokeAction} from 'ember-invoke-action';
 
 // ember-cli-shims doesn't export these
-const {Handlebars} = Ember;
+const {ObjectProxy, PromiseProxyMixin} = Ember;
 
-export default Component.extend({
+const ObjectPromiseProxy = ObjectProxy.extend(PromiseProxyMixin);
+
+export default Component.extend(ActiveLinkWrapper, {
     tagName: 'li',
-    classNames: ['gh-posts-list-item'],
-    classNameBindings: ['active'],
+    classNameBindings: ['isFeatured:featured', 'isPage:page'],
 
     post: null,
-    active: false,
+    previewIsHidden: false,
 
     isFeatured: alias('post.featured'),
     isPage: alias('post.page'),
@@ -23,43 +26,25 @@ export default Component.extend({
     isScheduled: equal('post.status', 'scheduled'),
 
     ghostPaths: injectService(),
+    timeZone: injectService(),
 
     authorName: computed('post.author.name', 'post.author.email', function () {
         return this.get('post.author.name') || this.get('post.author.email');
     }),
 
     authorAvatar: computed('post.author.image', function () {
-        return this.get('post.author.image') || `${this.get('ghostPaths.assetRoot')}/img/user-image.png`;
+        return this.get('post.author.image') || `${this.get('ghostPaths.subdir')}/ghost/img/user-image.png`;
     }),
 
     authorAvatarBackground: computed('authorAvatar', function () {
-        let authorAvatar = this.get('authorAvatar');
-        let safeUrl = Handlebars.Utils.escapeExpression(authorAvatar);
-        return htmlSafe(`background-image: url(${safeUrl})`);
+        return htmlSafe(`background-image: url(${this.get('authorAvatar')})`);
     }),
 
-    // HACK: this is intentionally awful due to time constraints
-    // TODO: find a better way to get an excerpt! :)
-    subText: computed('post.{html,metaDescription}', function () {
-        let html = this.get('post.html');
-        let metaDescription = this.get('post.metaDescription');
-        let text;
-
-        if (!isBlank(metaDescription)) {
-            text = metaDescription;
-        } else {
-            let $html = $(`<div>${html}</div>`);
-            text = $html.text();
-        }
-
-        return htmlSafe(`${text.slice(0, 80)}&hellip;`);
+    blogTimezone: computed('timeZone.blogTimezone', function () {
+        return ObjectPromiseProxy.create({
+            promise: this.get('timeZone.blogTimezone')
+        });
     }),
-
-    didReceiveAttrs() {
-        if (this.get('active')) {
-            this.scrollIntoView();
-        }
-    },
 
     click() {
         this.sendAction('onClick', this.get('post'));
@@ -69,11 +54,28 @@ export default Component.extend({
         this.sendAction('onDoubleClick', this.get('post'));
     },
 
+    didInsertElement() {
+        this._super(...arguments);
+        this.addObserver('active', this, this.scrollIntoView);
+    },
+
+    willDestroyElement() {
+        this._super(...arguments);
+        this.removeObserver('active', this, this.scrollIntoView);
+        if (this.get('post.isDeleted') && this.get('onDelete')) {
+            invokeAction(this, 'onDelete');
+        }
+    },
+
     scrollIntoView() {
+        if (!this.get('active')) {
+            return;
+        }
+
         let element = this.$();
         let offset = element.offset().top;
         let elementHeight = element.height();
-        let container = $('.content-list');
+        let container = $('.js-content-scrollbox');
         let containerHeight = container.height();
         let currentScroll = container.scrollTop();
         let isBelowTop, isAboveBottom, isOnScreen;

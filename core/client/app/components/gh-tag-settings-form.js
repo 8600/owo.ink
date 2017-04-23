@@ -2,6 +2,7 @@
 import Component from 'ember-component';
 import Ember from 'ember';
 import computed, {reads} from 'ember-computed';
+import get from 'ember-metal/get';
 import injectService from 'ember-service/inject';
 import {htmlSafe} from 'ember-string';
 
@@ -64,7 +65,6 @@ export default Component.extend({
 
         if (seoURL.length > 70) {
             seoURL = seoURL.substring(0, 70).trim();
-            seoURL = Handlebars.Utils.escapeExpression(seoURL);
             seoURL = htmlSafe(`${seoURL}&hellip;`);
         }
 
@@ -85,17 +85,12 @@ export default Component.extend({
         return metaDescription;
     }),
 
-    didReceiveAttrs() {
+    didReceiveAttrs(attrs) {
         this._super(...arguments);
 
-        let oldTagId = this._oldTagId;
-        let newTagId = this.get('tag.id');
-
-        if (newTagId !== oldTagId) {
+        if (get(attrs, 'newAttrs.tag.value.id') !== get(attrs, 'oldAttrs.tag.value.id')) {
             this.reset();
         }
-
-        this._oldTagId = newTagId;
     },
 
     reset() {

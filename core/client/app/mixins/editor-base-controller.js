@@ -15,20 +15,12 @@ import {task, timeout} from 'ember-concurrency';
 import PostModel from 'ghost-admin/models/post';
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
 import {isVersionMismatchError} from 'ghost-admin/services/ajax';
-import {isInvalidError} from 'ember-ajax/errors';
-
-import ghostPaths from 'ghost-admin/utils/ghost-paths';
 
 const {resolve} = RSVP;
-
-// ember-cli-shims doesn't export Ember.testing
-const {testing} = Ember;
 
 // this array will hold properties we need to watch
 // to know if the model has been changed (`controller.hasDirtyAttributes`)
 const watchedProps = ['model.scratch', 'model.titleScratch', 'model.hasDirtyAttributes', 'model.tags.[]'];
-
-const TITLE_DEBOUNCE = testing ? 10 : 700;
 
 PostModel.eachAttribute(function (name) {
     watchedProps.push(`model.${name}`);
@@ -42,16 +34,10 @@ export default Mixin.create({
     showLeaveEditorModal: false,
     showReAuthenticateModal: false,
 
-    application: injectController(),
+    postSettingsMenuController: injectController('post-settings-menu'),
     notifications: injectService(),
     clock: injectService(),
     slugGenerator: injectService(),
-
-    cards: [], // for apps
-    atoms: [], // for apps
-    toolbar: [], // for apps
-    apiRoot: ghostPaths().apiRoot,
-    assetPath: ghostPaths().assetRoot,
 
     init() {
         this._super(...arguments);
@@ -177,8 +163,8 @@ export default Mixin.create({
 
         // if the two "scratch" properties (title and content) match the model, then
         // it's ok to set hasDirtyAttributes to false
-        if (model.get('titleScratch') === model.get('title')
-            && JSON.stringify(model.get('scratch')) === JSON.stringify(model.get('mobiledoc'))) {
+        if (model.get('titleScratch') === model.get('title') &&
+            model.get('scratch') === model.get('markdown')) {
             this.set('hasDirtyAttributes', false);
         }
     },
@@ -193,8 +179,7 @@ export default Mixin.create({
                 return false;
             }
 
-            // let markdown = model.get('markdown');
-            let mobiledoc = model.get('mobiledoc');
+            let markdown = model.get('markdown');
             let title = model.get('title');
             let titleScratch = model.get('titleScratch');
             let scratch = this.get('model.scratch');
@@ -209,9 +194,8 @@ export default Mixin.create({
             }
 
             // since `scratch` is not model property, we need to check
-            // it explicitly against the model's mobiledoc attribute
-            // TODO either deep equals or compare the serialised version - RYAN
-            if (mobiledoc !== scratch) {
+            // it explicitly against the model's markdown attribute
+            if (markdown !== scratch) {
                 return true;
             }
 
@@ -246,11 +230,11 @@ export default Mixin.create({
 
     // used on window.onbeforeunload
     unloadDirtyMessage() {
-        return '==============================\n\n'
-             + 'Hey there! It looks like you\'re in the middle of writing'
-             + ' something and you haven\'t saved all of your content.'
-             + '\n\nSave before you go!\n\n'
-             + '==============================';
+        return '==============================\n\n' +
+            'Hey there! It looks like you\'re in the middle of writing' +
+            ' something and you haven\'t saved all of your content.' +
+            '\n\nSave before you go!\n\n' +
+            '==============================';
     },
 
     // TODO: This has to be moved to the I18n localization file.
@@ -323,7 +307,7 @@ export default Mixin.create({
         let errorMessage;
 
         function isString(str) {
-            /* global toString */
+            /*global toString*/
             return toString.call(str) === '[object String]';
         }
 
@@ -355,7 +339,7 @@ export default Mixin.create({
         }
 
         // debounce for 700 milliseconds
-        yield timeout(TITLE_DEBOUNCE);
+        yield timeout(700);
 
         yield this.get('generateSlug').perform();
     }).restartable(),
@@ -403,9 +387,19 @@ export default Mixin.create({
         save(options) {
             let prevStatus = this.get('model.status');
             let isNew = this.get('model.isNew');
+            let psmController = this.get('postSettingsMenuController');
             let promise, status;
 
             options = options || {};
+
+            // don't auto-save save if nothing has changed, this prevents
+            // unnecessary collision errors when reading a post that another
+            // user is editing
+            if (options.backgroundSave && !this.get('hasDirtyAttributes')) {
+                this.send('cancelTimers');
+                return;
+            }
+
             this.toggleProperty('submitting');
             if (options.backgroundSave) {
                 // do not allow a post's status to be set to published by a background save
@@ -427,8 +421,8 @@ export default Mixin.create({
             this.send('cancelTimers');
 
             // Set the properties that are indirected
-            // set mobiledoc equal to what's in the editor, minus the image markers.
-            this.set('model.mobiledoc', this.get('model.scratch'));
+            // set markdown equal to what's in the editor, minus the image markers.
+            this.set('model.markdown', this.get('model.scratch'));
             this.set('model.status', status);
 
             // Set a default title
@@ -437,8 +431,8 @@ export default Mixin.create({
             }
 
             this.set('model.title', this.get('model.titleScratch'));
-            this.set('model.metaTitle', this.get('model.metaTitleScratch'));
-            this.set('model.metaDescription', this.get('model.metaDescriptionScratch'));
+            this.set('model.metaTitle', psmController.get('metaTitleScratch'));
+            this.set('model.metaDescription', psmController.get('metaDescriptionScratch'));
 
             if (!this.get('model.slug')) {
                 this.get('updateTitle').cancelAll();
@@ -463,7 +457,9 @@ export default Mixin.create({
                 });
             }).catch((error) => {
                 // re-throw if we have a general server error
-                if (error && !isInvalidError(error)) {
+                // TODO: use isValidationError(error) once we have
+                // ember-ajax/ember-data integration
+                if (error && error.errors && error.errors[0].errorType !== 'ValidationError') {
                     this.toggleProperty('submitting');
                     this.send('error', error);
                     return;
@@ -498,14 +494,6 @@ export default Mixin.create({
             if (this.get('model.isNew')) {
                 this.send('save', {silent: true, backgroundSave: true});
             }
-        },
-
-        closeNavMenu() {
-            this.get('application').send('closeAutoNav');
-        },
-
-        closeMenus() {
-            this.get('application').send('closeMenus');
         },
 
         toggleLeaveEditorModal(transition) {

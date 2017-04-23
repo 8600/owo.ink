@@ -1,109 +1,69 @@
-<section class="gh-canvas">
-    <header class="gh-canvas-header">
-        <h2 class="gh-canvas-title">文章管理</h2>
-        <section class="view-actions">
-            {{#link-to "editor.new" class="gh-btn gh-btn-green" data-test-new-post-button=true}}<span>新建文章</span>{{/link-to}}
-        </section>
-    </header>
-    <div class="gh-contentfilter">
-        <div class="gh-contentfilter-left">
-            {{#power-select
-                selected=selectedType
-                options=availableTypes
-                searchField="name"
-                onchange=(action "changeType")
-                tagName="div"
-                classNames="gh-contentfilter-menu gh-contentfilter-type"
-                data-test-type-select=true
-                as |type|
-            }}
-                {{type.name}}
-            {{/power-select}}
-
-            {{#unless session.user.isAuthor}}
-            {{#power-select
-                selected=selectedAuthor
-                options=availableAuthors
-                searchField="name"
-                onchange=(action "changeAuthor")
-                tagName="div"
-                classNames="gh-contentfilter-menu gh-contentfilter-author"
-                data-test-author-select=true
-                as |author|
-            }}
-                {{author.name}}
-            {{/power-select}}
-            {{/unless}}
-
-            {{#power-select
-                selected=selectedTag
-                options=availableTags
-                searchField="name"
-                onchange=(action "changeTag")
-                tagName="div"
-                classNames="gh-contentfilter-menu gh-contentfilter-tag"
-                data-test-tag-select=true
-                as |tag|
-            }}
-                {{tag.name}}
-            {{/power-select}}
-        </div>
-
-        <div class="gh-contentfilter-right">
-            排序方式:
-            {{#power-select
-                selected=selectedOrder
-                options=availableOrders
-                searchEnabled=false
-                onchange=(action "changeOrder")
-                tagName="div"
-                classNames="gh-contentfilter-menu gh-contentfilter-sort"
-                data-test-order-select=true
-                as |order|
-            }}
-                {{order.name}}
-            {{/power-select}}
-        </div>
-    </div>
-
-    <section class="content-list">
-        <ol class="posts-list">
-            {{#each model as |post|}}
-                {{gh-posts-list-item
-                    post=post
-                    active=(eq post selectedPost)
-                    onDoubleClick="openEditor"
-                    data-test-post-id=post.id}}
-            {{else}}
-                <li class="no-posts-box">
-                    <div class="no-posts">
-                        {{#if showingAll}}
-                            <h3>You Haven't Written Any Posts Yet!</h3>
-                            {{#link-to "editor.new"}}<button type="button" class="gh-btn gh-btn-green gh-btn-lg"><span>Write a new Post</span></button>{{/link-to}}
-                        {{else}}
-                            <h3>No posts that match the current filter</h3>
-                            {{#link-to "posts.index" (query-params type=null)}}<button type="button" class="gh-btn gh-btn-lg"><span>Show all posts</span></button>{{/link-to}}
-                        {{/if}}
-                    </div>
-                </li>
-            {{/each}}
-        </ol>
-
-        {{infinity-loader
-            infinityModel=model
-            scrollable=".gh-main"
-            triggerOffset=1000}}
+{{#gh-content-view-container as |previewIsHidden|}}
+<header class="view-header">
+    {{#gh-view-title openMobileMenu="openMobileMenu"}}<span>Content</span>{{/gh-view-title}}
+    <section class="view-actions">
+        {{#link-to "editor.new" class="btn btn-green" title="New Post"}}New Post{{/link-to}}
     </section>
+</header>
 
-    {{#if showDeletePostModal}}
-        {{gh-fullscreen-modal "delete-post"
-            model=(hash
-                post=selectedPost
-                onSuccess=(route-action 'onPostDeletion')
-            )
-            close=(action "toggleDeletePostModal")
-            modifier="action wide"}}
-    {{/if}}
+<div class="view-container">
+    <section class="content-list js-content-list {{if postListFocused 'keyboard-focused'}}">
+        {{#gh-infinite-scroll tagName="section" classNames="content-list-content js-content-scrollbox" fetch="loadNextPage" as |checkScroll|}}
+            <ol class="posts-list">
+                {{#each sortedPosts key="id" as |post|}}
+                    {{#gh-posts-list-item post=post onDoubleClick="openEditor" onDelete=(action checkScroll) as |component|}}
+                        {{#link-to (if previewIsHidden 'editor.edit' 'posts.post') post.id class="permalink" title="Edit this post"}}
+                            <h3 class="entry-title">{{post.title}}</h3>
+                            <section class="entry-meta">
+                                <span class="avatar" style={{component.authorAvatarBackground}}>
+                                    <img src="{{component.authorAvatar}}" title="{{component.authorName}}">
+                                </span>
+                                <span class="author">{{component.authorName}}</span>
+                                <span class="status">
+                                    {{#if component.isPublished}}
+                                        {{#if post.page}}
+                                            <span class="page">Page</span>
+                                        {{else}}
+                                            <time datetime="{{post.publishedAtUTC}}" class="date published">
+                                                Published {{gh-format-timeago post.publishedAtUTC}}
+                                            </time>
+                                        {{/if}}
+                                    {{else}}
+                    					{{#if component.isScheduled}}
+                    						<span class="scheduled">Scheduled</span>
+                                            <span>&ndash;
+                                                <time datetime="{{post.publishedAtUTC}}" class-="date scheduled">
+                                                    {{gh-format-time-scheduled post.publishedAtUTC component.blogTimezone}}
+                                                </time>
+                                            </span>
+                    					{{else}}
+                                            <span class="draft">Draft</span>
+                    					{{/if}}
+                                    {{/if}}
+                                </span>
+                                {{#if feature.internalTags}}
+                                    <div class="internal-tags-list">
+                                        {{#each post.internalTags as |tag|}}
+                                            <span class="label label-default">{{tag.name}}</span>
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            </section>
+                        {{/link-to}}
+                    {{/gh-posts-list-item}}
+                {{/each}}
+            </ol>
+        {{/gh-infinite-scroll}}
+    </section>
+    <section class="content-preview js-content-preview {{if postContentFocused 'keyboard-focused'}}">
+        {{outlet}}
+    </section>
+</div>
+{{/gh-content-view-container}}
 
-    {{outlet}}
-</section>
+{{#if showDeletePostModal}}
+    {{gh-fullscreen-modal "delete-post"
+                          model=currentPost
+                          close=(action "toggleDeletePostModal")
+                          modifier="action wide"}}
+{{/if}}

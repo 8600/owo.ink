@@ -1,25 +1,36 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
+var should         = require('should'),
+    sinon          = require('sinon'),
+    Promise        = require('bluebird'),
+    rewire         = require('rewire'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers'),
-    settingsCache = require('../../../server/settings/cache'),
-
-    sandbox = sinon.sandbox.create();
+    handlebars     = hbs.handlebars,
+    helpers        = rewire('../../../server/helpers'),
+    api            = require('../../../server/api');
 
 describe('{{ghost_foot}} helper', function () {
-    var settingsCacheStub;
+    var sandbox;
 
-    afterEach(function () {
-        sandbox.restore();
+    before(function () {
+        utils.loadHelpers();
     });
 
     beforeEach(function () {
-        settingsCacheStub = sandbox.stub(settingsCache, 'get');
+        sandbox = sinon.sandbox.create();
+    });
+
+    it('has loaded ghost_foot helper', function () {
+        should.exist(handlebars.helpers.ghost_foot);
     });
 
     it('outputs correct injected code', function (done) {
-        settingsCacheStub.withArgs('ghost_foot').returns('<script type="text/javascript">var test = \'I am a variable!\'</script>');
+        sandbox.stub(api.settings, 'read', function () {
+            return Promise.resolve({
+                settings: [{value: '<script type="text/javascript">var test = \'I am a variable!\'</script>'}]
+            });
+        });
 
         helpers.ghost_foot.call().then(function (rendered) {
             should.exist(rendered);
@@ -29,25 +40,7 @@ describe('{{ghost_foot}} helper', function () {
         }).catch(done);
     });
 
-    it('outputs handles code injection being empty', function (done) {
-        settingsCacheStub.withArgs('ghost_foot').returns('');
-
-        helpers.ghost_foot.call().then(function (rendered) {
-            should.exist(rendered);
-            rendered.string.should.eql('');
-
-            done();
-        }).catch(done);
-    });
-
-    it('outputs handles code injection being undefined', function (done) {
-        settingsCacheStub.withArgs('ghost_foot').returns(undefined);
-
-        helpers.ghost_foot.call().then(function (rendered) {
-            should.exist(rendered);
-            rendered.string.should.eql('');
-
-            done();
-        }).catch(done);
+    afterEach(function () {
+        sandbox.restore();
     });
 });

@@ -44,7 +44,7 @@ cleanError = function cleanError(error) {
     value = value || 'unknown';
     message = message || error.raw.message;
 
-    return new errors.DataImportError({message: message, property: offendingProperty, value: value});
+    return new errors.DataImportError(message, offendingProperty, value);
 };
 
 handleErrors = function handleErrors(errorList) {

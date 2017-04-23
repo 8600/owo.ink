@@ -1,10 +1,10 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    rewire = require('rewire'),
+var should         = require('should'),
+    sinon          = require('sinon'),
+    rewire         = require('rewire'),
 
 // Stuff we are testing
-    getImageDimensions = rewire('../../../server/data/meta/image-dimensions'),
-    getCachedImageSizeFromUrl = rewire('../../../server/utils/cached-image-size-from-url'),
+    getImageDimensions          = rewire('../../../server/data/meta/image-dimensions'),
+    getCachedImageSizeFromUrl   = rewire('../../../server/utils/cached-image-size-from-url'),
 
     sandbox = sinon.sandbox.create();
 
@@ -78,6 +78,7 @@ describe('getImageDimensions', function () {
         getImageDimensions.__set__('getCachedImageSizeFromUrl', sizeOfStub);
 
         getImageDimensions(metaData).then(function (result) {
+            console.log('result:', result);
             should.exist(result);
             sizeOfStub.calledWith(metaData.coverImage.url).should.be.true();
             sizeOfStub.calledWith(metaData.authorImage.url).should.be.true();

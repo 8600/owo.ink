@@ -3,15 +3,12 @@ import {htmlSafe} from 'ember-string';
 import injectService from 'ember-service/inject';
 import run from 'ember-runloop';
 import {isEmberArray} from 'ember-array/utils';
-import observer from 'ember-metal/observer';
-import $ from 'jquery';
-import {isUnauthorizedError} from 'ember-ajax/errors';
+
 import AuthConfiguration from 'ember-simple-auth/configuration';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ShortcutsRoute from 'ghost-admin/mixins/shortcuts-route';
 import ctrlOrCmd from 'ghost-admin/utils/ctrl-or-cmd';
 import windowProxy from 'ghost-admin/utils/window-proxy';
-import RSVP from 'rsvp';
 
 function K() {
     return this;
@@ -25,19 +22,11 @@ shortcuts[`${ctrlOrCmd}+s`] = {action: 'save', scope: 'all'};
 export default Route.extend(ApplicationRouteMixin, ShortcutsRoute, {
     shortcuts,
 
-    routeAfterAuthentication: 'posts',
-
     config: injectService(),
     feature: injectService(),
     dropdown: injectService(),
-    lazyLoader: injectService(),
     notifications: injectService(),
-    settings: injectService(),
     upgradeNotification: injectService(),
-
-    beforeModel() {
-        return this.get('config').fetch();
-    },
 
     afterModel(model, transition) {
         this._super(...arguments);
@@ -57,20 +46,9 @@ export default Route.extend(ApplicationRouteMixin, ShortcutsRoute, {
                 authenticator.onOnline();
             }
 
-            let featurePromise = this.get('feature').fetch().then(() => {
-                if (this.get('feature.nightShift')) {
-                    return this._setAdminTheme();
-                }
-            });
-
-            let settingsPromise = this.get('settings').fetch();
-
-            // return the feature/settings load promises so that we block until
-            // they are loaded to enable synchronous access everywhere
-            return RSVP.all([
-                featurePromise,
-                settingsPromise
-            ]);
+            // return the feature loading promise so that we block until settings
+            // are loaded in order for synchronous access everywhere
+            return this.get('feature').fetch();
         }
     },
 
@@ -104,19 +82,6 @@ export default Route.extend(ApplicationRouteMixin, ShortcutsRoute, {
         }
     },
 
-    _nightShift: observer('feature.nightShift', function () {
-        this._setAdminTheme();
-    }),
-
-    _setAdminTheme() {
-        let nightShift = this.get('feature.nightShift');
-
-        return this.get('lazyLoader').loadStyle('dark', 'assets/ghost-dark.css', true).then(() => {
-            $('link[title=dark]').prop('disabled', !nightShift);
-            $('link[title=light]').prop('disabled', nightShift);
-        });
-    },
-
     actions: {
         openMobileMenu() {
             this.controller.set('showMobileMenu', true);
@@ -142,10 +107,6 @@ export default Route.extend(ApplicationRouteMixin, ShortcutsRoute, {
         signedIn() {
             this.get('notifications').clearAll();
             this.send('loadServerNotifications', true);
-
-            if (this.get('feature.nightShift')) {
-                this._setAdminTheme();
-            }
         },
 
         invalidateSession() {
@@ -204,51 +165,46 @@ export default Route.extend(ApplicationRouteMixin, ShortcutsRoute, {
         save: K,
 
         error(error, transition) {
-            // unauthoirized errors are already handled in the ajax service
-            if (isUnauthorizedError(error)) {
-                return false;
-            }
-
             if (error && isEmberArray(error.errors)) {
                 switch (error.errors[0].errorType) {
-                case 'NotFoundError': {
-                    if (transition) {
-                        transition.abort();
-                    }
 
-                    let routeInfo = transition.handlerInfos[transition.handlerInfos.length - 1];
-                    let router = this.get('router');
-                    let params = [];
+                    case 'NotFoundError':
+                        if (transition) {
+                            transition.abort();
+                        }
 
-                    for (let key of Object.keys(routeInfo.params)) {
-                        params.push(routeInfo.params[key]);
-                    }
+                        let routeInfo = transition.handlerInfos[transition.handlerInfos.length - 1];
+                        let router = this.get('router');
+                        let params = [];
 
-                    return this.transitionTo('error404', router.generate(routeInfo.name, ...params).replace('/ghost/', '').replace(/^\//g, ''));
-                }
-                case 'VersionMismatchError': {
-                    if (transition) {
-                        transition.abort();
-                    }
+                        for (let key of Object.keys(routeInfo.params)) {
+                            params.push(routeInfo.params[key]);
+                        }
 
-                    this.get('upgradeStatus').requireUpgrade();
-                    return false;
-                }
-                case 'Maintenance': {
-                    if (transition) {
-                        transition.abort();
-                    }
+                        return this.transitionTo('error404', router.generate(routeInfo.name, ...params).replace('/ghost/', '').replace(/^\//g, ''));
 
-                    this.get('upgradeStatus').maintenanceAlert();
-                    return false;
-                }
-                default: {
-                    this.get('notifications').showAPIError(error);
-                    // don't show the 500 page if we weren't navigating
-                    if (!transition) {
+                    case 'VersionMismatchError':
+                        if (transition) {
+                            transition.abort();
+                        }
+
+                        this.get('upgradeStatus').requireUpgrade();
                         return false;
-                    }
-                }
+
+                    case 'Maintenance':
+                        if (transition) {
+                            transition.abort();
+                        }
+
+                        this.get('upgradeStatus').maintenanceAlert();
+                        return false;
+
+                    default:
+                        this.get('notifications').showAPIError(error);
+                        // don't show the 500 page if we weren't navigating
+                        if (!transition) {
+                            return false;
+                        }
                 }
             }
 

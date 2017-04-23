@@ -4,7 +4,8 @@ import Evented from 'ember-evented';
 import BodyEventListener from 'ghost-admin/mixins/body-event-listener';
 
 export default Service.extend(Evented, BodyEventListener, {
-    bodyClick() {
+    bodyClick(event) {
+        /*jshint unused:false */
         this.closeDropdowns();
     },
 

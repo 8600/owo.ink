@@ -1,9 +1,12 @@
-var should  = require('should'), // jshint ignore:line
+var should  = require('should'),
     sinon   = require('sinon'),
 
     versionMatch = require('../../../../server/middleware/api/version-match'),
 
     sandbox = sinon.sandbox.create();
+
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('Version Mismatch', function () {
     var req, res, getStub, nextStub;

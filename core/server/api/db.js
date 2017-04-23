@@ -3,13 +3,16 @@
 var Promise          = require('bluebird'),
     exporter         = require('../data/export'),
     importer         = require('../data/importer'),
-    backupDatabase   = require('../data/db/backup'),
+    backupDatabase   = require('../data/migration').backupDatabase,
     models           = require('../models'),
     errors           = require('../errors'),
     utils            = require('./utils'),
     pipeline         = require('../utils/pipeline'),
-    docName          = 'db',
+    api              = {},
+    docName      = 'db',
     db;
+
+api.settings         = require('./settings');
 
 /**
  * ## DB API Methods
@@ -25,8 +28,8 @@ db = {
      * @param {{context}} options
      * @returns {Promise} Ghost Export JSON format
      */
-    exportContent: function exportContent(options) {
-        var tasks;
+    exportContent: function (options) {
+        var tasks = [];
 
         options = options || {};
 
@@ -34,8 +37,8 @@ db = {
         function exportContent() {
             return exporter.doExport().then(function (exportedData) {
                 return {db: [exportedData]};
-            }).catch(function (err) {
-                return Promise.reject(new errors.GhostError({err: err}));
+            }).catch(function (error) {
+                return Promise.reject(new errors.InternalServerError(error.message || error));
             });
         }
 
@@ -54,12 +57,15 @@ db = {
      * @param {{context}} options
      * @returns {Promise} Success
      */
-    importContent: function importContent(options) {
-        var tasks;
+    importContent: function (options) {
+        var tasks = [];
         options = options || {};
 
         function importContent(options) {
             return importer.importFromFile(options)
+                .then(function () {
+                    api.settings.updateSettingsCache();
+                })
                 .return({db: []});
         }
 
@@ -78,7 +84,7 @@ db = {
      * @param {{context}} options
      * @returns {Promise} Success
      */
-    deleteAllContent: function deleteAllContent(options) {
+    deleteAllContent: function (options) {
         var tasks,
             queryOpts = {columns: 'id', context: {internal: true}};
 
@@ -86,16 +92,15 @@ db = {
 
         function deleteContent() {
             var collections = [
-                models.Subscriber.findAll(queryOpts),
                 models.Post.findAll(queryOpts),
                 models.Tag.findAll(queryOpts)
             ];
 
             return Promise.each(collections, function then(Collection) {
-                return Collection.invokeThen('destroy');
+                return Collection.invokeThen('destroy', queryOpts);
             }).return({db: []})
-            .catch(function (err) {
-                throw new errors.GhostError({err: err});
+            .catch(function (error) {
+                throw new errors.InternalServerError(error.message || error);
             });
         }
 

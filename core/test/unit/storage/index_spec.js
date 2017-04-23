@@ -1,16 +1,19 @@
-var should = require('should'), // jshint ignore:line
-    fs = require('fs-extra'),
+var fs = require('fs-extra'),
+    should = require('should'),
     configUtils = require('../../utils/configUtils'),
     storage = require('../../../server/storage'),
     errors = require('../../../server/errors'),
     localFileStorage = require('../../../server/storage/local-file-store');
 
+// to stop jshint complaining
+should.equal(true, true);
+
 describe('storage: index_spec', function () {
     var scope = {adapter: null};
 
     before(function () {
-        if (!fs.existsSync(configUtils.config.getContentPath('storage'))) {
-            fs.mkdirSync(configUtils.config.getContentPath('storage'));
+        if (!fs.existsSync(configUtils.config.paths.storagePath.custom)) {
+            fs.mkdirSync(configUtils.config.paths.storagePath.custom);
         }
     });
 
@@ -38,14 +41,14 @@ describe('storage: index_spec', function () {
             try {
                 storage.getStorage('theme');
             } catch (err) {
-                (err instanceof errors.IncorrectUsageError).should.eql(true);
+                (err instanceof errors.IncorrectUsage).should.eql(true);
             }
         });
     });
 
     describe('custom ghost storage config', function () {
         it('images storage adapter is custom, themes is default', function () {
-            scope.adapter = configUtils.config.getContentPath('storage') + 'custom-adapter.js';
+            scope.adapter = configUtils.config.paths.storagePath.custom + 'custom-adapter.js';
 
             configUtils.set({
                 storage: {
@@ -64,7 +67,6 @@ describe('storage: index_spec', function () {
                 'AnotherAdapter.prototype.save = function (){};' +
                 'AnotherAdapter.prototype.serve = function (){};' +
                 'AnotherAdapter.prototype.delete = function (){};' +
-                'AnotherAdapter.prototype.read = function (){};' +
                 'module.exports = AnotherAdapter', chosenStorage;
 
             fs.writeFileSync(scope.adapter, jsFile);
@@ -79,13 +81,11 @@ describe('storage: index_spec', function () {
 
     describe('adapter validation', function () {
         it('create good adapter', function () {
-            scope.adapter = configUtils.config.getContentPath('storage') + 'another-storage.js';
+            scope.adapter = configUtils.config.paths.storagePath.custom + 'another-storage.js';
 
             configUtils.set({
                 storage: {
-                    active: {
-                        images: 'another-storage'
-                    }
+                    active: 'another-storage'
                 },
                 paths: {
                     storage: __dirname + '/another-storage.js'
@@ -101,7 +101,6 @@ describe('storage: index_spec', function () {
                 'AnotherAdapter.prototype.save = function (){};' +
                 'AnotherAdapter.prototype.serve = function (){};' +
                 'AnotherAdapter.prototype.delete = function (){};' +
-                'AnotherAdapter.prototype.read = function (){};' +
                 'module.exports = AnotherAdapter', adapter;
 
             fs.writeFileSync(scope.adapter, jsFile);
@@ -112,7 +111,7 @@ describe('storage: index_spec', function () {
         });
 
         it('create bad adapter: exists fn is missing', function () {
-            scope.adapter = configUtils.config.getContentPath('storage') + 'broken-storage.js';
+            scope.adapter = configUtils.config.paths.storagePath.custom + 'broken-storage.js';
 
             configUtils.set({
                 storage: {
@@ -139,7 +138,7 @@ describe('storage: index_spec', function () {
                 storage.getStorage();
             } catch (err) {
                 should.exist(err);
-                (err instanceof errors.IncorrectUsageError).should.eql(true);
+                (err instanceof errors.IncorrectUsage).should.eql(true);
             }
         });
     });

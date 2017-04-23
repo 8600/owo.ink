@@ -1,7 +1,11 @@
 var sqlite3 = require('./sqlite3'),
-    mysql   = require('./mysql');
+    mysql   = require('./mysql'),
+    pg      = require('./pg');
 
 module.exports = {
     sqlite3: sqlite3,
-    mysql: mysql
+    mysql: mysql,
+    pg: pg,
+    postgres: pg,
+    postgresql: pg
 };

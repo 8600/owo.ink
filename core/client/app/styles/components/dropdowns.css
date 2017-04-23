@@ -18,10 +18,11 @@
     margin: 2px 0 0;
     padding: 10px;
     min-width: 200px;
+    border: #dfe1e3 1px solid;
     background-color: #fff;
     background-clip: padding-box;
     border-radius: 4px;
-    box-shadow: 0 0 0 1px rgba(99,114,130,0.16), 0 8px 16px rgba(27,39,51,0.08);
+    box-shadow: rgba(0, 0, 0, 0.10) 0 2px 6px;
     list-style: none;
     text-align: left;
     text-transform: none;
@@ -39,10 +40,6 @@
     margin: 8px 0;
     height: 1px;
     background: color(#dfe1e3 lightness(+5%));
-}
-
-.dropdown-menu li {
-    margin: 0;
 }
 
 .dropdown-menu > li > a,
@@ -101,7 +98,7 @@
 .dropdown-menu > .active > button:hover,
 .dropdown-menu > .active > button:focus {
     outline: 0;
-    background-color: var(--blue);
+    background-color: #428bca;
     color: #fff;
     text-decoration: none;
 }
@@ -113,7 +110,7 @@
 .dropdown-menu > .disabled > button,
 .dropdown-menu > .disabled > button:hover,
 .dropdown-menu > .disabled > button:focus {
-    color: var(--midgrey);
+    color: #777;
 }
 
 .dropdown-menu > .disabled > a:hover,

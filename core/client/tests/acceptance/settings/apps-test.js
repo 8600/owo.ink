@@ -5,19 +5,20 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
+import run from 'ember-runloop';
 import startApp from '../../helpers/start-app';
 import destroyApp from '../../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
 
 describe('Acceptance: Settings - Apps', function () {
     let application;
 
-    beforeEach(function () {
+    beforeEach(function() {
         application = startApp();
     });
 
-    afterEach(function () {
+    afterEach(function() {
         destroyApp(application);
     });
 
@@ -25,14 +26,14 @@ describe('Acceptance: Settings - Apps', function () {
         invalidateSession(application);
         visit('/settings/apps');
 
-        andThen(function () {
+        andThen(function() {
             expect(currentURL(), 'currentURL').to.equal('/signin');
         });
     });
 
     it('redirects to team page when authenticated as author', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
         visit('/settings/apps');
@@ -44,7 +45,7 @@ describe('Acceptance: Settings - Apps', function () {
 
     it('redirects to team page when authenticated as editor', function () {
         let role = server.create('role', {name: 'Editor'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
         visit('/settings/apps');
@@ -57,7 +58,9 @@ describe('Acceptance: Settings - Apps', function () {
     describe('when logged in', function () {
         beforeEach(function () {
             let role = server.create('role', {name: 'Administrator'});
-            server.create('user', {roles: [role]});
+            let user = server.create('user', {roles: [role]});
+
+            server.loadFixtures();
 
             return authenticateSession(application);
         });
@@ -68,6 +71,7 @@ describe('Acceptance: Settings - Apps', function () {
             andThen(() => {
                 // has correct url
                 expect(currentURL(), 'currentURL').to.equal('/settings/apps');
+
             });
 
             click('#slack-link');
@@ -76,7 +80,9 @@ describe('Acceptance: Settings - Apps', function () {
                 // has correct url
                 expect(currentURL(), 'currentURL').to.equal('/settings/apps/slack');
             });
+
         });
+
         it('it redirects to AMP when clicking on the grid', function () {
             visit('/settings/apps');
 
@@ -92,5 +98,6 @@ describe('Acceptance: Settings - Apps', function () {
                 expect(currentURL(), 'currentURL').to.equal('/settings/apps/amp');
             });
         });
+
     });
 });

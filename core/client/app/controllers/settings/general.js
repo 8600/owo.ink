@@ -1,19 +1,22 @@
 import Controller from 'ember-controller';
-import computed from 'ember-computed';
+import computed, {notEmpty} from 'ember-computed';
 import injectService from 'ember-service/inject';
 import observer from 'ember-metal/observer';
 import run from 'ember-runloop';
+import SettingsSaveMixin from 'ghost-admin/mixins/settings-save';
 import randomPassword from 'ghost-admin/utils/random-password';
-import {task} from 'ember-concurrency';
+import $ from 'jquery';
 
-export default Controller.extend({
+export default Controller.extend(SettingsSaveMixin, {
 
     availableTimezones: null,
+    themeToDelete: null,
 
     showUploadLogoModal: false,
     showUploadCoverModal: false,
-    showUploadIconModal: false,
+    showDeleteThemeModal: notEmpty('themeToDelete'),
 
+    ajax: injectService(),
     config: injectService(),
     ghostPaths: injectService(),
     notifications: injectService(),
@@ -21,8 +24,13 @@ export default Controller.extend({
     _scratchFacebook: null,
     _scratchTwitter: null,
 
-    iconMimeTypes: 'image/png,image/x-icon',
-    iconExtensions: ['ico', 'png'],
+    logoImageSource: computed('model.logo', function () {
+        return this.get('model.logo') || '';
+    }),
+
+    coverImageSource: computed('model.cover', function () {
+        return this.get('model.cover') || '';
+    }),
 
     isDatedPermalinks: computed('model.permalinks', {
         set(key, value) {
@@ -47,23 +55,24 @@ export default Controller.extend({
     }),
 
     _deleteTheme() {
-        let theme = this.get('store').peekRecord('theme', this.get('themeToDelete').name);
+        let theme = this.get('themeToDelete');
+        let themeURL = `${this.get('ghostPaths.apiRoot')}/themes/${theme.name}/`;
 
         if (!theme) {
             return;
         }
 
-        return theme.destroyRecord().catch((error) => {
+        return this.get('ajax').del(themeURL).then(() => {
+            this.send('reloadSettings');
+        }).catch((error) => {
             this.get('notifications').showAPIError(error);
         });
     },
 
-    save: task(function* () {
+    save() {
         let notifications = this.get('notifications');
         let config = this.get('config');
-
-        try {
-            let model = yield this.get('model').save();
+        return this.get('model').save().then((model) => {
             config.set('blogTitle', model.get('title'));
 
             // this forces the document title to recompute after
@@ -71,16 +80,45 @@ export default Controller.extend({
             this.send('collectTitleTokens', []);
 
             return model;
-
-        } catch (error) {
+        }).catch((error) => {
             if (error) {
                 notifications.showAPIError(error, {key: 'settings.save'});
             }
             throw error;
-        }
-    }),
+        });
+    },
 
     actions: {
+        setTheme(theme) {
+            this.set('model.activeTheme', theme.name);
+            this.send('save');
+        },
+
+        downloadTheme(theme) {
+            let themeURL = `${this.get('ghostPaths.apiRoot')}/themes/${theme.name}`;
+            let accessToken = this.get('session.data.authenticated.access_token');
+            let downloadURL = `${themeURL}/download/?access_token=${accessToken}`;
+            let iframe = $('#iframeDownload');
+
+            if (iframe.length === 0) {
+                iframe = $('<iframe>', {id: 'iframeDownload'}).hide().appendTo('body');
+            }
+
+            iframe.attr('src', downloadURL);
+        },
+
+        deleteTheme(theme) {
+            if (theme) {
+                return this.set('themeToDelete', theme);
+            }
+
+            return this._deleteTheme();
+        },
+
+        hideDeleteThemeModal() {
+            this.set('themeToDelete', null);
+        },
+
         setTimezone(timezone) {
             this.set('model.activeTimezone', timezone.name);
         },
@@ -91,10 +129,6 @@ export default Controller.extend({
 
         toggleUploadLogoModal() {
             this.toggleProperty('showUploadLogoModal');
-        },
-
-        toggleUploadIconModal() {
-            this.toggleProperty('showUploadIconModal');
         },
 
         validateFacebookUrl() {
@@ -124,16 +158,16 @@ export default Controller.extend({
                 let username = [];
 
                 if (newUrl.match(/(?:facebook\.com\/)(\S+)/)) {
-                    [, username] = newUrl.match(/(?:facebook\.com\/)(\S+)/);
+                    [ , username ] = newUrl.match(/(?:facebook\.com\/)(\S+)/);
                 } else {
-                    [, username] = newUrl.match(/(?:https\:\/\/|http\:\/\/)?(?:www\.)?(?:\w+\.\w+\/+)?(\S+)/mi);
+                    [ , username ] = newUrl.match(/(?:https\:\/\/|http\:\/\/)?(?:www\.)?(?:\w+\.\w+\/+)?(\S+)/mi);
                 }
 
                 // check if we have a /page/username or without
                 if (username.match(/^(?:\/)?(pages?\/\S+)/mi)) {
                     // we got a page url, now save the username without the / in the beginning
 
-                    [, username] = username.match(/^(?:\/)?(pages?\/\S+)/mi);
+                    [ , username ] = username.match(/^(?:\/)?(pages?\/\S+)/mi);
                 } else if (username.match(/^(http|www)|(\/)/) || !username.match(/^([a-z\d\.]{5,50})$/mi)) {
                     errMessage = !username.match(/^([a-z\d\.]{5,50})$/mi) ? 'Your Page name is not a valid Facebook Page name' : 'The URL must be in a format like https://www.facebook.com/yourPage';
 
@@ -149,15 +183,15 @@ export default Controller.extend({
                 this.get('model.hasValidated').pushObject('facebook');
 
                 // User input is validated
-                return this.get('save').perform().then(() => {
+                return this.save().then(() => {
                     this.set('model.facebook', '');
                     run.schedule('afterRender', this, function () {
                         this.set('model.facebook', newUrl);
                     });
                 });
             } else {
-                errMessage = 'The URL must be in a format like '
-                           + 'https://www.facebook.com/yourPage';
+                errMessage = 'The URL must be in a format like ' +
+                    'https://www.facebook.com/yourPage';
                 this.get('model.errors').add('facebook', errMessage);
                 this.get('model.hasValidated').pushObject('facebook');
                 return;
@@ -191,7 +225,7 @@ export default Controller.extend({
                 let username = [];
 
                 if (newUrl.match(/(?:twitter\.com\/)(\S+)/)) {
-                    [, username] = newUrl.match(/(?:twitter\.com\/)(\S+)/);
+                    [ , username] = newUrl.match(/(?:twitter\.com\/)(\S+)/);
                 } else {
                     [username] = newUrl.match(/([^/]+)\/?$/mi);
                 }
@@ -212,15 +246,15 @@ export default Controller.extend({
                 this.get('model.hasValidated').pushObject('twitter');
 
                 // User input is validated
-                return this.get('save').perform().then(() => {
+                return this.save().then(() => {
                     this.set('model.twitter', '');
                     run.schedule('afterRender', this, function () {
                         this.set('model.twitter', newUrl);
                     });
                 });
             } else {
-                errMessage = 'The URL must be in a format like '
-                           + 'https://twitter.com/yourUsername';
+                errMessage = 'The URL must be in a format like ' +
+                    'https://twitter.com/yourUsername';
                 this.get('model.errors').add('twitter', errMessage);
                 this.get('model.hasValidated').pushObject('twitter');
                 return;

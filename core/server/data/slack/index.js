@@ -1,9 +1,8 @@
 var https           = require('https'),
+    errors          = require('../../errors'),
     url             = require('url'),
     Promise         = require('bluebird'),
-    errors          = require('../../errors'),
-    logging         = require('../../logging'),
-    utils           = require('../../utils'),
+    config          = require('../../config'),
     events          = require('../../events'),
     api             = require('../../api/settings'),
     i18n            = require('../../i18n'),
@@ -32,12 +31,12 @@ function makeRequest(reqOptions, reqPayload) {
     reqPayload = JSON.stringify(reqPayload);
 
     req.write(reqPayload);
-    req.on('error', function (err) {
-        logging.error(new errors.GhostError({
-            err: err,
-            context: i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.error'),
-            help: i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.help', {url: 'http://support.ghost.org'})
-        }));
+    req.on('error', function (error) {
+        errors.logError(
+            error,
+            i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.error'),
+            i18n.t('errors.data.xml.xmlrpc.pingUpdateFailed.help', {url: 'http://support.ghost.org'})
+        );
     });
 
     req.end();
@@ -48,7 +47,7 @@ function ping(post) {
 
     // If this is a post, we want to send the link of the post
     if (schema.isPost(post)) {
-        message = utils.url.urlFor('post', {post: post}, true);
+        message = config.urlFor('post', {post: post}, true);
     } else {
         message = post.message;
     }
@@ -73,7 +72,7 @@ function ping(post) {
             slackData = {
                 text: message,
                 unfurl_links: true,
-                icon_url: utils.url.urlJoin(utils.url.urlFor('admin', true), 'img/ghosticon.jpg'),
+                icon_url: config.urlFor({relativeUrl: '/ghost/img/ghosticon.jpg'}, {}, true),
                 username: 'Ghost'
             };
 

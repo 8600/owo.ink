@@ -1,11 +1,16 @@
-// Dirty require!
-var ghostHead = require('../../../../helpers/ghost_head');
+var ampContentHelper   = require('./amp_content'),
+    ampComponentsHelper = require('./amp_components'),
+    registerAsyncThemeHelper = require('../../../../helpers').registerAsyncThemeHelper,
+    ghostHead = require('../../../../helpers/ghost_head'),
+    registerAmpHelpers;
 
-module.exports = function registerAmpHelpers(ghost) {
-    ghost.helpers.registerAsync('amp_content', require('./amp_content'));
+registerAmpHelpers = function (ghost) {
+    ghost.helpers.registerAsync('amp_content', ampContentHelper);
 
-    ghost.helpers.register('amp_components', require('./amp_components'));
+    ghost.helpers.register('amp_components', ampComponentsHelper);
 
     // we use the {{ghost_head}} helper, but call it {{amp_ghost_head}}, so it's consistent
-    ghost.helpers.registerAsync('amp_ghost_head', ghostHead);
+    registerAsyncThemeHelper('amp_ghost_head', ghostHead);
 };
+
+module.exports = registerAmpHelpers;

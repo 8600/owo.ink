@@ -1,12 +1,11 @@
-var should = require('should'),
-    testUtils = require('../../utils'),
-    _ = require('lodash'),
+var testUtils           = require('../../utils'),
+    should              = require('should'),
+    _                   = require('lodash'),
 
     // Stuff we are testing
-    SettingsAPI = require('../../../server/api/settings'),
-    settingsCache = require('../../../server/settings/cache'),
-    defaultContext = {user: 1},
-    internalContext = {internal: true},
+    SettingsAPI         = require('../../../server/api/settings'),
+    defaultContext      = {user: 1},
+    internalContext     = {internal: true},
     callApiWithContext,
     getErrorDetails;
 
@@ -51,9 +50,7 @@ describe('Settings API', function () {
             testUtils.API.checkResponse(results.settings[0], 'setting');
 
             // Check for a core setting
-            should.not.exist(_.find(results.settings, function (setting) {
-                return setting.type === 'core';
-            }));
+            should.not.exist(_.find(results.settings, function (setting) { return setting.type === 'core'; }));
         }).catch(getErrorDetails);
     });
 
@@ -65,9 +62,7 @@ describe('Settings API', function () {
             testUtils.API.checkResponse(results.settings[0], 'setting');
 
             // Check for a core setting
-            should.not.exist(_.find(results.settings, function (setting) {
-                return setting.type === 'core';
-            }));
+            should.not.exist(_.find(results.settings, function (setting) { return setting.type === 'core'; }));
         }).catch(getErrorDetails);
     });
 
@@ -79,9 +74,7 @@ describe('Settings API', function () {
             testUtils.API.checkResponse(results.settings[0], 'setting');
 
             // Check for a core setting
-            should.exist(_.find(results.settings, function (setting) {
-                return setting.type === 'core';
-            }));
+            should.exist(_.find(results.settings, function (setting) { return setting.type === 'core'; }));
         }).catch(getErrorDetails);
     });
 
@@ -95,8 +88,8 @@ describe('Settings API', function () {
     });
 
     it('cannot read core settings if not an internal request', function () {
-        return callApiWithContext(defaultContext, 'read', {key: 'dbHash'}).then(function () {
-            throw new Error('Allowed to read dbHash with external request');
+        return callApiWithContext(defaultContext, 'read',  {key: 'databaseVersion'}).then(function () {
+            throw new Error('Allowed to read databaseVersion with external request');
         }).catch(function (error) {
             should.exist(error);
             error.errorType.should.eql('NoPermissionError');
@@ -104,7 +97,7 @@ describe('Settings API', function () {
     });
 
     it('can read core settings if an internal request', function () {
-        return callApiWithContext(internalContext, 'read', {key: 'dbHash'}).then(function (response) {
+        return callApiWithContext(internalContext, 'read', {key: 'databaseVersion'}).then(function (response) {
             should.exist(response);
             testUtils.API.checkResponse(response, 'settings');
             response.settings.length.should.equal(1);
@@ -122,22 +115,17 @@ describe('Settings API', function () {
     });
 
     it('can edit', function () {
-        // see default-settings.json
-        settingsCache.get('title').should.eql('Ghost');
-
         return callApiWithContext(defaultContext, 'edit', {settings: [{key: 'title', value: 'UpdatedGhost'}]}, {})
             .then(function (response) {
                 should.exist(response);
                 testUtils.API.checkResponse(response, 'settings');
                 response.settings.length.should.equal(1);
                 testUtils.API.checkResponse(response.settings[0], 'setting');
-
-                settingsCache.get('title').should.eql('UpdatedGhost');
             });
     });
 
     it('cannot edit a core setting if not an internal request', function () {
-        return callApiWithContext(defaultContext, 'edit', {settings: [{key: 'dbHash', value: 'hash'}]}, {})
+        return callApiWithContext(defaultContext, 'edit', {settings: [{key: 'databaseVersion', value: '999'}]}, {})
             .then(function () {
                 throw new Error('Allowed to edit a core setting as external request');
             }).catch(function (err) {
@@ -148,26 +136,13 @@ describe('Settings API', function () {
     });
 
     it('can edit a core setting with an internal request', function () {
-        return callApiWithContext(internalContext, 'edit', {settings: [{key: 'dbHash', value: 'hash'}]}, {})
+        return callApiWithContext(internalContext, 'edit', {settings: [{key: 'databaseVersion', value: '999'}]}, {})
             .then(function (response) {
                 should.exist(response);
                 testUtils.API.checkResponse(response, 'settings');
                 response.settings.length.should.equal(1);
                 testUtils.API.checkResponse(response.settings[0], 'setting');
             });
-    });
-
-    it('cannot edit the active theme setting via API even with internal context', function () {
-        return callApiWithContext(internalContext, 'edit', 'activeTheme', {
-            settings: [{key: 'activeTheme', value: 'rasper'}]
-        }).then(function () {
-            throw new Error('Allowed to change active theme settting');
-        }).catch(function (err) {
-            should.exist(err);
-
-            err.errorType.should.eql('BadRequestError');
-            err.message.should.eql('Attempted to change activeTheme via settings API');
-        });
     });
 
     it('ensures values are stringified before saving to database', function () {
@@ -177,6 +152,18 @@ describe('Settings API', function () {
             response.settings.length.should.equal(1);
             testUtils.API.checkResponse(response.settings[0], 'setting');
             response.settings[0].value.should.equal('[]');
+        });
+    });
+
+    it('does not allow an active theme which is not installed', function () {
+        return callApiWithContext(defaultContext, 'edit', 'activeTheme', {
+            settings: [{key: 'activeTheme', value: 'rasper'}]
+        }).then(function () {
+            throw new Error('Allowed to set an active theme which is not installed');
+        }).catch(function (err) {
+            should.exist(err);
+
+            err.errorType.should.eql('ValidationError');
         });
     });
 

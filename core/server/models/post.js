@@ -1,18 +1,17 @@
 // # Post Model
-var _               = require('lodash'),
-    uuid            = require('uuid'),
-    moment          = require('moment'),
-    Promise         = require('bluebird'),
-    sequence        = require('../utils/sequence'),
-    errors          = require('../errors'),
-    Showdown        = require('showdown-ghost'),
-    legacyConverter = new Showdown.converter({extensions: ['ghostgfm', 'footnotes', 'highlight']}),
-    ghostBookshelf  = require('./base'),
-    events          = require('../events'),
-    config          = require('../config'),
-    utils           = require('../utils'),
-    baseUtils       = require('./base/utils'),
-    i18n            = require('../i18n'),
+var _              = require('lodash'),
+    uuid           = require('uuid'),
+    moment         = require('moment'),
+    Promise        = require('bluebird'),
+    sequence       = require('../utils/sequence'),
+    errors         = require('../errors'),
+    Showdown       = require('showdown-ghost'),
+    converter      = new Showdown.converter({extensions: ['ghostgfm', 'footnotes', 'highlight']}),
+    ghostBookshelf = require('./base'),
+    events         = require('../events'),
+    config         = require('../config'),
+    baseUtils      = require('./base/utils'),
+    i18n           = require('../i18n'),
     Post,
     Posts;
 
@@ -25,7 +24,6 @@ Post = ghostBookshelf.Model.extend({
         if (usePreviousResourceType) {
             resourceType = this.updated('page') ? 'page' : 'post';
         }
-
         events.emit(resourceType + '.' + event, this);
     },
 
@@ -36,106 +34,149 @@ Post = ghostBookshelf.Model.extend({
         };
     },
 
-    onSaved: function onSaved(model, response, options) {
-        return this.updateTags(model, response, options);
-    },
+    initialize: function initialize() {
+        ghostBookshelf.Model.prototype.initialize.apply(this, arguments);
 
-    onCreated: function onCreated(model) {
-        var status = model.get('status');
-        model.emitChange('added');
-
-        if (['published', 'scheduled'].indexOf(status) !== -1) {
-            model.emitChange(status);
-        }
-    },
-
-    onUpdated: function onUpdated(model) {
-        model.statusChanging = model.get('status') !== model.updated('status');
-        model.isPublished = model.get('status') === 'published';
-        model.isScheduled = model.get('status') === 'scheduled';
-        model.wasPublished = model.updated('status') === 'published';
-        model.wasScheduled = model.updated('status') === 'scheduled';
-        model.resourceTypeChanging = model.get('page') !== model.updated('page');
-        model.publishedAtHasChanged = model.hasDateChanged('published_at');
-        model.needsReschedule = model.publishedAtHasChanged && model.isScheduled;
-
-        // Handle added and deleted for post -> page or page -> post
-        if (model.resourceTypeChanging) {
-            if (model.wasPublished) {
-                model.emitChange('unpublished', true);
+        /**
+         * http://knexjs.org/#Builder-forUpdate
+         * https://dev.mysql.com/doc/refman/5.7/en/innodb-locking-reads.html
+         *
+         * Lock target collection/model for further update operations.
+         * This avoids collisions and possible content override cases.
+         *
+         * `forUpdate` is only supported for posts right now
+         */
+        this.on('fetching:collection', function (model, columns, options) {
+            if (options.forUpdate && options.transacting) {
+                options.query.forUpdate();
             }
+        });
 
-            if (model.wasScheduled) {
-                model.emitChange('unscheduled', true);
+        this.on('fetching', function (model, columns, options) {
+            if (options.forUpdate && options.transacting) {
+                options.query.forUpdate();
             }
+        });
 
-            model.emitChange('deleted', true);
+        /**
+         * We update the tags after the Post was inserted.
+         * We update the tags before the Post was updated, see `onSaving` event.
+         * `onCreated` is called before `onSaved`.
+         */
+        this.on('created', function onCreated(model, response, options) {
+            var status = model.get('status');
+
             model.emitChange('added');
 
-            if (model.isPublished) {
-                model.emitChange('published');
+            if (['published', 'scheduled'].indexOf(status) !== -1) {
+                model.emitChange(status);
             }
 
-            if (model.isScheduled) {
-                model.emitChange('scheduled');
-            }
-        } else {
-            if (model.statusChanging) {
-                // CASE: was published before and is now e.q. draft or scheduled
+            return this.updateTags(model, response, options);
+        });
+
+        this.on('updated', function onUpdated(model) {
+            model.statusChanging = model.get('status') !== model.updated('status');
+            model.isPublished = model.get('status') === 'published';
+            model.isScheduled = model.get('status') === 'scheduled';
+            model.wasPublished = model.updated('status') === 'published';
+            model.wasScheduled = model.updated('status') === 'scheduled';
+            model.resourceTypeChanging = model.get('page') !== model.updated('page');
+            model.publishedAtHasChanged = model.hasDateChanged('published_at');
+            model.needsReschedule = model.publishedAtHasChanged && model.isScheduled;
+
+            // Handle added and deleted for post -> page or page -> post
+            if (model.resourceTypeChanging) {
                 if (model.wasPublished) {
-                    model.emitChange('unpublished');
+                    model.emitChange('unpublished', true);
                 }
 
-                // CASE: was draft or scheduled before and is now e.q. published
+                if (model.wasScheduled) {
+                    model.emitChange('unscheduled', true);
+                }
+
+                model.emitChange('deleted', true);
+                model.emitChange('added');
+
                 if (model.isPublished) {
                     model.emitChange('published');
                 }
 
-                // CASE: was draft or published before and is now e.q. scheduled
                 if (model.isScheduled) {
                     model.emitChange('scheduled');
                 }
-
-                // CASE: from scheduled to something
-                if (model.wasScheduled && !model.isScheduled && !model.isPublished) {
-                    model.emitChange('unscheduled');
-                }
             } else {
-                if (model.isPublished) {
-                    model.emitChange('published.edited');
+                if (model.statusChanging) {
+                    // CASE: was published before and is now e.q. draft or scheduled
+                    if (model.wasPublished) {
+                        model.emitChange('unpublished');
+                    }
+
+                    // CASE: was draft or scheduled before and is now e.q. published
+                    if (model.isPublished) {
+                        model.emitChange('published');
+                    }
+
+                    // CASE: was draft or published before and is now e.q. scheduled
+                    if (model.isScheduled) {
+                        model.emitChange('scheduled');
+                    }
+
+                    // CASE: from scheduled to something
+                    if (model.wasScheduled && !model.isScheduled && !model.isPublished) {
+                        model.emitChange('unscheduled');
+                    }
+                } else {
+                    if (model.isPublished) {
+                        model.emitChange('published.edited');
+                    }
+
+                    if (model.needsReschedule) {
+                        model.emitChange('rescheduled');
+                    }
                 }
 
-                if (model.needsReschedule) {
-                    model.emitChange('rescheduled');
-                }
+                // Fire edited if this wasn't a change between resourceType
+                model.emitChange('edited');
             }
+        });
 
-            // Fire edited if this wasn't a change between resourceType
-            model.emitChange('edited');
-        }
-    },
+        this.on('destroying', function (model, options) {
+            return model.load('tags', options)
+                .then(function (response) {
+                    if (!response.related || !response.related('tags') || !response.related('tags').length) {
+                        return;
+                    }
 
-    onDestroying: function onDestroying(model, options) {
-        return model.load('tags', options)
-            .then(function (response) {
-                if (!response.related || !response.related('tags') || !response.related('tags').length) {
-                    return;
-                }
+                    return Promise.mapSeries(response.related('tags').models, function (tag) {
+                        return baseUtils.tagUpdate.detachTagFromPost(model, tag, options)();
+                    });
+                })
+                .then(function () {
+                    // @TODO: filtering is not possible for subscribers, see https://github.com/TryGhost/GQL/issues/22
+                    return ghostBookshelf.model('Subscriber')
+                        .where({
+                            post_id: model.id
+                        })
+                        .fetchAll(options);
+                })
+                .then(function (response) {
+                    return Promise.each(response.models, function (subscriber) {
+                        subscriber.set('post_id', null);
+                        return subscriber.save(null, options);
+                    });
+                })
+                .then(function () {
+                    if (model.previous('status') === 'published') {
+                        model.emitChange('unpublished');
+                    }
 
-                return Promise.mapSeries(response.related('tags').models, function (tag) {
-                    return baseUtils.tagUpdate.detachTagFromPost(model, tag, options)();
+                    model.emitChange('deleted');
                 });
-            })
-            .then(function () {
-                if (model.previous('status') === 'published') {
-                    model.emitChange('unpublished');
-                }
-
-                model.emitChange('deleted');
-            });
+        });
     },
 
-    onSaving: function onSaving(model, attr, options) {
+    saving: function saving(model, attr, options) {
         options = options || {};
 
         var self = this,
@@ -149,35 +190,34 @@ Post = ghostBookshelf.Model.extend({
             prevSlug    = this._previousAttributes.slug,
             tagsToCheck = this.get('tags'),
             publishedAt = this.get('published_at'),
-            publishedAtHasChanged = this.hasDateChanged('published_at'),
-            mobiledoc   = this.get('mobiledoc'),
-            tags = [];
+            publishedAtHasChanged = this.hasDateChanged('published_at', {beforeWrite: true}),
+            tags = [], ops = [];
 
         // CASE: disallow published -> scheduled
         // @TODO: remove when we have versioning based on updated_at
         if (newStatus !== olderStatus && newStatus === 'scheduled' && olderStatus === 'published') {
-            return Promise.reject(new errors.ValidationError({
-                message: i18n.t('errors.models.post.isAlreadyPublished', {key: 'status'})
-            }));
+            return Promise.reject(new errors.ValidationError(
+                i18n.t('errors.models.post.isAlreadyPublished', {key: 'status'})
+            ));
         }
 
         // CASE: both page and post can get scheduled
         if (newStatus === 'scheduled') {
             if (!publishedAt) {
-                return Promise.reject(new errors.ValidationError({
-                    message: i18n.t('errors.models.post.valueCannotBeBlank', {key: 'published_at'})
-                }));
+                return Promise.reject(new errors.ValidationError(
+                    i18n.t('errors.models.post.valueCannotBeBlank', {key: 'published_at'})
+                ));
             } else if (!moment(publishedAt).isValid()) {
-                return Promise.reject(new errors.ValidationError({
-                    message: i18n.t('errors.models.post.valueCannotBeBlank', {key: 'published_at'})
-                }));
+                return Promise.reject(new errors.ValidationError(
+                    i18n.t('errors.models.post.valueCannotBeBlank', {key: 'published_at'})
+                ));
             // CASE: to schedule/reschedule a post, a minimum diff of x minutes is needed (default configured is 2minutes)
-            } else if (publishedAtHasChanged && moment(publishedAt).isBefore(moment().add(config.get('times').cannotScheduleAPostBeforeInMinutes, 'minutes'))) {
-                return Promise.reject(new errors.ValidationError({
-                    message: i18n.t('errors.models.post.expectedPublishedAtInFuture', {
-                        cannotScheduleAPostBeforeInMinutes: config.get('times').cannotScheduleAPostBeforeInMinutes
+            } else if (publishedAtHasChanged && moment(publishedAt).isBefore(moment().add(config.times.cannotScheduleAPostBeforeInMinutes, 'minutes'))) {
+                return Promise.reject(new errors.ValidationError(
+                    i18n.t('errors.models.post.expectedPublishedAtInFuture', {
+                        cannotScheduleAPostBeforeInMinutes: config.times.cannotScheduleAPostBeforeInMinutes
                     })
-                }));
+                ));
             }
         }
 
@@ -195,17 +235,13 @@ Post = ghostBookshelf.Model.extend({
             });
 
             // keep tags for 'saved' event
+            // get('tags') will be removed after saving, because it's not a direct attribute of posts (it's a relation)
             this.tagsToSave = tags;
         }
 
-        ghostBookshelf.Model.prototype.onSaving.call(this, model, attr, options);
+        ghostBookshelf.Model.prototype.saving.call(this, model, attr, options);
 
-        if (mobiledoc) {
-            this.set('html', utils.mobiledocConverter.render(JSON.parse(mobiledoc)));
-        } else {
-            // legacy showdown mode
-            this.set('html', legacyConverter.makeHtml(_.toString(this.get('markdown'))));
-        }
+        this.set('html', converter.makeHtml(_.toString(this.get('markdown'))));
 
         // disabling sanitization until we can implement a better version
         title = this.get('title') || i18n.t('errors.models.post.untitled');
@@ -230,35 +266,58 @@ Post = ghostBookshelf.Model.extend({
             }
         }
 
+        /**
+         * - `updateTags` happens before the post is saved to the database
+         * - when editing a post, it's running in a transaction, see `Post.edit`
+         * - we are using a update collision detection, we have to know if tags were updated in the client
+         *
+         * NOTE: For adding a post, updateTags happens after the post insert, see `onCreated` event
+         */
+        if (options.method === 'update' || options.method === 'patch') {
+            ops.push(function updateTags() {
+                return self.updateTags(model, attr, options);
+            });
+        }
+
         // If a title is set, not the same as the old title, a draft post, and has never been published
         if (prevTitle !== undefined && newTitle !== prevTitle && newStatus === 'draft' && !publishedAt) {
-            // Pass the new slug through the generator to strip illegal characters, detect duplicates
-            return ghostBookshelf.Model.generateSlug(Post, this.get('title'),
-                    {status: 'all', transacting: options.transacting, importing: options.importing})
-                .then(function then(slug) {
-                    // After the new slug is found, do another generate for the old title to compare it to the old slug
-                    return ghostBookshelf.Model.generateSlug(Post, prevTitle).then(function then(prevTitleSlug) {
-                        // If the old slug is the same as the slug that was generated from the old title
-                        // then set a new slug. If it is not the same, means was set by the user
-                        if (prevTitleSlug === prevSlug) {
-                            self.set({slug: slug});
-                        }
-                    });
-                });
-        } else {
-            // If any of the attributes above were false, set initial slug and check to see if slug was changed by the user
-            if (this.hasChanged('slug') || !this.get('slug')) {
+            ops.push(function updateSlug() {
                 // Pass the new slug through the generator to strip illegal characters, detect duplicates
-                return ghostBookshelf.Model.generateSlug(Post, this.get('slug') || this.get('title'),
-                        {status: 'all', transacting: options.transacting, importing: options.importing})
+                return ghostBookshelf.Model.generateSlug(Post, self.get('title'),
+                    {status: 'all', transacting: options.transacting, importing: options.importing})
                     .then(function then(slug) {
-                        self.set({slug: slug});
+                        // After the new slug is found, do another generate for the old title to compare it to the old slug
+                        return ghostBookshelf.Model.generateSlug(Post, prevTitle,
+                            {status: 'all', transacting: options.transacting, importing: options.importing}
+                        ).then(function then(prevTitleSlug) {
+                            // If the old slug is the same as the slug that was generated from the old title
+                            // then set a new slug. If it is not the same, means was set by the user
+                            if (prevTitleSlug === prevSlug) {
+                                self.set({slug: slug});
+                            }
+                        });
                     });
-            }
+            });
+        } else {
+            ops.push(function updateSlug() {
+                // If any of the attributes above were false, set initial slug and check to see if slug was changed by the user
+                if (self.hasChanged('slug') || !self.get('slug')) {
+                    // Pass the new slug through the generator to strip illegal characters, detect duplicates
+                    return ghostBookshelf.Model.generateSlug(Post, self.get('slug') || self.get('title'),
+                        {status: 'all', transacting: options.transacting, importing: options.importing})
+                        .then(function then(slug) {
+                            self.set({slug: slug});
+                        });
+                }
+
+                return Promise.resolve();
+            });
         }
+
+        return sequence(ops);
     },
 
-    onCreating: function onCreating(model, attr, options) {
+    creating: function creating(model, attr, options) {
         options = options || {};
 
         // set any dynamic default properties
@@ -266,7 +325,7 @@ Post = ghostBookshelf.Model.extend({
             this.set('author_id', this.contextUser(options));
         }
 
-        ghostBookshelf.Model.prototype.onCreating.call(this, model, attr, options);
+        ghostBookshelf.Model.prototype.creating.call(this, model, attr, options);
     },
 
     /**
@@ -299,7 +358,9 @@ Post = ghostBookshelf.Model.extend({
                     tagsToRemove,
                     tagsToCreate;
 
+                // CASE: if nothing has changed, unset `tags`.
                 if (baseUtils.tagUpdate.tagSetsAreEqual(newTags, currentTags)) {
+                    savedModel.unset('tags');
                     return;
                 }
 
@@ -330,7 +391,7 @@ Post = ghostBookshelf.Model.extend({
                     var tag;
 
                     if (tagsToCreate.indexOf(newTag.name) > -1) {
-                        tagOps.push(baseUtils.tagUpdate.createTagThenAttachTagToPost(Post, TagModel, savedModel, newTag, index, options));
+                        tagOps.push(baseUtils.tagUpdate.createTagThenAttachTagToPost(TagModel, savedModel, newTag, index, options));
                     } else {
                         // try to find a tag on the current post which matches
                         tag = _.find(currentTags, function (currentTag) {
@@ -348,7 +409,7 @@ Post = ghostBookshelf.Model.extend({
                         });
 
                         if (tag) {
-                            tagOps.push(baseUtils.tagUpdate.attachTagToPost(Post, savedModel.id, tag, index, options));
+                            tagOps.push(baseUtils.tagUpdate.attachTagToPost(savedModel, tag, index, options));
                         }
                     }
                 });
@@ -367,12 +428,15 @@ Post = ghostBookshelf.Model.extend({
                 return doTagUpdates(options);
             }).then(function () {
                 // Don't do anything, the transaction processed ok
-            }).catch(function failure(err) {
-                return Promise.reject(new errors.GhostError({
-                    err: err,
-                    context: i18n.t('errors.models.post.tagUpdates.error'),
-                    help: i18n.t('errors.models.post.tagUpdates.help')
-                }));
+            }).catch(function failure(error) {
+                errors.logError(
+                    error,
+                    i18n.t('errors.models.post.tagUpdates.error'),
+                    i18n.t('errors.models.post.tagUpdates.help')
+                );
+                return Promise.reject(new errors.InternalServerError(
+                    i18n.t('errors.models.post.tagUpdates.error') + ' ' + i18n.t('errors.models.post.tagUpdates.help') + error
+                ));
             });
         }
     },
@@ -417,7 +481,7 @@ Post = ghostBookshelf.Model.extend({
         }
 
         if (!options.columns || (options.columns && options.columns.indexOf('url') > -1)) {
-            attrs.url = utils.url.urlPathForPost(attrs);
+            attrs.url = config.urlPathForPost(attrs);
         }
 
         return attrs;
@@ -502,9 +566,10 @@ Post = ghostBookshelf.Model.extend({
             // whitelists for the `options` hash argument on methods, by method name.
             // these are the only options that can be passed to Bookshelf / Knex.
             validOptions = {
-                findOne: ['columns', 'importing', 'withRelated', 'require'],
+                findOne: ['columns', 'importing', 'withRelated', 'require', 'forUpdate'],
                 findPage: ['page', 'limit', 'columns', 'filter', 'order', 'status', 'staticPages'],
-                findAll: ['columns', 'filter']
+                findAll: ['columns', 'filter', 'forUpdate'],
+                edit: ['forUpdate']
             };
 
         if (validOptions[methodName]) {
@@ -515,19 +580,16 @@ Post = ghostBookshelf.Model.extend({
     },
 
     /**
-     * Filters potentially unsafe model attributes, so you can pass them to Bookshelf / Knex.
+     * Manually add 'tags' attribute since it's not in the schema and call parent.
+     *
      * @param {Object} data Has keys representing the model's attributes/fields in the database.
      * @return {Object} The filtered results of the passed in data, containing only what's allowed in the schema.
      */
     filterData: function filterData(data) {
-        var permittedAttributes = this.prototype.permittedAttributes(),
-            filteredData;
+        var filteredData = ghostBookshelf.Model.filterData.apply(this, arguments),
+            extraData = _.pick(data, ['tags']);
 
-        // manually add 'tags' attribute since it's not in the schema
-        permittedAttributes.push('tags');
-
-        filteredData = _.pick(data, permittedAttributes);
-
+        _.merge(filteredData, extraData);
         return filteredData;
     },
 
@@ -616,22 +678,37 @@ Post = ghostBookshelf.Model.extend({
 
     /**
      * ### Edit
+     * Fetches and saves to Post. See model.Base.edit
+     *
      * @extends ghostBookshelf.Model.edit to handle returning the full object and manage _updatedAttributes
      * **See:** [ghostBookshelf.Model.edit](base.js.html#edit)
      */
     edit: function edit(data, options) {
-        var self = this;
+        var self = this,
+            editPost = function editPost(data, options) {
+                options.forUpdate = true;
+
+                return ghostBookshelf.Model.edit.call(self, data, options).then(function then(post) {
+                    return self.findOne({status: 'all', id: options.id}, options)
+                        .then(function then(found) {
+                            if (found) {
+                                // Pass along the updated attributes for checking status changes
+                                found._updatedAttributes = post._updatedAttributes;
+                                return found;
+                            }
+                        });
+                });
+            };
+
         options = options || {};
 
-        return ghostBookshelf.Model.edit.call(this, data, options).then(function then(post) {
-            return self.findOne({status: 'all', id: options.id}, options)
-                .then(function then(found) {
-                    if (found) {
-                        // Pass along the updated attributes for checking status changes
-                        found._updatedAttributes = post._updatedAttributes;
-                        return found;
-                    }
-                });
+        if (options.transacting) {
+            return editPost(data, options);
+        }
+
+        return ghostBookshelf.transaction(function (transacting) {
+            options.transacting = transacting;
+            return editPost(data, options);
         });
     },
 
@@ -660,15 +737,15 @@ Post = ghostBookshelf.Model.extend({
         options = this.filterOptions(options, 'destroyByAuthor');
 
         if (!authorId) {
-            throw new errors.NotFoundError({message: i18n.t('errors.models.post.noUserFound')});
+            throw new errors.NotFoundError(i18n.t('errors.models.post.noUserFound'));
         }
 
         return postCollection
             .query('where', 'author_id', '=', authorId)
             .fetch(options)
             .call('invokeThen', 'destroy', options)
-            .catch(function (err) {
-                return Promise.reject(new errors.GhostError({err: err}));
+            .catch(function (error) {
+                throw new errors.InternalServerError(error.message || error);
             });
     }),
 
@@ -689,7 +766,7 @@ Post = ghostBookshelf.Model.extend({
                 var newArgs = [foundPostModel].concat(origArgs);
 
                 return self.permissible.apply(self, newArgs);
-            });
+            }, errors.logAndThrowError);
         }
 
         if (postModel) {
@@ -701,7 +778,7 @@ Post = ghostBookshelf.Model.extend({
             return Promise.resolve();
         }
 
-        return Promise.reject(new errors.NoPermissionError({message: i18n.t('errors.models.post.notEnoughPermission')}));
+        return Promise.reject(new errors.NoPermissionError(i18n.t('errors.models.post.notEnoughPermission')));
     }
 });
 

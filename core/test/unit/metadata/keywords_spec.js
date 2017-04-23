@@ -1,6 +1,7 @@
-var should = require('should'),
-    sinon = require('sinon'),
-    getKeywords = require('../../../server/data/meta/keywords'),
+var getKeywords = require('../../../server/data/meta/keywords'),
+    sinon   = require('sinon'),
+    labs    = require('../../../server/utils/labs'),
+    should = require('should'),
     sandbox = sinon.sandbox.create();
 
 describe('getKeywords', function () {
@@ -20,7 +21,8 @@ describe('getKeywords', function () {
         should.deepEqual(keywords, ['one', 'two', 'three']);
     });
 
-    it('should only return visible tags', function () {
+    it('should only return visible tags if internal tags are enabled in labs', function () {
+        sandbox.stub(labs, 'isSet').returns(true);
         var keywords = getKeywords({
             post: {
                 tags: [
@@ -32,6 +34,21 @@ describe('getKeywords', function () {
             }
         });
         should.deepEqual(keywords, ['one', 'three']);
+    });
+
+    it('should return all tags if internal tags are disabled in labs', function () {
+        sandbox.stub(labs, 'isSet').returns(false);
+        var keywords = getKeywords({
+            post: {
+                tags: [
+                    {name: 'one', visibility: 'public'},
+                    {name: 'two', visibility: 'internal'},
+                    {name: 'three'},
+                    {name: 'four', visibility: 'internal'}
+                ]
+            }
+        });
+        should.deepEqual(keywords, ['one', 'two', 'three', 'four']);
     });
 
     it('should return null if post has tags is empty array', function () {

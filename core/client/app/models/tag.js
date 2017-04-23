@@ -1,8 +1,7 @@
-/* eslint-disable camelcase */
-import computed, {equal} from 'ember-computed';
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
+import {equal} from 'ember-computed';
 import observer from 'ember-metal/observer';
 import injectService from 'ember-service/inject';
-import {guidFor} from 'ember-metal/utils';
 
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
@@ -11,6 +10,7 @@ import ValidationEngine from 'ghost-admin/mixins/validation-engine';
 export default Model.extend(ValidationEngine, {
     validationType: 'tag',
 
+    uuid: attr('string'),
     name: attr('string'),
     slug: attr('string'),
     description: attr('string'),
@@ -30,27 +30,21 @@ export default Model.extend(ValidationEngine, {
 
     feature: injectService(),
 
-    // HACK: ugly hack to main compatibility with selectize as used in the
-    // PSM tags input
-    // TODO: remove once we've switched over to EPS for the tags input
-    uuid: computed(function () {
-        return guidFor(this);
-    }),
-
     setVisibility() {
         let internalRegex = /^#.?/;
+
         this.set('visibility', internalRegex.test(this.get('name')) ? 'internal' : 'public');
     },
 
     save() {
-        if (this.get('changedAttributes.name') && !this.get('isDeleted')) {
+        if (this.get('feature.internalTags') && this.get('changedAttributes.name') && !this.get('isDeleted')) {
             this.setVisibility();
         }
         return this._super(...arguments);
     },
 
-    setVisibilityOnNew: observer('isNew', 'isSaving', 'name', function () {
-        if (this.get('isNew') && !this.get('isSaving')) {
+    setVisibilityOnNew: observer('feature.internalTags', 'isNew', 'isSaving', 'name', function () {
+        if (this.get('isNew') && !this.get('isSaving') && this.get('feature.internalTags')) {
             this.setVisibility();
         }
     })

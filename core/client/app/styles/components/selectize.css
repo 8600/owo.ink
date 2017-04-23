@@ -122,21 +122,21 @@
     display: inline-block;
     overflow: hidden;
     box-sizing: border-box;
-    padding: 10px 12px;
+    padding: 8px 10px;
     width: 100%;
-    height: 39px;
-    border: color(var(--lightgrey) l(-5%) s(-10%)) 1px solid;
+    height: 37px;
+    border: 1px solid #dfe1e3;
     border-radius: var(--border-radius);
-    color: color(var(--midgrey) l(-18%));
+    color: #666;
     transition: border-color 0.15s linear;
 }
 
 .selectize-input.focus {
-    border-color: color(var(--lightgrey) l(-15%) s(-10%));
+    border-color: #b1b1b1;
 }
 
 .selectize-control.multi .selectize-input.has-items {
-    padding: 6px 10px 3px;
+    padding: 5px 8px 2px;
     height: auto;
 }
 

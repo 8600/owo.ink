@@ -15,7 +15,7 @@
         <link rel="shortcut icon" href="{{asset "favicon.ico"}}">
         <meta http-equiv="cleartype" content="on">
 
-        <link rel="stylesheet" href="{{asset "shared/ghost.css"}}"/>
+        <link rel="stylesheet" href="{{asset "ghost.css" ghost="true" minifyInProduction="true"}}" />
     </head>
     <body>
         <div class="gh-app">
@@ -33,7 +33,7 @@
                                             {{input_password class="gh-input" placeholder="Password"}}
                                         </span>
                                     </div>
-                                    <button class="gh-btn gh-btn-blue gh-btn-block" type="submit"><span>Enter Now</span></button>
+                                    <button class="btn btn-blue btn-block" type="submit">Enter Now</button>
                                 </form>
 
                                 {{#if error}}

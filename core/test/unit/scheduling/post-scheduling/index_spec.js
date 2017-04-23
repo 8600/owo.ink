@@ -1,18 +1,17 @@
+
 var should = require('should'),
     sinon = require('sinon'),
     Promise = require('bluebird'),
     moment = require('moment'),
     config = require(__dirname + '/../../../../server/config'),
-    testUtils = require(config.get('paths').corePath + '/test/utils'),
-    errors = require(config.get('paths').corePath + '/server/errors'),
-    events = require(config.get('paths').corePath + '/server/events'),
-    models = require(config.get('paths').corePath + '/server/models'),
-    api = require(config.get('paths').corePath + '/server/api'),
-    schedulingUtils = require(config.get('paths').corePath + '/server/scheduling/utils'),
-    SchedulingDefault = require(config.get('paths').corePath + '/server/scheduling/SchedulingDefault'),
-    postScheduling = require(config.get('paths').corePath + '/server/scheduling/post-scheduling'),
-
-    sandbox = sinon.sandbox.create();
+    testUtils = require(config.paths.corePath + '/test/utils'),
+    errors = require(config.paths.corePath + '/server/errors'),
+    events = require(config.paths.corePath + '/server/events'),
+    models = require(config.paths.corePath + '/server/models'),
+    api = require(config.paths.corePath + '/server/api'),
+    schedulingUtils = require(config.paths.corePath + '/server/scheduling/utils'),
+    SchedulingDefault = require(config.paths.corePath + '/server/scheduling/SchedulingDefault'),
+    postScheduling = require(config.paths.corePath + '/server/scheduling/post-scheduling');
 
 describe('Scheduling: Post Scheduling', function () {
     var scope = {
@@ -33,28 +32,33 @@ describe('Scheduling: Post Scheduling', function () {
 
         scope.adapter = new SchedulingDefault();
 
-        sandbox.stub(api.schedules, 'getScheduledPosts', function () {
+        sinon.stub(api.schedules, 'getScheduledPosts', function () {
             return Promise.resolve({posts: scope.scheduledPosts});
         });
 
-        sandbox.stub(events, 'onMany', function (events, stubDone) {
+        sinon.stub(events, 'onMany', function (events, stubDone) {
             events.forEach(function (event) {
                 scope.events[event] = stubDone;
             });
         });
 
-        sandbox.stub(schedulingUtils, 'createAdapter').returns(Promise.resolve(scope.adapter));
+        sinon.stub(schedulingUtils, 'createAdapter').returns(Promise.resolve(scope.adapter));
 
         models.Client.findOne = function () {
             return Promise.resolve(scope.client);
         };
 
-        sandbox.spy(scope.adapter, 'schedule');
-        sandbox.spy(scope.adapter, 'reschedule');
+        sinon.spy(scope.adapter, 'schedule');
+        sinon.spy(scope.adapter, 'reschedule');
     });
 
     afterEach(function (done) {
-        sandbox.restore();
+        scope.adapter.schedule.reset();
+        schedulingUtils.createAdapter.restore();
+        scope.adapter.schedule.restore();
+        scope.adapter.reschedule.restore();
+        events.onMany.restore();
+        api.schedules.getScheduledPosts.restore();
         testUtils.teardown(done);
     });
 
@@ -100,7 +104,7 @@ describe('Scheduling: Post Scheduling', function () {
                 postScheduling.init()
                     .catch(function (err) {
                         should.exist(err);
-                        (err instanceof errors.IncorrectUsageError).should.eql(true);
+                        (err instanceof errors.IncorrectUsage).should.eql(true);
                         done();
                     });
             });

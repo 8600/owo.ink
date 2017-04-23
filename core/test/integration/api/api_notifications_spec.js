@@ -1,9 +1,11 @@
-var should = require('should'),
-    testUtils = require('../../utils'),
-    _ = require('lodash'),
-    ObjectId = require('bson-objectid'),
+var testUtils        = require('../../utils'),
+    should           = require('should'),
+    _                = require('lodash'),
+    uuid             = require('uuid'),
+
+    // Stuff we are testing
     NotificationsAPI = require('../../../server/api/notifications'),
-    SettingsAPI = require('../../../server/api/settings');
+    SettingsAPI      = require('../../../server/api/settings');
 
 describe('Notifications API', function () {
     // Keep the DB clean
@@ -12,10 +14,6 @@ describe('Notifications API', function () {
     beforeEach(testUtils.setup('settings', 'users:roles', 'perms:setting', 'perms:notification', 'perms:init'));
 
     should.exist(NotificationsAPI);
-
-    after(function () {
-        return NotificationsAPI.destroyAll(testUtils.context.internal);
-    });
 
     it('can add, adds defaults (internal)', function (done) {
         var msg = {
@@ -63,8 +61,7 @@ describe('Notifications API', function () {
         var msg = {
             type: 'info',
             message: 'Hello, this is dog number 3',
-            // id can't be passed from outside
-            id: ObjectId.generate()
+            id: 99
         };
 
         NotificationsAPI.add({notifications: [msg]}, testUtils.context.internal).then(function (result) {
@@ -74,7 +71,8 @@ describe('Notifications API', function () {
             should.exist(result.notifications);
 
             notification = result.notifications[0];
-            notification.id.should.not.equal(msg.id);
+            notification.id.should.be.a.Number();
+            notification.id.should.not.equal(99);
             should.exist(notification.status);
             notification.status.should.equal('alert');
 
@@ -158,6 +156,7 @@ describe('Notifications API', function () {
             type: 'info',
             location: 'test.to-be-deleted',
             custom: true,
+            uuid: uuid.v4(),
             dismissible: true,
             message: 'Hello, this is dog number 4'
         };
@@ -166,12 +165,12 @@ describe('Notifications API', function () {
             var notification = result.notifications[0];
 
             NotificationsAPI.destroy(
-                _.extend({}, testUtils.context.internal, {id: notification.id})
+            _.extend({}, testUtils.context.internal, {id: notification.id})
             ).then(function () {
                 return SettingsAPI.read(_.extend({key: 'seenNotifications'}, testUtils.context.internal));
             }).then(function (response) {
                 should.exist(response);
-                response.settings[0].value.should.containEql(notification.id);
+                response.settings[0].value.should.containEql(customNotification.uuid);
 
                 done();
             }).catch(done);

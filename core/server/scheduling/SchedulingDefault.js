@@ -2,8 +2,7 @@ var util = require('util'),
     moment = require('moment'),
     request = require('superagent'),
     SchedulingBase = require(__dirname + '/SchedulingBase'),
-    errors = require(__dirname + '/../errors'),
-    logging = require(__dirname + '/../logging');
+    errors = require(__dirname + '/../errors');
 
 /**
  * allJobs is a sorted list by time attribute
@@ -170,7 +169,7 @@ SchedulingDefault.prototype._execute = function (jobs) {
                     });
                 });
             })();
-        }, diff - 70);
+        }, diff - 200);
     });
 };
 
@@ -213,10 +212,7 @@ SchedulingDefault.prototype._pingUrl = function (object) {
                 }, self.retryTimeoutInMs);
             }
 
-            logging.error(new errors.GhostError({
-                err: err,
-                level: '严重'
-            }));
+            errors.logError(err);
         }
     });
 };

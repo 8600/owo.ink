@@ -1,9 +1,11 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
-    nock = require('nock'),
-    configUtils = require('../utils/configUtils'),
-    gravatar = require('../../server/utils/gravatar'),
-    utils = require('../../server/utils');
+var should          = require('should'),
+    sinon           = require('sinon'),
+    nock            = require('nock'),
+    gravatar        = require('../../server/utils/gravatar'),
+    utils           = require('../../server/utils');
+
+// To stop jshint complaining
+should.equal(true, true);
 
 describe('Server Utilities', function () {
     describe('Safe String', function () {
@@ -93,12 +95,16 @@ describe('Server Utilities', function () {
     });
 
     describe('gravatar-lookup', function () {
+        var currentEnv = process.env.NODE_ENV;
+
         beforeEach(function () {
-            configUtils.set('privacy:useGravatar', true);
+            // give environment a value that will call gravatar
+            process.env.NODE_ENV = 'production';
         });
 
         afterEach(function () {
-            configUtils.restore();
+            // reset the environment
+            process.env.NODE_ENV = currentEnv;
         });
 
         it('can successfully lookup a gravatar url', function (done) {
@@ -135,7 +141,9 @@ describe('Server Utilities', function () {
                 .reply(200);
 
             gravatar.lookup({email: 'exists@example.com'}, 10).then(function (result) {
-                should.not.exist(result);
+                should.exist(result);
+                should.not.exist(result.image);
+
                 done();
             }).catch(done);
         });

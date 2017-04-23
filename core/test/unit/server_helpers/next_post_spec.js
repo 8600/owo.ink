@@ -1,9 +1,13 @@
-var should = require('should'), // jshint ignore:line
-    sinon = require('sinon'),
-    Promise = require('bluebird'),
+var should         = require('should'),
+    sinon          = require('sinon'),
+    Promise        = require('bluebird'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
+
 // Stuff we are testing
-    helpers = require('../../../server/helpers'),
-    api = require('../../../server/api'),
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers'),
+    api            = require('../../../server/api'),
 
     sandbox = sinon.sandbox.create();
 
@@ -16,6 +20,7 @@ describe('{{next_post}} helper', function () {
 
     describe('with valid post data - ', function () {
         beforeEach(function () {
+            utils.loadHelpers();
             readPostStub = sandbox.stub(api.posts, 'read', function (options) {
                 if (options.include.indexOf('next') === 0) {
                     return Promise.resolve({
@@ -25,20 +30,22 @@ describe('{{next_post}} helper', function () {
             });
         });
 
+        it('has loaded next_post helper', function () {
+            should.exist(handlebars.helpers.prev_post);
+        });
+
         it('shows \'if\' template with next post data', function (done) {
             var fn = sinon.spy(),
                 inverse = sinon.spy(),
                 optionsData = {name: 'next_post', fn: fn, inverse: inverse};
 
-            helpers.prev_post.call({
-                html: 'content',
+            helpers.prev_post.call({html: 'content',
                 status: 'published',
                 markdown: 'ff',
                 title: 'post2',
                 slug: 'current',
                 created_at: new Date(0),
-                url: '/current/'
-            }, optionsData).then(function () {
+                url: '/current/'}, optionsData).then(function () {
                 fn.calledOnce.should.be.true();
                 inverse.calledOnce.should.be.false();
 
@@ -54,6 +61,7 @@ describe('{{next_post}} helper', function () {
 
     describe('for valid post with no next post', function () {
         beforeEach(function () {
+            utils.loadHelpers();
             readPostStub = sandbox.stub(api.posts, 'read', function (options) {
                 if (options.include.indexOf('next') === 0) {
                     return Promise.resolve({posts: [{slug: '/current/', title: 'post 2'}]});
@@ -66,14 +74,12 @@ describe('{{next_post}} helper', function () {
                 inverse = sinon.spy(),
                 optionsData = {name: 'next_post', fn: fn, inverse: inverse};
 
-            helpers.prev_post.call({
-                html: 'content',
+            helpers.prev_post.call({html: 'content',
                 markdown: 'ff',
                 title: 'post2',
                 slug: 'current',
                 created_at: new Date(0),
-                url: '/current/'
-            }, optionsData).then(function () {
+                url: '/current/'}, optionsData).then(function () {
                 fn.called.should.be.false();
                 inverse.called.should.be.true();
                 done();
@@ -85,6 +91,7 @@ describe('{{next_post}} helper', function () {
 
     describe('for invalid post data', function () {
         beforeEach(function () {
+            utils.loadHelpers();
             readPostStub = sandbox.stub(api.posts, 'read', function (options) {
                 if (options.include.indexOf('next') === 0) {
                     return Promise.resolve({});
@@ -110,6 +117,7 @@ describe('{{next_post}} helper', function () {
 
     describe('for unpublished post', function () {
         beforeEach(function () {
+            utils.loadHelpers();
             readPostStub = sandbox.stub(api.posts, 'read', function (options) {
                 if (options.include.indexOf('next') === 0) {
                     return Promise.resolve({
@@ -124,20 +132,18 @@ describe('{{next_post}} helper', function () {
                 inverse = sinon.spy(),
                 optionsData = {name: 'next_post', fn: fn, inverse: inverse};
 
-            helpers.prev_post.call({
-                html: 'content',
+            helpers.prev_post.call({html: 'content',
                 status: 'published',
                 markdown: 'ff',
                 title: 'post2',
                 slug: 'current',
                 created_at: new Date(0),
-                url: '/current/'
-            }, optionsData)
-                .then(function () {
-                    fn.called.should.be.true();
-                    inverse.called.should.be.false();
-                    done();
-                }).catch(function (err) {
+                url: '/current/'}, optionsData)
+            .then(function () {
+                fn.called.should.be.true();
+                inverse.called.should.be.false();
+                done();
+            }).catch(function (err) {
                 done(err);
             });
         });

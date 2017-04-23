@@ -1,21 +1,19 @@
-var should = require('should'),
-    supertest = require('supertest'),
-    testUtils = require('../../../utils'),
-    config = require('../../../../../core/server/config'),
-    ghost = testUtils.startGhost,
+var testUtils     = require('../../../utils'),
+    should        = require('should'),
+    supertest     = require('supertest'),
+
+    ghost         = require('../../../../../core'),
+
     request;
 
 describe('Settings API', function () {
-    var accesstoken = '', ghostServer;
+    var accesstoken = '';
 
     before(function (done) {
         // starting ghost automatically populates the db
         // TODO: prevent db init, and manage bringing up the DB with fixtures ourselves
-        ghost().then(function (_ghostServer) {
-            ghostServer = _ghostServer;
-            return ghostServer.start();
-        }).then(function () {
-            request = supertest.agent(config.get('url'));
+        ghost().then(function (ghostServer) {
+            request = supertest.agent(ghostServer.rootApp);
         }).then(function () {
             return testUtils.doAuth(request);
         }).then(function (token) {
@@ -24,11 +22,10 @@ describe('Settings API', function () {
         }).catch(done);
     });
 
-    after(function () {
-        return testUtils.clearData()
-            .then(function () {
-                return ghostServer.stop();
-            });
+    after(function (done) {
+        testUtils.clearData().then(function () {
+            done();
+        }).catch(done);
     });
 
     // TODO: currently includes values of type=core
@@ -69,7 +66,7 @@ describe('Settings API', function () {
                 should.exist(jsonResponse);
                 should.exist(jsonResponse.settings);
 
-                testUtils.API.checkResponseValue(jsonResponse.settings[0], ['id', 'key', 'value', 'type', 'created_at', 'created_by', 'updated_at', 'updated_by']);
+                testUtils.API.checkResponseValue(jsonResponse.settings[0], ['id', 'uuid', 'key', 'value', 'type', 'created_at', 'created_by', 'updated_at', 'updated_by']);
                 jsonResponse.settings[0].key.should.eql('title');
                 testUtils.API.isISO8601(jsonResponse.settings[0].created_at).should.be.true();
                 done();
@@ -79,7 +76,6 @@ describe('Settings API', function () {
     it('can\'t retrieve non existent setting', function (done) {
         request.get(testUtils.API.getApiQuery('settings/testsetting/'))
             .set('Authorization', 'Bearer ' + accesstoken)
-            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect('Cache-Control', testUtils.cacheRules.private)
             .expect(404)
@@ -142,7 +138,6 @@ describe('Settings API', function () {
     it('can\'t edit settings with invalid accesstoken', function (done) {
         request.get(testUtils.API.getApiQuery('settings/'))
             .set('Authorization', 'Bearer ' + accesstoken)
-            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect('Cache-Control', testUtils.cacheRules.private)
             .end(function (err, res) {
@@ -173,7 +168,6 @@ describe('Settings API', function () {
     it('can\'t edit non existent setting', function (done) {
         request.get(testUtils.API.getApiQuery('settings/'))
             .set('Authorization', 'Bearer ' + accesstoken)
-            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect('Cache-Control', testUtils.cacheRules.private)
             .end(function (err, res) {

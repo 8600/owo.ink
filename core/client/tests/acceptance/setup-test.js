@@ -5,16 +5,11 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
-import startApp from '../helpers/start-app';
-import destroyApp from '../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from '../helpers/ember-simple-auth';
-import {enableGhostOAuth} from '../helpers/configuration';
-import {Response} from 'ember-cli-mirage';
-import {
-    stubSuccessfulOAuthConnect,
-    stubFailedOAuthConnect
-} from '../helpers/oauth';
+import { expect } from 'chai';
+import startApp from 'ghost-admin/tests/helpers/start-app';
+import destroyApp from 'ghost-admin/tests/helpers/destroy-app';
+import { invalidateSession, authenticateSession } from 'ghost-admin/tests/helpers/ember-simple-auth';
+import Mirage from 'ember-cli-mirage';
 
 describe('Acceptance: Setup', function () {
     let application;
@@ -29,7 +24,7 @@ describe('Acceptance: Setup', function () {
 
     it('redirects if already authenticated', function () {
         let role = server.create('role', {name: 'Author'});
-        server.create('user', {roles: [role], slug: 'test-user'});
+        let user = server.create('user', {roles: [role], slug: 'test-user'});
 
         authenticateSession(application);
 
@@ -104,7 +99,7 @@ describe('Acceptance: Setup', function () {
                 expect(find('.gh-flow-content em').text()).to.equal('2');
             });
 
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 // it transitions to step two
@@ -118,7 +113,7 @@ describe('Acceptance: Setup', function () {
                     .to.be.true;
             });
 
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 // it marks fields as invalid
@@ -139,7 +134,7 @@ describe('Acceptance: Setup', function () {
             fillIn('[name="name"]', 'Test User');
             fillIn('[name="password"]', 'password');
             fillIn('[name="blog-title"]', 'Blog Title');
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 // it transitions to step 3
@@ -147,7 +142,7 @@ describe('Acceptance: Setup', function () {
                     .to.equal('/setup/three');
 
                 // submit button is "disabled"
-                expect(find('button[type="submit"]').hasClass('gh-btn-green'), 'invite button with no emails is white')
+                expect(find('button[type="submit"]').hasClass('btn-green'), 'invite button with no emails is white')
                     .to.be.false;
             });
 
@@ -156,7 +151,7 @@ describe('Acceptance: Setup', function () {
 
             andThen(() => {
                 // submit button is "enabled"
-                expect(find('button[type="submit"]').hasClass('gh-btn-green'), 'invite button is green with valid email address')
+                expect(find('button[type="submit"]').hasClass('btn-green'), 'invite button is green with valid email address')
                     .to.be.true;
             });
 
@@ -185,7 +180,7 @@ describe('Acceptance: Setup', function () {
 
                 // validation error
                 if (postCount === 1) {
-                    return new Response(422, {}, {
+                    return new Mirage.Response(422, {}, {
                         errors: [
                             {
                                 errorType: 'ValidationError',
@@ -197,12 +192,12 @@ describe('Acceptance: Setup', function () {
 
                 // server error
                 if (postCount === 2) {
-                    return new Response(500, {}, null);
+                    return new Mirage.Response(500, {}, null);
                 }
             });
 
             visit('/setup/two');
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 // non-server validation
@@ -216,7 +211,7 @@ describe('Acceptance: Setup', function () {
             fillIn('[name="blog-title"]', 'Blog Title');
 
             // first post - simulated validation error
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 expect(find('.main-error').text().trim(), 'error text')
@@ -224,7 +219,7 @@ describe('Acceptance: Setup', function () {
             });
 
             // second post - simulated server error
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 expect(find('.main-error').text().trim(), 'error text')
@@ -238,7 +233,7 @@ describe('Acceptance: Setup', function () {
         it('handles invalid origin error on step 2', function () {
             // mimick the API response for an invalid origin
             server.post('/authentication/token', function () {
-                return new Response(401, {}, {
+                return new Mirage.Response(401, {}, {
                     errors: [
                         {
                             errorType: 'UnauthorizedError',
@@ -256,11 +251,11 @@ describe('Acceptance: Setup', function () {
             fillIn('[name="name"]', 'Test User');
             fillIn('[name="password"]', 'password');
             fillIn('[name="blog-title"]', 'Blog Title');
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 // button should not be spinning
-                expect(find('.gh-btn-green .spinner').length, 'button has spinner')
+                expect(find('.btn-green .spinner').length, 'button has spinner')
                     .to.equal(0);
                 // we should show an error message
                 expect(find('.main-error').text(), 'error text')
@@ -271,19 +266,19 @@ describe('Acceptance: Setup', function () {
         it('handles validation errors in step 3', function () {
             let input = '[name="users"]';
             let postCount = 0;
-            let button, formGroup;
+            let button, formGroup, user;
 
             invalidateSession(application);
             server.loadFixtures('roles');
 
-            server.post('/invites', function ({invites}, request) {
-                let [params] = JSON.parse(request.requestBody).invites;
+            server.post('/users', function (db, request) {
+                let [params] = JSON.parse(request.requestBody).users;
 
                 postCount++;
 
                 // invalid
                 if (postCount === 1) {
-                    return new Response(422, {}, {
+                    return new Mirage.Response(422, {}, {
                         errors: [
                             {
                                 errorType: 'ValidationError',
@@ -293,18 +288,11 @@ describe('Acceptance: Setup', function () {
                     });
                 }
 
-                // TODO: duplicated from mirage/config/invites - extract method?
-                /* eslint-disable camelcase */
-                params.token = `${invites.all().models.length}-token`;
-                params.expires = moment.utc().add(1, 'day').valueOf();
-                params.created_at = moment.utc().format();
-                params.created_by = 1;
-                params.updated_at = moment.utc().format();
-                params.updated_by = 1;
-                params.status = 'sent';
-                /* eslint-enable camelcase */
-
-                return invites.create(params);
+                // valid
+                user = db.users.insert(params);
+                return {
+                    users: [user]
+                };
             });
 
             // complete step 2 so we can access step 3
@@ -313,7 +301,7 @@ describe('Acceptance: Setup', function () {
             fillIn('[name="name"]', 'Test User');
             fillIn('[name="password"]', 'password');
             fillIn('[name="blog-title"]', 'Blog Title');
-            click('.gh-btn-green');
+            click('.btn-green');
 
             // default field/button state
             andThen(() => {
@@ -324,9 +312,9 @@ describe('Acceptance: Setup', function () {
                     .to.be.false;
 
                 expect(button.text().trim(), 'default button text')
-                    .to.equal('向好友发送邀请');
+                    .to.equal('Invite some users');
 
-                expect(button.hasClass('gh-btn-minor'), 'default button is disabled')
+                expect(button.hasClass('btn-minor'), 'default button is disabled')
                     .to.be.true;
             });
 
@@ -340,7 +328,7 @@ describe('Acceptance: Setup', function () {
                 expect(button.text().trim(), 'no users submitted button text')
                     .to.equal('No users to invite');
 
-                expect(button.hasClass('gh-btn-minor'), 'no users submitted button is disabled')
+                expect(button.hasClass('btn-minor'), 'no users submitted button is disabled')
                     .to.be.true;
             });
 
@@ -355,7 +343,7 @@ describe('Acceptance: Setup', function () {
                 expect(button.text().trim(), 'single invalid button text')
                     .to.equal('1 invalid email address');
 
-                expect(button.hasClass('gh-btn-minor'), 'invalid email button is disabled')
+                expect(button.hasClass('btn-minor'), 'invalid email button is disabled')
                     .to.be.true;
             });
 
@@ -379,7 +367,7 @@ describe('Acceptance: Setup', function () {
                 expect(button.text().trim(), 'single valid button text')
                     .to.equal('Invite 1 user');
 
-                expect(button.hasClass('gh-btn-green'), 'valid email button is enabled')
+                expect(button.hasClass('btn-green'), 'valid email button is enabled')
                     .to.be.true;
             });
 
@@ -393,7 +381,7 @@ describe('Acceptance: Setup', function () {
             });
 
             // submit invitations with simulated failure on 1 invite
-            click('.gh-btn-green');
+            click('.btn-green');
 
             andThen(() => {
                 // it redirects to the home / "content" screen
@@ -407,117 +395,6 @@ describe('Acceptance: Setup', function () {
                 // it displays failure alert
                 expect(find('.gh-alert-red').length, 'number of failure alerts')
                     .to.equal(1);
-            });
-        });
-    });
-
-    describe('using Ghost OAuth', function () {
-        beforeEach(function () {
-            // mimic a new install
-            server.get('/authentication/setup/', function () {
-                return {
-                    setup: [
-                        {status: false}
-                    ]
-                };
-            });
-
-            // ensure we have settings (to pass validation) and roles available
-            enableGhostOAuth(server);
-            server.loadFixtures('settings');
-            server.loadFixtures('roles');
-        });
-
-        it('displays the connect form and validates', function () {
-            invalidateSession(application);
-
-            visit('/setup');
-
-            andThen(() => {
-                // it redirects to step one
-                expect(
-                    currentURL(),
-                    'url after accessing /setup'
-                ).to.equal('/setup/one');
-            });
-
-            click('.gh-btn-green');
-
-            andThen(() => {
-                expect(
-                    find('button.login').text().trim(),
-                    'login button text'
-                ).to.equal('Sign in with Ghost');
-            });
-
-            click('.gh-btn-green');
-
-            andThen(() => {
-                let sessionFG = find('button.login').closest('.form-group');
-                let titleFG = find('input[name="blog-title"]').closest('.form-group');
-
-                // session is validated
-                expect(
-                    sessionFG.hasClass('error'),
-                    'session form group has error class'
-                ).to.be.true;
-
-                expect(
-                    sessionFG.find('.response').text().trim(),
-                    'session validation text'
-                ).to.match(/Please connect a Ghost\.org account/i);
-
-                // blog title is validated
-                expect(
-                    titleFG.hasClass('error'),
-                    'title form group has error class'
-                ).to.be.true;
-
-                expect(
-                    titleFG.find('.response').text().trim(),
-                    'title validation text'
-                ).to.match(/please enter a blog title/i);
-            });
-
-            // TODO: test that connecting clears session validation error
-            // TODO: test that typing in blog title clears validation error
-        });
-
-        it('can connect and setup successfully', function () {
-            stubSuccessfulOAuthConnect(application);
-
-            visit('/setup/two');
-            click('button.login');
-
-            andThen(() => {
-                expect(
-                    find('button.login').text().trim(),
-                    'login button text when connected'
-                ).to.equal('Connected: oauthtest@example.com');
-            });
-
-            fillIn('input[name="blog-title"]', 'Ghostbusters');
-            click('.gh-btn-green');
-
-            andThen(() => {
-                expect(
-                    currentURL(),
-                    'url after submitting'
-                ).to.equal('/setup/three');
-            });
-        });
-
-        it('handles failed connect', function () {
-            stubFailedOAuthConnect(application);
-
-            visit('/setup/two');
-            click('button.login');
-
-            andThen(() => {
-                expect(
-                    find('.main-error').text().trim(),
-                    'error text after failed oauth connect'
-                ).to.match(/authentication with ghost\.org denied or failed/i);
             });
         });
     });

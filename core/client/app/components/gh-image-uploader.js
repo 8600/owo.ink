@@ -5,6 +5,7 @@ import {htmlSafe} from 'ember-string';
 import {isBlank} from 'ember-utils';
 import {isEmberArray} from 'ember-array/utils';
 import run from 'ember-runloop';
+
 import {invokeAction} from 'ember-invoke-action';
 import ghostPaths from 'ghost-admin/utils/ghost-paths';
 import {
@@ -23,23 +24,20 @@ export default Component.extend({
     text: '',
     altText: '',
     saveButton: true,
-    accept: null,
-    extensions: null,
-    uploadUrl: null,
+    accept: 'image/gif,image/jpg,image/jpeg,image/png,image/svg+xml',
+    extensions: ['gif', 'jpg', 'jpeg', 'png', 'svg'],
     validate: null,
 
     dragClass: null,
     failureMessage: null,
     file: null,
+    formType: 'upload',
     url: null,
     uploadPercentage: 0,
 
     ajax: injectService(),
+    config: injectService(),
     notifications: injectService(),
-
-    _defaultAccept: 'image/gif,image/jpg,image/jpeg,image/png,image/svg+xml',
-    _defaultExtensions: ['gif', 'jpg', 'jpeg', 'png', 'svg'],
-    _defaultUploadUrl: '/uploads/',
 
     // TODO: this wouldn't be necessary if the server could accept direct
     // file uploads
@@ -71,22 +69,25 @@ export default Component.extend({
         return htmlSafe(`width: ${width}`);
     }),
 
+    canShowUploadForm: computed('config.fileStorage', function () {
+        return this.get('config.fileStorage') !== false;
+    }),
+
+    showUploadForm: computed('formType', function () {
+        let canShowUploadForm = this.get('canShowUploadForm');
+        let formType = this.get('formType');
+
+        return formType === 'upload' && canShowUploadForm;
+    }),
+
     didReceiveAttrs() {
         let image = this.get('image');
         this.set('url', image);
-
-        if (!this.get('accept')) {
-            this.set('accept', this.get('_defaultAccept'));
-        }
-        if (!this.get('extensions')) {
-            this.set('extensions', this.get('_defaultExtensions'));
-        }
-        if (!this.get('uploadUrl')) {
-            this.set('uploadUrl', this.get('_defaultUploadUrl'));
-        }
     },
 
     dragOver(event) {
+        let showUploadForm = this.get('showUploadForm');
+
         if (!event.dataTransfer) {
             return;
         }
@@ -99,21 +100,32 @@ export default Component.extend({
         event.stopPropagation();
         event.preventDefault();
 
-        this.set('dragClass', '-drag-over');
+        if (showUploadForm) {
+            this.set('dragClass', '-drag-over');
+        }
     },
 
     dragLeave(event) {
+        let showUploadForm = this.get('showUploadForm');
+
         event.preventDefault();
-        this.set('dragClass', null);
+
+        if (showUploadForm) {
+            this.set('dragClass', null);
+        }
     },
 
     drop(event) {
+        let showUploadForm = this.get('showUploadForm');
+
         event.preventDefault();
 
         this.set('dragClass', null);
 
-        if (event.dataTransfer.files) {
-            this.send('fileSelected', event.dataTransfer.files);
+        if (showUploadForm) {
+            if (event.dataTransfer.files) {
+                this.send('fileSelected', event.dataTransfer.files);
+            }
         }
     },
 
@@ -149,10 +161,7 @@ export default Component.extend({
         }
 
         if (isUnsupportedMediaTypeError(error)) {
-            let validExtensions = this.get('extensions').join(', .').toUpperCase();
-            validExtensions = `.${validExtensions}`;
-
-            message = `The image type you uploaded is not supported. Please use ${validExtensions}`;
+            message = 'The image type you uploaded is not supported. Please use .PNG, .JPG, .GIF, .SVG.';
         } else if (isRequestEntityTooLargeError(error)) {
             message = 'The image you uploaded was larger than the maximum file size your server allows.';
         } else if (error.errors && !isBlank(error.errors[0].message)) {
@@ -168,9 +177,7 @@ export default Component.extend({
     generateRequest() {
         let ajax = this.get('ajax');
         let formData = this.get('formData');
-        let uploadUrl = this.get('uploadUrl');
-        // CASE: we want to upload an icon and we have to POST it to a different endpoint, expecially for icons
-        let url = `${ghostPaths().apiRoot}${uploadUrl}`;
+        let url = `${ghostPaths().apiRoot}/uploads/`;
 
         this._uploadStarted();
 
@@ -225,8 +232,9 @@ export default Component.extend({
         fileSelected(fileList) {
             // can't use array destructuring here as FileList is not a strict
             // array and fails in Safari
-            // eslint-disable-next-line ember-suave/prefer-destructuring
+            // jscs:disable requireArrayDestructuring
             let file = fileList[0];
+            // jscs:enable requireArrayDestructuring
             let validationResult = this._validate(file);
 
             this.set('file', file);
@@ -241,9 +249,22 @@ export default Component.extend({
             }
         },
 
+        onInput(url) {
+            this.set('url', url);
+            invokeAction(this, 'onInput', url);
+        },
+
         reset() {
             this.set('file', null);
             this.set('uploadPercentage', 0);
+        },
+
+        switchForm(formType) {
+            this.set('formType', formType);
+
+            run.scheduleOnce('afterRender', this, function () {
+                invokeAction(this, 'formChanged', formType);
+            });
         },
 
         saveUrl() {

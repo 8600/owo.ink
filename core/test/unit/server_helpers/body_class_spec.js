@@ -1,22 +1,27 @@
-var should = require('should'), // jshint ignore:line
-    themeList = require('../../../server/themes').list,
+var should         = require('should'),
+    hbs            = require('express-hbs'),
+    utils          = require('./utils'),
+    configUtils    = require('../../utils/configUtils'),
 
 // Stuff we are testing
-    helpers = require('../../../server/helpers');
+    handlebars     = hbs.handlebars,
+    helpers        = require('../../../server/helpers');
 
 describe('{{body_class}} helper', function () {
     var options = {};
     before(function () {
-        themeList.init({
-            casper: {
-                assets: null,
-                'default.hbs': '/content/themes/casper/default.hbs',
-                'index.hbs': '/content/themes/casper/index.hbs',
-                'page.hbs': '/content/themes/casper/page.hbs',
-                'page-about.hbs': '/content/themes/casper/page-about.hbs',
-                'post.hbs': '/content/themes/casper/post.hbs'
+        utils.loadHelpers();
+        configUtils.set({paths: {
+            availableThemes: {
+                casper: {
+                    'default.hbs': '/content/themes/casper/default.hbs',
+                    'index.hbs': '/content/themes/casper/index.hbs',
+                    'page.hbs': '/content/themes/casper/page.hbs',
+                    'page-about.hbs': '/content/themes/casper/page-about.hbs',
+                    'post.hbs': '/content/themes/casper/post.hbs'
+                }
             }
-        });
+        }});
     });
 
     beforeEach(function () {
@@ -31,7 +36,11 @@ describe('{{body_class}} helper', function () {
     });
 
     after(function () {
-        themeList.init();
+        configUtils.restore();
+    });
+
+    it('has loaded body_class helper', function () {
+        should.exist(handlebars.helpers.body_class);
     });
 
     it('can render class string', function () {
@@ -76,7 +85,7 @@ describe('{{body_class}} helper', function () {
                 {relativeUrl: '/page/4'}
             );
 
-            rendered.string.should.equal('paged');
+            rendered.string.should.equal('paged archive-template');
         });
 
         it('tag page', function () {
@@ -94,7 +103,7 @@ describe('{{body_class}} helper', function () {
                 {relativeUrl: '/tag/foo/page/2', tag: {slug: 'foo'}}
             );
 
-            rendered.string.should.equal('tag-template tag-foo paged');
+            rendered.string.should.equal('tag-template tag-foo paged archive-template');
         });
 
         it('author page', function () {
@@ -112,7 +121,7 @@ describe('{{body_class}} helper', function () {
                 {relativeUrl: '/author/bar/page/2', author: {slug: 'bar'}}
             );
 
-            rendered.string.should.equal('author-template author-bar paged');
+            rendered.string.should.equal('author-template author-bar paged archive-template');
         });
 
         it('private route for password protection', function () {
@@ -136,19 +145,19 @@ describe('{{body_class}} helper', function () {
         it('a static page', function () {
             var rendered = callBodyClassWithContext(
                 ['page'],
-                {relativeUrl: '/about', post: {page: true, slug: 'about'}}
+                {relativeUrl: '/about', post: {page: true}}
             );
 
-            rendered.string.should.equal('page-template page-about');
+            rendered.string.should.equal('post-template page-template page');
         });
 
-        it('a static page with custom template (is now the same as one without)', function () {
+        it('a static page with custom template', function () {
             var rendered = callBodyClassWithContext(
                 ['page'],
                 {relativeUrl: '/about', post: {page: true, slug: 'about'}}
             );
 
-            rendered.string.should.equal('page-template page-about');
+            rendered.string.should.equal('post-template page-template page page-about page-template-about');
         });
     });
 });

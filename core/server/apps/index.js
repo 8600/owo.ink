@@ -1,7 +1,6 @@
 
 var _           = require('lodash'),
     Promise     = require('bluebird'),
-    logging     = require('../logging'),
     errors      = require('../errors'),
     api         = require('../api'),
     loader      = require('./loader'),
@@ -22,13 +21,13 @@ function getInstalledApps() {
             return Promise.reject(e);
         }
 
-        return installed.concat(config.get('internalApps'));
+        return installed.concat(config.internalApps);
     });
 }
 
 function saveInstalledApps(installedApps) {
     return getInstalledApps().then(function (currentInstalledApps) {
-        var updatedAppsInstalled = _.difference(_.uniq(installedApps.concat(currentInstalledApps)), config.get('internalApps'));
+        var updatedAppsInstalled = _.difference(_.uniq(installedApps.concat(currentInstalledApps)), config.internalApps);
 
         return api.settings.edit({settings: [{key: 'installedApps', value: updatedAppsInstalled}]}, {context: {internal: true}});
     });
@@ -45,14 +44,14 @@ module.exports = {
 
                 appsToLoad = JSON.parse(aApps.value) || [];
 
-                appsToLoad = appsToLoad.concat(config.get('internalApps'));
+                appsToLoad = appsToLoad.concat(config.internalApps);
             });
-        } catch (err) {
-            logging.error(new errors.GhostError({
-                err: err,
-                context: i18n.t('errors.apps.failedToParseActiveAppsSettings.context'),
-                help: i18n.t('errors.apps.failedToParseActiveAppsSettings.help')
-            }));
+        } catch (e) {
+            errors.logError(
+                i18n.t('errors.apps.failedToParseActiveAppsSettings.error', {message: e.message}),
+                i18n.t('errors.apps.failedToParseActiveAppsSettings.context'),
+                i18n.t('errors.apps.failedToParseActiveAppsSettings.help')
+            );
 
             return Promise.resolve();
         }
@@ -89,11 +88,11 @@ module.exports = {
                 // Extend the loadedApps onto the available apps
                 _.extend(availableApps, loadedApps);
             }).catch(function (err) {
-                logging.error(new errors.GhostError({
-                    err: err,
-                    context: i18n.t('errors.apps.appWillNotBeLoaded.error'),
-                    help: i18n.t('errors.apps.appWillNotBeLoaded.help')
-                }));
+                errors.logError(
+                    err.message || err,
+                    i18n.t('errors.apps.appWillNotBeLoaded.error'),
+                    i18n.t('errors.apps.appWillNotBeLoaded.help')
+                );
             });
         });
     },

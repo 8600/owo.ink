@@ -5,20 +5,18 @@ import {
     beforeEach,
     afterEach
 } from 'mocha';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
-import {enableGhostOAuth} from '../helpers/configuration';
-import {
-    stubSuccessfulOAuthConnect,
-    stubFailedOAuthConnect
-} from '../helpers/oauth';
+import $ from 'jquery';
 
 describe('Acceptance: Signup', function() {
     let application;
 
     beforeEach(function() {
         application = startApp();
+
+        server.loadFixtures();
     });
 
     afterEach(function() {
@@ -26,30 +24,6 @@ describe('Acceptance: Signup', function() {
     });
 
     it('can signup successfully', function() {
-        server.get('/authentication/invitation', function () {
-            return {
-                invitation: [{valid: true}]
-            };
-        });
-
-        server.post('/authentication/invitation/', function ({users}, {requestBody}) {
-            let params = JSON.parse(requestBody);
-            expect(params.invitation[0].name).to.equal('Test User');
-            expect(params.invitation[0].email).to.equal('kevin+test2@ghost.org');
-            expect(params.invitation[0].password).to.equal('ValidPassword');
-            expect(params.invitation[0].token).to.equal('MTQ3MDM0NjAxNzkyOXxrZXZpbit0ZXN0MkBnaG9zdC5vcmd8MmNEblFjM2c3ZlFUajluTks0aUdQU0dmdm9ta0xkWGY2OEZ1V2dTNjZVZz0');
-
-            // ensure that `/users/me/` request returns a user
-            let role = server.create('role', {name: 'Author'});
-            users.create({email: 'kevin@test2@ghost.org', roles: [role]});
-
-            return {
-                invitation: [{
-                    message: 'Invitation accepted.'
-                }]
-            };
-        });
-
         // token details:
         // "1470346017929|kevin+test2@ghost.org|2cDnQc3g7fQTj9nNK4iGPSGfvomkLdXf68FuWgS66Ug="
         visit('/signup/MTQ3MDM0NjAxNzkyOXxrZXZpbit0ZXN0MkBnaG9zdC5vcmd8MmNEblFjM2c3ZlFUajluTks0aUdQU0dmdm9ta0xkWGY2OEZ1V2dTNjZVZz0');
@@ -132,7 +106,30 @@ describe('Acceptance: Signup', function() {
         });
 
         // submitting sends correct details and redirects to content screen
-        click('.gh-btn-green');
+        click('.btn-green');
+
+        server.get('/authentication/invitation', function (db, request) {
+            return {
+                invitation: [{valid: true}]
+            };
+        });
+
+        server.post('/authentication/invitation/', function (db, request) {
+            let params = $.deparam(request.requestBody);
+            expect(params.invitation[0].name).to.equal('Test User');
+            expect(params.invitation[0].email).to.equal('kevin+test2@ghost.org');
+            expect(params.invitation[0].password).to.equal('ValidPassword');
+            expect(params.invitation[0].token).to.equal('MTQ3MDM0NjAxNzkyOXxrZXZpbit0ZXN0MkBnaG9zdC5vcmd8MmNEblFjM2c3ZlFUajluTks0aUdQU0dmdm9ta0xkWGY2OEZ1V2dTNjZVZz0');
+
+            // ensure that `/users/me/` request returns a user
+            server.create('user', {email: 'kevin@test2@ghost.org'});
+
+            return {
+                invitation: [{
+                    message: 'Invitation accepted.'
+                }]
+            };
+        });
 
         andThen(function () {
             expect(currentPath()).to.equal('posts.index');
@@ -142,61 +139,4 @@ describe('Acceptance: Signup', function() {
     it('redirects if already logged in');
     it('redirects with alert on invalid token');
     it('redirects with alert on non-existant or expired token');
-
-    describe('using Ghost OAuth', function () {
-        beforeEach(function () {
-            enableGhostOAuth(server);
-
-            let {invites, users} = server.schema;
-
-            let user = users.create({name: 'Test Invite Creator'});
-
-            invites.create({
-                email: 'kevin+test2@ghost.org',
-                createdBy: user.id
-            });
-        });
-
-        it('can sign up sucessfully', function () {
-            stubSuccessfulOAuthConnect(application);
-
-            // token details:
-            // "1470346017929|kevin+test2@ghost.org|2cDnQc3g7fQTj9nNK4iGPSGfvomkLdXf68FuWgS66Ug="
-            visit('/signup/MTQ3MDM0NjAxNzkyOXxrZXZpbit0ZXN0MkBnaG9zdC5vcmd8MmNEblFjM2c3ZlFUajluTks0aUdQU0dmdm9ta0xkWGY2OEZ1V2dTNjZVZz0');
-
-            andThen(() => {
-                expect(currentPath()).to.equal('signup');
-
-                expect(
-                    find('.gh-flow-content header p').text().trim(),
-                    'form header text'
-                ).to.equal('Accept your invite from Test Invite Creator');
-            });
-
-            click('button.login');
-
-            andThen(() => {
-                expect(currentPath()).to.equal('posts.index');
-            });
-        });
-
-        it('handles failed connect', function () {
-            stubFailedOAuthConnect(application);
-
-            // token details:
-            // "1470346017929|kevin+test2@ghost.org|2cDnQc3g7fQTj9nNK4iGPSGfvomkLdXf68FuWgS66Ug="
-            visit('/signup/MTQ3MDM0NjAxNzkyOXxrZXZpbit0ZXN0MkBnaG9zdC5vcmd8MmNEblFjM2c3ZlFUajluTks0aUdQU0dmdm9ta0xkWGY2OEZ1V2dTNjZVZz0');
-
-            click('button.login');
-
-            andThen(() => {
-                expect(currentPath()).to.equal('signup');
-
-                expect(
-                    find('.main-error').text().trim(),
-                    'flow error text'
-                ).to.match(/authentication with ghost\.org denied or failed/i);
-            });
-        });
-    });
 });

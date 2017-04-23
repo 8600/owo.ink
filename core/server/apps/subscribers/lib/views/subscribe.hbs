@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="{{asset "favicon.ico"}}">
     <meta http-equiv="cleartype" content="on">
 
-    <link rel="stylesheet" href="{{asset "shared/ghost.css"}}"/>
+    <link rel="stylesheet" href="{{asset "ghost.css" ghost="true" minifyInProduction="true"}}" />
 </head>
 <body>
 <div class="gh-app">
@@ -38,7 +38,7 @@
                             {{subscribe_form
                                 form_class="gh-signin"
                                 input_class="gh-input"
-                                button_class="gh-btn gh-btn-blue gh-btn-block"
+                                button_class="btn btn-blue btn-block"
                                 placeholder="Your email address"
                                 autofocus="true"
                             }}

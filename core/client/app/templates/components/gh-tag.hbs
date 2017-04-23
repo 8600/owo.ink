@@ -3,8 +3,10 @@
         <span class="tag-title">{{tag.name}}</span>
         <span class="label label-default">/{{tag.slug}}</span>
 
-        {{#if tag.isInternal}}
-            <span class="label label-blue">internal</span>
+        {{#if feature.internalTags}}
+            {{#if tag.isInternal}}
+                <span class="label label-blue">internal</span>
+            {{/if}}
         {{/if}}
 
         <p class="tag-description">{{tag.description}}</p>

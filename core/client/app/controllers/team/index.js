@@ -1,24 +1,24 @@
 import Controller from 'ember-controller';
+import {alias, filter} from 'ember-computed';
 import injectService from 'ember-service/inject';
-import {sort} from 'ember-computed';
 
 export default Controller.extend({
 
     showInviteUserModal: false,
 
-    activeUsers: null,
-    suspendedUsers: null,
-    invites: null,
+    users: alias('model'),
 
     session: injectService(),
 
-    inviteOrder: ['email'],
-    sortedInvites: sort('invites', 'inviteOrder'),
+    activeUsers: filter('users', function (user) {
+        return /^active|warn-[1-4]|locked$/.test(user.get('status'));
+    }),
 
-    userOrder: ['name', 'email'],
+    invitedUsers: filter('users', function (user) {
+        let status = user.get('status');
 
-    sortedActiveUsers: sort('activeUsers', 'userOrder'),
-    sortedSuspendedUsers: sort('suspendedUsers', 'userOrder'),
+        return status === 'invited' || status === 'invited-pending';
+    }),
 
     actions: {
         toggleInviteUserModal() {

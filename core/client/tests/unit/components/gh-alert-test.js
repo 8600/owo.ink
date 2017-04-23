@@ -1,27 +1,33 @@
 /* jshint expr:true */
-import {expect} from 'chai';
-import {describe, it} from 'mocha';
-import {setupComponentTest} from 'ember-mocha';
+import { expect } from 'chai';
+import {
+    describeComponent,
+    it
+}
+from 'ember-mocha';
 import sinon from 'sinon';
 
-describe('Unit: Component: gh-alert', function () {
-    setupComponentTest('gh-alert', {
-        unit: true,
+describeComponent(
+    'gh-alert',
+    'Unit: Component: gh-alert',
+    {
+        unit: true
         // specify the other units that are required for this test
-        needs: ['service:notifications']
-    });
+        // needs: ['component:foo', 'helper:bar']
+    },
+    function () {
+        it('closes notification through notifications service', function () {
+            let component = this.subject();
+            let notifications = {};
+            let notification = {message: 'Test close', type: 'success'};
 
-    it('closes notification through notifications service', function () {
-        let component = this.subject();
-        let notifications = {};
-        let notification = {message: 'Test close', type: 'success'};
+            notifications.closeNotification = sinon.spy();
+            component.set('notifications', notifications);
+            component.set('message', notification);
 
-        notifications.closeNotification = sinon.spy();
-        component.set('notifications', notifications);
-        component.set('message', notification);
+            this.$().find('button').click();
 
-        this.$().find('button').click();
-
-        expect(notifications.closeNotification.calledWith(notification)).to.be.true;
-    });
-});
+            expect(notifications.closeNotification.calledWith(notification)).to.be.true;
+        });
+    }
+);

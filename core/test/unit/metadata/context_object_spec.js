@@ -1,8 +1,6 @@
-var should = require('should'),
-    sinon = require('sinon'),
+var should          = require('should'),
     getContextObject = require('../../../server/data/meta/context_object.js'),
-    settingsCache = require('../../../server/settings/cache'),
-    sandbox = sinon.sandbox.create();
+    configUtils     = require('../../utils/configUtils');
 
 describe('getContextObject', function () {
     var data, context, contextObject;
@@ -49,15 +47,11 @@ describe('getContextObject', function () {
 
     describe('override blog', function () {
         before(function () {
-            sandbox.stub(settingsCache, 'get', function (key) {
-                return {
-                    cover: 'test.png'
-                }[key];
-            });
+            configUtils.set({theme: {foo: 'bar'}});
         });
 
         after(function () {
-            sandbox.restore();
+            configUtils.restore();
         });
 
         it('should return blog context object for unknown context', function () {
@@ -66,7 +60,7 @@ describe('getContextObject', function () {
             contextObject = getContextObject(data, context);
 
             should.exist(contextObject);
-            contextObject.should.have.property('cover', 'test.png');
+            contextObject.should.have.property('foo', 'bar');
         });
     });
 });

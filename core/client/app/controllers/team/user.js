@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import Controller from 'ember-controller';
 import computed, {alias, and, not, or, readOnly} from 'ember-computed';
 import injectService from 'ember-service/inject';
@@ -11,12 +10,8 @@ import {task, taskGroup} from 'ember-concurrency';
 import isNumber from 'ghost-admin/utils/isNumber';
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
 
-// ember-cli-shims doesn't export this
-const {Handlebars} = Ember;
-
 export default Controller.extend({
     showDeleteUserModal: false,
-    showSuspendUserModal: false,
     showTransferOwnerModal: false,
     showUploadCoverModal: false,
     showUplaodImageModal: false,
@@ -24,7 +19,6 @@ export default Controller.extend({
     _scratchTwitter: null,
 
     ajax: injectService(),
-    config: injectService(),
     dropdown: injectService(),
     ghostPaths: injectService(),
     notifications: injectService(),
@@ -44,53 +38,38 @@ export default Controller.extend({
     rolesDropdownIsVisible: and('isNotOwnProfile', 'canAssignRoles', 'isNotOwnersProfile'),
     userActionsAreVisible: or('deleteUserActionIsVisible', 'canMakeOwner'),
 
-    isOwnProfile: computed('user.id', 'currentUser.id', function () {
-        return this.get('user.id') === this.get('currentUser.id');
-    }),
-    isNotOwnProfile: not('isOwnProfile'),
-    showMyGhostLink: and('config.ghostOAuth', 'isOwnProfile'),
-
-    canChangeEmail: computed('config.ghostOAuth', 'isAdminUserOnOwnerProfile', function () {
-        let ghostOAuth = this.get('config.ghostOAuth');
-        let isAdminUserOnOwnerProfile = this.get('isAdminUserOnOwnerProfile');
-
-        return !ghostOAuth && !isAdminUserOnOwnerProfile;
+    isNotOwnProfile: computed('user.id', 'currentUser.id', function () {
+        return this.get('user.id') !== this.get('currentUser.id');
     }),
 
     deleteUserActionIsVisible: computed('currentUser', 'canAssignRoles', 'user', function () {
-        if ((this.get('canAssignRoles') && this.get('isNotOwnProfile') && !this.get('user.isOwner'))
-            || (this.get('currentUser.isEditor') && (this.get('isNotOwnProfile')
-            || this.get('user.isAuthor')))) {
+        if ((this.get('canAssignRoles') && this.get('isNotOwnProfile') && !this.get('user.isOwner')) ||
+            (this.get('currentUser.isEditor') && (this.get('isNotOwnProfile') ||
+            this.get('user.isAuthor')))) {
             return true;
         }
     }),
 
-    canChangePassword: computed('config.ghostOAuth', 'isAdminUserOnOwnerProfile', function () {
-        return !this.get('config.ghostOAuth') && !this.get('isAdminUserOnOwnerProfile');
-    }),
-
     // duplicated in gh-user-active -- find a better home and consolidate?
     userDefault: computed('ghostPaths', function () {
-        return `${this.get('ghostPaths.assetRoot')}/img/user-image.png`;
+        return `${this.get('ghostPaths.subdir')}/ghost/img/user-image.png`;
     }),
 
     userImageBackground: computed('user.image', 'userDefault', function () {
         let url = this.get('user.image') || this.get('userDefault');
-        let safeUrl = Handlebars.Utils.escapeExpression(url);
 
-        return htmlSafe(`background-image: url(${safeUrl})`);
+        return htmlSafe(`background-image: url(${url})`);
     }),
     // end duplicated
 
     coverDefault: computed('ghostPaths', function () {
-        return `${this.get('ghostPaths.assetRoot')}/img/user-cover.png`;
+        return `${this.get('ghostPaths.subdir')}/ghost/img/user-cover.png`;
     }),
 
     coverImageBackground: computed('user.cover', 'coverDefault', function () {
         let url = this.get('user.cover') || this.get('coverDefault');
-        let safeUrl = Handlebars.Utils.escapeExpression(url);
 
-        return htmlSafe(`background-image: url(${safeUrl})`);
+        return htmlSafe(`background-image: url(${url})`);
     }),
 
     coverTitle: computed('user.name', function () {
@@ -191,6 +170,7 @@ export default Controller.extend({
                 window.history.replaceState({path: newPath}, '', newPath);
             }
 
+            this.toggleProperty('submitting');
             this.get('notifications').closeAlerts('user.update');
 
             return model;
@@ -222,28 +202,6 @@ export default Controller.extend({
             }
         },
 
-        suspendUser() {
-            this.get('model').set('status', 'inactive');
-            return this.get('save').perform();
-        },
-
-        toggleSuspendUserModal() {
-            if (this.get('deleteUserActionIsVisible')) {
-                this.toggleProperty('showSuspendUserModal');
-            }
-        },
-
-        unsuspendUser() {
-            this.get('model').set('status', 'active');
-            return this.get('save').perform();
-        },
-
-        toggleUnsuspendUserModal() {
-            if (this.get('deleteUserActionIsVisible')) {
-                this.toggleProperty('showUnsuspendUserModal');
-            }
-        },
-
         validateFacebookUrl() {
             let newUrl = this.get('_scratchFacebook');
             let oldUrl = this.get('user.facebook');
@@ -272,16 +230,16 @@ export default Controller.extend({
                 let username = [];
 
                 if (newUrl.match(/(?:facebook\.com\/)(\S+)/)) {
-                    [, username] = newUrl.match(/(?:facebook\.com\/)(\S+)/);
+                    [ , username ] = newUrl.match(/(?:facebook\.com\/)(\S+)/);
                 } else {
-                    [, username] = newUrl.match(/(?:https\:\/\/|http\:\/\/)?(?:www\.)?(?:\w+\.\w+\/+)?(\S+)/mi);
+                    [ , username ] = newUrl.match(/(?:https\:\/\/|http\:\/\/)?(?:www\.)?(?:\w+\.\w+\/+)?(\S+)/mi);
                 }
 
                 // check if we have a /page/username or without
                 if (username.match(/^(?:\/)?(pages?\/\S+)/mi)) {
                     // we got a page url, now save the username without the / in the beginning
 
-                    [, username] = username.match(/^(?:\/)?(pages?\/\S+)/mi);
+                    [ , username ] = username.match(/^(?:\/)?(pages?\/\S+)/mi);
                 } else if (username.match(/^(http|www)|(\/)/) || !username.match(/^([a-z\d\.]{5,50})$/mi)) {
                     errMessage = !username.match(/^([a-z\d\.]{5,50})$/mi) ? 'Your Username is not a valid Facebook Username' : 'The URL must be in a format like https://www.facebook.com/yourUsername';
 
@@ -305,8 +263,8 @@ export default Controller.extend({
                     });
                 });
             } else {
-                errMessage = 'The URL must be in a format like '
-                           + 'https://www.facebook.com/yourUsername';
+                errMessage = 'The URL must be in a format like ' +
+                    'https://www.facebook.com/yourUsername';
                 this.get('user.errors').add('facebook', errMessage);
                 this.get('user.hasValidated').pushObject('facebook');
                 return;
@@ -341,7 +299,7 @@ export default Controller.extend({
                 let username = [];
 
                 if (newUrl.match(/(?:twitter\.com\/)(\S+)/)) {
-                    [, username] = newUrl.match(/(?:twitter\.com\/)(\S+)/);
+                    [ , username] = newUrl.match(/(?:twitter\.com\/)(\S+)/);
                 } else {
                     [username] = newUrl.match(/([^/]+)\/?$/mi);
                 }
@@ -370,8 +328,8 @@ export default Controller.extend({
                     });
                 });
             } else {
-                errMessage = 'The URL must be in a format like '
-                           + 'https://twitter.com/yourUsername';
+                errMessage = 'The URL must be in a format like ' +
+                    'https://twitter.com/yourUsername';
                 this.get('user.errors').add('twitter', errMessage);
                 this.get('user.hasValidated').pushObject('twitter');
                 return;

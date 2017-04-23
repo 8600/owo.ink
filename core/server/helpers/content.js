@@ -9,6 +9,7 @@
 var hbs             = require('express-hbs'),
     _               = require('lodash'),
     downsize        = require('downsize'),
+    downzero        = require('../utils/downzero'),
     content;
 
 content = function (options) {
@@ -19,6 +20,13 @@ content = function (options) {
     });
 
     if (truncateOptions.hasOwnProperty('words') || truncateOptions.hasOwnProperty('characters')) {
+        // Legacy function: {{content words="0"}} should return leading tags.
+        if (truncateOptions.hasOwnProperty('words') && truncateOptions.words === 0) {
+            return new hbs.handlebars.SafeString(
+                downzero(this.html)
+            );
+        }
+
         return new hbs.handlebars.SafeString(
             downsize(this.html, truncateOptions)
         );

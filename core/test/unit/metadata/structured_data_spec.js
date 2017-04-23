@@ -1,5 +1,5 @@
-var should = require('should'),
-    getStructuredData = require('../../../server/data/meta/structured_data');
+var getStructuredData = require('../../../server/data/meta/structured_data'),
+    should = require('should');
 
 describe('getStructuredData', function () {
     it('should return structured data from metadata', function (done) {

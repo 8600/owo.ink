@@ -1,137 +1,45 @@
+import $ from 'jquery';
 import AuthenticatedRoute from 'ghost-admin/routes/authenticated';
 import ShortcutsRoute from 'ghost-admin/mixins/shortcuts-route';
-import InfinityRoute from 'ember-infinity/mixins/route';
-import {assign} from 'ember-platform';
-import {isBlank} from 'ember-utils';
-import $ from 'jquery';
+import PaginationMixin from 'ghost-admin/mixins/pagination';
 
-export default AuthenticatedRoute.extend(InfinityRoute, ShortcutsRoute, {
+export default AuthenticatedRoute.extend(ShortcutsRoute, PaginationMixin, {
     titleToken: 'Content',
 
-    perPage: 30,
-    perPageParam: 'limit',
-    totalPagesParam: 'meta.pagination.pages',
-
-    queryParams: {
-        type: {
-            refreshModel: true,
-            replace: true
-        },
-        author: {
-            refreshModel: true,
-            replace: true
-        },
-        tag: {
-            refreshModel: true,
-            replace: true
-        },
-        order: {
-            refreshModel: true,
-            replace: true
-        }
+    paginationModel: 'post',
+    paginationSettings: {
+        status: 'all',
+        staticPages: 'all'
     },
 
-    _type: null,
-    _selectedPostIndex: null,
+    model() {
+        let paginationSettings = this.get('paginationSettings');
 
-    model(params) {
         return this.get('session.user').then((user) => {
-            let queryParams = this._typeParams(params.type);
-            let filterParams = {tag: params.tag};
-
             if (user.get('isAuthor')) {
-                // authors can only view their own posts
-                filterParams.author = user.get('slug');
-            } else if (params.author) {
-                filterParams.author = params.author;
+                paginationSettings.filter = paginationSettings.filter ?
+                    `${paginationSettings.filter}+author:${user.get('slug')}` : `author:${user.get('slug')}`;
             }
 
-            let filter = this._filterString(filterParams);
-            if (!isBlank(filter)) {
-                queryParams.filter = filter;
-            }
+            return this.loadFirstPage().then(() => {
+                // using `.filter` allows the template to auto-update when new models are pulled in from the server.
+                // we just need to 'return true' to allow all models by default.
+                return this.store.filter('post', (post) => {
+                    if (user.get('isAuthor')) {
+                        return post.isAuthoredByUser(user);
+                    }
 
-            if (!isBlank(params.order)) {
-                queryParams.order = params.order;
-            }
-
-            let perPage = this.get('perPage');
-            let paginationSettings = assign({perPage, startingPage: 1}, queryParams);
-
-            return this.infinityModel('post', paginationSettings);
-        });
-    },
-
-    _typeParams(type) {
-        let status = 'all';
-        let staticPages = 'all';
-
-        switch (type) {
-        case 'draft':
-            status = 'draft';
-            staticPages = false;
-            break;
-        case 'published':
-            status = 'published';
-            staticPages = false;
-            break;
-        case 'scheduled':
-            status = 'scheduled';
-            staticPages = false;
-            break;
-        case 'page':
-            staticPages = true;
-            break;
-        }
-
-        return {
-            status,
-            staticPages
-        };
-    },
-
-    _filterString(filter) {
-        return Object.keys(filter).map((key) => {
-            let value = filter[key];
-
-            if (!isBlank(value)) {
-                return `${key}:${filter[key]}`;
-            }
-        }).compact().join('+');
-    },
-
-    // trigger a background load of all tags and authors for use in the filter dropdowns
-    setupController(controller) {
-        this._super(...arguments);
-
-        if (!controller._hasLoadedTags) {
-            this.get('store').query('tag', {limit: 'all'}).then(() => {
-                controller._hasLoadedTags = true;
-            });
-        }
-
-        this.get('session.user').then((user) => {
-            if (!user.get('isAuthor') && !controller._hasLoadedAuthors) {
-                this.get('store').query('user', {limit: 'all'}).then(() => {
-                    controller._hasLoadedAuthors = true;
+                    return true;
                 });
-            }
+            });
         });
     },
 
     stepThroughPosts(step) {
-        let currentPost = this.get('controller.selectedPost');
-        let posts = this.get('controller.model');
+        let currentPost = this.get('controller.currentPost');
+        let posts = this.get('controller.sortedPosts');
         let length = posts.get('length');
-        let newPosition;
-
-        // when the currentPost is deleted we won't be able to use indexOf.
-        // we keep track of the index locally so we can select next after deletion
-        if (this._selectedPostIndex !== null && length) {
-            newPosition = this._selectedPostIndex + step;
-        } else {
-            newPosition = posts.indexOf(currentPost) + step;
-        }
+        let newPosition = posts.indexOf(currentPost) + step;
 
         // if we are on the first or last item
         // just do nothing (desired behavior is to not
@@ -142,37 +50,31 @@ export default AuthenticatedRoute.extend(InfinityRoute, ShortcutsRoute, {
             return;
         }
 
-        this._selectedPostIndex = newPosition;
-        this.set('controller.selectedPost', posts.objectAt(newPosition));
+        this.transitionTo('posts.post', posts.objectAt(newPosition));
+    },
+
+    scrollContent(amount) {
+        let content = $('.js-content-preview');
+        let scrolled = content.scrollTop();
+
+        content.scrollTop(scrolled + 50 * amount);
     },
 
     shortcuts: {
         'up, k': 'moveUp',
         'down, j': 'moveDown',
-        'enter': 'editPost',
-        'c': 'newPost',
-        'command+backspace, ctrl+backspace': 'deletePost'
-    },
-
-    resetController() {
-        this.set('controller.selectedPost', null);
-        this.set('controller.showDeletePostModal', false);
+        left: 'focusList',
+        right: 'focusContent',
+        c: 'newPost'
     },
 
     actions: {
-        willTransition() {
-            this._selectedPostIndex = null;
-
-            if (this.get('controller')) {
-                this.resetController();
-            }
+        focusList() {
+            this.controller.set('keyboardFocus', 'postList');
         },
 
-        queryParamsDidChange() {
-            // scroll back to the top
-            $('.content-list').scrollTop(0);
-
-            this._super(...arguments);
+        focusContent() {
+            this.controller.set('keyboardFocus', 'postContent');
         },
 
         newPost() {
@@ -180,28 +82,19 @@ export default AuthenticatedRoute.extend(InfinityRoute, ShortcutsRoute, {
         },
 
         moveUp() {
-            this.stepThroughPosts(-1);
-        },
-
-        moveDown() {
-            this.stepThroughPosts(1);
-        },
-
-        editPost() {
-            let selectedPost = this.get('controller.selectedPost');
-
-            if (selectedPost) {
-                this.transitionTo('editor.edit', selectedPost.get('id'));
+            if (this.controller.get('postContentFocused')) {
+                this.scrollContent(-1);
+            } else {
+                this.stepThroughPosts(-1);
             }
         },
 
-        deletePost() {
-            this.get('controller').send('toggleDeletePostModal');
-        },
-
-        onPostDeletion() {
-            // select next post (re-select the current index)
-            this.stepThroughPosts(0);
+        moveDown() {
+            if (this.controller.get('postContentFocused')) {
+                this.scrollContent(1);
+            } else {
+                this.stepThroughPosts(1);
+            }
         }
     }
 });

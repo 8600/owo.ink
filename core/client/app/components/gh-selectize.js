@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
 import {A as emberA, isEmberArray} from 'ember-array/utils';
 import computed from 'ember-computed';
 import {isBlank} from 'ember-utils';
