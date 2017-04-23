@@ -7,31 +7,17 @@
 
 The project is maintained by a non-profit organisation called the **Ghost Foundation**, along with an amazing group of independent [contributors](https://github.com/TryGhost/Ghost/contributors). We're trying to make publishing software that changes the shape of online journalism.
 
-- [Ghost.org](https://ghost.org)
-- [Latest Release](https://ghost.org/developers/)
-- [Support](http://support.ghost.org/)
-- [Theme Docs](http://themes.ghost.org)
-- [Contributing Guide](https://github.com/TryGhost/Ghost/blob/master/.github/CONTRIBUTING.md)
-- [Feature Requests](http://ideas.ghost.org/)
-- [Dev Blog](http://dev.ghost.org)
+# 快速启动
 
-**NOTE: If you’re stuck, can’t get something working or need some help, please head on over and join our [Slack community](https://ghost.org/slack/) rather than opening an issue.**
+请确保您已经有了Node.js版本以上环境
 
-
-# Quick Start Install
-
-Make sure you've installed Node.js - We recommend the latest **Node v4 LTS** release. For other versions [click here](http://support.ghost.org/supported-node-versions/). May contain nuts.
-
-1. Download the [latest release](https://ghost.org/developers/) of Ghost
-1. Unzip in the location you want to install
-1. Fire up a terminal
-1. `npm install --production`
-1. Start Ghost!
-    - Local environment: `npm start`
-    - On a server: `npm start --production`
-1. `http://localhost:2368/ghost` :tada:
-
-More [install docs](http://support.ghost.org/installation/) here in case you got stuck.
+1. 下载最新的Release包
+1. 将代码解压出来
+1. `npm install --production`安装依赖包
+1. 运行博客!
+    - 本地环境: `npm start`
+    - 生产环境环境: `npm start --production`
+1. 管理地址:`http://localhost:2368/ghost` 
 
 <a name="getting-started"></a>
 # Developer Install (from git)
