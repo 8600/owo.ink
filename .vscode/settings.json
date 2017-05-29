@@ -1,0 +1,16 @@
+// 将设置放入此文件中以覆盖默认值和用户设置。
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "core/built": true,
+    "core/client/dist": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "core/built": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/.github": true,
+    "core/client/dist": true
+  }
+}
