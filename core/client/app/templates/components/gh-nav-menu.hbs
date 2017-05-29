@@ -20,10 +20,10 @@
     </section>
     <ul class="gh-nav-list gh-nav-main">
         {{!<li><i class="icon-dash"></i>Dashboard</li>}}
-        <li>{{#link-to "editor.new" classNames="gh-nav-main-editor"}}<i class="icon-pen"></i>New Post{{/link-to}}</li>
-        <li>{{#link-to "posts" classNames="gh-nav-main-content"}}<i class="icon-content"></i>Content{{/link-to}}</li>
+        <li>{{#link-to "editor.new" classNames="gh-nav-main-editor"}}<i class="icon-pen"></i>新建文章{{/link-to}}</li>
+        <li>{{#link-to "posts" classNames="gh-nav-main-content"}}<i class="icon-content"></i>文章列表{{/link-to}}</li>
         {{!<li><a href="#"><i class="icon-user"></i>My Posts</a></li>}}
-        <li>{{#link-to "team" classNames="gh-nav-main-users"}}<i class="icon-team"></i>Team{{/link-to}}</li>
+        <li>{{#link-to "team" classNames="gh-nav-main-users"}}<i class="icon-team"></i>管理团队{{/link-to}}</li>
         {{!<li><a href="#"><i class="icon-idea"></i>Ideas</a></li>}}
         {{#if feature.subscribers}}
             {{#if (gh-user-can-admin session.user)}}
@@ -33,8 +33,8 @@
     </ul>
     {{#if (gh-user-can-admin session.user)}}
         <ul class="gh-nav-list gh-nav-settings">
-            <li class="gh-nav-list-h">Settings</li>
-            <li>{{#link-to "settings.general" classNames="gh-nav-settings-general"}}<i class="icon-settings"></i>General{{/link-to}}</li>
+            <li class="gh-nav-list-h">设置</li>
+            <li>{{#link-to "settings.general" classNames="gh-nav-settings-general"}}<i class="icon-settings"></i>基本设置{{/link-to}}</li>
             {{!<li><i class="icon-design"></i>Themes</li>}}
             <li>{{#link-to "settings.navigation" classNames="gh-nav-settings-navigation"}}<i class="icon-compass"></i>Navigation{{/link-to}}</li>
             <li>{{#link-to "settings.tags" classNames="gh-nav-settings-tags"}}<i class="icon-tag"></i>Tags{{/link-to}}</li>

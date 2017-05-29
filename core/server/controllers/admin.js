@@ -1,10 +1,7 @@
-var _             = require('lodash'),
-    Promise       = require('bluebird'),
-    api           = require('../api'),
-    errors        = require('../errors'),
-    updateCheck   = require('../update-check'),
-    i18n          = require('../i18n'),
-    adminControllers;
+const _             = require('lodash'),
+      Promise       = require('bluebird'),
+      api           = require('../api');
+let   adminControllers;
 
 adminControllers = {
     // Route: index

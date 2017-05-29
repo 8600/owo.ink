@@ -76,7 +76,7 @@ describe('Acceptance: Settings - General', function () {
                 expect(currentURL(), 'currentURL').to.equal('/settings/general');
 
                 // has correct page title
-                expect(document.title, 'page title').to.equal('Settings - General - Test Blog');
+                expect(document.title, 'page title').to.equal('设置 - 基本设置 - Test Blog');
 
                 // highlights nav menu
                 expect($('.gh-nav-settings-general').hasClass('active'), 'highlights nav menu item')
@@ -94,7 +94,7 @@ describe('Acceptance: Settings - General', function () {
             click('.view-header .btn.btn-blue');
 
             andThen(() => {
-                expect(document.title, 'page title').to.equal('Settings - General - New Blog Title');
+                expect(document.title, 'page title').to.equal('设置 - 基本设置 - New Blog Title');
             });
 
             click('.blog-logo');
