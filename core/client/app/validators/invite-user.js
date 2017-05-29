@@ -7,10 +7,10 @@ export default BaseValidator.create({
         let email = model.get('email');
 
         if (validator.empty(email)) {
-            model.get('errors').add('email', 'Please enter an email.');
+            model.get('errors').add('email', '请输入电子邮件。');
             this.invalidate();
         } else if (!validator.isEmail(email)) {
-            model.get('errors').add('email', 'Invalid Email.');
+            model.get('errors').add('email', '错误的邮件地址。');
             this.invalidate();
         }
     }

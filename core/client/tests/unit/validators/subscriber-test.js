@@ -52,7 +52,7 @@ describe('Unit: Validator: subscriber', function () {
 
         let emailErrors = subscriber.get('errors').errorsFor('email').get(0);
         expect(emailErrors.attribute, 'errors.email.attribute').to.equal('email');
-        expect(emailErrors.message, 'errors.email.message').to.equal('Please enter an email.');
+        expect(emailErrors.message, 'errors.email.message').to.equal('请输入电子邮件。');
 
         expect(passed, 'passed').to.be.false;
         expect(subscriber.get('hasValidated'), 'hasValidated').to.include('email');

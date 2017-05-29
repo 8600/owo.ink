@@ -30,7 +30,7 @@
         {{gh-error-message errors=errors property="password"}}
     {{/gh-form-group}}
     {{#gh-form-group errors=errors hasValidated=hasValidated property="blogTitle"}}
-        <label for="blog-title">Blog title</label>
+        <label for="blog-title">标题</label>
         <span class="input-icon icon-content">
             {{gh-input blogTitle tabindex="4" type="text" name="blog-title" placeholder="Eg. The Daily Awesome" autocorrect="off" focusOut=(action "preValidate" "blogTitle") update=(action (mut blogTitle))}}
         </span>

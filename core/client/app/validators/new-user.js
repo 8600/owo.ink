@@ -7,7 +7,7 @@ export default BaseValidator.extend({
         let name = model.get('name');
 
         if (!validator.isLength(name, 1)) {
-            model.get('errors').add('name', 'Please enter a name.');
+            model.get('errors').add('name', '请输入用户名。');
             this.invalidate();
         }
     },
@@ -16,10 +16,10 @@ export default BaseValidator.extend({
         let email = model.get('email');
 
         if (validator.empty(email)) {
-            model.get('errors').add('email', 'Please enter an email.');
+            model.get('errors').add('email', '请输入电子邮件。');
             this.invalidate();
         } else if (!validator.isEmail(email)) {
-            model.get('errors').add('email', 'Invalid Email.');
+            model.get('errors').add('email', '错误的邮件地址。');
             this.invalidate();
         }
     },
@@ -28,7 +28,7 @@ export default BaseValidator.extend({
         let password = model.get('password');
 
         if (!validator.isLength(password, 8)) {
-            model.get('errors').add('password', 'Password must be at least 8 characters long');
+            model.get('errors').add('password', ' 密码长度必须至少为8个字符');
             this.invalidate();
         }
     }

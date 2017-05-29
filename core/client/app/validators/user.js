@@ -13,7 +13,7 @@ export default BaseValidator.create({
 
         if (this.isActive(model)) {
             if (validator.empty(name)) {
-                model.get('errors').add('name', 'Please enter a name.');
+                model.get('errors').add('name', '请输入用户名。');
                 this.invalidate();
             } else if (!validator.isLength(name, 0, 150)) {
                 model.get('errors').add('name', 'Name is too long');

@@ -32,29 +32,7 @@ adminControllers = {
             });
         }
 
-        updateCheck().then(function then() {
-            return updateCheck.showUpdateNotification();
-        }).then(function then(updateVersion) {
-            if (!updateVersion) {
-                return;
-            }
-
-            var notification = {
-                status: 'alert',
-                type: 'info',
-                location: 'upgrade.new-version-available',
-                dismissible: false,
-                message: i18n.t('notices.controllers.newVersionAvailable',
-                                {version: updateVersion, link: '<a href="http://support.ghost.org/how-to-upgrade/" target="_blank">Click here</a>'})};
-
-            return api.notifications.browse({context: {internal: true}}).then(function then(results) {
-                if (!_.some(results.notifications, {message: notification.message})) {
-                    return api.notifications.add({notifications: [notification]}, {context: {internal: true}});
-                }
-            });
-        }).finally(function noMatterWhat() {
-            renderIndex();
-        }).catch(errors.logError);
+        renderIndex();
     }
 };
 

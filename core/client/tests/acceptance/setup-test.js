@@ -312,7 +312,7 @@ describe('Acceptance: Setup', function () {
                     .to.be.false;
 
                 expect(button.text().trim(), 'default button text')
-                    .to.equal('Invite some users');
+                    .to.equal('向好友发送邮件');
 
                 expect(button.hasClass('btn-minor'), 'default button is disabled')
                     .to.be.true;

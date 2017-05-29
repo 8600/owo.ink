@@ -173,7 +173,7 @@ describe('Acceptance: Team', function () {
 
                 andThen(() => {
                     expect(find('.modal-body .form-group:first').hasClass('error'), 'email input has error status').to.be.true;
-                    expect(find('.modal-body .form-group:first .response').text()).to.contain('Please enter an email.');
+                    expect(find('.modal-body .form-group:first .response').text()).to.contain('请输入电子邮件。');
                 });
 
                 fillIn(emailInputField, 'test@example.com');
