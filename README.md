@@ -51,5 +51,5 @@ grunt prod
 ```bash
 npm start
 
-## running production? Add --production
+## 生产环境? 加上 --production
 ```
