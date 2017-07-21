@@ -6,12 +6,12 @@
 title: Hexo
 subtitle:
 description:
-author: John Doe
+author: PUGE
 language:
 timezone:
 
 # URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
+## 如果你的博客使用子域名访问, 则应该设置url: 'http://yoursite.com/child' 并且设置root: '/child/'
 url: https://owo.ink
 root: /
 permalink: :year/:month/:day/:title/
@@ -28,7 +28,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
+new_post_name: :title.md # 新文章名
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
