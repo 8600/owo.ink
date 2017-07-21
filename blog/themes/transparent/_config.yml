@@ -1,19 +1,17 @@
 # Header
 menu:
-  Home: /
-  Archives: /archives
+  主页: /
+  归档: /archives
 
 # Content
 excerpt_link: More
 prev: Prev
 next: Next
 reply: Reply
-share: Share
 fancybox: true
 
 # Sidebar
 widgets:
-- search
 - music
 - category
 - recent_posts
