@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+  
+  
+  
+  
+  
+  <title>owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="owo.ink">
+<meta property="og:url" content="https://owo.ink/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:locale" content="zh-cn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="owo.ink">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main">
+  
+    <article id="post-promise" class="post-promise post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/promise/">vue子组件与父组件通讯</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <hr>
+<h2 id="title-八段代码彻底掌握-Promise"><a href="#title-八段代码彻底掌握-Promise" class="headerlink" title="title: 八段代码彻底掌握 Promise"></a>title: 八段代码彻底掌握 Promise</h2><h3 id="1-Promise的立即执行性"><a href="#1-Promise的立即执行性" class="headerlink" title="1.Promise的立即执行性"></a>1.Promise的立即执行性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">var p = new Promise(function(resolve, reject)&#123;</div><div class="line">  console.log(&quot;create a promise&quot;);</div><div class="line">  resolve(&quot;success&quot;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(&quot;after new Promise&quot;);</div><div class="line"></div><div class="line">p.then(function(value)&#123;</div><div class="line">  console.log(value);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>控制台输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&quot;create a promise&quot;</div><div class="line">&quot;after new Promise&quot;</div><div class="line">&quot;success&quot;</div></pre></td></tr></table></figure></p>
+<p>Promise对象表示未来某个将要发生的事件，但在创建（new）Promise时，作为Promise参数传入的函数是会被立即执行的，只是其中执行的代码可以是异步代码。有些同学会认为，当Promise对象调用then方法时，Promise接收的函数才会执行，这是错误的。因此，代码中”create a promise”先于”after new Promise”输出。</p>
+<h3 id="2-Promise-三种状态"><a href="#2-Promise-三种状态" class="headerlink" title="2.Promise 三种状态"></a>2.Promise 三种状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">var p1 = new Promise(function(resolve,reject)&#123;</div><div class="line">  resolve(1);</div><div class="line">&#125;);</div><div class="line">var p2 = new Promise(function(resolve,reject)&#123;</div><div class="line">  setTimeout(function()&#123;</div><div class="line">    resolve(2);  </div><div class="line">  &#125;, 500);      </div><div class="line">&#125;);</div><div class="line">var p3 = new Promise(function(resolve,reject)&#123;</div><div class="line">  setTimeout(function()&#123;</div><div class="line">    reject(3);  </div><div class="line">  &#125;, 500);      </div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(p1);</div><div class="line">console.log(p2);</div><div class="line">console.log(p3);</div><div class="line">setTimeout(function()&#123;</div><div class="line">  console.log(p2);</div><div class="line">&#125;, 1000);</div><div class="line">setTimeout(function()&#123;</div><div class="line">  console.log(p3);</div><div class="line">&#125;, 1000);</div><div class="line"></div><div class="line">p1.then(function(value)&#123;</div><div class="line">  console.log(value);</div><div class="line">&#125;);</div><div class="line">p2.then(function(value)&#123;</div><div class="line">  console.log(value);</div><div class="line">&#125;);</div><div class="line">p3.catch(function(err)&#123;</div><div class="line">  console.log(err);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>控制台输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Promise &#123;[[PromiseStatus]]: &quot;resolved&quot;, [[PromiseValue]]: 1&#125;</div><div class="line">Promise &#123;[[PromiseStatus]]: &quot;pending&quot;, [[PromiseValue]]: undefined&#125;</div><div class="line">Promise &#123;[[PromiseStatus]]: &quot;pending&quot;, [[PromiseValue]]: undefined&#125;</div><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">Promise &#123;[[PromiseStatus]]: &quot;resolved&quot;, [[PromiseValue]]: 2&#125;</div><div class="line">Promise &#123;[[PromiseStatus]]: &quot;rejected&quot;, [[PromiseValue]]: 3&#125;</div></pre></td></tr></table></figure></p>
+<p>Promise的内部实现是一个状态机。Promise有三种状态：pending，resolved，rejected。当Promise刚创建完成时，处于pending状态；当Promise中的函数参数执行了resolve后，Promise由pending状态变成resolved状态；如果在Promise的函数参数中执行的不是resolve方法，而是reject方法，那么Promise会由pending状态变成rejected状态。</p>
+<p>p2、p3刚创建完成时，控制台输出的这两台Promise都处于pending状态，但为什么p1是resolved状态呢？ 这是因为p1 的函数参数中执行的是一段同步代码，Promise刚创建完成，resolve方法就已经被调用了，因而紧跟着的输出显示p1是resolved状态。我们通过两个<code>setTimeout</code>函数，延迟1s后再次输出p2、p3的状态，此时p2、p3已经执行完成，状态分别变成resolved和rejected。</p>
+<h3 id="3-Promise-状态的不可逆性"><a href="#3-Promise-状态的不可逆性" class="headerlink" title="3.Promise 状态的不可逆性"></a>3.Promise 状态的不可逆性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">var p1 = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(&quot;success1&quot;);</div><div class="line">  resolve(&quot;success2&quot;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">var p2 = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(&quot;success&quot;);</div><div class="line">  reject(&quot;reject&quot;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">p1.then(function(value)&#123;</div><div class="line">  console.log(value);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">p2.then(function(value)&#123;</div><div class="line">  console.log(value);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&quot;success1&quot;</div><div class="line">&quot;success&quot;</div></pre></td></tr></table></figure>
+<p>Promise状态的一旦变成resolved或rejected时，Promise的状态和值就固定下来了，不论你后续再怎么调用resolve或reject方法，都不能改变它的状态和值。因此，p1中<code>resolve(&quot;success2&quot;)</code>并不能将p1的值更改为<code>success2</code>，p2中<code>reject(&quot;reject&quot;)</code>也不能将p2的状态由resolved改变为rejected.</p>
+<h3 id="4-链式调用"><a href="#4-链式调用" class="headerlink" title="4.链式调用"></a>4.链式调用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">var p = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(1);</div><div class="line">&#125;);</div><div class="line">p.then(function(value)&#123;               //第一个then</div><div class="line">  console.log(value);</div><div class="line">  return value*2;</div><div class="line">&#125;).then(function(value)&#123;              //第二个then</div><div class="line">  console.log(value);</div><div class="line">&#125;).then(function(value)&#123;              //第三个then</div><div class="line">  console.log(value);</div><div class="line">  return Promise.resolve(&apos;resolve&apos;); </div><div class="line">&#125;).then(function(value)&#123;              //第四个then</div><div class="line">  console.log(value);</div><div class="line">  return Promise.reject(&apos;reject&apos;);</div><div class="line">&#125;).then(function(value)&#123;              //第五个then</div><div class="line">  console.log(&apos;resolve: &apos;+ value);</div><div class="line">&#125;, function(err)&#123;</div><div class="line">  console.log(&apos;reject: &apos; + err);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">1</div><div class="line">2</div><div class="line">undefined</div><div class="line">&quot;resolve&quot;</div><div class="line">&quot;reject: reject&quot;</div></pre></td></tr></table></figure>
+<p>Promise对象的then方法返回一个新的Promise对象，因此可以通过链式调用then方法。then方法接收两个函数作为参数，第一个参数是Promise执行成功时的回调，第二个参数是Promise执行失败时的回调。两个函数只会有一个被调用，函数的返回值将被用作创建then返回的Promise对象。这两个参数的返回值可以是以下三种情况中的一种：</p>
+<ul>
+<li>return 一个同步的值 ，或者 undefined（当没有返回一个有效值时，默认返回undefined），then方法将返回一个resolved状态的Promise对象，Promise对象的值就是这个返回值。</li>
+<li>return 另一个 Promise，then方法将根据这个Promise的状态和值创建一个新的Promise对象返回。</li>
+<li>throw 一个同步异常，then方法将返回一个rejected状态的Promise, 值是该异常。</li>
+</ul>
+<p>根据以上分析，代码中第一个then会返回一个值为2（1*2），状态为resolved的Promise对象，于是第二个then输出的值是2。第二个then中没有返回值，因此将返回默认的undefined，于是在第三个then中输出undefined。第三个then和第四个then中分别返回一个状态是resolved的Promise和一个状态是rejected的Promise，依次由第四个then中成功的回调函数和第五个then中失败的回调函数处理。</p>
+<h3 id="5-Promise-then-回调异步性"><a href="#5-Promise-then-回调异步性" class="headerlink" title="5.Promise then() 回调异步性"></a>5.Promise then() 回调异步性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var p = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(&quot;success&quot;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">p.then(function(value)&#123;</div><div class="line">  console.log(value);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(&quot;which one is called first ?&quot;);</div></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&quot;which one is called first ?&quot;</div><div class="line">&quot;success&quot;</div></pre></td></tr></table></figure>
+<p>Promise接收的函数参数是同步执行的，但then方法中的回调函数执行则是异步的，因此，”success”会在后面输出。</p>
+<h3 id="6-Promise-中的异常"><a href="#6-Promise-中的异常" class="headerlink" title="6.Promise 中的异常"></a>6.Promise 中的异常</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">var p1 = new Promise( function(resolve,reject)&#123;</div><div class="line">  foo.bar();</div><div class="line">  resolve( 1 );      </div><div class="line">&#125;);</div><div class="line"></div><div class="line">p1.then(</div><div class="line">  function(value)&#123;</div><div class="line">    console.log(&apos;p1 then value: &apos; + value);</div><div class="line">  &#125;,</div><div class="line">  function(err)&#123;</div><div class="line">    console.log(&apos;p1 then err: &apos; + err);</div><div class="line">  &#125;</div><div class="line">).then(</div><div class="line">  function(value)&#123;</div><div class="line">    console.log(&apos;p1 then then value: &apos;+value);</div><div class="line">  &#125;,</div><div class="line">  function(err)&#123;</div><div class="line">    console.log(&apos;p1 then then err: &apos; + err);</div><div class="line">  &#125;</div><div class="line">);</div><div class="line"></div><div class="line">var p2 = new Promise(function(resolve,reject)&#123;</div><div class="line">  resolve( 2 );    </div><div class="line">&#125;);</div><div class="line"></div><div class="line">p2.then(</div><div class="line">  function(value)&#123;</div><div class="line">    console.log(&apos;p2 then value: &apos; + value);</div><div class="line">    foo.bar();</div><div class="line">  &#125;, </div><div class="line">  function(err)&#123;</div><div class="line">    console.log(&apos;p2 then err: &apos; + err);</div><div class="line">  &#125;</div><div class="line">).then(</div><div class="line">  function(value)&#123;</div><div class="line">    console.log(&apos;p2 then then value: &apos; + value);</div><div class="line">  &#125;,</div><div class="line">  function(err)&#123;</div><div class="line">    console.log(&apos;p2 then then err: &apos; + err);</div><div class="line">    return 1;</div><div class="line">  &#125;</div><div class="line">).then(</div><div class="line">  function(value)&#123;</div><div class="line">    console.log(&apos;p2 then then then value: &apos; + value);</div><div class="line">  &#125;,</div><div class="line">  function(err)&#123;</div><div class="line">    console.log(&apos;p2 then then then err: &apos; + err);</div><div class="line">  &#125;</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">p1 then err: ReferenceError: foo is not defined</div><div class="line">p2 then value: 2</div><div class="line">p1 then then value: undefined</div><div class="line">p2 then then err: ReferenceError: foo is not defined</div><div class="line">p2 then then then value: 1</div></pre></td></tr></table></figure>
+<p>Promise中的异常由then参数中第二个回调函数（Promise执行失败的回调）处理，异常信息将作为Promise的值。异常一旦得到处理，then返回的后续Promise对象将恢复正常，并会被Promise执行成功的回调函数处理。另外，需要注意p1、p2 多级then的回调函数是交替执行的 ，这正是由Promise then回调的异步性决定的。</p>
+<h3 id="7-Promise-resolve"><a href="#7-Promise-resolve" class="headerlink" title="7.Promise.resolve()"></a>7.Promise.resolve()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">var p1 = Promise.resolve( 1 );</div><div class="line">var p2 = Promise.resolve( p1 );</div><div class="line">var p3 = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(1);</div><div class="line">&#125;);</div><div class="line">var p4 = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(p1);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(p1 === p2); </div><div class="line">console.log(p1 === p3);</div><div class="line">console.log(p1 === p4);</div><div class="line">console.log(p3 === p4);</div><div class="line"></div><div class="line">p4.then(function(value)&#123;</div><div class="line">  console.log(&apos;p4=&apos; + value);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">p2.then(function(value)&#123;</div><div class="line">  console.log(&apos;p2=&apos; + value);</div><div class="line">&#125;)</div><div class="line"></div><div class="line">p1.then(function(value)&#123;</div><div class="line">  console.log(&apos;p1=&apos; + value);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">true</div><div class="line">false</div><div class="line">false</div><div class="line">false</div><div class="line">p2=1</div><div class="line">p1=1</div><div class="line">p4=1</div></pre></td></tr></table></figure>
+<p><code>Promise.resolve(...)</code>可以接收一个值或者是一个Promise对象作为参数。当参数是普通值时，它返回一个resolved状态的Promise对象，对象的值就是这个参数；当参数是一个Promise对象时，它直接返回这个Promise参数。因此，p1 === p2。但通过new的方式创建的Promise对象都是一个新的对象，因此后面的三个比较结果都是false。另外，为什么p4的then最先调用，但在控制台上是最后输出结果的呢？因为p4的resolve中接收的参数是一个Promise对象p1，resolve会对p1”拆箱“，获取p1的状态和值，但这个过程是异步的，可参考下一节。</p>
+<h3 id="8-resolve-vs-reject"><a href="#8-resolve-vs-reject" class="headerlink" title="8.resolve vs reject"></a>8.resolve vs reject</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">var p1 = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(Promise.resolve(&apos;resolve&apos;));</div><div class="line">&#125;);</div><div class="line"></div><div class="line">var p2 = new Promise(function(resolve, reject)&#123;</div><div class="line">  resolve(Promise.reject(&apos;reject&apos;));</div><div class="line">&#125;);</div><div class="line"></div><div class="line">var p3 = new Promise(function(resolve, reject)&#123;</div><div class="line">  reject(Promise.resolve(&apos;resolve&apos;));</div><div class="line">&#125;);</div><div class="line"></div><div class="line">p1.then(</div><div class="line">  function fulfilled(value)&#123;</div><div class="line">    console.log(&apos;fulfilled: &apos; + value);</div><div class="line">  &#125;, </div><div class="line">  function rejected(err)&#123;</div><div class="line">    console.log(&apos;rejected: &apos; + err);</div><div class="line">  &#125;</div><div class="line">);</div><div class="line"></div><div class="line">p2.then(</div><div class="line">  function fulfilled(value)&#123;</div><div class="line">    console.log(&apos;fulfilled: &apos; + value);</div><div class="line">  &#125;, </div><div class="line">  function rejected(err)&#123;</div><div class="line">    console.log(&apos;rejected: &apos; + err);</div><div class="line">  &#125;</div><div class="line">);</div><div class="line"></div><div class="line">p3.then(</div><div class="line">  function fulfilled(value)&#123;</div><div class="line">    console.log(&apos;fulfilled: &apos; + value);</div><div class="line">  &#125;, </div><div class="line">  function rejected(err)&#123;</div><div class="line">    console.log(&apos;rejected: &apos; + err);</div><div class="line">  &#125;</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">p3 rejected: [object Promise]</div><div class="line">p1 fulfilled: resolve</div><div class="line">p2 rejected: reject</div></pre></td></tr></table></figure>
+<p>Promise回调函数中的第一个参数resolve，会对Promise执行”拆箱”动作。即当resolve的参数是一个Promise对象时，resolve会”拆箱”获取这个Promise对象的状态和值，但这个过程是异步的。p1”拆箱”后，获取到Promise对象的状态是resolved，因此fulfilled回调被执行；p2”拆箱”后，获取到Promise对象的状态是rejected，因此rejected回调被执行。但Promise回调函数中的第二个参数reject不具备”拆箱“的能力，reject的参数会直接传递给then方法中的rejected回调。因此，即使p3 reject接收了一个resolved状态的Promise，then方法中被调用的依然是rejected，并且参数就是reject接收到的Promise对象。</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/promise/">
+    <time datetime="2017-07-27T05:52:58.479Z" class="entry-date">
+        2017-07-27
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-nodejs-email" class="post-nodejs-email post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/nodejs-email/">Node.js获取Email</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>POP3POP3全称为Post Office Protocol version3，是TCP/IP协议族的一员，由RFC 1939定义。其主要提供离线处理邮件，这种离线访问的模式是一种存储转发服务，将邮件从邮件服务器传送到客户端，本地的一些移动、标记操作并不影响服务器端。POP3的客户端首先与服务器建立TCP连接(默认端口是110)，随后向服务器发送命令并等待响应。服务器接收客户端的命令并返回响应。这种你来我往的交互方式维持着两者之间的通信并持续到连接终止。</p>
+<p>客户端的命令由一个命令和一些参数组成并以空格隔开，以CRLF(Carriage Return-Line Feed:\r\n)对结束。其中命令采用ASCII码，但不区分大小写，区分大小写的是其随后的参数。POP3服务器响应由一个状态码和一个可能跟有附加信息的命令组成，所有响应也是由CRLF对结束。状态码的值分为”positive”(“+OK”)和”negetive”(“-ERR”)。当信息发送完毕时，最后一行以结束符(.)加CRLF对。</p>
+<p>在整个生命周期中，POP3会话存在的状态有如下几种。当服务器响应命令请求发送授权响应，这一过程为授权(AUTHORIZATION)状态。客户端向服务器发出身份认证并经过服务器确认后就进入了事务（TRANSACTION）状态。这一状态下，服务器获取客户的相关邮件资源，并接收客户端的如下命令：STAT、LIST、RETR、DELE、NOOP、RSET、QUIT 。当客户端发出QUIT命令后，会话会进入更新(UPDATE)状态。在这状态中，服务器会释放上一状态中取得的资源，并终止连接。<br><img title="" src="http://edwardsblog.qiniudn.com/image/5/02/1f86d20ff453fb2a49c457b5f96e5.png"></p>
+<p>接下来使用node的poplib包来实现POP3客户端的功能。这里我以qq邮件举例，我们先需要把qq邮件服务器的POP3的功能打开，具体可查看相关官方文档。qq邮件的host为’pop.qq.com’，port为995。</p>
+<p><pre class="lang:default decode:true ">var POP3Client = require(‘poplib’);<br>//首先建立连接<br>var client = new POP3Client(port, host, {<br>      tlserrs: false, //是否忽略tls errors<br>      enabletls: true, //传输层安全协议ssl<br>      debug: true //是否在console输出命令和响应信息<br>});</pre><br>当然我们需要捕获异常来响应服务器发出的错误码，比如111就是服务器拒绝链接。以及一些程序运行过程的控制。通过这些预警措施能有效控制程序的状态。</p>
+<p><pre>//network error handler<br>client.on(‘error’, function(err){<br>      if(err.errno === 111){<br>            console.log(‘Unable to connect to server.’);<br>      }else{<br>            console.log(‘Server error occurred.’);<br>      }<br>      //console错误<br>      console.log(err);<br>});<br>//state invalid handler 处理状态与命令不一致的情况<br>client.on(‘invalid-state’, function(cmd){<br>      console.log(‘Invalid state. You tried calling ‘, cmd);<br>});<br>//locked handler 处理多命令同时进行的问题<br>client.on(‘locked’, function(cmd){<br>      console.log(‘Current conmand has not finished yet. You tried calling ‘, cmd);<br>});</pre><br>按照开始所述的POP3服务流程，我们需要先建立与服务器的连接，并进行身份认证才能进行邮件的获取操作。首先获取邮件列表，再获取第一封邮件的内容。这些操作都成功后就发出QUIT命令来退出服务。</p>
+<p><pre>//connect to the remote server<br>client.on(‘connect’, function(){<br>      console.log(‘CONNECT success’);<br>  //成功建立连接后进入AUTHORIZATION状态，进行身份认证<br>      client.login(username, password);<br>});<br>/**</pre></p>
+<ul>
+<li>Successfully login<br>*/<br>//login handler status Boolean<br>client.on(‘login’, function(status, rawdata){<br>   if(status){<pre><code>console.log(&apos;LOGIN/PASS success.&apos;);
+//获取邮件列表
+client.list();
+</code></pre>   }else{<pre><code>console.log(&apos;ERR: LOGIN/PASS failed&apos;);
+client.quit();
+</code></pre>   }<br>});<br>//LIST handler<br>client.on(‘list’, function(status, msgcount, msgnumber, data, rawdata){<br>   if(status === false){<pre><code>console.log(&apos;LIST failed&apos;);
+//获取失败，退出服务
+client.quit();
+</code></pre>   }else{<pre><code>console.log(&apos;LIST success with&apos;, msgcount, &apos; element(s).&apos;);
+if(msgcount &amp;gt; 0){
+</code></pre>   //获取第一封邮件<pre><code>      client.retr(1);
+}
+</code></pre>   }<br>});<br>//RETR handler<br>client.on(‘retr’, function(status, msgnumber, data, rawdata){<br>   if(status === true){<pre><code>console.log(&apos;RETR success&apos;, msgnumber);
+</code></pre> //获得后，输出data数据<br> console.log(‘data is ‘, data);<pre><code>client.quit();
+</code></pre>   }else{<pre><code>console.log(&apos;ERR: RETR failed for msgnumber&apos;, msgnumber);
+</code></pre>   }<br>});<br>//QUIT handler<br>client.on(‘quit’, function(status, rawdata){<br>   if(status === true){<pre><code>console.log(&apos;QUIT success&apos;);
+process.exit(0);
+</code></pre>   }else{<br> console.log(‘ERR: QUIT failed.’);<pre><code>process.exit(0);
+</code></pre>   }<br>});<br>这个lib的使用非常简单，但对于结果解析的支持基本没有。不能很好满足我们的需求。所以需要替换为另一个比较复杂但功能更多的邮件协议——IMAP。  </li><li>IMAPIMAP全称为Internet Message Access Protocol，和POP3一样是邮件访问的协议。现在的版本为IMAP4rev1，和POP3相比主要有以下不同。<br>  </li><li>支持在线和离线操作。IMAP客户端可以一直连接在服务器上，获得更快的响应时间。</li><br>  <li>支持多客户端。提供一种机制让客户能够感知其他当前连接到这个邮箱的用户所做的操作。</li><br>  <li>支持访问消息中的MIME部分。</li><br>  <li>支持在服务器保留消息状态信息。服务器可以跟踪消息状态提供，多个客户在不同时间访问一个邮箱可以感知其他用户所做的操作。</li><br>  <li>支持在服务器上访问多个邮箱。</li><br>  <li>支持服务器端搜索。</li><br>  <li>支持一个定义良好的扩展机制。</li>
+
+
+</ul>
+<p>IMAP服务包括了一系列操作：邮箱的建立、删除及重命名、检查新邮件、永久删除邮件、设置和清除标志、基于服务器和 MIME 的分析和搜索、有效并有选择的取回邮件属性、文本和部分内容。兼顾这么多功能的IMAP的命令就比POP3多多了。命令的格式也有所不同，客户端的命令带标签前缀，通过客户端定义，node-imap包的前缀为A加数字(数字通过每次操作累加)。而服务器响应用”+”作为前缀，响应的类型分为”OK”成功、”NO”失败、”BAD”错误。<br><a href="http://edwardsblog.qiniudn.com/image/8/67/c9c3956ac4ce3d6e72da0ba0cb0c6.jpg" rel="external" target="_blank"><img title="" src="http://edwardsblog.qiniudn.com/image/8/67/c9c3956ac4ce3d6e72da0ba0cb0c6.jpg" alt="IMAP协议的状态"></a></p><br>IMAP协议的状态类型有4种，通过状态之间转化来理解IMAP的工作流程。如图，建立连接后，连接会进入认证或者未认证状态。如果是预认证的连接状态会进入认证状态，否则处于未认证的状态。认证状态可接收的命令有CAPABILITY、NOOP、LOGOUT、SELECT、EXAMINE、CREATE、DELETE、RENAME、SUBSCRIBE、UNSUBSCRIBE、LIST、LSUB、STATUS和APPEND。，未认证状态可接收的命令有CAPABILITY、NOOP、LOGOUT、STARTTLS、AUTHENTICATE、LOGIN。如果出现不适当的命令引发协议错误，则进入注销状态。进入认证状态后，可以发出SELECT命令来选择邮件，这时连接就进入了选中状态。选择状态相比认证状态也接收CHECK、CLOSE、EXPUNGE、SEARCH、FETCH、STORE、COPY及UID命令。当进行退出命令时，进入注销状态。当服务器发出LOGOUT的响应后，双方断开连接。这些命令可以参考<a href="http://blog.sina.com.cn/s/blog_604124c10100db11.html" target="_blank" rel="external">IMAP命令详解</a>。<p></p>
+<p>我写的例程在node-imap的例子基础上使用mailparser包来解析邮件正文，然后存储到本地磁盘。</p>
+<p>node-imap首先需要创建客户端的实例，通过将认证信息和服务器配置传递给它构造函数。这个实例需要监听ready消息，这个消息是在连接状态属于认证状态时才被触发。触发后，我们选择要打开INBOX邮件文件夹，回调中获得到的信息为这个文件夹中的相关消息，比如messages数和文件夹中可使用的flags等。我们接着在这个文件夹中进行搜索命令，当然可以直接就使用搜索命令对这个邮箱进行邮件搜索。我们搜索的条件为未阅邮件以及时间限制，这个方法返回的是匹配的邮件编号。通过邮件编号，我们能获得这个邮件的内容，获取的命令为FETCH。其imap.fetch()来执行，第一个参数是邮件编号数组，第二个参数是指定返回的邮件的部分内容，node-imap也会自动添加来一些信息字段，比如UID、FLAGS、INTERNALDATE。然后我们在等待fetch到的数据传递回来。这一阶段的代码如下。</p>
+<p><pre>function openInbox(cb){<br>  imap.openBox(‘INBOX’, true, cb);<br>};<br>//等待触发ready<br>imap.once(‘ready’, function(){<br>  openInbox(function(err, box){<br>    if(err){<br>      //抛出异常 imap处理<br>      throw err;<br>    }else{<br>      console.log(‘Info: You have %d messages in your INBOX’, box.messages.total);<br>      imap.search([‘UNSEEN’, [ ‘SINCE’ , ‘2015-06-14’ ]], function(err, results){<br>        console.log(‘Debug: search results is ‘ + results);<br>        if(err){<br>          throw err;<br>        }else{<br>          var f = imap.fetch(results, { bodies: ‘’, struct: true });<br>          //接下来对得到的数据处理<br>          //…<br>        }<br>      }<br>    }<br>  }<br>});</pre><br>监听到’message’消息后，通过Mailparset包来解析邮件内容。为了节省内存消耗，通过steam的方式将数据传递给解析器。解析器再将邮件数据存储起来。</p>
+<p><pre>f.on(‘message’, function(msg, seqno){<br>  var mailparser = new MailParser();<br>  console.log(‘Info: Message #%d’, seqno);<br>  var prefix = ‘(#’ + seqno + ‘)’;<br>  //正文内容的处理<br>  msg.on(‘body’, function(stream, info){<br>    console.log(‘Debug: info.which: ‘ + info.which);<br>    if(info.which === ‘TEXT’){<br>      console.log(prefix + ‘Body [%s] found, %d total bytes’, inspect(info.which), info.size);<br>    }<br>    //pipe到mailparse解析器<br>    stream.pipe(mailparser);<br>    var buffer = ‘’,<br>        count = 0;<br>    stream.on(‘data’, function(chunk){<br>      count += chunk.length;<br>      buffer += chunk.toString(‘utf8’);<br>    });<br>    //stream结束，向console发出消息<br>    stream.once(‘end’, function(){<br>      if(info.which !== ‘TEXT’){<br>        console.log(prefix + ‘Parsed header: %s’, inspect(Imap.parseHeader(buffer)));<br>      }else{<br>        console.log(prefix + ‘Body[%s] Finished’, inspect(info.which));<br>      }<br>    });<br>    //解析器将获得的数据存储到磁盘。<br>    mailparser.on(“end”, function(mail){<br>      fs.writeFile(‘msg- ‘ + seqno + ‘-body.html’, mail.html, function(err){<br>        if(err){<br>          throw err;<br>        }<br>        console.log(‘Info: #%d saved!’, seqno);<br>      });<br>      //如果有附件，则存储起来。<br>      if(mail.attachments){<br>        mail.attachments.forEach(function(attachment){<br>            console.log(attachment.fileName);<br>            fs.writeFile(‘msg-‘ + seqno + ‘-‘ + attachment.generatedFileName, attachment.content, function(err){<br>              if(err){<br>                throw err;<br>              }<br>              console.log(‘Info: #%d attachment saved!’, seqno);<br>            });<br>        });<br>      }<br>  });<br>});</pre><br>接下来还需要做的事是将邮件数据聚合，以一封完整的格式存储到MongoDB数据库中。</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/nodejs-email/">
+    <time datetime="2017-07-21T08:27:19.028Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-mobile-phone-system" class="post-mobile-phone-system post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/mobile-phone-system/">判断iOS或Android手机</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。<span>代码</span>如下：</p>
+<p><pre>&lt;script type=”text/javascript”&gt;<br>var u = navigator.userAgent;<br>var isAndroid = u.indexOf(‘Android’) &gt; -1 || u.indexOf(‘Adr’) &gt; -1; //android终端<br>var isiOS = !!u.match(/(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端<br>alert(‘是否是Android：’+isAndroid);<br>alert(‘是否是iOS：’+isiOS);<br>&lt;/script&gt;</pre><br>下面一个比较全面的浏览器检查函数，提供更多的检查内容，你可以检查是否是移动端、ipad、iphone、微信、QQ等。</p>
+<p><pre>&lt;script type=”text/javascript”&gt;<br>//判断访问终端<br>var browser={<br>    versions:function(){<br>        var u = navigator.userAgent, app = navigator.appVersion;<br>        return {<br>            trident: u.indexOf(‘Trident’) &gt; -1, //IE内核<br>            presto: u.indexOf(‘Presto’) &gt; -1, //opera内核<br>            webKit: u.indexOf(‘AppleWebKit’) &gt; -1, //苹果、谷歌内核<br>            gecko: u.indexOf(‘Gecko’) &gt; -1 &amp;&amp; u.indexOf(‘KHTML’) == -1,//火狐内核<br>            mobile: !!u.match(/AppleWebKit.<em>Mobile.</em>/), //是否为移动终端<br>            ios: !!u.match(/(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端<br>            android: u.indexOf(‘Android’) &gt; -1 || u.indexOf(‘Adr’) &gt; -1, //android终端<br>            iPhone: u.indexOf(‘iPhone’) &gt; -1 , //是否为iPhone或者QQHD浏览器<br>            iPad: u.indexOf(‘iPad’) &gt; -1, //是否iPad<br>            webApp: u.indexOf(‘Safari’) == -1, //是否web应该程序，没有头部与底部<br>            weixin: u.indexOf(‘MicroMessenger’) &gt; -1, //是否微信 （2015-01-22新增）<br>            qq: u.match(/\sQQ/i) == “ qq” //是否QQ<br>        };<br>    }(),<br>    language:(navigator.browserLanguage || navigator.language).toLowerCase()<br>}<br>&lt;/script&gt;<br></pre><br><strong>使用方法：</strong></p>
+<p><pre class="lang:js decode:true ">//判断是否IE内核<br>if(browser.versions.trident){ alert(“is IE”); }<br>//判断是否webKit内核<br>if(browser.versions.webKit){ alert(“is webKit”); }<br>//判断是否移动端<br>if(browser.versions.mobile||browser.versions.android||browser.versions.ios){ alert(“移动端”); }</pre><br><strong>检测浏览器语言</strong>：</p>
+<p><pre class="lang:js decode:true ">currentLang = navigator.language;   //判断除IE外其他浏览器使用语言<br>if(!currentLang){//判断IE浏览器使用语言<br>    currentLang = navigator.browserLanguage;<br>}<br>alert(currentLang);</pre><br>第二种：</p>
+<p><pre class="lang:default decode:true ">if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {<br>    //alert(navigator.userAgent);<br>    window.location.href =”iPhone.html”;<br>} else if (/(Android)/i.test(navigator.userAgent)) {<br>    //alert(navigator.userAgent);<br>    window.location.href =”Android.html”;<br>} else {<br>    window.location.href =”pc.html”;<br>};</pre><br>&nbsp;</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/mobile-phone-system/">
+    <time datetime="2017-07-21T08:24:27.021Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-text" class="post-text post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/text/">vue子组件与父组件通讯</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>记录</p>
+<p>JSON转字符串 JSON.stringify()</p>
+<p>JSON字符串转换为JSON对象 JSON.parse(str)</p>
+<p>判断数据类型 typeof</p>
+<p>查看进程：ps -ef |grep nodejs</p>
+<p>nohup后台 nohup meteor –production &amp;</p>
+<p>查看运行的后台进程  jobs</p>
+<p>fg %n将后台脚本调到前台执行</p>
+<p>linux重启：shutdown -r now </p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/text/">
+    <time datetime="2017-07-21T08:22:49.623Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-meteor" class="post-meteor post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/meteor/">Meteor</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>1.启动方式 <code>meteor -p 80</code></p>
+<p>2.使用nohup后台运行meteor</p>
+<ul>
+<li>nohup meteor -p 80 &amp;</li>
+<li>jobs</li>
+<li>exit</li>
+</ul>
+<p>3.meteor数据库启动失败试试<br><code>rm -rf .meteor/local/db/mongod.lock .meteor/local/db/journal/</code></p>
+<p>4.docker下MongoDB无法启动<br><a href="https://github.com/meteor/meteor/issues/4019" target="_blank" rel="external">帮助信息</a></p>
+<p><code>apt-get install language-pack-en -y</code></p>
+<p>5.docker下出现<code>You are attempting to run Meteor as the &#39;root&#39; superuser</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export METEOR_NO_RELEASE_CHECK=true</div><div class="line">curl https://install.meteor.com/?release=1.4.1.3 | sh</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/meteor/">
+    <time datetime="2017-07-21T08:20:08.513Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-faster-css" class="post-faster-css post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/faster-css/">10条影响CSS渲染速度的写法与建议</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h6 id="1、-zishu-尽量避开"><a href="#1、-zishu-尽量避开" class="headerlink" title="1、{} #zishu {} 尽量避开"></a>1、<em>{} #zishu </em>{} 尽量避开</h6><p>   由于不同浏览器对HTML标签的解释有差异，所以最终的网页效果在不同的浏览器中可能是不一样的，为了消除这方面的风险，设计者通常会在CSS的一个始就把所有标签的默认属性全部去除，以达到所有签标属性值都统一的效果。所以就有了<em>通配符。</em>会遍历所有的标签；</p>
+<p>*{margin:0; padding:0}<br>   建议的的解决办法：</p>
+<p>   不要去使用生僻的标签，因为这些标签往往在不同浏览器中解释出来的效果不一样；所以你要尽可能的去使用那些常用的标签；</p>
+<p>   不要使用*；而是把你常用到的这些标签进行处理；例如：body,li,p,h1{margin:0; padding:0}</p>
+<h6 id="2、滤镜的一些东西不要去用"><a href="#2、滤镜的一些东西不要去用" class="headerlink" title="2、滤镜的一些东西不要去用"></a>2、滤镜的一些东西不要去用</h6><p>   IE的一些滤镜在FIREFOX中不支持，往往写一些效果时你还是使用CSS HACK；而滤镜是一个非常毫资源的东西；特别是一些羽化、阴影和一个前透明的效果；</p>
+<p>   建议的解决办法：</p>
+<p>   能不使用就不要使用，一方面兼容问题；很多效果只能在IE中使用；</p>
+<p>   就本例而言，如果非要这样在的效果，建议用图片作背景；(只说优化速度，实际应用还是可以小部分用，有人可能会说，用图片还多一个HTTP请求呢，呵呵……)</p>
+<p>   一个非常好的例子，就是在今年512大地震时，很多网站一夜之间全部变成了灰色，他们只用了一行CSS代码：</p>
+<p>body{filter: gray;}<br>   但，你会看会看到这些网页非常的慢，打开后你的CPU也会飙升，不夸张的说，如果你的电脑配置差，干死你也不为过。</p>
+<h6 id="3、一个页面上少用绝对定位"><a href="#3、一个页面上少用绝对定位" class="headerlink" title="3、一个页面上少用绝对定位"></a>3、一个页面上少用绝对定位</h6><p>   绝对定位(position:absolute )是网页布局中很常用到的，特别是作一些浮动效果时，也会让页面看起来非常的酷。但网页中如果使用过多的绝对定位，会让你的网页变得非常的慢，这一点上边FIREFOX表现要比IE还要差。</p>
+<p>   建议的解决办法：</p>
+<p>   尽可能少用，这个少用的值是多少，也没有一个非常好的值来说明；还要看绝定定位这个标签里边的内容的多少；在这里我只能说，这样写会有性能问题，少用。</p>
+<p>   如果能用变通实现同样的效果，就用变通的办法。</p>
+<h6 id="4、background-背景图片的平铺"><a href="#4、background-背景图片的平铺" class="headerlink" title="4、background 背景图片的平铺"></a>4、background 背景图片的平铺</h6><p>   有些网页的背景或页面中某块的背景通常要用到图片的平铺，平铺后就会有平铺次数的问题，如果是单次还好，如果是多次，就废了。</p>
+<p>   建议的作法：</p>
+<p>   色彩少的图片要作成gif图片；</p>
+<p>   平铺的图片尽可能大一些，如果是色彩少的GIF图片，图片大一些，实际大小也不会大多少；上边的两个例子就很好的证明，第一个图片非常少，第二个图大较大一些；但速度是非常不一样的；</p>
+<h6 id="5、让属性尽可能多的去继承"><a href="#5、让属性尽可能多的去继承" class="headerlink" title="5、让属性尽可能多的去继承"></a>5、让属性尽可能多的去继承</h6><p>   尽可能让一些属性子可以继承父，而不是覆盖父；</p>
+<h6 id="6、CSS的路径别太深；"><a href="#6、CSS的路径别太深；" class="headerlink" title="6、CSS的路径别太深；"></a>6、CSS的路径别太深；</h6><p><code>#zishu #info #tool #sidebar h2{ font-size:12px;}</code></p>
+<h6 id="7、能简写的一些就简写；"><a href="#7、能简写的一些就简写；" class="headerlink" title="7、能简写的一些就简写；"></a>7、能简写的一些就简写；</h6><p>   这个对渲染速度没有影响；只是少几个字符；</p>
+<h6 id="8、别放空的的class或没有的class在HTML代码中；"><a href="#8、别放空的的class或没有的class在HTML代码中；" class="headerlink" title="8、别放空的的class或没有的class在HTML代码中；"></a>8、别放空的的class或没有的class在HTML代码中；</h6><h6 id="9、float-的应用"><a href="#9、float-的应用" class="headerlink" title="9、float 的应用"></a>9、float 的应用</h6><p>   这个东西我的感觉是如果使用不当，百分百有性能问题，而且还非常的大，但实在不知道怎么样能弄一个例子出来；这里只能建议大家如果不是很明白float是怎么工作的，还是少使用为妙。</p>
+<p>   曾经因为这个把IE干死过，我写过一个例子，虽说和这个没有什么太大的关系：IE之死__原来与CSS有关</p>
+<h6 id="10、合理的布局"><a href="#10、合理的布局" class="headerlink" title="10、合理的布局"></a>10、合理的布局</h6><p>   为什么这么说呢，合理的布局，可以改变CSS的写法以及渲染过程。</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/faster-css/">
+    <time datetime="2017-07-21T08:17:35.446Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-npm" class="post-npm post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/npm/">npm</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>1.更换npm源为淘宝源<br><code>npm --registry=https://registry.npm.taobao.org</code></p>
+<p>2.查看npm包安装路径<br><code>which node</code></p>
+<p>3.查看npm配置项<br><code>npm config list</code></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/npm/">
+    <time datetime="2017-07-21T08:17:28.557Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-array" class="post-array post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/array/">JavaScript 数组方法对比</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。</p>
+<p>注意：区分以下两个方法的不同点：</p>
+<ul>
+<li>array.splice() 影响原来的数组</li>
+<li>array.slice() 不影响原来的数组</li>
+</ul>
+<h5 id="I-新增：影响原数组"><a href="#I-新增：影响原数组" class="headerlink" title="I. 新增：影响原数组"></a>I. 新增：影响原数组</h5><p>使用 array.push() 和 array.ushift() 新增元素会影响原来的数组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let mutatingAdd = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]; </div><div class="line">mutatingAdd.push(&apos;f&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]</div><div class="line">mutatingAdd.unshift(&apos;z&apos;); // [&apos;z&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos; &apos;f&apos;]</div></pre></td></tr></table></figure></p>
+<h5 id="II-新增：不影响原数组"><a href="#II-新增：不影响原数组" class="headerlink" title="II. 新增：不影响原数组"></a>II. 新增：不影响原数组</h5><p>两种方式新增元素不会影响原数组，第一种是 array.concat() 。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = arr1.concat(&apos;f&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]  （注：原文有误，我做了修改 “.” ---&gt; “,”）</div><div class="line">console.log(arr1); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>第二种方法是使用 JavaScript 的展开（spread）操作符，展开操作符是三个点（…）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = [...arr1, &apos;f&apos;]; // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]  </div><div class="line">const arr3 = [&apos;z&apos;, ...arr1]; // [&apos;z&apos;, &apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>展开操作符会复制原来的数组，从原数组取出所有元素，然后存入新的环境。</p>
+<h5 id="III-移除：影响原数组"><a href="#III-移除：影响原数组" class="headerlink" title="III. 移除：影响原数组"></a>III. 移除：影响原数组</h5><p>使用 array.pop() 和 array.shift() 移除数组元素时，会影响原来的数组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingRemove.pop(); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">mutatingRemove.shift(); // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;]</div></pre></td></tr></table></figure></p>
+<p>array.pop() 和 array.shift() 返回被移除的元素，你可以通过一个变量获取被移除的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const returnedValue1 = mutatingRemove.pop();  </div><div class="line">console.log(mutatingRemove); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">console.log(returnedValue1); // &apos;e&apos;</div><div class="line">const returnedValue2 = mutatingRemove.shift();  </div><div class="line">console.log(mutatingRemove); // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">console.log(returnedValue2); // &apos;a&apos;</div></pre></td></tr></table></figure></p>
+<p>array.splice() 也可以删除数组的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingRemove.splice(0, 2); // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>像 array.pop() 和 array.shift() 一样，array.splice() 同样返回移除的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">let returnedItems = mutatingRemove.splice(0, 2);  </div><div class="line">console.log(mutatingRemove); // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">console.log(returnedItems) // [&apos;a&apos;, &apos;b&apos;]</div></pre></td></tr></table></figure></p>
+<h5 id="IV-移除：不影响原数组"><a href="#IV-移除：不影响原数组" class="headerlink" title="IV. 移除：不影响原数组"></a>IV. 移除：不影响原数组</h5><p>JavaScript 的 array.filter() 方法基于原数组创建一个新数组，新数组仅包含匹配特定条件的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = arr1.filter(a =&gt; a !== &apos;e&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]（注：原文有误，我做了修改）  </div><div class="line">// 或者</div><div class="line">const arr2 = arr1.filter(a =&gt; &#123;  </div><div class="line">  return a !== &apos;e&apos;;</div><div class="line">&#125;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]（注：原文有误，我做了修改）</div></pre></td></tr></table></figure></p>
+<p>以上代码的条件是“不等于 ‘e’ ”，因此新数组（arr2）里面没有包含 ‘e’。</p>
+<p>箭头函数的独特性：</p>
+<p>单行箭头函数，’return’ 关键字是默认自带的，不需要手动书写。</p>
+<p>可是，多行箭头函数就需要明确地返回一个值。</p>
+<p>另一种不影响原数组的方式是 array.slice()（不要与 array.splice() 混淆）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">const arr2 = arr1.slice(1, 5) // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">const arr3 = arr1.slice(2) // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<h5 id="V-替换：影响原数组"><a href="#V-替换：影响原数组" class="headerlink" title="V. 替换：影响原数组"></a>V. 替换：影响原数组</h5><p>如果知道替换哪一个元素，可以使用 array.splice() 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let mutatingReplace = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingReplace.splice(2, 1, 30); // [&apos;a&apos;, &apos;b&apos;, 30, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">// 或者</div><div class="line">mutatingReplace.splice(2, 1, 30, 31); // [&apos;a&apos;, &apos;b&apos;, 30, 31, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure>
+<h5 id="VI-替换：不影响原数组"><a href="#VI-替换：不影响原数组" class="headerlink" title="VI. 替换：不影响原数组"></a>VI. 替换：不影响原数组</h5><p>可以使用 array.map() 创建一个新数组，并且可以检查每一个元素，根据特定的条件替换它们。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">const arr2 = arr1.map(item =&gt; &#123;  </div><div class="line">  if(item === &apos;c&apos;) &#123;</div><div class="line">    item = &apos;CAT&apos;;</div><div class="line">  &#125;</div><div class="line">  return item;</div><div class="line">&#125;); // [&apos;a&apos;, &apos;b&apos;, &apos;CAT&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>使用 array.map() 转换数据</p>
+<p>array.map() 是个强力方法，可以用于转换数据，而不污染原先的数据源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const origArr = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">const transformedArr = origArr.map(n =&gt; n + &apos;Hi!&apos;); // [&apos;aHi!&apos;, &apos;bHi!&apos;, &apos;cHi!&apos;, &apos;dHi!&apos;, &apos;eHi!&apos;]  </div><div class="line">console.log(origArr); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]; // 原数组毫发无损</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/array/">
+    <time datetime="2017-07-21T08:15:11.690Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-json" class="post-json post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/json/">JSON</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p><strong>JSON.parse()和JSON.stringify()</strong></p>
+<ol>
+<li>JSON.parse(string[, translator]) 将字符串转换为JSON对象</li>
+</ol>
+<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var str = &apos;&#123;&quot;name&quot;:&quot;叶德华&quot;,&quot;age&quot;:23&#125;&apos;;</div><div class="line">str = JSON.parse(str);</div></pre></td></tr></table></figure></p>
+<ol>
+<li>JSON.stringify(object[, replacer[, space]])  将JSON对象转为字符串</li>
+</ol>
+<blockquote>
+<p>参数：</p>
+<p>object：是要转为字符串的JSON对象。</p>
+<p>replacer：可选，可以是改变字符串转换过程的函数，也可以是一组String和Number对象，这些对象用作一个白名单，用于选择要转换为字符串的对象的属性。如果这个值是空或没有提供，则在所得的JSON字符串中包含对象的所有属性。</p>
+<p>space参数：可选，是一个String或Number对象，用于把空白插入输出的JSON字符串，以提高可读性。如果这是一个数值，则表示用作空白的空格字符数；如果该数值大于10，就取其值为10；小于1的值表示不应使用空格。如果这是一个字符串（如果该字符串多于10个字符，就取前10个字符），就把该字符串用作空白。如果没有提供这个参数（或者为空），就不使用空白。</p>
+</blockquote>
+<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var str = &apos;&#123;&quot;name&quot;:&quot;叶德华&quot;,&quot;age&quot;:23&#125;&apos;;</div><div class="line">str = JSON.parse(str);</div><div class="line">console.info(JSON.stringify(str));</div><div class="line">console.info(JSON.stringify(str,null,5));</div><div class="line">console.info(JSON.stringify(str,[&quot;name&quot;],5));</div><div class="line">console.info(JSON.stringify(str,null,&quot;###&quot;));</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/json/">
+    <time datetime="2017-07-21T08:13:44.329Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-electron" class="post-electron post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/electron/">electron</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>替换国内下载源:</p>
+<p><code>npm config set ELECTRON_MIRROR=&quot;https://npm.taobao.org/mirrors/electron/&quot;</code></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/electron/">
+    <time datetime="2017-07-21T08:12:35.453Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+  
+    <nav id="pagination">
+      <nav id="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      </nav>
+    </nav>
+  
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/promise/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs-email/">Node.js获取Email</a>
+          </li>
+        
+          <li>
+            <a href="/mobile-phone-system/">判断iOS或Android手机</a>
+          </li>
+        
+          <li>
+            <a href="/text/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/meteor/">Meteor</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="1.创建文件Order.js，内容为：123&amp;quot;use strict&amp;quot;;import Vue from &amp;apos;vue&amp;apos;;export var Order = new Vue();
+2.在父组件里导入Order.js并监听事件,父组件内容为:1234567import" />
+  
+  
+  
+  
+  
+  
+  <title>vue子组件与父组件通讯 | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.创建文件Order.js，内容为：123&amp;quot;use strict&amp;quot;;import Vue from &amp;apos;vue&amp;apos;;export var Order = new Vue(); 2.在父组件里导入Order.js并监听事件,父组件内容为:1234567import &amp;#123; Order &amp;#125; from &amp;apos;./Order.js&amp;apos;//">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue子组件与父组件通讯">
+<meta property="og:url" content="https://owo.ink/order/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="1.创建文件Order.js，内容为：123&amp;quot;use strict&amp;quot;;import Vue from &amp;apos;vue&amp;apos;;export var Order = new Vue(); 2.在父组件里导入Order.js并监听事件,父组件内容为:1234567import &amp;#123; Order &amp;#125; from &amp;apos;./Order.js&amp;apos;//">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-07-21T08:10:51.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue子组件与父组件通讯">
+<meta name="twitter:description" content="1.创建文件Order.js，内容为：123&amp;quot;use strict&amp;quot;;import Vue from &amp;apos;vue&amp;apos;;export var Order = new Vue(); 2.在父组件里导入Order.js并监听事件,父组件内容为:1234567import &amp;#123; Order &amp;#125; from &amp;apos;./Order.js&amp;apos;//">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-order" class="post-order post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      vue子组件与父组件通讯
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>1.创建文件Order.js，内容为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&quot;use strict&quot;;</div><div class="line">import Vue from &apos;vue&apos;;</div><div class="line">export var Order = new Vue();</div></pre></td></tr></table></figure></p>
+<p>2.在父组件里导入Order.js并监听事件,父组件内容为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">import &#123; Order &#125; from &apos;./Order.js&apos;</div><div class="line">// ...</div><div class="line">created () &#123;</div><div class="line">  Order.$on(&apos;tip&apos;, (text) =&gt; &#123;</div><div class="line">    alert(text)</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>3.在子组件里导入Order.js并发送事件,子组件内容为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import &#123; Order &#125; from &apos;./Order.js&apos;</div><div class="line"> // ...</div><div class="line">Order.$emit(&apos;tip&apos;, &apos;123&apos;)</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/order/">
+    <time datetime="2017-07-21T08:02:45.039Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/electron/" rel="prev"><span class="meta-nav">←</span> electron</a></span>
+    
+    
+        <span class="nav-next"><a href="/dns-prefetch/" rel="next">DNS预获取dns-prefetch提升页面载入速度 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/promise/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs-email/">Node.js获取Email</a>
+          </li>
+        
+          <li>
+            <a href="/mobile-phone-system/">判断iOS或Android手机</a>
+          </li>
+        
+          <li>
+            <a href="/text/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/meteor/">Meteor</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>

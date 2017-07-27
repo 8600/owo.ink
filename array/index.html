@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。
+注意：区分以下两个方法的不同点：
+
+array.splice() 影响原来的数组
+array.slice() 不影响原来的数组
+
+I. 新增：影响原数组使用 array.pus" />
+  
+  
+  
+  
+  
+  
+  <title>JavaScript 数组方法对比 | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。 注意：区分以下两个方法的不同点：  array.splice() 影响原来的数组 array.slice() 不影响原来的数组  I. 新增：影响原数组使用 array.push() 和 array.ushift() 新增元素会影响原来的数组。123let mutatingA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 数组方法对比">
+<meta property="og:url" content="https://owo.ink/array/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。 注意：区分以下两个方法的不同点：  array.splice() 影响原来的数组 array.slice() 不影响原来的数组  I. 新增：影响原数组使用 array.push() 和 array.ushift() 新增元素会影响原来的数组。123let mutatingA">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-07-21T08:16:43.702Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 数组方法对比">
+<meta name="twitter:description" content="JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。 注意：区分以下两个方法的不同点：  array.splice() 影响原来的数组 array.slice() 不影响原来的数组  I. 新增：影响原数组使用 array.push() 和 array.ushift() 新增元素会影响原来的数组。123let mutatingA">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-array" class="post-array post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      JavaScript 数组方法对比
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。</p>
+<p>注意：区分以下两个方法的不同点：</p>
+<ul>
+<li>array.splice() 影响原来的数组</li>
+<li>array.slice() 不影响原来的数组</li>
+</ul>
+<h5 id="I-新增：影响原数组"><a href="#I-新增：影响原数组" class="headerlink" title="I. 新增：影响原数组"></a>I. 新增：影响原数组</h5><p>使用 array.push() 和 array.ushift() 新增元素会影响原来的数组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let mutatingAdd = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]; </div><div class="line">mutatingAdd.push(&apos;f&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]</div><div class="line">mutatingAdd.unshift(&apos;z&apos;); // [&apos;z&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos; &apos;f&apos;]</div></pre></td></tr></table></figure></p>
+<h5 id="II-新增：不影响原数组"><a href="#II-新增：不影响原数组" class="headerlink" title="II. 新增：不影响原数组"></a>II. 新增：不影响原数组</h5><p>两种方式新增元素不会影响原数组，第一种是 array.concat() 。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = arr1.concat(&apos;f&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]  （注：原文有误，我做了修改 “.” ---&gt; “,”）</div><div class="line">console.log(arr1); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>第二种方法是使用 JavaScript 的展开（spread）操作符，展开操作符是三个点（…）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = [...arr1, &apos;f&apos;]; // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]  </div><div class="line">const arr3 = [&apos;z&apos;, ...arr1]; // [&apos;z&apos;, &apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>展开操作符会复制原来的数组，从原数组取出所有元素，然后存入新的环境。</p>
+<h5 id="III-移除：影响原数组"><a href="#III-移除：影响原数组" class="headerlink" title="III. 移除：影响原数组"></a>III. 移除：影响原数组</h5><p>使用 array.pop() 和 array.shift() 移除数组元素时，会影响原来的数组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingRemove.pop(); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">mutatingRemove.shift(); // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;]</div></pre></td></tr></table></figure></p>
+<p>array.pop() 和 array.shift() 返回被移除的元素，你可以通过一个变量获取被移除的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const returnedValue1 = mutatingRemove.pop();  </div><div class="line">console.log(mutatingRemove); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">console.log(returnedValue1); // &apos;e&apos;</div><div class="line">const returnedValue2 = mutatingRemove.shift();  </div><div class="line">console.log(mutatingRemove); // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">console.log(returnedValue2); // &apos;a&apos;</div></pre></td></tr></table></figure></p>
+<p>array.splice() 也可以删除数组的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingRemove.splice(0, 2); // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>像 array.pop() 和 array.shift() 一样，array.splice() 同样返回移除的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">let returnedItems = mutatingRemove.splice(0, 2);  </div><div class="line">console.log(mutatingRemove); // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">console.log(returnedItems) // [&apos;a&apos;, &apos;b&apos;]</div></pre></td></tr></table></figure></p>
+<h5 id="IV-移除：不影响原数组"><a href="#IV-移除：不影响原数组" class="headerlink" title="IV. 移除：不影响原数组"></a>IV. 移除：不影响原数组</h5><p>JavaScript 的 array.filter() 方法基于原数组创建一个新数组，新数组仅包含匹配特定条件的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = arr1.filter(a =&gt; a !== &apos;e&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]（注：原文有误，我做了修改）  </div><div class="line">// 或者</div><div class="line">const arr2 = arr1.filter(a =&gt; &#123;  </div><div class="line">  return a !== &apos;e&apos;;</div><div class="line">&#125;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]（注：原文有误，我做了修改）</div></pre></td></tr></table></figure></p>
+<p>以上代码的条件是“不等于 ‘e’ ”，因此新数组（arr2）里面没有包含 ‘e’。</p>
+<p>箭头函数的独特性：</p>
+<p>单行箭头函数，’return’ 关键字是默认自带的，不需要手动书写。</p>
+<p>可是，多行箭头函数就需要明确地返回一个值。</p>
+<p>另一种不影响原数组的方式是 array.slice()（不要与 array.splice() 混淆）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">const arr2 = arr1.slice(1, 5) // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">const arr3 = arr1.slice(2) // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<h5 id="V-替换：影响原数组"><a href="#V-替换：影响原数组" class="headerlink" title="V. 替换：影响原数组"></a>V. 替换：影响原数组</h5><p>如果知道替换哪一个元素，可以使用 array.splice() 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let mutatingReplace = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingReplace.splice(2, 1, 30); // [&apos;a&apos;, &apos;b&apos;, 30, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">// 或者</div><div class="line">mutatingReplace.splice(2, 1, 30, 31); // [&apos;a&apos;, &apos;b&apos;, 30, 31, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure>
+<h5 id="VI-替换：不影响原数组"><a href="#VI-替换：不影响原数组" class="headerlink" title="VI. 替换：不影响原数组"></a>VI. 替换：不影响原数组</h5><p>可以使用 array.map() 创建一个新数组，并且可以检查每一个元素，根据特定的条件替换它们。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">const arr2 = arr1.map(item =&gt; &#123;  </div><div class="line">  if(item === &apos;c&apos;) &#123;</div><div class="line">    item = &apos;CAT&apos;;</div><div class="line">  &#125;</div><div class="line">  return item;</div><div class="line">&#125;); // [&apos;a&apos;, &apos;b&apos;, &apos;CAT&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
+<p>使用 array.map() 转换数据</p>
+<p>array.map() 是个强力方法，可以用于转换数据，而不污染原先的数据源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const origArr = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">const transformedArr = origArr.map(n =&gt; n + &apos;Hi!&apos;); // [&apos;aHi!&apos;, &apos;bHi!&apos;, &apos;cHi!&apos;, &apos;dHi!&apos;, &apos;eHi!&apos;]  </div><div class="line">console.log(origArr); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]; // 原数组毫发无损</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/array/">
+    <time datetime="2017-07-21T08:15:11.690Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/npm/" rel="prev"><span class="meta-nav">←</span> npm</a></span>
+    
+    
+        <span class="nav-next"><a href="/json/" rel="next">JSON <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/promise/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs-email/">Node.js获取Email</a>
+          </li>
+        
+          <li>
+            <a href="/mobile-phone-system/">判断iOS或Android手机</a>
+          </li>
+        
+          <li>
+            <a href="/text/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/meteor/">Meteor</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="JSON.parse()和JSON.stringify()
+
+JSON.parse(string[, translator]) 将字符串转换为JSON对象
+
+示例代码：12var str = &amp;apos;&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;叶德华&amp;quot;,&amp;quot;age" />
+  
+  
+  
+  
+  
+  
+  <title>JSON | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="JSON.parse()和JSON.stringify()  JSON.parse(string[, translator]) 将字符串转换为JSON对象  示例代码：12var str = &amp;apos;&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;叶德华&amp;quot;,&amp;quot;age&amp;quot;:23&amp;#125;&amp;apos;;str = JSON.parse(str);  JSON">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JSON">
+<meta property="og:url" content="https://owo.ink/json/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="JSON.parse()和JSON.stringify()  JSON.parse(string[, translator]) 将字符串转换为JSON对象  示例代码：12var str = &amp;apos;&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;叶德华&amp;quot;,&amp;quot;age&amp;quot;:23&amp;#125;&amp;apos;;str = JSON.parse(str);  JSON">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-07-21T08:14:11.223Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JSON">
+<meta name="twitter:description" content="JSON.parse()和JSON.stringify()  JSON.parse(string[, translator]) 将字符串转换为JSON对象  示例代码：12var str = &amp;apos;&amp;#123;&amp;quot;name&amp;quot;:&amp;quot;叶德华&amp;quot;,&amp;quot;age&amp;quot;:23&amp;#125;&amp;apos;;str = JSON.parse(str);  JSON">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-json" class="post-json post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      JSON
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p><strong>JSON.parse()和JSON.stringify()</strong></p>
+<ol>
+<li>JSON.parse(string[, translator]) 将字符串转换为JSON对象</li>
+</ol>
+<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var str = &apos;&#123;&quot;name&quot;:&quot;叶德华&quot;,&quot;age&quot;:23&#125;&apos;;</div><div class="line">str = JSON.parse(str);</div></pre></td></tr></table></figure></p>
+<ol>
+<li>JSON.stringify(object[, replacer[, space]])  将JSON对象转为字符串</li>
+</ol>
+<blockquote>
+<p>参数：</p>
+<p>object：是要转为字符串的JSON对象。</p>
+<p>replacer：可选，可以是改变字符串转换过程的函数，也可以是一组String和Number对象，这些对象用作一个白名单，用于选择要转换为字符串的对象的属性。如果这个值是空或没有提供，则在所得的JSON字符串中包含对象的所有属性。</p>
+<p>space参数：可选，是一个String或Number对象，用于把空白插入输出的JSON字符串，以提高可读性。如果这是一个数值，则表示用作空白的空格字符数；如果该数值大于10，就取其值为10；小于1的值表示不应使用空格。如果这是一个字符串（如果该字符串多于10个字符，就取前10个字符），就把该字符串用作空白。如果没有提供这个参数（或者为空），就不使用空白。</p>
+</blockquote>
+<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var str = &apos;&#123;&quot;name&quot;:&quot;叶德华&quot;,&quot;age&quot;:23&#125;&apos;;</div><div class="line">str = JSON.parse(str);</div><div class="line">console.info(JSON.stringify(str));</div><div class="line">console.info(JSON.stringify(str,null,5));</div><div class="line">console.info(JSON.stringify(str,[&quot;name&quot;],5));</div><div class="line">console.info(JSON.stringify(str,null,&quot;###&quot;));</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/json/">
+    <time datetime="2017-07-21T08:13:44.329Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/array/" rel="prev"><span class="meta-nav">←</span> JavaScript 数组方法对比</a></span>
+    
+    
+        <span class="nav-next"><a href="/electron/" rel="next">electron <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/promise/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs-email/">Node.js获取Email</a>
+          </li>
+        
+          <li>
+            <a href="/mobile-phone-system/">判断iOS或Android手机</a>
+          </li>
+        
+          <li>
+            <a href="/text/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/meteor/">Meteor</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>

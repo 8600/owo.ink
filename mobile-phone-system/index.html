@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。代码如下：
+&amp;lt;script type=”text/javascript”&amp;gt;var u = navigator.userAgent;var isAndroid = u.indexOf(‘Android’" />
+  
+  
+  
+  
+  
+  
+  <title>判断iOS或Android手机 | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。代码如下： &amp;lt;script type=”text/javascript”&amp;gt;var u = navigator.userAgent;var isAndroid = u.indexOf(‘Android’) &amp;gt; -1 || u.indexOf(‘Adr’) &amp;gt; -1; //android终端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="判断iOS或Android手机">
+<meta property="og:url" content="https://owo.ink/mobile-phone-system/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。代码如下： &amp;lt;script type=”text/javascript”&amp;gt;var u = navigator.userAgent;var isAndroid = u.indexOf(‘Android’) &amp;gt; -1 || u.indexOf(‘Adr’) &amp;gt; -1; //android终端">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-07-21T08:26:23.522Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="判断iOS或Android手机">
+<meta name="twitter:description" content="通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。代码如下： &amp;lt;script type=”text/javascript”&amp;gt;var u = navigator.userAgent;var isAndroid = u.indexOf(‘Android’) &amp;gt; -1 || u.indexOf(‘Adr’) &amp;gt; -1; //android终端">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-mobile-phone-system" class="post-mobile-phone-system post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      判断iOS或Android手机
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。<span>代码</span>如下：</p>
+<p><pre>&lt;script type=”text/javascript”&gt;<br>var u = navigator.userAgent;<br>var isAndroid = u.indexOf(‘Android’) &gt; -1 || u.indexOf(‘Adr’) &gt; -1; //android终端<br>var isiOS = !!u.match(/(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端<br>alert(‘是否是Android：’+isAndroid);<br>alert(‘是否是iOS：’+isiOS);<br>&lt;/script&gt;</pre><br>下面一个比较全面的浏览器检查函数，提供更多的检查内容，你可以检查是否是移动端、ipad、iphone、微信、QQ等。</p>
+<p><pre>&lt;script type=”text/javascript”&gt;<br>//判断访问终端<br>var browser={<br>    versions:function(){<br>        var u = navigator.userAgent, app = navigator.appVersion;<br>        return {<br>            trident: u.indexOf(‘Trident’) &gt; -1, //IE内核<br>            presto: u.indexOf(‘Presto’) &gt; -1, //opera内核<br>            webKit: u.indexOf(‘AppleWebKit’) &gt; -1, //苹果、谷歌内核<br>            gecko: u.indexOf(‘Gecko’) &gt; -1 &amp;&amp; u.indexOf(‘KHTML’) == -1,//火狐内核<br>            mobile: !!u.match(/AppleWebKit.<em>Mobile.</em>/), //是否为移动终端<br>            ios: !!u.match(/(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端<br>            android: u.indexOf(‘Android’) &gt; -1 || u.indexOf(‘Adr’) &gt; -1, //android终端<br>            iPhone: u.indexOf(‘iPhone’) &gt; -1 , //是否为iPhone或者QQHD浏览器<br>            iPad: u.indexOf(‘iPad’) &gt; -1, //是否iPad<br>            webApp: u.indexOf(‘Safari’) == -1, //是否web应该程序，没有头部与底部<br>            weixin: u.indexOf(‘MicroMessenger’) &gt; -1, //是否微信 （2015-01-22新增）<br>            qq: u.match(/\sQQ/i) == “ qq” //是否QQ<br>        };<br>    }(),<br>    language:(navigator.browserLanguage || navigator.language).toLowerCase()<br>}<br>&lt;/script&gt;<br></pre><br><strong>使用方法：</strong></p>
+<p><pre class="lang:js decode:true ">//判断是否IE内核<br>if(browser.versions.trident){ alert(“is IE”); }<br>//判断是否webKit内核<br>if(browser.versions.webKit){ alert(“is webKit”); }<br>//判断是否移动端<br>if(browser.versions.mobile||browser.versions.android||browser.versions.ios){ alert(“移动端”); }</pre><br><strong>检测浏览器语言</strong>：</p>
+<p><pre class="lang:js decode:true ">currentLang = navigator.language;   //判断除IE外其他浏览器使用语言<br>if(!currentLang){//判断IE浏览器使用语言<br>    currentLang = navigator.browserLanguage;<br>}<br>alert(currentLang);</pre><br>第二种：</p>
+<p><pre class="lang:default decode:true ">if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {<br>    //alert(navigator.userAgent);<br>    window.location.href =”iPhone.html”;<br>} else if (/(Android)/i.test(navigator.userAgent)) {<br>    //alert(navigator.userAgent);<br>    window.location.href =”Android.html”;<br>} else {<br>    window.location.href =”pc.html”;<br>};</pre><br>&nbsp;</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/mobile-phone-system/">
+    <time datetime="2017-07-21T08:24:27.021Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/nodejs-email/" rel="prev"><span class="meta-nav">←</span> Node.js获取Email</a></span>
+    
+    
+        <span class="nav-next"><a href="/text/" rel="next">vue子组件与父组件通讯 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/promise/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs-email/">Node.js获取Email</a>
+          </li>
+        
+          <li>
+            <a href="/mobile-phone-system/">判断iOS或Android手机</a>
+          </li>
+        
+          <li>
+            <a href="/text/">vue子组件与父组件通讯</a>
+          </li>
+        
+          <li>
+            <a href="/meteor/">Meteor</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>
