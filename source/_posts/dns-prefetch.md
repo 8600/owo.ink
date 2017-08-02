@@ -24,7 +24,7 @@ DNS Prefetch 应该尽量的放在网页的前面，推荐放在 `<meta charset=
 <link rel="dns-prefetch" href="//api.share.baidu.com">
 <link rel="dns-prefetch" href="//bdimg.share.baidu.com">
 ```
-需要注意的是，虽然使用 DNS Prefetch 能够加快页面的解析速度，但是也不能滥用，因为有开发者指出 [禁用DNS 预读取能节省每月100亿的DNS查询](http://www.pinkbike.com/news/DNS-Prefetching-implications.html) 。
+需要注意的是，虽然使用 DNS Prefetch 能够加快页面的解析速度，但是也不能滥用，因为有开发者指出 [禁用DNS 预读取能节省每月100亿的DNS查询](https://www.pinkbike.com/news/DNS-Prefetching-implications.html) 。
 
 如果需要禁止隐式的 DNS Prefetch，可以使用以下的标签：
 

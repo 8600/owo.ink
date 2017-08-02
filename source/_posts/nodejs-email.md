@@ -7,7 +7,7 @@ POP3POP3全称为Post Office Protocol version3，是TCP/IP协议族的一员，�
 客户端的命令由一个命令和一些参数组成并以空格隔开，以CRLF(Carriage Return-Line Feed:\r\n)对结束。其中命令采用ASCII码，但不区分大小写，区分大小写的是其随后的参数。POP3服务器响应由一个状态码和一个可能跟有附加信息的命令组成，所有响应也是由CRLF对结束。状态码的值分为"positive"("+OK")和"negetive"("-ERR")。当信息发送完毕时，最后一行以结束符(.)加CRLF对。
 
 在整个生命周期中，POP3会话存在的状态有如下几种。当服务器响应命令请求发送授权响应，这一过程为授权(AUTHORIZATION)状态。客户端向服务器发出身份认证并经过服务器确认后就进入了事务（TRANSACTION）状态。这一状态下，服务器获取客户的相关邮件资源，并接收客户端的如下命令：STAT、LIST、RETR、DELE、NOOP、RSET、QUIT 。当客户端发出QUIT命令后，会话会进入更新(UPDATE)状态。在这状态中，服务器会释放上一状态中取得的资源，并终止连接。
-<img title="" src="http://edwardsblog.qiniudn.com/image/5/02/1f86d20ff453fb2a49c457b5f96e5.png" /></a>
+<img title="" src="https://edwardsblog.qiniudn.com/image/5/02/1f86d20ff453fb2a49c457b5f96e5.png" /></a>
 
 接下来使用node的poplib包来实现POP3客户端的功能。这里我以qq邮件举例，我们先需要把qq邮件服务器的POP3的功能打开，具体可查看相关官方文档。qq邮件的host为'pop.qq.com'，port为995。
 <pre class="lang:default decode:true ">var POP3Client = require('poplib');
@@ -103,8 +103,8 @@ client.on('quit', function(status, rawdata){
  	<li>支持一个定义良好的扩展机制。</li>
 
 IMAP服务包括了一系列操作：邮箱的建立、删除及重命名、检查新邮件、永久删除邮件、设置和清除标志、基于服务器和 MIME 的分析和搜索、有效并有选择的取回邮件属性、文本和部分内容。兼顾这么多功能的IMAP的命令就比POP3多多了。命令的格式也有所不同，客户端的命令带标签前缀，通过客户端定义，node-imap包的前缀为A加数字(数字通过每次操作累加)。而服务器响应用"+"作为前缀，响应的类型分为"OK"成功、"NO"失败、"BAD"错误。
-<a href="http://edwardsblog.qiniudn.com/image/8/67/c9c3956ac4ce3d6e72da0ba0cb0c6.jpg" rel="lightbox"><img title="" src="http://edwardsblog.qiniudn.com/image/8/67/c9c3956ac4ce3d6e72da0ba0cb0c6.jpg" alt="IMAP协议的状态" /></a></p>
-IMAP协议的状态类型有4种，通过状态之间转化来理解IMAP的工作流程。如图，建立连接后，连接会进入认证或者未认证状态。如果是预认证的连接状态会进入认证状态，否则处于未认证的状态。认证状态可接收的命令有CAPABILITY、NOOP、LOGOUT、SELECT、EXAMINE、CREATE、DELETE、RENAME、SUBSCRIBE、UNSUBSCRIBE、LIST、LSUB、STATUS和APPEND。，未认证状态可接收的命令有CAPABILITY、NOOP、LOGOUT、STARTTLS、AUTHENTICATE、LOGIN。如果出现不适当的命令引发协议错误，则进入注销状态。进入认证状态后，可以发出SELECT命令来选择邮件，这时连接就进入了选中状态。选择状态相比认证状态也接收CHECK、CLOSE、EXPUNGE、SEARCH、FETCH、STORE、COPY及UID命令。当进行退出命令时，进入注销状态。当服务器发出LOGOUT的响应后，双方断开连接。这些命令可以参考<a href="http://blog.sina.com.cn/s/blog_604124c10100db11.html">IMAP命令详解</a>。
+<a href="https://edwardsblog.qiniudn.com/image/8/67/c9c3956ac4ce3d6e72da0ba0cb0c6.jpg" rel="lightbox"><img title="" src="https://edwardsblog.qiniudn.com/image/8/67/c9c3956ac4ce3d6e72da0ba0cb0c6.jpg" alt="IMAP协议的状态" /></a></p>
+IMAP协议的状态类型有4种，通过状态之间转化来理解IMAP的工作流程。如图，建立连接后，连接会进入认证或者未认证状态。如果是预认证的连接状态会进入认证状态，否则处于未认证的状态。认证状态可接收的命令有CAPABILITY、NOOP、LOGOUT、SELECT、EXAMINE、CREATE、DELETE、RENAME、SUBSCRIBE、UNSUBSCRIBE、LIST、LSUB、STATUS和APPEND。，未认证状态可接收的命令有CAPABILITY、NOOP、LOGOUT、STARTTLS、AUTHENTICATE、LOGIN。如果出现不适当的命令引发协议错误，则进入注销状态。进入认证状态后，可以发出SELECT命令来选择邮件，这时连接就进入了选中状态。选择状态相比认证状态也接收CHECK、CLOSE、EXPUNGE、SEARCH、FETCH、STORE、COPY及UID命令。当进行退出命令时，进入注销状态。当服务器发出LOGOUT的响应后，双方断开连接。这些命令可以参考<a href="https://blog.sina.com.cn/s/blog_604124c10100db11.html">IMAP命令详解</a>。
 
 我写的例程在node-imap的例子基础上使用mailparser包来解析邮件正文，然后存储到本地磁盘。
 
