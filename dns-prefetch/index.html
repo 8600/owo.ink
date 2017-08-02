@@ -21,7 +21,7 @@ DNS 作为互联网的基础协议，其解析的速度似乎很容易被网站�
 <meta property="og:site_name" content="owo.ink">
 <meta property="og:description" content="DNS Prefetch，即DNS预获取，是前端优化的一部分。一般来说，在前端优化中与 DNS 有关的有两点： 一个是减少DNS的请求次数，另一个就是进行DNS预获取 。 DNS 作为互联网的基础协议，其解析的速度似乎很容易被网站优化人员忽视。现在大多数新浏览器已经针对DNS解析进行了优化，典型的一次DNS解析需要耗费 20-120 毫秒，减少DNS解析时间和次数是个很好的优化方式。DNS Pre">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2017-07-21T08:01:52.384Z">
+<meta property="og:updated_time" content="2017-08-02T01:14:44.242Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNS预获取dns-prefetch提升页面载入速度">
 <meta name="twitter:description" content="DNS Prefetch，即DNS预获取，是前端优化的一部分。一般来说，在前端优化中与 DNS 有关的有两点： 一个是减少DNS的请求次数，另一个就是进行DNS预获取 。 DNS 作为互联网的基础协议，其解析的速度似乎很容易被网站优化人员忽视。现在大多数新浏览器已经针对DNS解析进行了优化，典型的一次DNS解析需要耗费 20-120 毫秒，减少DNS解析时间和次数是个很好的优化方式。DNS Pre">
@@ -83,7 +83,7 @@ DNS 作为互联网的基础协议，其解析的速度似乎很容易被网站�
 <p>默认情况下浏览器会对页面中和当前域名（正在浏览网页的域名）不在同一个域的域名进行预获取，并且缓存结果，这就是隐式的 DNS Prefetch。如果想对页面中没有出现的域进行预获取，那么就要使用显示的 DNS Prefetch 了。</p>
 <p>目前大多数浏览器已经支持此属性，支持版本如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">– Safari: 5+</div><div class="line">– Chrome: All</div><div class="line">– Firefox: 3.5+</div><div class="line">– Opera: Unknown</div><div class="line">– IE: 9+ (called “Pre-resolution” on blogs.msdn.com)</div></pre></td></tr></table></figure></p>
 <p>其中 Chrome 和 Firefox 3.5+ 内置了 DNS Prefetching 技术并对DNS预解析做了相应优化设置。所以 即使不设置此属性，Chrome 和 Firefox 3.5+ 也能自动在后台进行预解析 。<br>DNS Prefetch 应该尽量的放在网页的前面，推荐放在 <code>&lt;meta charset=&quot;UTF-8&quot;&gt;</code> 后面。具体使用方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</div><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//www.itechzero.com&quot;&gt;</div><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//api.share.baidu.com&quot;&gt;</div><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//bdimg.share.baidu.com&quot;&gt;</div></pre></td></tr></table></figure></p>
-<p>需要注意的是，虽然使用 DNS Prefetch 能够加快页面的解析速度，但是也不能滥用，因为有开发者指出 <a href="http://www.pinkbike.com/news/DNS-Prefetching-implications.html" target="_blank" rel="external">禁用DNS 预读取能节省每月100亿的DNS查询</a> 。</p>
+<p>需要注意的是，虽然使用 DNS Prefetch 能够加快页面的解析速度，但是也不能滥用，因为有开发者指出 <a href="https://www.pinkbike.com/news/DNS-Prefetching-implications.html" target="_blank" rel="external">禁用DNS 预读取能节省每月100亿的DNS查询</a> 。</p>
 <p>如果需要禁止隐式的 DNS Prefetch，可以使用以下的标签：</p>
 <p><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;off&quot;&gt;</code></p>
 

@@ -122,7 +122,7 @@
 <p>默认情况下浏览器会对页面中和当前域名（正在浏览网页的域名）不在同一个域的域名进行预获取，并且缓存结果，这就是隐式的 DNS Prefetch。如果想对页面中没有出现的域进行预获取，那么就要使用显示的 DNS Prefetch 了。</p>
 <p>目前大多数浏览器已经支持此属性，支持版本如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">– Safari: 5+</div><div class="line">– Chrome: All</div><div class="line">– Firefox: 3.5+</div><div class="line">– Opera: Unknown</div><div class="line">– IE: 9+ (called “Pre-resolution” on blogs.msdn.com)</div></pre></td></tr></table></figure></p>
 <p>其中 Chrome 和 Firefox 3.5+ 内置了 DNS Prefetching 技术并对DNS预解析做了相应优化设置。所以 即使不设置此属性，Chrome 和 Firefox 3.5+ 也能自动在后台进行预解析 。<br>DNS Prefetch 应该尽量的放在网页的前面，推荐放在 <code>&lt;meta charset=&quot;UTF-8&quot;&gt;</code> 后面。具体使用方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</div><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//www.itechzero.com&quot;&gt;</div><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//api.share.baidu.com&quot;&gt;</div><div class="line">&lt;link rel=&quot;dns-prefetch&quot; href=&quot;//bdimg.share.baidu.com&quot;&gt;</div></pre></td></tr></table></figure></p>
-<p>需要注意的是，虽然使用 DNS Prefetch 能够加快页面的解析速度，但是也不能滥用，因为有开发者指出 <a href="http://www.pinkbike.com/news/DNS-Prefetching-implications.html" target="_blank" rel="external">禁用DNS 预读取能节省每月100亿的DNS查询</a> 。</p>
+<p>需要注意的是，虽然使用 DNS Prefetch 能够加快页面的解析速度，但是也不能滥用，因为有开发者指出 <a href="https://www.pinkbike.com/news/DNS-Prefetching-implications.html" target="_blank" rel="external">禁用DNS 预读取能节省每月100亿的DNS查询</a> 。</p>
 <p>如果需要禁止隐式的 DNS Prefetch，可以使用以下的标签：</p>
 <p><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;off&quot;&gt;</code></p>
 
@@ -171,30 +171,30 @@
 <p>为了达成这一目标，它让容器决定如何分配容器成员的大小以及空间。这听起来相当不错，那么，让我们来看看实践中它是如何工作的。</p>
 <p>在本文中，我们将深入的探讨 Flexbox 中 5 个常见的属性。看看它们能做什么，如何使用它们，以及使用它们构建的布局是什么样的。</p>
 <hr>
-<h5 id="属性-1-Display-Flex"><a href="#属性-1-Display-Flex" class="headerlink" title="属性 #1: Display: Flex"></a>属性 #1: Display: Flex</h5><p>以下是示例页面：<br><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-523dbccc41453c86.gif" alt=""></p>
+<h5 id="属性-1-Display-Flex"><a href="#属性-1-Display-Flex" class="headerlink" title="属性 #1: Display: Flex"></a>属性 #1: Display: Flex</h5><p>以下是示例页面：<br><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-523dbccc41453c86.gif" alt=""></p>
 <p>我们可以看到，在灰色的容器中，包含了 4 种不同颜色与大小的 div 元素。每个 div 元素都默认<code>display: block</code>，因此，每个四方体都占据了一行的整个宽度。</p>
 <p>为了开始使用 Flexbox 布局，你需要将你的容器变为 Flex 容器。这很容易实现：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#container &#123;</div><div class="line">  display: flex;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-603a348d420cd823.gif" alt=""></p>
+<p><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-603a348d420cd823.gif" alt=""></p>
 <h5 id="属性-2-Flex-Direction"><a href="#属性-2-Flex-Direction" class="headerlink" title="属性 #2: Flex Direction"></a>属性 #2: Flex Direction</h5><p>Flexbox 容器有两根轴：主轴和垂直的交叉轴，默认情况如下：</p>
-<p><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-93f65b182a2f85d4.png" alt=""></p>
+<p><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-93f65b182a2f85d4.png" alt=""></p>
 <p>项目默认是由主轴（从左到右）排列的，这就是你使用display: flex后，四方体以水平线排列的原因。</p>
 <p>而<code>Flex-direction</code>决定了主轴的方向。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#container &#123;</div><div class="line">  display: flex;</div><div class="line">  flex-direction: column;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这里有一个重要的区别：<code>flex-direction: column</code>所指的是四方体将沿主轴的垂直方向对齐。它使主轴自身从水平到垂直。</p>
-<p>而<code>flex-direction</code>还有一些其他的值供你设置，例如：<code>row-reverse</code>与<code>column-reverse</code>.<br><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-643ed5f305d85377.gif" alt=""></p>
+<p>而<code>flex-direction</code>还有一些其他的值供你设置，例如：<code>row-reverse</code>与<code>column-reverse</code>.<br><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-643ed5f305d85377.gif" alt=""></p>
 <h5 id="属性-3-Justify-Content"><a href="#属性-3-Justify-Content" class="headerlink" title="属性 #3: Justify Content"></a>属性 #3: Justify Content</h5><p><code>justify-content</code>属性定义了项目在主轴上的对齐方式。</p>
 <p>在这里，你将更多的了解主轴与交叉轴的区别。首先，让我们回到<code>flex-direction: row</code>值上。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#container &#123;</div><div class="line">  display: flex;</div><div class="line">  flex-direction: row;</div><div class="line">  justify-content: flex-start;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>justify-content</code>属性包含了 5 个值供你使用：</p>
 <blockquote>
 <p>Flex-start<br>Flex-end<br>Center<br>Space-between<br>Space-around</p>
 </blockquote>
-<p><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-739ce25a66110b9e.gif" alt=""></p>
+<p><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-739ce25a66110b9e.gif" alt=""></p>
 <p><code>Space-around</code>与<code>Space-between</code>是两个不容易直观理解的值。<code>Space-between</code>实现了两端对齐，而四方体之间的间隔都是相等的。</p>
 <p><code>Space-around</code>使四方体两侧的间隔相等，这意味着四方体之间的间隔比最外边四方体与边框的间隔要大一倍。（每个四方体贡献了不重叠的等量余量，从而使空间翻倍）</p>
 <p>最后一点：请记住 <code>justify-content</code>沿主轴对齐，而<code>flex-direction</code>决定了主轴的方向。它将决定你移动的方向。</p>
 <h5 id="属性-4-Align-Items"><a href="#属性-4-Align-Items" class="headerlink" title="属性 #4: Align Items"></a>属性 #4: Align Items</h5><p>当你理解了<code>justify-content</code>属性，理解<code>Align Items</code>属性就变得轻而易举了。</p>
 <p><code>justify-content</code>定义了项目在主轴的对齐方式，而<code>align-items</code>属性则定义了项目在交叉轴上是如何对齐的。</p>
-<p><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-82ed714fd22557a1.png" alt=""></p>
+<p><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-82ed714fd22557a1.png" alt=""></p>
 <p>当我们将<code>flex-direction</code>属性值重置为row后，我们的轴看上去就与上图一致。</p>
 <p>那么，让我们深入的了解下<code>Align Items</code>属性有哪些值：</p>
 <blockquote>
@@ -202,16 +202,16 @@
 </blockquote>
 <p>前三个值与<code>justify-content</code>属性中的值完全一致，没有太多需要解释的地方。</p>
 <p>但是，接下来两个值却有些不同。</p>
-<p><code>Stretch</code>指的是如果项目未设置高度或设为<code>auto</code>，项目将占满整个容器。而<code>baseline</code>是指项目将与段落标签的底部对齐。<br><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-5884ef1046c04119.gif" alt=""></p>
+<p><code>Stretch</code>指的是如果项目未设置高度或设为<code>auto</code>，项目将占满整个容器。而<code>baseline</code>是指项目将与段落标签的底部对齐。<br><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-5884ef1046c04119.gif" alt=""></p>
 <p>（请注意，对于<code>align-items：stretch</code>，我不得不将四方体的高度设置为auto，否则height属性将覆盖该stretch）</p>
 <p>对于baseline，如果你去掉段落标签，它则会对齐四方形的底部，如下图所示：</p>
-<p><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-2c5a097f00549381.png" alt=""></p>
-<p>为了更好地演示主轴和交叉轴的表现，在基于<code>justify-content</code>属性和<code>align-items</code>属性的值为center的情况下，让我们看看赋予<code>flex-direction</code>属性两个不同值后，它的表现如何：<br><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-ca9a85bcbcd77fd1.gif" alt=""></p>
+<p><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-2c5a097f00549381.png" alt=""></p>
+<p>为了更好地演示主轴和交叉轴的表现，在基于<code>justify-content</code>属性和<code>align-items</code>属性的值为center的情况下，让我们看看赋予<code>flex-direction</code>属性两个不同值后，它的表现如何：<br><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-ca9a85bcbcd77fd1.gif" alt=""></p>
 <p>我们可以看到，对于row值，四方体沿着与主轴水平方向排列，而对于column值，它们则沿着与主轴垂直的方向排列。</p>
 <p>即使出现了同时保持水平与垂直居中的情况，两者也不可互换！</p>
 <h5 id="属性-5-Align-Self"><a href="#属性-5-Align-Self" class="headerlink" title="属性 #5: Align Self"></a>属性 #5: Align Self</h5><p><code>align-self</code>属性允许你对特定的项目有与其他项目不一样的对齐方式，它可覆盖<code>align-items</code>属性。虽然它的默认值为auto，但它继承了父元素<code>align-items</code>的属性。除了auto外，其他都与<code>align-items</code>属性完全一致。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#container &#123;</div><div class="line">  align-items: flex-start;</div><div class="line">&#125;</div><div class="line">.square#one &#123;</div><div class="line">  align-self: center;</div><div class="line">&#125;</div><div class="line">// Only this square will be centered.</div></pre></td></tr></table></figure>
-<p>我们将在两个四方体上应用<code>align-self</code>属性，而其余的四方体则应用<code>align-items: center</code>与 <code>flex-direction: row</code>，让我们看看会发生什么：<br><img src="http://myweb-10017157.cos.myqcloud.com/2017/0211/675733-91938230a16c111f.gif" alt=""></p>
+<p>我们将在两个四方体上应用<code>align-self</code>属性，而其余的四方体则应用<code>align-items: center</code>与 <code>flex-direction: row</code>，让我们看看会发生什么：<br><img src="https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-91938230a16c111f.gif" alt=""></p>
 
       
     </div><!-- .entry-content -->
