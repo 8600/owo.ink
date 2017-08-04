@@ -1,6 +1,6 @@
 {
   "name": "puge",
-  "version": "5.5.7",
+  "version": "5.5.8",
   "description": "博客生成",
   "main": "lib/hexo",
   "bin": {
@@ -8,27 +8,19 @@
   },
   "scripts": {
     "eslint": "eslint .",
-    "jscs": "jscs .",
-    "test": "mocha test/index.js",
-    "test-cov": "istanbul cover --print both _mocha -- test/index.js"
+    "jscs": "jscs ."
   },
   "directories": {
     "lib": "./lib",
     "bin": "./bin"
   },
-  "repository": "hexojs/hexo-cli",
-  "homepage": "https://hexo.io/",
+  "homepage": "https://owo.ink/",
   "keywords": [
     "website",
     "blog",
     "cms",
     "framework",
-    "hexo",
     "cli"
-  ],
-  "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
-  "maintainers": [
-    "Abner Chou <hi@abnerchou.me> (http://abnerchou.me)"
   ],
   "license": "MIT",
   "dependencies": {
@@ -47,14 +39,14 @@
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1",
     "eslint": "^4.3.0",
-    "eslint-config-hexo": "^1.0.3",
-    "hexo-renderer-marked": "^0.2.10",
+    "eslint-config-hexo": "^2.0.0",
+    "hexo-renderer-marked": "^0.3.0",
     "istanbul": "^0.4.3",
     "jscs": "^3.0.4",
     "jscs-preset-hexo": "^1.0.1",
     "mocha": "^3.4.2",
     "proxyquire": "^1.7.9",
     "rewire": "^2.5.1",
-    "sinon": "^2.4.0"
+    "sinon": "^3.0.0"
   }
 }
