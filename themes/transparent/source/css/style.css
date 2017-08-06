@@ -1362,6 +1362,10 @@ article.format-quote .entry-content blockquote {
 	margin-right: 1.5rem;
 }
 
+.wrapper {
+	display: flex;
+}
+
 
 /* =Comments
 -------------------------------------------------------------- */
@@ -1671,8 +1675,7 @@ img#wpstats {
 		overflow: hidden;
 	}
 	.site-content {
-		float: left;
-		width: 65.104166667%;
+		width: 80%;
 	}
 	body.template-front-page .site-content,
 	body.single-attachment .site-content,
@@ -1680,8 +1683,7 @@ img#wpstats {
 		width: 100%;
 	}
 	.widget-area {
-		float: right;
-		width: 26.041666667%;
+		width: 20%;
 	}
 	.site-header h1,
 	.site-header h2 {
