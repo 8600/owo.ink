@@ -13,7 +13,7 @@ Flexbox 的基本原则是提供一种构建灵活、直观的布局方式。
 
 ##### 属性 #1: Display: Flex
 以下是示例页面：
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-523dbccc41453c86.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-523dbccc41453c86.gif?Expires=1502072855&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=VRRAezm4qKuY87Nr89EKOHxnEqs%3D)
 
 我们可以看到，在灰色的容器中，包含了 4 种不同颜色与大小的 div 元素。每个 div 元素都默认`display: block`，因此，每个四方体都占据了一行的整个宽度。
 
@@ -24,13 +24,13 @@ Flexbox 的基本原则是提供一种构建灵活、直观的布局方式。
   display: flex;
 }
 ```
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-603a348d420cd823.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-603a348d420cd823.gif?Expires=1502072911&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=NhV9zAMZc6pdY%2BAU9Bnng65tdMQ%3D)
 
 ##### 属性 #2: Flex Direction
 
 Flexbox 容器有两根轴：主轴和垂直的交叉轴，默认情况如下：
 
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-93f65b182a2f85d4.png)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-93f65b182a2f85d4.png?Expires=1502073018&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=SWbh86CLALFE%2FPWGw90ES3mEYrI%3D)
 
 项目默认是由主轴（从左到右）排列的，这就是你使用display: flex后，四方体以水平线排列的原因。
 
@@ -44,7 +44,7 @@ Flexbox 容器有两根轴：主轴和垂直的交叉轴，默认情况如下：
 这里有一个重要的区别：`flex-direction: column`所指的是四方体将沿主轴的垂直方向对齐。它使主轴自身从水平到垂直。
 
 而`flex-direction`还有一些其他的值供你设置，例如：`row-reverse`与`column-reverse`.
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-643ed5f305d85377.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-643ed5f305d85377.gif?Expires=1502072938&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=%2FivGZiwUKfjQmtGz%2FE4cTJAp5U8%3D)
 ##### 属性 #3: Justify Content
 
 `justify-content`属性定义了项目在主轴上的对齐方式。
@@ -65,7 +65,7 @@ Center
 Space-between
 Space-around
 
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-739ce25a66110b9e.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-739ce25a66110b9e.gif?Expires=1502072958&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=EIqyPrOEbq%2BJ9aNljOy1axO953M%3D)
 
 `Space-around`与`Space-between`是两个不容易直观理解的值。`Space-between`实现了两端对齐，而四方体之间的间隔都是相等的。
 
@@ -79,7 +79,7 @@ Space-around
 
 `justify-content`定义了项目在主轴的对齐方式，而`align-items`属性则定义了项目在交叉轴上是如何对齐的。
 
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-82ed714fd22557a1.png)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-82ed714fd22557a1.png?Expires=1502072982&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=EgFvj4G7mI65ftozVT3A4HnIyI4%3D)
 
 当我们将`flex-direction`属性值重置为row后，我们的轴看上去就与上图一致。
 
@@ -95,16 +95,16 @@ baseline
 但是，接下来两个值却有些不同。
 
 `Stretch`指的是如果项目未设置高度或设为`auto`，项目将占满整个容器。而`baseline`是指项目将与段落标签的底部对齐。
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-5884ef1046c04119.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-5884ef1046c04119.gif?Expires=1502072883&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=ueap4vZcQfAvbVi7T54NqLvvix8%3D)
 
 （请注意，对于`align-items：stretch`，我不得不将四方体的高度设置为auto，否则height属性将覆盖该stretch）
 
 对于baseline，如果你去掉段落标签，它则会对齐四方形的底部，如下图所示：
 
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-2c5a097f00549381.png)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-2c5a097f00549381.png?Expires=1502072782&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=pf0HVvwSvpG3KCukEBvZs3VQVSM%3D)
 
 为了更好地演示主轴和交叉轴的表现，在基于`justify-content`属性和`align-items`属性的值为center的情况下，让我们看看赋予`flex-direction`属性两个不同值后，它的表现如何：
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-ca9a85bcbcd77fd1.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-ca9a85bcbcd77fd1.gif?Expires=1502073039&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=CD7lLn3lFOlZD7UWXcZngRRh4%2Fg%3D)
 
 我们可以看到，对于row值，四方体沿着与主轴水平方向排列，而对于column值，它们则沿着与主轴垂直的方向排列。
 
@@ -124,4 +124,4 @@ baseline
 // Only this square will be centered.
 ```
 我们将在两个四方体上应用`align-self`属性，而其余的四方体则应用`align-items: center`与 `flex-direction: row`，让我们看看会发生什么：
-![](https://myweb-10017157.cos.myqcloud.com/2017/0211/675733-91938230a16c111f.gif)
+![](https://puge.oss-cn-beijing.aliyuncs.com/web/flexbox/675733-91938230a16c111f.gif?Expires=1502073000&OSSAccessKeyId=TMP.AQG2-ozbbQ7l-cmpZTDw75UaWhW-wT_kVIEq6rkO6lCPU9YQ7b-DYh8xQ-SUMC4CFQCGSKwFd0iY_bcpLz341M2cSdOKfQIVALoJzJaYqCToDRgAqhL-dOwcuo1T&Signature=SU54p%2BAS1NCQ9IudJkVZ%2BBNFmqI%3D)
