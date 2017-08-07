@@ -1,7 +1,4 @@
 ---
-title: vue子组件与父组件通讯
----
----
 title: 八段代码彻底掌握 Promise
 ---
 ### 1.Promise的立即执行性
