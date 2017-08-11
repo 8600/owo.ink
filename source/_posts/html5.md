@@ -84,7 +84,7 @@ title: HTML5
 
 `<meter></meter>`：表示分数的值或者已知范围的测量结果。如投票结果。
 
-> 例如：<meter value="0.2" title=”Miles“>20%completed</meter>
+> 例如：`<meter value="0.2" title=”Miles“>20%completed</meter>`
 
 `<progress></progress>`：完成进度。可通过js动态更新value。
 

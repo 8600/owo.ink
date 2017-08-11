@@ -997,8 +997,6 @@ article.sticky .featured-post {
 .comment-content code {
     font-family: Consolas, Monaco, Lucida Console, monospace;
     padding: 0 5px;
-    margin: 0 2px;
-    font-size: 0.9em;
     border: 1px solid rgba(0, 0, 0, 0.24);
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -1138,7 +1136,7 @@ footer.entry-meta {
 figure.highlight {
     border: 1px solid rgba(0, 0, 0, 0.24);
     margin-bottom: 15px;
-    padding: 7px 15px;
+    padding: 7px 5px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
     line-height: 1.6;
@@ -1161,10 +1159,12 @@ figure.highlight td {
 
 figure.highlight .gutter {
     color: #999;
-    padding-right: 15px;
+    padding-right: 5px;
     border-right: 1px solid rgba(0, 0, 0, 0.24);
     text-align: right;
-    vertical-align: middle;
+	vertical-align: middle;
+	user-select: none;
+	text-align: center;
 }
 
 figure.highlight .code {
@@ -1653,6 +1653,12 @@ img#wpstats {
 	margin: 0 auto 1.714285714rem;
 }
 
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+::-webkit-scrollbar { width: 10px; height: 5px; background-color: #ccc; }  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track { border-radius: 5px; }  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb { border-radius: 5px; background-color: cadetblue; } 
 
 /* =Media queries
 -------------------------------------------------------------- */
