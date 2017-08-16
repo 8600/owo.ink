@@ -7,7 +7,7 @@ POP3POP3全称为Post Office Protocol version3，是TCP/IP协议族的一员，�
 客户端的命令由一个命令和一些参数组成并以空格隔开，以CRLF(Carriage Return-Line Feed:\r\n)对结束。其中命令采用ASCII码，但不区分大小写，区分大小写的是其随后的参数。POP3服务器响应由一个状态码和一个可能跟有附加信息的命令组成，所有响应也是由CRLF对结束。状态码的值分为"positive"("+OK")和"negetive"("-ERR")。当信息发送完毕时，最后一行以结束符(.)加CRLF对。
 
 在整个生命周期中，POP3会话存在的状态有如下几种。当服务器响应命令请求发送授权响应，这一过程为授权(AUTHORIZATION)状态。客户端向服务器发出身份认证并经过服务器确认后就进入了事务（TRANSACTION）状态。这一状态下，服务器获取客户的相关邮件资源，并接收客户端的如下命令：STAT、LIST、RETR、DELE、NOOP、RSET、QUIT 。当客户端发出QUIT命令后，会话会进入更新(UPDATE)状态。在这状态中，服务器会释放上一状态中取得的资源，并终止连接。
-<img title="" src="https://owo-10017157.cossh.myqcloud.com/nodejs-email/1f86d20ff453fb2a49c457b5f96e5.png" /></a>
+<img title="" src="https://my-owo-ink.b0.upaiyun.com/owo.ink/nodejs-email/1f86d20ff453fb2a49c457b5f96e5.png" /></a>
 
 接下来使用node的poplib包来实现POP3客户端的功能。这里我以qq邮件举例，我们先需要把qq邮件服务器的POP3的功能打开，具体可查看相关官方文档。qq邮件的host为'pop.qq.com'，port为995。
 <pre class="lang:default decode:true ">var POP3Client = require('poplib');
