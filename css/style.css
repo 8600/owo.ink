@@ -2,13 +2,13 @@
 Theme Name: Cyan Style
 Theme URI: https://github.com/wizardforcel/hexo-theme-cyanstyle
 Author: the WordPress team
-Author URI: https://wordpress.org/
+Author URI: http://wordpress.org/
 Secondary Developer: Flygon
-Secondary Developer URI: https://flygon.net/
+Secondary Developer URI: http://flygon.net/
 Description: Inspired by Wordpress theme Twentytwelve.
 Version: 1.0
 License: GNU General Public License v2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: responsive, two_column, chinese, wordpress, light
 Text Domain: hexo-theme-cyanstyle
 
@@ -76,8 +76,8 @@ to maintain vertical rhythm:
 
 ---------- Further reading
 
-https://snook.ca/archives/html_and_css/font-size-with-rem
-https://blog.typekit.com/2011/11/09/type-study-sizing-the-legible-letter/
+http://snook.ca/archives/html_and_css/font-size-with-rem
+http://blog.typekit.com/2011/11/09/type-study-sizing-the-legible-letter/
 
 
 /* =Reset
@@ -758,7 +758,6 @@ section[role="banner"] {
 	color: rgb(81, 165, 168); /* Widget Link Hover*/
 }
 
-}
 .widget-area #s {
 	width: 70.66666666666%; /* define a width to avoid dropping a wider submit button */
 }
@@ -997,8 +996,6 @@ article.sticky .featured-post {
 .comment-content code {
     font-family: Consolas, Monaco, Lucida Console, monospace;
     padding: 0 5px;
-    margin: 0 2px;
-    font-size: 0.9em;
     border: 1px solid rgba(0, 0, 0, 0.24);
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -1138,7 +1135,7 @@ footer.entry-meta {
 figure.highlight {
     border: 1px solid rgba(0, 0, 0, 0.24);
     margin-bottom: 15px;
-    padding: 7px 15px;
+    padding: 7px 5px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
     line-height: 1.6;
@@ -1161,10 +1158,12 @@ figure.highlight td {
 
 figure.highlight .gutter {
     color: #999;
-    padding-right: 15px;
+    padding-right: 5px;
     border-right: 1px solid rgba(0, 0, 0, 0.24);
     text-align: right;
-    vertical-align: middle;
+	vertical-align: middle;
+	user-select: none;
+	text-align: center;
 }
 
 figure.highlight .code {
@@ -1653,6 +1652,12 @@ img#wpstats {
 	margin: 0 auto 1.714285714rem;
 }
 
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
+::-webkit-scrollbar { width: 10px; height: 5px; background-color: #ccc; }  
+/*定义滚动条轨道 内阴影+圆角*/  
+::-webkit-scrollbar-track { border-radius: 5px; }  
+/*定义滑块 内阴影+圆角*/  
+::-webkit-scrollbar-thumb { border-radius: 5px; background-color: cadetblue; } 
 
 /* =Media queries
 -------------------------------------------------------------- */
