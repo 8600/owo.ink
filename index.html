@@ -53,6 +53,87 @@
       <div id="main" class="wrapper">
         <div id="primary" class="site-content"><div id="content" role="main">
   
+    <article id="post-es2017" class="post-es2017 post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/es2017/">ES2017异步函数现已正式可用</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>ES2017标准已于2017年6月份正式定稿了，并广泛支持最新的特性：异步函数。如果你曾经被异步 JavaScript 的逻辑困扰，这么新函数正是为你设计的。</p>
+<p>异步函数或多或少会让你编写一些顺序的 JavaScript 代码，但是却不需要在 callbacks、generators 或 promise 中包含你的逻辑。</p>
+<p>如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function logger() &#123;</div><div class="line">    let data = fetch(&apos;http://sampleapi.com/posts&apos;)</div><div class="line">    console.log(data)</div><div class="line">&#125;</div><div class="line">logger()</div></pre></td></tr></table></figure></p>
+<p>这段代码并未实现你的预期。如果你是在JS中编写的，那么你可能会知道为什么。</p>
+<p>下面这段代码，却实现了你的预期。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">async function logger() &#123;</div><div class="line">    let data = await fetch(&apos;http:sampleapi.com/posts&apos;)</div><div class="line">    console.log(data)</div><div class="line">&#125;</div><div class="line">logger()</div></pre></td></tr></table></figure></p>
+<p>这段代码起作用了，从直观上看，仅仅只是多了 async 和 await 两个词。</p>
+<p>ES6 标准之前的 JavaScript 异步函数</p>
+<p>在深入学习 async 和 await 之前，我们需要先理解 Promise。为了领会 Promise，我们需要回到普通回调函数中进一步学习。</p>
+<p>Promise 是在 ES6 中引入的，并促使在编写 JavaScript 的异步代码方面，实现了巨大的提升。从此编写回调函数不再那么痛苦。</p>
+<p>回调是一个函数，可以将结果传递给函数并在该函数内进行调用，以便作为事件的响应。同时，这也是JS的基础。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">function readFile(&apos;file.txt&apos;, (data) =&gt; &#123;</div><div class="line">    // This is inside the callback function</div><div class="line">    console.log(data)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个函数只是简单的向文件中记录数据，在文件完成之前进行读取是不可能的。这个过程似乎很简单，但是如果想要按顺序读取并记录五个不同的文件，需要怎么实现呢？</p>
+<p>没有 Promise 的时候，为了按顺序执行任务，就需要通过嵌套回调来实现，就像下面的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// This is officially callback hell</div><div class="line">function combineFiles(file1, file2, file3, printFileCallBack) &#123;</div><div class="line">    let newFileText = &apos;&apos;</div><div class="line">    readFile(string1, (text) =&gt; &#123;</div><div class="line">        newFileText += text</div><div class="line">        readFile(string2, (text) =&gt; &#123;</div><div class="line">            newFileText += text</div><div class="line">            readFile(string3, (text) =&gt; &#123;</div><div class="line">                newFileText += text</div><div class="line">                printFileCallBack(newFileText)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这就很难推断函数下面会发生什么，同时也很难处理各种场景下发生的错误，比如其中某个文件不存在的情况。</p>
+<p>Promise 改善了这种情况</p>
+<p>这正是 Promise 的优势所在，Promise 是对还未产生的数据的一种推理。Kyle Simpson 将 Promise 解释为：就像在快餐店里点餐一样。</p>
+<ul>
+<li>点餐</li>
+<li>为所点的午餐付费，并拿到排队单号</li>
+<li>等待午餐</li>
+<li>当你的午餐准备好了，会叫你的单号提醒你取餐</li>
+<li>收到午餐</li>
+</ul>
+<p>正如上面的这种场景，当你等餐时，你是无法吃到午餐的，但是你可以提前为吃午餐做好准备。你可以进行其它事情，此时你知道午餐就要来了，虽然此刻你还无法享用它，但是这个午餐已经“promise”给你了。这就是所谓的 promise，表示一个最终会存在的数据的对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">readFile(file1)</div><div class="line">    .then((file1-data) =&gt; &#123; /* do something */ &#125;)</div><div class="line">    .then((previous-promise-data) =&gt; &#123; /* do the next thing */ &#125;)</div><div class="line">    .catch( /* handle errors */ )</div></pre></td></tr></table></figure></p>
+<p>上面是 Promise 语法。它主要的优点就是可以将队列事件以一种直观的方式链接在一起。虽然这个示例清晰易懂，但是还是用到了回调。Promise 只是让回调显得比较简单和更加直观。</p>
+<p>最佳方式：async / await</p>
+<p>若干年前，async 函数纳入了 JavaScript 生态系统。就在上个月，async 函数成为了 JavaScript 语言的官方特性，并得到了广泛支持。</p>
+<p>async 和 await 是建立在 Promise 和 generator上。本质上，允许我们使用 await 这个关键词在任何函数中的任何我们想要的地方进行暂停。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">async function logger() &#123;</div><div class="line">    // pause until fetch returns</div><div class="line">    let data = await fetch(&apos;http://sampleapi.com/posts&apos;)</div><div class="line">    console.log(data)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面这段代码运行之后，得到了想要的结果。代码从 API 调用中记录了数据。</p>
+<p>这种方式的好处就是非常直观。编写代码的方式就是大脑思考的方式，告诉脚本在需要的地方暂停。</p>
+<p>另一个好处是，当我们不能使用 promise 时，还可以使用 try 和 catch：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">async function logger ()  &#123;</div><div class="line">    try &#123;</div><div class="line">        let user_id = await fetch(&apos;/api/users/username&apos;)</div><div class="line">        let posts = await fetch(&apos;/api/`$&#123;user_id&#125;`&apos;)</div><div class="line">        let object = JSON.parse(user.posts.toString())</div><div class="line">        console.log(posts)</div><div class="line">    &#125; catch (error) &#123;</div><div class="line">        console.error(&apos;Error:&apos;, error)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面是一个刻意写错的示例，为了证明了一点：在运行过程中，catch 可以捕获任何步骤中发生的错误。至少有三个地方，try 可能会失败，这是在异步代码中的一种最干净的方式来处理错误。</p>
+<p>我们还可以使用带有循环和条件的 async 函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">async function count() &#123;</div><div class="line">    let counter = 1</div><div class="line">    for (let i = 0; i &lt; 100; i++) &#123;</div><div class="line">        counter += 1</div><div class="line">        console.log(counter)</div><div class="line">        await sleep(1000)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这是一个很简答的例子，如果运行这段程序，将会看到代码在 sleep 调用时暂停，下一个循环迭代将会在1秒后启动。</p>
+<p>要点和细节</p>
+<p>相信我们已经感受到了 asyns 和 await 的美妙之处，接下来让我们深入了解一下细节：</p>
+<p>async 和 await 建立在 Promise 之上。使用 async，总是会返回一个 Promise。请记住这一点，因为这也是容易犯错的地方。<br>当执行到 await 时，程序会暂停当前函数，而不是所有代码<br>async 和 await 是非阻塞的<br>依旧可以使用 Promise helpers，例如 Promise.all( )<br>正如之前的示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">async function logPosts ()  &#123;</div><div class="line">    try &#123;</div><div class="line">        let user_id = await fetch(&apos;/api/users/username&apos;)</div><div class="line">        let post_ids = await fetch(&apos;/api/posts/&lt;code&gt;$&#123;user_id&#125;&apos;)</div><div class="line">        let promises = post_ids.map(post_id =&gt; &#123;</div><div class="line">            return  fetch(&apos;/api/posts/$&#123;post_id&#125;&apos;)</div><div class="line">        &#125;</div><div class="line">        let posts = await Promise.all(promises)</div><div class="line">        console.log(posts)</div><div class="line">    &#125; catch (error) &#123;</div><div class="line">        console.error(&apos;Error:&apos;, error)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>await 只能用于声明为 async 的函数中<br>因此，不能在全局范围内使用 await<br>如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// throws an error</div><div class="line">function logger (callBack) &#123;</div><div class="line">    console.log(await callBack)</div><div class="line">&#125;</div><div class="line"></div><div class="line">// works!</div><div class="line">async function logger () &#123;</div><div class="line">    console.log(await callBack)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>现已正式可用</p>
+<p>到2017年6月，几乎所有浏览器都可以使用 async 和 await。为了确保你的代码随时可用，则需要使用 Babel 将你的 JavaScript 代码编译为旧浏览器也支持的语法。</p>
+<p>如果对更多ES2017内容感兴趣，请访问ES2017特性的完整列表。</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/es2017/">
+    <time datetime="2017-08-22T05:58:24.541Z" class="entry-date">
+        2017-08-22
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
     <article id="post-html5" class="post-html5 post type-post status-publish format-standard hentry">
     <!---->
 
@@ -715,62 +796,6 @@ process.exit(0);
 
 
   
-    <article id="post-json" class="post-json post type-post status-publish format-standard hentry">
-    <!---->
-
-      <header class="entry-header">
-        
-        
-  
-    <h1 class="entry-title">
-      <a class="article-title" href="/json/">JSON</a>
-    </h1>
-  
-
-        
-        <div class="comments-link">
-            
-        </div><!-- .comments-link -->
-      </header><!-- .entry-header -->
-
-    <div class="entry-content">
-      
-        <p><strong>JSON.parse()和JSON.stringify()</strong></p>
-<ol>
-<li>JSON.parse(string[, translator]) 将字符串转换为JSON对象</li>
-</ol>
-<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var str = &apos;&#123;&quot;name&quot;:&quot;叶德华&quot;,&quot;age&quot;:23&#125;&apos;;</div><div class="line">str = JSON.parse(str);</div></pre></td></tr></table></figure></p>
-<ol>
-<li>JSON.stringify(object[, replacer[, space]])  将JSON对象转为字符串</li>
-</ol>
-<blockquote>
-<p>参数：</p>
-<p>object：是要转为字符串的JSON对象。</p>
-<p>replacer：可选，可以是改变字符串转换过程的函数，也可以是一组String和Number对象，这些对象用作一个白名单，用于选择要转换为字符串的对象的属性。如果这个值是空或没有提供，则在所得的JSON字符串中包含对象的所有属性。</p>
-<p>space参数：可选，是一个String或Number对象，用于把空白插入输出的JSON字符串，以提高可读性。如果这是一个数值，则表示用作空白的空格字符数；如果该数值大于10，就取其值为10；小于1的值表示不应使用空格。如果这是一个字符串（如果该字符串多于10个字符，就取前10个字符），就把该字符串用作空白。如果没有提供这个参数（或者为空），就不使用空白。</p>
-</blockquote>
-<p>示例代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var str = &apos;&#123;&quot;name&quot;:&quot;叶德华&quot;,&quot;age&quot;:23&#125;&apos;;</div><div class="line">str = JSON.parse(str);</div><div class="line">console.info(JSON.stringify(str));</div><div class="line">console.info(JSON.stringify(str,null,5));</div><div class="line">console.info(JSON.stringify(str,[&quot;name&quot;],5));</div><div class="line">console.info(JSON.stringify(str,null,&quot;###&quot;));</div></pre></td></tr></table></figure></p>
-
-      
-    </div><!-- .entry-content -->
-
-    <footer class="entry-meta">
-    <a href="/json/">
-    <time datetime="2017-07-21T08:13:44.329Z" class="entry-date">
-        2017-07-21
-    </time>
-</a>
-    
-    
-    </footer>
-</article>
-
-
-
-
-
-
-  
   
     <nav id="pagination">
       <nav id="page-nav">
@@ -793,6 +818,10 @@ process.exit(0);
       <ul>
         
           <li>
+            <a href="/es2017/">ES2017异步函数现已正式可用</a>
+          </li>
+        
+          <li>
             <a href="/html5/">HTML5</a>
           </li>
         
@@ -806,10 +835,6 @@ process.exit(0);
         
           <li>
             <a href="/mobile-phone-system/">判断iOS或Android手机</a>
-          </li>
-        
-          <li>
-            <a href="/text/">vue子组件与父组件通讯</a>
           </li>
         
       </ul>
