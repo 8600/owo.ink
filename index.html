@@ -53,6 +53,52 @@
       <div id="main" class="wrapper">
         <div id="primary" class="site-content"><div id="content" role="main">
   
+    <article id="post-nodejs_recursive_copy" class="post-nodejs_recursive_copy post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/nodejs_recursive_copy/">Node.JS循环递归复制文件目录</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>在Node.js中，要实现目录文件夹的循环递归复制也非常简单，使用fs模块即可，仅需几行，而且性能也不错，我们先来实现文件的复制：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">let fs   = require(&apos;fs&apos;)</div><div class="line">let path = require(&apos;path&apos;)</div><div class="line"></div><div class="line">let copyFile = function(srcPath, tarPath, cb) &#123;</div><div class="line">  let rs = fs.createReadStream(srcPath)</div><div class="line">  rs.on(&apos;error&apos;, function(err) &#123;</div><div class="line">    if (err) &#123;</div><div class="line">      console.log(&apos;read error&apos;, srcPath)</div><div class="line">    &#125;</div><div class="line">    cb &amp;&amp; cb(err)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  let ws = fs.createWriteStream(tarPath)</div><div class="line">  ws.on(&apos;error&apos;, function(err) &#123;</div><div class="line">    if (err) &#123;</div><div class="line">      console.log(&apos;write error&apos;, tarPath)</div><div class="line">    &#125;</div><div class="line">    cb &amp;&amp; cb(err)</div><div class="line">  &#125;)</div><div class="line">  ws.on(&apos;close&apos;, function(ex) &#123;</div><div class="line">    cb &amp;&amp; cb(ex)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  rs.pipe(ws)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>复制目录及其子目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">let copyFolder = function(srcDir, tarDir, cb) &#123;</div><div class="line">  fs.readdir(srcDir, function(err, files) &#123;</div><div class="line">    let count = 0</div><div class="line">    let checkEnd = function() &#123;</div><div class="line">      ++count == files.length &amp;&amp; cb &amp;&amp; cb()</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (err) &#123;</div><div class="line">      checkEnd()</div><div class="line">      return</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    files.forEach(function(file) &#123;</div><div class="line">      let srcPath = path.join(srcDir, file)</div><div class="line">      let tarPath = path.join(tarDir, file)</div><div class="line"></div><div class="line">      fs.stat(srcPath, function(err, stats) &#123;</div><div class="line">        if (stats.isDirectory()) &#123;</div><div class="line">          console.log(&apos;mkdir&apos;, tarPath)</div><div class="line">          fs.mkdir(tarPath, function(err) &#123;</div><div class="line">            if (err) &#123;</div><div class="line">              console.log(err)</div><div class="line">              return</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            copyFolder(srcPath, tarPath, checkEnd)</div><div class="line">          &#125;)</div><div class="line">        &#125; else &#123;</div><div class="line">          copyFile(srcPath, tarPath, checkEnd)</div><div class="line">        &#125;</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    //为空时直接回调</div><div class="line">    files.length === 0 &amp;&amp; cb &amp;&amp; cb()</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">copyFolder(&apos;...&apos;, &apos;....&apos;, function(err) &#123;</div><div class="line">  if (err) &#123;</div><div class="line">    return</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  //continue</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/nodejs_recursive_copy/">
+    <time datetime="2017-09-06T09:42:56.013Z" class="entry-date">
+        2017-09-06
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
     <article id="post-es2017" class="post-es2017 post type-post status-publish format-standard hentry">
     <!---->
 
@@ -730,72 +776,6 @@ process.exit(0);
 
 
   
-    <article id="post-array" class="post-array post type-post status-publish format-standard hentry">
-    <!---->
-
-      <header class="entry-header">
-        
-        
-  
-    <h1 class="entry-title">
-      <a class="article-title" href="/array/">JavaScript 数组方法对比</a>
-    </h1>
-  
-
-        
-        <div class="comments-link">
-            
-        </div><!-- .comments-link -->
-      </header><!-- .entry-header -->
-
-    <div class="entry-content">
-      
-        <p>JavaScript 提供了多种新增，移除，替换数组元素的方法，但是有些会影响原来的数组；有些则不会，它是新建了一个数组。</p>
-<p>注意：区分以下两个方法的不同点：</p>
-<ul>
-<li>array.splice() 影响原来的数组</li>
-<li>array.slice() 不影响原来的数组</li>
-</ul>
-<h5 id="I-新增：影响原数组"><a href="#I-新增：影响原数组" class="headerlink" title="I. 新增：影响原数组"></a>I. 新增：影响原数组</h5><p>使用 array.push() 和 array.ushift() 新增元素会影响原来的数组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let mutatingAdd = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]; </div><div class="line">mutatingAdd.push(&apos;f&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]</div><div class="line">mutatingAdd.unshift(&apos;z&apos;); // [&apos;z&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos; &apos;f&apos;]</div></pre></td></tr></table></figure></p>
-<h5 id="II-新增：不影响原数组"><a href="#II-新增：不影响原数组" class="headerlink" title="II. 新增：不影响原数组"></a>II. 新增：不影响原数组</h5><p>两种方式新增元素不会影响原数组，第一种是 array.concat() 。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = arr1.concat(&apos;f&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]  （注：原文有误，我做了修改 “.” ---&gt; “,”）</div><div class="line">console.log(arr1); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
-<p>第二种方法是使用 JavaScript 的展开（spread）操作符，展开操作符是三个点（…）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = [...arr1, &apos;f&apos;]; // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;]  </div><div class="line">const arr3 = [&apos;z&apos;, ...arr1]; // [&apos;z&apos;, &apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
-<p>展开操作符会复制原来的数组，从原数组取出所有元素，然后存入新的环境。</p>
-<h5 id="III-移除：影响原数组"><a href="#III-移除：影响原数组" class="headerlink" title="III. 移除：影响原数组"></a>III. 移除：影响原数组</h5><p>使用 array.pop() 和 array.shift() 移除数组元素时，会影响原来的数组。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingRemove.pop(); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">mutatingRemove.shift(); // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;]</div></pre></td></tr></table></figure></p>
-<p>array.pop() 和 array.shift() 返回被移除的元素，你可以通过一个变量获取被移除的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const returnedValue1 = mutatingRemove.pop();  </div><div class="line">console.log(mutatingRemove); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">console.log(returnedValue1); // &apos;e&apos;</div><div class="line">const returnedValue2 = mutatingRemove.shift();  </div><div class="line">console.log(mutatingRemove); // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;]  </div><div class="line">console.log(returnedValue2); // &apos;a&apos;</div></pre></td></tr></table></figure></p>
-<p>array.splice() 也可以删除数组的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingRemove.splice(0, 2); // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
-<p>像 array.pop() 和 array.shift() 一样，array.splice() 同样返回移除的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let mutatingRemove = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">let returnedItems = mutatingRemove.splice(0, 2);  </div><div class="line">console.log(mutatingRemove); // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">console.log(returnedItems) // [&apos;a&apos;, &apos;b&apos;]</div></pre></td></tr></table></figure></p>
-<h5 id="IV-移除：不影响原数组"><a href="#IV-移除：不影响原数组" class="headerlink" title="IV. 移除：不影响原数组"></a>IV. 移除：不影响原数组</h5><p>JavaScript 的 array.filter() 方法基于原数组创建一个新数组，新数组仅包含匹配特定条件的元素。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];</div><div class="line">const arr2 = arr1.filter(a =&gt; a !== &apos;e&apos;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]（注：原文有误，我做了修改）  </div><div class="line">// 或者</div><div class="line">const arr2 = arr1.filter(a =&gt; &#123;  </div><div class="line">  return a !== &apos;e&apos;;</div><div class="line">&#125;); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;]（注：原文有误，我做了修改）</div></pre></td></tr></table></figure></p>
-<p>以上代码的条件是“不等于 ‘e’ ”，因此新数组（arr2）里面没有包含 ‘e’。</p>
-<p>箭头函数的独特性：</p>
-<p>单行箭头函数，’return’ 关键字是默认自带的，不需要手动书写。</p>
-<p>可是，多行箭头函数就需要明确地返回一个值。</p>
-<p>另一种不影响原数组的方式是 array.slice()（不要与 array.splice() 混淆）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">const arr2 = arr1.slice(1, 5) // [&apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">const arr3 = arr1.slice(2) // [&apos;c&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
-<h5 id="V-替换：影响原数组"><a href="#V-替换：影响原数组" class="headerlink" title="V. 替换：影响原数组"></a>V. 替换：影响原数组</h5><p>如果知道替换哪一个元素，可以使用 array.splice() 。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let mutatingReplace = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">mutatingReplace.splice(2, 1, 30); // [&apos;a&apos;, &apos;b&apos;, 30, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">// 或者</div><div class="line">mutatingReplace.splice(2, 1, 30, 31); // [&apos;a&apos;, &apos;b&apos;, 30, 31, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure>
-<h5 id="VI-替换：不影响原数组"><a href="#VI-替换：不影响原数组" class="headerlink" title="VI. 替换：不影响原数组"></a>VI. 替换：不影响原数组</h5><p>可以使用 array.map() 创建一个新数组，并且可以检查每一个元素，根据特定的条件替换它们。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">const arr1 = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]  </div><div class="line">const arr2 = arr1.map(item =&gt; &#123;  </div><div class="line">  if(item === &apos;c&apos;) &#123;</div><div class="line">    item = &apos;CAT&apos;;</div><div class="line">  &#125;</div><div class="line">  return item;</div><div class="line">&#125;); // [&apos;a&apos;, &apos;b&apos;, &apos;CAT&apos;, &apos;d&apos;, &apos;e&apos;]</div></pre></td></tr></table></figure></p>
-<p>使用 array.map() 转换数据</p>
-<p>array.map() 是个强力方法，可以用于转换数据，而不污染原先的数据源。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const origArr = [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;];  </div><div class="line">const transformedArr = origArr.map(n =&gt; n + &apos;Hi!&apos;); // [&apos;aHi!&apos;, &apos;bHi!&apos;, &apos;cHi!&apos;, &apos;dHi!&apos;, &apos;eHi!&apos;]  </div><div class="line">console.log(origArr); // [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;]; // 原数组毫发无损</div></pre></td></tr></table></figure></p>
-
-      
-    </div><!-- .entry-content -->
-
-    <footer class="entry-meta">
-    <a href="/array/">
-    <time datetime="2017-07-21T08:15:11.690Z" class="entry-date">
-        2017-07-21
-    </time>
-</a>
-    
-    
-    </footer>
-</article>
-
-
-
-
-
-
-  
   
     <nav id="pagination">
       <nav id="page-nav">
@@ -818,6 +798,10 @@ process.exit(0);
       <ul>
         
           <li>
+            <a href="/nodejs_recursive_copy/">Node.JS循环递归复制文件目录</a>
+          </li>
+        
+          <li>
             <a href="/es2017/">ES2017异步函数现已正式可用</a>
           </li>
         
@@ -831,10 +815,6 @@ process.exit(0);
         
           <li>
             <a href="/nodejs-email/">Node.js获取Email</a>
-          </li>
-        
-          <li>
-            <a href="/mobile-phone-system/">判断iOS或Android手机</a>
           </li>
         
       </ul>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="在Node.js中，要实现目录文件夹的循环递归复制也非常简单，使用fs模块即可，仅需几行，而且性能也不错，我们先来实现文件的复制：
+12345678910111213141516171819202122232425let fs   = require(&amp;apos;fs&amp;apos;)let path " />
+  
+  
+  
+  
+  
+  
+  <title>Node.JS循环递归复制文件目录 | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在Node.js中，要实现目录文件夹的循环递归复制也非常简单，使用fs模块即可，仅需几行，而且性能也不错，我们先来实现文件的复制： 12345678910111213141516171819202122232425let fs   = require(&amp;apos;fs&amp;apos;)let path = require(&amp;apos;path&amp;apos;)let copyFile = function">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.JS循环递归复制文件目录">
+<meta property="og:url" content="https://owo.ink/nodejs_recursive_copy/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="在Node.js中，要实现目录文件夹的循环递归复制也非常简单，使用fs模块即可，仅需几行，而且性能也不错，我们先来实现文件的复制： 12345678910111213141516171819202122232425let fs   = require(&amp;apos;fs&amp;apos;)let path = require(&amp;apos;path&amp;apos;)let copyFile = function">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-09-06T09:42:56.013Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node.JS循环递归复制文件目录">
+<meta name="twitter:description" content="在Node.js中，要实现目录文件夹的循环递归复制也非常简单，使用fs模块即可，仅需几行，而且性能也不错，我们先来实现文件的复制： 12345678910111213141516171819202122232425let fs   = require(&amp;apos;fs&amp;apos;)let path = require(&amp;apos;path&amp;apos;)let copyFile = function">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-nodejs_recursive_copy" class="post-nodejs_recursive_copy post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      Node.JS循环递归复制文件目录
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>在Node.js中，要实现目录文件夹的循环递归复制也非常简单，使用fs模块即可，仅需几行，而且性能也不错，我们先来实现文件的复制：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">let fs   = require(&apos;fs&apos;)</div><div class="line">let path = require(&apos;path&apos;)</div><div class="line"></div><div class="line">let copyFile = function(srcPath, tarPath, cb) &#123;</div><div class="line">  let rs = fs.createReadStream(srcPath)</div><div class="line">  rs.on(&apos;error&apos;, function(err) &#123;</div><div class="line">    if (err) &#123;</div><div class="line">      console.log(&apos;read error&apos;, srcPath)</div><div class="line">    &#125;</div><div class="line">    cb &amp;&amp; cb(err)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  let ws = fs.createWriteStream(tarPath)</div><div class="line">  ws.on(&apos;error&apos;, function(err) &#123;</div><div class="line">    if (err) &#123;</div><div class="line">      console.log(&apos;write error&apos;, tarPath)</div><div class="line">    &#125;</div><div class="line">    cb &amp;&amp; cb(err)</div><div class="line">  &#125;)</div><div class="line">  ws.on(&apos;close&apos;, function(ex) &#123;</div><div class="line">    cb &amp;&amp; cb(ex)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  rs.pipe(ws)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>复制目录及其子目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">let copyFolder = function(srcDir, tarDir, cb) &#123;</div><div class="line">  fs.readdir(srcDir, function(err, files) &#123;</div><div class="line">    let count = 0</div><div class="line">    let checkEnd = function() &#123;</div><div class="line">      ++count == files.length &amp;&amp; cb &amp;&amp; cb()</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (err) &#123;</div><div class="line">      checkEnd()</div><div class="line">      return</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    files.forEach(function(file) &#123;</div><div class="line">      let srcPath = path.join(srcDir, file)</div><div class="line">      let tarPath = path.join(tarDir, file)</div><div class="line"></div><div class="line">      fs.stat(srcPath, function(err, stats) &#123;</div><div class="line">        if (stats.isDirectory()) &#123;</div><div class="line">          console.log(&apos;mkdir&apos;, tarPath)</div><div class="line">          fs.mkdir(tarPath, function(err) &#123;</div><div class="line">            if (err) &#123;</div><div class="line">              console.log(err)</div><div class="line">              return</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            copyFolder(srcPath, tarPath, checkEnd)</div><div class="line">          &#125;)</div><div class="line">        &#125; else &#123;</div><div class="line">          copyFile(srcPath, tarPath, checkEnd)</div><div class="line">        &#125;</div><div class="line">      &#125;)</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    //为空时直接回调</div><div class="line">    files.length === 0 &amp;&amp; cb &amp;&amp; cb()</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">copyFolder(&apos;...&apos;, &apos;....&apos;, function(err) &#123;</div><div class="line">  if (err) &#123;</div><div class="line">    return</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  //continue</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/nodejs_recursive_copy/">
+    <time datetime="2017-09-06T09:42:56.013Z" class="entry-date">
+        2017-09-06
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+    
+        <span class="nav-next"><a href="/es2017/" rel="next">ES2017异步函数现已正式可用 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/nodejs_recursive_copy/">Node.JS循环递归复制文件目录</a>
+          </li>
+        
+          <li>
+            <a href="/es2017/">ES2017异步函数现已正式可用</a>
+          </li>
+        
+          <li>
+            <a href="/html5/">HTML5</a>
+          </li>
+        
+          <li>
+            <a href="/promise/">八段代码彻底掌握 Promise</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs-email/">Node.js获取Email</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>
