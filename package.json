@@ -1,6 +1,6 @@
 {
   "name": "puge",
-  "version": "5.5.8",
+  "version": "5.5.9",
   "description": "博客生成",
   "main": "lib/hexo",
   "bin": {
@@ -40,7 +40,7 @@
     "chai-as-promised": "^7.1.1",
     "eslint": "^4.3.0",
     "eslint-config-hexo": "^2.0.0",
-    "hexo-renderer-marked": "^0.3.0",
+    "hexo-renderer-marked": "^0.2.10",
     "istanbul": "^0.4.3",
     "jscs": "^3.0.4",
     "jscs-preset-hexo": "^1.0.1",
