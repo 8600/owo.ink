@@ -1,10 +1,10 @@
 {
   "name": "puge",
-  "version": "5.5.9",
+  "version": "5.5.10",
   "description": "博客生成",
   "main": "lib/hexo",
   "bin": {
-    "puge": "./bin/hexo"
+    "puge": "./bin/puge"
   },
   "scripts": {
     "eslint": "eslint .",
