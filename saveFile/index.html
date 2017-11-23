@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="123456789101112131415/*** 在本地进行文件保存* @param  &amp;#123;String&amp;#125; content     要保存到本地的图片数据* @param  &amp;#123;String&amp;#125; fileName 文件名*/saveFile (content, f" />
+  
+  
+  
+  
+  
+  
+  <title>js保存文件 | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="123456789101112131415/*** 在本地进行文件保存* @param  &amp;#123;String&amp;#125; content     要保存到本地的图片数据* @param  &amp;#123;String&amp;#125; fileName 文件名*/saveFile (content, fileName) &amp;#123;  const aLink = document.createElem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js保存文件">
+<meta property="og:url" content="https://owo.ink/saveFile/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="123456789101112131415/*** 在本地进行文件保存* @param  &amp;#123;String&amp;#125; content     要保存到本地的图片数据* @param  &amp;#123;String&amp;#125; fileName 文件名*/saveFile (content, fileName) &amp;#123;  const aLink = document.createElem">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-11-23T01:51:05.125Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="js保存文件">
+<meta name="twitter:description" content="123456789101112131415/*** 在本地进行文件保存* @param  &amp;#123;String&amp;#125; content     要保存到本地的图片数据* @param  &amp;#123;String&amp;#125; fileName 文件名*/saveFile (content, fileName) &amp;#123;  const aLink = document.createElem">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-saveFile" class="post-saveFile post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      js保存文件
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">* 在本地进行文件保存</div><div class="line">* @param  &#123;String&#125; content     要保存到本地的图片数据</div><div class="line">* @param  &#123;String&#125; fileName 文件名</div><div class="line">*/</div><div class="line">saveFile (content, fileName) &#123;</div><div class="line">  const aLink = document.createElement(&apos;a&apos;)</div><div class="line">  const blob = new Blob([content], &#123;</div><div class="line">    type: &apos;text/plain&apos;</div><div class="line">  &#125;)</div><div class="line">  aLink.download = fileName</div><div class="line">  aLink.href = URL.createObjectURL(blob)</div><div class="line">  aLink.click()</div><div class="line">  URL.revokeObjectURL(blob)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">* 在本地进行文件保存</div><div class="line">* @param  &#123;String&#125; content     要保存到本地的图片数据</div><div class="line">* @param  &#123;String&#125; fileName 文件名</div><div class="line">*/</div><div class="line">saveFile (content, fileName) &#123;</div><div class="line">  let saveLink = document.createElementNS(&apos;http://www.w3.org/1999/xhtml&apos;, &apos;a&apos;)</div><div class="line">  saveLink.href = data</div><div class="line">  saveLink.download = filename</div><div class="line">  const event = document.createEvent(&apos;MouseEvents&apos;)</div><div class="line">  event.initMouseEvent(&apos;click&apos;, true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)</div><div class="line">  saveLink.dispatchEvent(event)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/saveFile/">
+    <time datetime="2017-11-23T01:45:54.029Z" class="entry-date">
+        2017-11-23
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+    
+        <span class="nav-next"><a href="/string/" rel="next">JavaScript 字符串实用常操纪要 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/saveFile/">js保存文件</a>
+          </li>
+        
+          <li>
+            <a href="/string/">JavaScript 字符串实用常操纪要</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs_recursive_copy/">Node.JS循环递归复制文件目录</a>
+          </li>
+        
+          <li>
+            <a href="/es2017/">ES2017异步函数现已正式可用</a>
+          </li>
+        
+          <li>
+            <a href="/html5/">HTML5</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>
