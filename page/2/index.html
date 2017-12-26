@@ -53,6 +53,58 @@
       <div id="main" class="wrapper">
         <div id="primary" class="site-content"><div id="content" role="main">
   
+    <article id="post-meteor" class="post-meteor post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/meteor/">Meteor</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <p>1.启动方式 <code>meteor -p 80</code></p>
+<p>2.使用nohup后台运行meteor</p>
+<ul>
+<li>nohup meteor -p 80 &amp;</li>
+<li>jobs</li>
+<li>exit</li>
+</ul>
+<p>3.meteor数据库启动失败试试<br><code>rm -rf .meteor/local/db/mongod.lock .meteor/local/db/journal/</code></p>
+<p>4.docker下MongoDB无法启动<br><a href="https://github.com/meteor/meteor/issues/4019" target="_blank" rel="external">帮助信息</a></p>
+<p><code>apt-get install language-pack-en -y</code></p>
+<p>5.docker下出现<code>You are attempting to run Meteor as the &#39;root&#39; superuser</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export METEOR_NO_RELEASE_CHECK=true</div><div class="line">curl https://install.meteor.com/?release=1.4.1.3 | sh</div></pre></td></tr></table></figure></p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/meteor/">
+    <time datetime="2017-07-21T08:20:08.513Z" class="entry-date">
+        2017-07-21
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
     <article id="post-faster-css" class="post-faster-css post type-post status-publish format-standard hentry">
     <!---->
 
@@ -571,6 +623,10 @@
       <ul>
         
           <li>
+            <a href="/generators/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/saveFile/">js保存文件</a>
           </li>
         
@@ -584,10 +640,6 @@
         
           <li>
             <a href="/es2017/">ES2017异步函数现已正式可用</a>
-          </li>
-        
-          <li>
-            <a href="/html5/">HTML5</a>
           </li>
         
       </ul>

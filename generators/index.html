@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="ES6 Generators详解1.什么是generators？我们可以把generators理解成一段 可以暂停并重新开始执行的函数123456function* genFunc() &amp;#123;    // (A)    console.log(&amp;apos;First&amp;apos;);    yi" />
+  
+  
+  
+  
+  
+  
+  <title>owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ES6 Generators详解1.什么是generators？我们可以把generators理解成一段 可以暂停并重新开始执行的函数123456function* genFunc() &amp;#123;    // (A)    console.log(&amp;apos;First&amp;apos;);    yield; //(B)    console.log(&amp;apos;Second&amp;apos;); //(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="owo.ink">
+<meta property="og:url" content="https://owo.ink/generators/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="ES6 Generators详解1.什么是generators？我们可以把generators理解成一段 可以暂停并重新开始执行的函数123456function* genFunc() &amp;#123;    // (A)    console.log(&amp;apos;First&amp;apos;);    yield; //(B)    console.log(&amp;apos;Second&amp;apos;); //(">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:updated_time" content="2017-12-26T02:30:52.826Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="owo.ink">
+<meta name="twitter:description" content="ES6 Generators详解1.什么是generators？我们可以把generators理解成一段 可以暂停并重新开始执行的函数123456function* genFunc() &amp;#123;    // (A)    console.log(&amp;apos;First&amp;apos;);    yield; //(B)    console.log(&amp;apos;Second&amp;apos;); //(">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-generators" class="post-generators post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h2 id="ES6-Generators详解"><a href="#ES6-Generators详解" class="headerlink" title="ES6 Generators详解"></a>ES6 Generators详解</h2><h3 id="1-什么是generators？"><a href="#1-什么是generators？" class="headerlink" title="1.什么是generators？"></a>1.什么是generators？</h3><p>我们可以把generators理解成一段 <strong>可以暂停并重新开始执行的函数</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">function* genFunc() &#123;</div><div class="line">    // (A)</div><div class="line">    console.log(&apos;First&apos;);</div><div class="line">    yield; //(B)</div><div class="line">    console.log(&apos;Second&apos;); //(C)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>function*</code>是定义generator函数的关键字，yield是一个操作符，generator 可以通过yield暂停自己执行，另外，<strong>generator可以通过yield接受输入和对外输入</strong></p>
+<p>当我们调用<code>genFunc()</code>,我们得到一个generator对象genObj,我们可以通过这个genObj控制程序的执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const genObj = genFunc()</div></pre></td></tr></table></figure>
+<p><em>上面的程序初始会暂停在行A</em>，调用genObj.next()会使程序继续执行直到遇到下一个yield</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; genObj.next();</div><div class="line">First</div><div class="line">&#123; value: undefined, done: false &#125;</div></pre></td></tr></table></figure>
+<p>这里先忽略genObj.next()返回的对象，之后会介绍</p>
+<p>现在，程序暂停在了行B，再次调用 genObj.next(),程序又开始执行，行C被执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; genObj.next()</div><div class="line">Second</div><div class="line">&#123; value: undefined, done: true &#125;</div></pre></td></tr></table></figure>
+<p>然后，函数就执行结束了，再次调用genObj.next()也不会有什么效果了</p>
+<h3 id="2-generator扮演的角色"><a href="#2-generator扮演的角色" class="headerlink" title="2.generator扮演的角色"></a>2.generator扮演的角色</h3><h4 id="迭代器-数据生产者"><a href="#迭代器-数据生产者" class="headerlink" title="迭代器(数据生产者)"></a>迭代器(数据生产者)</h4><p>每一个yield可以通过next()返回一个值，这意味着generators可以通过循环或递归生产一系列的值，因为generator对象实现了Iterable接口，generator生产的一系列值可以被ES6中任意支持可迭代对象的结构处理，两个例子，for of循环和扩展操作（…）</p>
+<h4 id="观察者-数据消费者"><a href="#观察者-数据消费者" class="headerlink" title="观察者(数据消费者)"></a>观察者(数据消费者)</h4><p>yield可以通过next()接受一个值，这意味着generator变成了一个暂停执行的数据消费者直到通过next()给generator传递了一个新值</p>
+<h4 id="协作程序-数据生产者和消费者"><a href="#协作程序-数据生产者和消费者" class="headerlink" title="协作程序(数据生产者和消费者)"></a>协作程序(数据生产者和消费者)</h4><p>考虑到generators是可以暂停的并且可以同时作为数据生产者和消费者，不会做太多的工作就可以把generator转变成协作程序(合作进行的多任务)</p>
+<h3 id="3-generators作为数据生产者-iterators"><a href="#3-generators作为数据生产者-iterators" class="headerlink" title="3.generators作为数据生产者(iterators)"></a>3.generators作为数据生产者(iterators)</h3><p>generators同时实现了接口Iterable 和 Iterator（如下所示），这意味着，<strong>generator函数返回的对象是一个迭代器也是一个可迭代的对象</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">interface Iterable &#123;</div><div class="line">    [Symbol.iterator]() : Iterator;</div><div class="line">&#125;</div><div class="line">interface Iterator &#123;</div><div class="line">    next() : IteratorResult;</div><div class="line">&#125;</div><div class="line">interface IteratorResult &#123;</div><div class="line">    value : any;</div><div class="line">    done : boolean;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>generator对象完整的接口后面会提到，这里删掉了接口Iterable的return()方法，因为这个方法这一小节用不到</p>
+<p>generator函数通过yield生产一系列的值，这些值可以通过迭代器的next()方法来使用，例如下面的generator函数生成了值a和b</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">function* genFunc()&#123;</div><div class="line">    yield &apos;a&apos;</div><div class="line">    yield &apos;b&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>交互展示如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; const genObj = genFunc();</div><div class="line">&gt; genObj.next()</div><div class="line">&#123; value: &apos;a&apos;, done: false &#125;</div><div class="line"></div><div class="line">&gt; genObj.next()</div><div class="line">&#123; value: &apos;b&apos;, done: false &#125;</div><div class="line"></div><div class="line">&gt; genObj.next() // done: true =&gt; end of sequence</div><div class="line">&#123; value: undefined, done: true &#125;</div></pre></td></tr></table></figure>
+<h3 id="3-迭代generator的三种方式"><a href="#3-迭代generator的三种方式" class="headerlink" title="3.迭代generator的三种方式"></a>3.迭代generator的三种方式</h3><ul>
+<li>for of循环</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">for (const x of genFunc()) &#123;</div><div class="line">       console.log(x);</div><div class="line">   &#125;</div><div class="line">   // Output:</div><div class="line">   // a</div><div class="line">   // b</div></pre></td></tr></table></figure>
+<ul>
+<li>扩展操作符(…)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const arr = [...genFunc()]; // [&apos;a&apos;, &apos;b&apos;]</div></pre></td></tr></table></figure>
+<ul>
+<li>解构赋值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt; const [x, y] = genFunc();</div><div class="line">&gt; x</div><div class="line">&apos;a&apos;</div><div class="line">&gt; y</div><div class="line">&apos;b&apos;</div></pre></td></tr></table></figure>
+<h3 id="4-generator中的return"><a href="#4-generator中的return" class="headerlink" title="4.generator中的return"></a>4.generator中的return</h3><p>上面的generator函数没有包含一个显式的return,一个隐式的return 返回undefined,让我们试验一个显式返回return的generator</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function* genFuncWithReturn() &#123;</div><div class="line">    yield &apos;a&apos;;</div><div class="line">    yield &apos;b&apos;;</div><div class="line">    return &apos;result&apos;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面的结构表明<strong>return 指定的值保存在最后一个next()返回的对象中</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt; const genObjWithReturn = genFuncWithReturn();</div><div class="line">&gt; genObjWithReturn.next()</div><div class="line">&#123; value: &apos;a&apos;, done: false &#125;</div><div class="line">&gt; genObjWithReturn.next()</div><div class="line">&#123; value: &apos;b&apos;, done: false &#125;</div><div class="line">&gt; genObjWithReturn.next()</div><div class="line">&#123; value: &apos;result&apos;, done: true &#125;</div></pre></td></tr></table></figure>
+<p>然而，<strong>大部分和可迭代对象一起工作的结构会忽略done属性是true的对象的value值</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">for (const x of genFuncWithReturn()) &#123;</div><div class="line">    console.log(x);</div><div class="line">&#125;</div><div class="line">// Output:</div><div class="line">// a</div><div class="line">// b</div><div class="line"></div><div class="line">const arr = [...genFuncWithReturn()]; // [&apos;a&apos;, &apos;b&apos;]</div></pre></td></tr></table></figure>
+<h3 id="5-generator函数中抛异常"><a href="#5-generator函数中抛异常" class="headerlink" title="5.generator函数中抛异常"></a>5.generator函数中抛异常</h3><p>如果一个异常离开了generator函数，next()可以抛出它</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function* genFunc() &#123;</div><div class="line">    throw new Error(&apos;Problem!&apos;);</div><div class="line">&#125;</div><div class="line">const genObj = genFunc();</div><div class="line">genObj.next(); // Error: Problem!</div></pre></td></tr></table></figure>
+<p>这意味着next()可以生产三种类型的值</p>
+<ul>
+<li>对于可迭代序列中的一项x，它返回 {value:x,done:false}</li>
+<li>对于可迭代序列的最后一项,明确是return返回的z，它返回{value:z,done:true}</li>
+<li>对于异常，它抛出这个异常</li>
+</ul>
+<h3 id="6-通过-yield-递归"><a href="#6-通过-yield-递归" class="headerlink" title="6.通过 yield*递归"></a>6.通过 yield*递归</h3><p>我们只能在generator函数中使用yield，如果我们想通过generator实现递归算法，我们就需要一种方式来在一个generator中调用另一个generator，这就用到了<code>yield*</code>，现在，我们只介绍<code>yield*</code>用在generator函数产生值的情况，之后介绍<code>yield*</code>用在generator接受值的情况</p>
+<p>generator递归调用另一个generator的方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function* foo() &#123;</div><div class="line">    yield &apos;a&apos;;</div><div class="line">    yield &apos;b&apos;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function* bar() &#123;</div><div class="line">    yield &apos;x&apos;;</div><div class="line">    yield* foo();</div><div class="line">    yield &apos;y&apos;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">const arr = [...bar()];</div><div class="line">//[&apos;x&apos;, &apos;a&apos;, &apos;b&apos;, &apos;y&apos;]</div></pre></td></tr></table></figure>
+<p>在内部，yield*像下面这样工作的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function* bar() &#123;</div><div class="line">    yield &apos;x&apos;;</div><div class="line">    for (const value of foo()) &#123;</div><div class="line">        yield value;</div><div class="line">    &#125;</div><div class="line">    yield &apos;y&apos;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另外，yield*的操作数不一定非得是一个generator函数生成的对象，可以是任何可迭代的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function* bla() &#123;</div><div class="line">    yield &apos;sequence&apos;;</div><div class="line">    yield* [&apos;of&apos;, &apos;yielded&apos;];</div><div class="line">    yield &apos;values&apos;;</div><div class="line">&#125;</div><div class="line">const arr = [...bla()];</div><div class="line">// [&apos;sequence&apos;, &apos;of&apos;, &apos;yielded&apos;, &apos;values&apos;]</div></pre></td></tr></table></figure>
+<p><strong>yield*考虑可迭代对象的最后一个值</strong></p>
+<p>ES6中的很多结构会忽略generator函数返回的可迭代对象的最后一个值(例如 for of，扩展操作符,如上面介绍过的那样)，但是，<code>yield*</code>的结果是这个值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function* genFuncWithReturn() &#123;</div><div class="line">    yield &apos;a&apos;;</div><div class="line">    yield &apos;b&apos;;</div><div class="line">    return &apos;The result&apos;;</div><div class="line">&#125;</div><div class="line">function* logReturned(genObj) &#123;</div><div class="line">    const result = yield* genObj;</div><div class="line">    console.log(result); // (A)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; [...logReturned(genFuncWithReturn())]</div><div class="line">The result</div><div class="line">[ &apos;a&apos;, &apos;b&apos; ]</div></pre></td></tr></table></figure>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/generators/">
+    <time datetime="2017-12-26T02:30:52.812Z" class="entry-date">
+        2017-12-26
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+    
+        <span class="nav-next"><a href="/saveFile/" rel="next">js保存文件 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/generators/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/saveFile/">js保存文件</a>
+          </li>
+        
+          <li>
+            <a href="/string/">JavaScript 字符串实用常操纪要</a>
+          </li>
+        
+          <li>
+            <a href="/nodejs_recursive_copy/">Node.JS循环递归复制文件目录</a>
+          </li>
+        
+          <li>
+            <a href="/es2017/">ES2017异步函数现已正式可用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2017 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>
