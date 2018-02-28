@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  
+    <meta name="description" content="1.不要用 for_in 遍历数组这是 JavaScript 初学者常见的误区。for_in 用于遍历对象中包括原型链上的所有可枚举的（enumerable）的 key，本来不是为遍历数组而存在。
+使用 for_in 遍历数组有三点问题：
+遍历顺序不固定
+JavaScript 引擎不保证对象的遍历顺" />
+  
+  
+  
+  
+  
+  
+  <title>给初学者：JavaScript 中数组操作注意点 | owo.ink</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.不要用 for_in 遍历数组这是 JavaScript 初学者常见的误区。for_in 用于遍历对象中包括原型链上的所有可枚举的（enumerable）的 key，本来不是为遍历数组而存在。 使用 for_in 遍历数组有三点问题： 遍历顺序不固定 JavaScript 引擎不保证对象的遍历顺序。当把数组作为普通对象遍历时同样不保证遍历出的索引顺序。 会遍历出对象原型链上的值。 如果你改变了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给初学者：JavaScript 中数组操作注意点">
+<meta property="og:url" content="https://owo.ink/array-operation-advice/index.html">
+<meta property="og:site_name" content="owo.ink">
+<meta property="og:description" content="1.不要用 for_in 遍历数组这是 JavaScript 初学者常见的误区。for_in 用于遍历对象中包括原型链上的所有可枚举的（enumerable）的 key，本来不是为遍历数组而存在。 使用 for_in 遍历数组有三点问题： 遍历顺序不固定 JavaScript 引擎不保证对象的遍历顺序。当把数组作为普通对象遍历时同样不保证遍历出的索引顺序。 会遍历出对象原型链上的值。 如果你改变了">
+<meta property="og:locale" content="zh-cn">
+<meta property="og:image" content="http://puge-10017157.cossh.myqcloud.com/temp/b2b7ff75cd471e05d9d27a6418218525.png">
+<meta property="og:updated_time" content="2018-02-28T09:34:35.500Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给初学者：JavaScript 中数组操作注意点">
+<meta name="twitter:description" content="1.不要用 for_in 遍历数组这是 JavaScript 初学者常见的误区。for_in 用于遍历对象中包括原型链上的所有可枚举的（enumerable）的 key，本来不是为遍历数组而存在。 使用 for_in 遍历数组有三点问题： 遍历顺序不固定 JavaScript 引擎不保证对象的遍历顺序。当把数组作为普通对象遍历时同样不保证遍历出的索引顺序。 会遍历出对象原型链上的值。 如果你改变了">
+<meta name="twitter:image" content="http://puge-10017157.cossh.myqcloud.com/temp/b2b7ff75cd471e05d9d27a6418218525.png">
+  
+  
+    <link rel="icon" href="/css/images/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+<body class="home blog custom-background custom-font-enabled single-author">
+  <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header" role="banner">
+  <hgroup>
+    <h1 class="site-title">
+      <a href="/" title="owo.ink" rel="home">owo.ink</a>
+    </h1>
+    
+  </hgroup>
+
+  <nav id="site-navigation" class="main-navigation" role="navigation">
+    <button class="menu-toggle">菜单</button>
+    <a class="assistive-text" href="/#content" title="跳至内容">跳至内容</a><!--TODO-->
+    <div class="menu-main-container">
+      <ul id="menu-main" class="nav-menu">
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/">主页</a></li>
+      
+        <li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/archives">归档</a></li>
+      
+      </ul>
+    </div>
+  </nav>
+</header>
+      <div id="main" class="wrapper">
+        <div id="primary" class="site-content"><div id="content" role="main"><article id="post-array-operation-advice" class="post-array-operation-advice post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title article-title">
+      给初学者：JavaScript 中数组操作注意点
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h4 id="1-不要用-for-in-遍历数组"><a href="#1-不要用-for-in-遍历数组" class="headerlink" title="1.不要用 for_in 遍历数组"></a>1.不要用 for_in 遍历数组</h4><p>这是 JavaScript 初学者常见的误区。for_in 用于遍历对象中包括原型链上的所有可枚举的（enumerable）的 key，本来不是为遍历数组而存在。</p>
+<p>使用 for_in 遍历数组有三点问题：</p>
+<p>遍历顺序不固定</p>
+<p>JavaScript 引擎不保证对象的遍历顺序。当把数组作为普通对象遍历时同样不保证遍历出的索引顺序。</p>
+<p>会遍历出对象原型链上的值。</p>
+<p>如果你改变了数组的原型对象（比如 polyfill）而没有将其设为 enumerable: false，for_in 会把这些东西遍历出来。</p>
+<p>运行效率低下。</p>
+<p>尽管理论上 JavaScript 使用对象的形式储存数组，JavaScript 引擎还是会对数组这一非常常用的内置对象特别优化。 <a href="https://jsperf.com/for-in-vs-…" target="_blank" rel="external">https://jsperf.com/for-in-vs-…</a><br>可以看到使用 for_in 遍历数组要比使用下标遍历数组慢 50 倍以上</p>
+<p>PS：你可能是想找 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of" target="_blank" rel="external">for_of</a></p>
+<h4 id="不要用-JSON-parse-JSON-stringify-深拷贝数组"><a href="#不要用-JSON-parse-JSON-stringify-深拷贝数组" class="headerlink" title="不要用 JSON.parse(JSON.stringify()) 深拷贝数组"></a>不要用 JSON.parse(JSON.stringify()) 深拷贝数组</h4><p>有人使用 JSON 中深拷贝对象或数组。这虽然在多数情况是个简单方便的手段，但也可能引发未知 bug，因为：</p>
+<p>会使某些特定值转换为 null</p>
+<p>NaN, undefined, Infinity 对于 JSON 中不支持的这些值，会在序列化 JSON 时被转换为 null，反序列化回来后自然也就是 null</p>
+<p>会丢失值为 undefined 的键值对</p>
+<p>JSON 序列化时会忽略值为 undefined 的 key，反序列化回来后自然也就丢失了</p>
+<p>会将 Date 对象转换为字符串</p>
+<p>JSON 不支持对象类型，对于 JS 中 Date 对象的处理方式为转换为 ISO8601 格式的字符串。然而反序列化并不会把时间格式的字符串转化为 Date 对象</p>
+<p>运行效率低下。</p>
+<p>作为原生函数，JSON.stringify 和 JSON.parse 自身操作 JSON 字符串的速度是很快的。然而为了深拷贝数组把对象序列化成 JSON 再反序列化回来完全没有必要。</p>
+<p>我花了一些时间写了一个简单的深拷贝数组或对象的函数，测试发现运行速度差不多是使用 JSON 中转的 6 倍左右，顺便还支持了 TypedArray、RegExp 的对象的复制</p>
+<p><a href="https://jsperf.com/deep-clone-array-using-native-json-and-custom-deepclone" target="_blank" rel="external">链接</a></p>
+<h4 id="不要用-arr-find-代替-arr-some"><a href="#不要用-arr-find-代替-arr-some" class="headerlink" title="不要用 arr.find 代替 arr.some"></a>不要用 arr.find 代替 arr.some</h4><p>Array.prototype.find 是 ES2015 中新增的数组查找函数，与 Array.prototype.some 有相似之处，但不能替代后者。</p>
+<p>Array.prototype.find 返回第一个符合条件的值，直接拿这个值做 if 判断是否存在，如果这个符合条件的值恰好是 0 怎么办？</p>
+<p>arr.find 是找到数组中的值后对其进一步处理，一般用于对象数组的情况；arr.some 才是检查存在性；两者不可混用。</p>
+<h4 id="不要用-arr-map-代替-arr-forEach"><a href="#不要用-arr-map-代替-arr-forEach" class="headerlink" title="不要用 arr.map 代替 arr.forEach"></a>不要用 arr.map 代替 arr.forEach</h4><p>也是一个 JavaScript 初学者常常犯的错误，他们往往并没有分清 Array.prototype.map 和 Array.prototype.forEach 的实际含义。</p>
+<p>map 中文叫做 映射，它通过将某个序列依次执行某个函数导出另一个新的序列。这个函数通常是不含副作用的，更不会修改原始的数组（所谓纯函数）。</p>
+<p>forEach 就没有那么多说法，它就是简单的把数组中所有项都用某个函数处理一遍。由于 forEach 没有返回值（返回 undefined），所以它的回调函数通常是包含副作用的，否则这个 forEach 写了毫无意义。</p>
+<p>确实 map 比 forEach 更加强大，但是 map 会创建一个新的数组，占用内存。如果你不用 map 的返回值，那你就应当使用 forEach</p>
+<h4 id="补：forEach-与-break"><a href="#补：forEach-与-break" class="headerlink" title="补：forEach 与 break"></a>补：forEach 与 break</h4><p>ES6 以前，遍历数组主要就是两种方法：手写循环用下标迭代，使用 Array.prototype.forEach。前者万能，效率最高，可就是写起来比较繁琐——它不能直接获取到数组中的值。</p>
+<p>笔者个人是喜欢后者的：可以直接获取到迭代的下标和值，而且函数式风格（注意 FP 注重的是不可变数据结构，forEach 天生为副作用存在，所以只有 FP 的形而没有神）写起来爽快无比。但是！不知各位同学注意过没有：forEach 一旦开始就停不下来了。。。</p>
+<p>forEach 接受一个回调函数，你可以提前 return，相当于手写循环中的 continue。但是你不能 break——因为回调函数中没有循环让你去 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[1, 2, 3, 4, 5].forEach(x =&gt; &#123;</div><div class="line">  console.log(x);</div><div class="line">  if (x === 3) &#123;</div><div class="line">    break;  // SyntaxError: Illegal break statement</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>解决方案还是有的。其他函数式编程语言例如 scala 就遇到了类似问题，它提供了一个函数break，作用是抛出一个异常。</p>
+<p><img src="http://puge-10017157.cossh.myqcloud.com/temp/b2b7ff75cd471e05d9d27a6418218525.png" alt=""></p>
+<p>我们可以仿照这样的做法，来实现 arr.forEach 的 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">try &#123;</div><div class="line">  [1, 2, 3, 4, 5].forEach(x =&gt; &#123;</div><div class="line">    console.log(x);</div><div class="line">    if (x === 3) &#123;</div><div class="line">      throw &apos;break&apos;;</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">&#125; catch (e) &#123;</div><div class="line">  if (e !== &apos;break&apos;) throw e; // 不要勿吞异常。。。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>恶心的一Ｂ对不对。还有其他方法，比如用 Array.prototype.some 代替 Array.prototype.forEach。</p>
+<p>考虑 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/some#Description" target="_blank" rel="external">Array.prototype.some</a> 的特性，当 some 找到一个符合条件的值（回调函数返回 true）时会立即终止循环，利用这样的特性可以模拟 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[1, 2, 3, 4, 5].some(x =&gt; &#123;</div><div class="line">  console.log(x);</div><div class="line">  if (x === 3) &#123;</div><div class="line">    return true; // break</div><div class="line">  &#125;</div><div class="line">  // return undefined; 相当于 false</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>some 的返回值被忽略掉了，它已经脱离了判断数组中是否有元素符合给出的条件这一原始的含义。</p>
+<p>在 ES6 前，笔者主要使用该法（其实因为 Babel 代码膨胀的缘故，现在也偶尔使用），ES6 不一样了，我们有了 for…of。for…of 是真正的循环，可以 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">for (const x of [1, 2, 3, 4, 5]) &#123;</div><div class="line">  console.log(x);</div><div class="line">  if (x === 3) &#123;</div><div class="line">    break;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是有个问题，for…of 似乎拿不到循环的下标。其实 JavaScript 语言制定者想到了这个问题，可以如下解决：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for (const [index, value] of [1, 2, 3, 4, 5].entries()) &#123;</div><div class="line">  console.log(`arr[$&#123;index&#125;] = $&#123;value&#125;`);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/entries" target="_blank" rel="external">Array.prototype.entries</a></p>
+<p>for…of 和 forEach 的性能测试：<a href="https://jsperf.com/array-fore…" target="_blank" rel="external">https://jsperf.com/array-fore…</a> Chrome 中 for…of 要快一些哦😯</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/array-operation-advice/">
+    <time datetime="2018-02-28T09:33:27.140Z" class="entry-date">
+        2018-02-28
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+    
+<nav class="nav-single">
+    <h3 class="assistive-text">文章导航</h3>
+    
+        <span class="nav-previous"><a href="/mvvm/" rel="prev"><span class="meta-nav">←</span> 实现数据的双向绑定mvvm-剖析Vue的原理</a></span>
+    
+    
+        <span class="nav-next"><a href="/generators/" rel="next">ES6 Generators详解 <span class="meta-nav">→</span></a></span>
+    
+</nav><!-- .nav-single -->
+
+
+
+
+
+
+
+</div></div>
+        <div id="secondary" class="widget-area" role="complementary">
+  
+    
+  
+    
+  
+    
+  <aside class="widget">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget-content">
+      <ul>
+        
+          <li>
+            <a href="/mvvm/">实现数据的双向绑定mvvm-剖析Vue的原理</a>
+          </li>
+        
+          <li>
+            <a href="/array-operation-advice/">给初学者：JavaScript 中数组操作注意点</a>
+          </li>
+        
+          <li>
+            <a href="/generators/">ES6 Generators详解</a>
+          </li>
+        
+          <li>
+            <a href="/saveFile/">js保存文件</a>
+          </li>
+        
+          <li>
+            <a href="/string/">JavaScript 字符串实用常操纪要</a>
+          </li>
+        
+      </ul>
+    </div>
+  </aside>
+
+  
+    
+  
+    
+  
+</div>
+      </div>
+      <footer id="colophon" role="contentinfo">
+    <p>&copy; 2018 PUGE
+    All rights reserved.</p>
+    <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
+</footer>
+    <div id="bg"></div>
+
+  </div>
+</body>
+</html>

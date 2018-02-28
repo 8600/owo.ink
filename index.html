@@ -53,10 +53,18 @@
       <div id="main" class="wrapper">
         <div id="primary" class="site-content"><div id="content" role="main">
   
-    <article id="post-generators" class="post-generators post type-post status-publish format-standard hentry">
+    <article id="post-mvvm" class="post-mvvm post type-post status-publish format-standard hentry">
     <!---->
 
       <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/mvvm/">实现数据的双向绑定mvvm-剖析Vue的原理</a>
+    </h1>
+  
+
         
         <div class="comments-link">
             
@@ -65,7 +73,224 @@
 
     <div class="entry-content">
       
-        <h2 id="ES6-Generators详解"><a href="#ES6-Generators详解" class="headerlink" title="ES6 Generators详解"></a>ES6 Generators详解</h2><h3 id="1-什么是generators？"><a href="#1-什么是generators？" class="headerlink" title="1.什么是generators？"></a>1.什么是generators？</h3><p>我们可以把generators理解成一段 <strong>可以暂停并重新开始执行的函数</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">function* genFunc() &#123;</div><div class="line">    // (A)</div><div class="line">    console.log(&apos;First&apos;);</div><div class="line">    yield; //(B)</div><div class="line">    console.log(&apos;Second&apos;); //(C)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+        <p>一、几种实现双向绑定的做法</p>
+<p>目前几种主流的 <code>mvc(vm)</code> 框架都实现了单向数据绑定，而我所理解的双向数据绑定无非就是在单向绑定的基础上给可输入元素（ <code>input</code> 、 <code>textare</code> 等）添加了 <code>change(input)</code> 事件，来动态修改 <code>model</code>和 <code>view</code> ，并没有多高深。所以无需太过介怀是实现的单向或双向绑定。</p>
+<p>发布者-订阅者模式（ <code>backbone.js</code> ）<br>脏值检查（ <code>angular.js</code> ）<br>数据劫持（ <code>vue.js</code> ）</p>
+<p>1.1 发布者-订阅者模式</p>
+<ul>
+<li>一般通过 <code>sub</code> , <code>pub</code> 的方式实现数据和视图的绑定监听，更新数据方式通常做法是 <code>vm.set(&#39;property&#39;, value)</code> ， <a href="http://www.html-js.com/article/Study-of-twoway-data-binding-JavaScript-talk-about-JavaScript-every-day" target="_blank" rel="external">这里有篇文章讲的比较详细
+</a></li>
+<li>这种方式现在毕竟太low了，我们更希望通过 vm.property = value 这种方式更新数据，同时自动更新视图，于是有了下面两种方式</li>
+</ul>
+<p>1.2 脏值检查</p>
+<p><code>angular.js</code> 是通过脏值检测的方式比对数据是否有变更，来决定是否更新视图，最简单的方式就是通过 <code>setInterval()</code> 定时轮询检测数据变动，当然Google不会这么low，angular只有在指定的事件触发时进入脏值检测，大致如下：</p>
+<ul>
+<li>DOM 事件，譬如用户输入文本，点击按钮等。( <code>ng-click</code> )</li>
+<li>XHR 响应事件 ( <code>$http</code> )</li>
+<li>浏览器 <code>Location</code> 变更事件 ( <code>$location</code> )</li>
+<li>Timer 事件( <code>$timeout</code> , <code>$interval</code> )</li>
+<li>执行 <code>$digest()</code> 或 <code>$apply()</code></li>
+</ul>
+<p>1.3 数据劫持<br><code>vue.js</code> 则是采用数据劫持结合发布者-订阅者模式的方式，通过 <code>Object.defineProperty()</code> 来劫持各个属性的 <code>setter</code> ， <code>getter</code> ，在数据变动时发布消息给订阅者，触发相应的监听回调。</p>
+<p>二、实现思路<br>已经了解到 <code>vue</code> 是通过数据劫持的方式来做数据绑定的，其中最核心的方法便是通过 <code>Object.defineProperty()</code> 来实现对属性的劫持，达到监听数据变动的目的，无疑这个方法是本文中最重要、最基础的内容之一，如果不熟悉 <code>defineProperty</code> ，猛戳 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">这里</a></p>
+<p>要实现<code>mvvm</code>的双向绑定，就必须要实现以下几点</p>
+<ul>
+<li>实现一个数据监听器 <code>Observer</code> ，能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者</li>
+<li>实现一个指令解析器 <code>Compile</code> ，对每个元素节点的指令进行扫描和解析，根据指令模板替换数据，以及绑定相应的更新函数</li>
+<li>实现一个 <code>Watcher</code> ，作为连接 <code>Observer</code> 和 <code>Compile</code> 的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数，从而更新视图</li>
+<li><code>mvvm</code> 入口函数，整合以上三者</li>
+</ul>
+<p>上述流程如图所示：<br><img src="http://ouqjus79v.bkt.clouddn.com//b636BjI.png!web" alt="b636BjI.png!web"></p>
+<p>2.1 实现Observer</p>
+<ul>
+<li><p>我们知道可以利用 <code>Obeject.defineProperty()</code> 来监听属性变动</p>
+</li>
+<li><p>那么将需要 <code>observe</code> 的数据对象进行递归遍历，包括子属性对象的属性，都加上 <code>setter</code> 和 <code>getter</code></p>
+</li>
+<li><p>这样的话，给这个对象的某个值赋值，就会触发 <code>setter</code> ，那么就能监听到了数据变化。相关代码可以是这样</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">var data = &#123;name: &apos;kindeng&apos;&#125;;</div><div class="line">observe(data);</div><div class="line">data.name = &apos;dmq&apos;; // 哈哈哈，监听到值变化了 kindeng --&gt; dmq</div><div class="line"></div><div class="line">function observe(data) &#123;</div><div class="line">    if (!data || typeof data !== &apos;object&apos;) &#123;</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line">    // 取出所有属性遍历</div><div class="line">    Object.keys(data).forEach(function(key) &#123;</div><div class="line">	    defineReactive(data, key, data[key]);</div><div class="line">	&#125;);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">function defineReactive(data, key, val) &#123;</div><div class="line">    observe(val); // 监听子属性</div><div class="line">    Object.defineProperty(data, key, &#123;</div><div class="line">        enumerable: true, // 可枚举</div><div class="line">        configurable: false, // 不能再define</div><div class="line">        get: function() &#123;</div><div class="line">            return val;</div><div class="line">        &#125;,</div><div class="line">        set: function(newVal) &#123;</div><div class="line">            console.log(&apos;哈哈哈，监听到值变化了 &apos;, val, &apos; --&gt; &apos;, newVal);</div><div class="line">            val = newVal;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>完整代码 h<a href="ttps://github.com/poetries/mvvm/blob/master/observer.js" target="_blank" rel="external">ttps://github.com/poetries/mvvm/blob/master/observer.js</a></p>
+<p>这样我们已经可以监听每个数据的变化了，那么监听到变化之后就是怎么通知订阅者了，所以接下来我们需要实现一个消息订阅器，很简单，维护一个数组，用来收集订阅者，数据变动触发 <code>notify</code> ，再调用订阅者的 <code>update</code> 方法，代码改善之后是这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">// ... 省略</div><div class="line">function defineReactive(data, key, val) &#123;</div><div class="line">	var dep = new Dep();</div><div class="line">    observe(val); // 监听子属性</div><div class="line"></div><div class="line">    Object.defineProperty(data, key, &#123;</div><div class="line">        // ... 省略</div><div class="line">        set: function(newVal) &#123;</div><div class="line">        	if (val === newVal) return;</div><div class="line">            console.log(&apos;哈哈哈，监听到值变化了 &apos;, val, &apos; --&gt; &apos;, newVal);</div><div class="line">            val = newVal;</div><div class="line">            dep.notify(); // 通知所有订阅者</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">function Dep() &#123;</div><div class="line">    this.subs = [];</div><div class="line">&#125;</div><div class="line">Dep.prototype = &#123;</div><div class="line">    addSub: function(sub) &#123;</div><div class="line">        this.subs.push(sub);</div><div class="line">    &#125;,</div><div class="line">    notify: function() &#123;</div><div class="line">        this.subs.forEach(function(sub) &#123;</div><div class="line">            sub.update();</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>那么问题来了，谁是订阅者，怎么往订阅器添加订阅者？</p>
+</li>
+<li><p>没错，上面的思路整理中我们已经明确订阅者应该是 Watcher , 而且 var dep = new Dep(); 是在 defineReactive 方法内部定义的，所以想通过 dep 添加订阅者，就必须要在闭包内操作，所以我们可以在 getter 里面动手脚：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">// Observer.js</div><div class="line">// ...省略</div><div class="line">Object.defineProperty(data, key, &#123;</div><div class="line">	get: function() &#123;</div><div class="line">		// 由于需要在闭包内添加watcher，所以通过Dep定义一个全局target属性，暂存watcher, 添加完移除</div><div class="line">		Dep.target &amp;&amp; dep.addDep(Dep.target);</div><div class="line">		return val;</div><div class="line">	&#125;</div><div class="line">    // ... 省略</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// Watcher.js</div><div class="line">Watcher.prototype = &#123;</div><div class="line">	get: function(key) &#123;</div><div class="line">		Dep.target = this;</div><div class="line">		this.value = data[key];	// 这里会触发属性的getter，从而添加订阅者</div><div class="line">		Dep.target = null;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>这里已经实现了一个 Observer 了，已经具备了监听数据和数据变化通知订阅者的功能。那么接下来就是实现 Compile 了</li>
+</ul>
+<p>2.2 实现 Compile</p>
+<ul>
+<li>compile 主要做的事情是解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图</li>
+<li><p>并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图，如图所示<br><img src="http://ouqjus79v.bkt.clouddn.com//yAjMnqV.png!web" alt="yAjMnqV.png!web"></p>
+</li>
+<li><p>因为遍历解析的过程有多次操作 dom 节点，为提高性能和效率，会先将跟节点 el 转换成文档碎片 fragment 进行解析编译操作</p>
+</li>
+<li>解析完成，再将 fragment 添加回原来的真实 dom 节点中</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">function Compile(el) &#123;</div><div class="line">    this.$el = this.isElementNode(el) ? el : document.querySelector(el);</div><div class="line">    if (this.$el) &#123;</div><div class="line">        this.$fragment = this.node2Fragment(this.$el);</div><div class="line">        this.init();</div><div class="line">        this.$el.appendChild(this.$fragment);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">Compile.prototype = &#123;</div><div class="line">	init: function() &#123; this.compileElement(this.$fragment); &#125;,</div><div class="line">    node2Fragment: function(el) &#123;</div><div class="line">        var fragment = document.createDocumentFragment(), child;</div><div class="line">        // 将原生节点拷贝到fragment</div><div class="line">        while (child = el.firstChild) &#123;</div><div class="line">            fragment.appendChild(child);</div><div class="line">        &#125;</div><div class="line">        return fragment;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li>compileElement 方法将遍历所有节点及其子节点，进行扫描解析编译，调用对应的指令渲染函数进行数据渲染，并调用对应的指令更新函数进行绑定，详看代码及注释说明</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">Compile.prototype = &#123;</div><div class="line">	// ... 省略</div><div class="line">	compileElement: function(el) &#123;</div><div class="line">        var childNodes = el.childNodes, me = this;</div><div class="line">        [].slice.call(childNodes).forEach(function(node) &#123;</div><div class="line">            var text = node.textContent;</div><div class="line">            var reg = /\&#123;\&#123;(.*)\&#125;\&#125;/;	// 表达式文本</div><div class="line">            // 按元素节点方式编译</div><div class="line">            if (me.isElementNode(node)) &#123;</div><div class="line">                me.compile(node);</div><div class="line">            &#125; else if (me.isTextNode(node) &amp;&amp; reg.test(text)) &#123;</div><div class="line">                me.compileText(node, RegExp.$1);</div><div class="line">            &#125;</div><div class="line">            // 遍历编译子节点</div><div class="line">            if (node.childNodes &amp;&amp; node.childNodes.length) &#123;</div><div class="line">                me.compileElement(node);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    compile: function(node) &#123;</div><div class="line">        var nodeAttrs = node.attributes, me = this;</div><div class="line">        [].slice.call(nodeAttrs).forEach(function(attr) &#123;</div><div class="line">            // 规定：指令以 v-xxx 命名</div><div class="line">            // 如 &lt;span v-text=&quot;content&quot;&gt;&lt;/span&gt; 中指令为 v-text</div><div class="line">            var attrName = attr.name;	// v-text</div><div class="line">            if (me.isDirective(attrName)) &#123;</div><div class="line">                var exp = attr.value; // content</div><div class="line">                var dir = attrName.substring(2);	// text</div><div class="line">                if (me.isEventDirective(dir)) &#123;</div><div class="line">                	// 事件指令, 如 v-on:click</div><div class="line">                    compileUtil.eventHandler(node, me.$vm, exp, dir);</div><div class="line">                &#125; else &#123;</div><div class="line">                	// 普通指令</div><div class="line">                    compileUtil[dir] &amp;&amp; compileUtil[dir](node, me.$vm, exp);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 指令处理集合</div><div class="line">var compileUtil = &#123;</div><div class="line">    text: function(node, vm, exp) &#123;</div><div class="line">        this.bind(node, vm, exp, &apos;text&apos;);</div><div class="line">    &#125;,</div><div class="line">    // ...省略</div><div class="line">    bind: function(node, vm, exp, dir) &#123;</div><div class="line">        var updaterFn = updater[dir + &apos;Updater&apos;];</div><div class="line">        // 第一次初始化视图</div><div class="line">        updaterFn &amp;&amp; updaterFn(node, vm[exp]);</div><div class="line">        // 实例化订阅者，此操作会在对应的属性消息订阅器中添加了该订阅者watcher</div><div class="line">        new Watcher(vm, exp, function(value, oldValue) &#123;</div><div class="line">        	// 一旦属性值有变化，会收到通知执行此更新函数，更新视图</div><div class="line">            updaterFn &amp;&amp; updaterFn(node, value, oldValue);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 更新函数</div><div class="line">var updater = &#123;</div><div class="line">    textUpdater: function(node, value) &#123;</div><div class="line">        node.textContent = typeof value == &apos;undefined&apos; ? &apos;&apos; : value;</div><div class="line">    &#125;</div><div class="line">    // ...省略</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>2.3 实现Watcher</p>
+<p>Watcher 订阅者作为 Observer 和 Compile 之间通信的桥梁，主要做的事情是</p>
+<ul>
+<li>在自身实例化时往属性订阅器 dep 里面添加自己</li>
+<li>自身必须有一个 update() 方法</li>
+<li>待属性变动 dep.notice() 通知时，能调用自身的 update() 方法，并触发 Compile 中绑定的回调，则功成身退。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">function Watcher(vm, exp, cb) &#123;</div><div class="line">    this.cb = cb;</div><div class="line">    this.vm = vm;</div><div class="line">    this.exp = exp;</div><div class="line">    // 此处为了触发属性的getter，从而在dep添加自己，结合Observer更易理解</div><div class="line">    this.value = this.get(); </div><div class="line">&#125;</div><div class="line">Watcher.prototype = &#123;</div><div class="line">    update: function() &#123;</div><div class="line">        this.run();	// 属性值变化收到通知</div><div class="line">    &#125;,</div><div class="line">    run: function() &#123;</div><div class="line">        var value = this.get(); // 取到最新值</div><div class="line">        var oldVal = this.value;</div><div class="line">        if (value !== oldVal) &#123;</div><div class="line">            this.value = value;</div><div class="line">            this.cb.call(this.vm, value, oldVal); // 执行Compile中绑定的回调，更新视图</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    get: function() &#123;</div><div class="line">        Dep.target = this;	// 将当前订阅者指向自己</div><div class="line">        var value = this.vm[exp];	// 触发getter，添加自己到属性订阅器中</div><div class="line">        Dep.target = null;	// 添加完毕，重置</div><div class="line">        return value;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">// 这里再次列出Observer和Dep，方便理解</div><div class="line">Object.defineProperty(data, key, &#123;</div><div class="line">	get: function() &#123;</div><div class="line">		// 由于需要在闭包内添加watcher，所以可以在Dep定义一个全局target属性，暂存watcher, 添加完移除</div><div class="line">		Dep.target &amp;&amp; dep.addDep(Dep.target);</div><div class="line">		return val;</div><div class="line">	&#125;</div><div class="line">    // ... 省略</div><div class="line">&#125;);</div><div class="line">Dep.prototype = &#123;</div><div class="line">    notify: function() &#123;</div><div class="line">        this.subs.forEach(function(sub) &#123;</div><div class="line">            sub.update(); // 调用订阅者的update方法，通知变化</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>完整代码 <a href="https://github.com/poetries/mvvm/blob/master/watcher.js" target="_blank" rel="external">https://github.com/poetries/mvvm/blob/master/watcher.js</a></p>
+<ul>
+<li>实例化 Watcher 的时候，调用 get() 方法，通过 Dep.target = watcherInstance 标记订阅者是当前 watcher 实例，强行触发属性定义的 getter 方法， getter 方法执行的时候，就会在属性的订阅器 dep 添加当前 watcher 实例，从而在属性值有变化的时候， watcherInstance 就能收到更新通知。</li>
+<li>基本上 vue 中数据绑定相关比较核心的几个模块也是这几个，猛戳 这里 , 在 src 目录可找到 vue 源码。<br>最后来讲讲 MVVM 入口文件的相关逻辑和实现吧，相对就比较简单了</li>
+</ul>
+<p>三、实现MVVM<br>MVVM 作为数据绑定的入口，整合 <code>Observer</code> 、 <code>Compile</code> 和 <code>Watcher</code> 三者，通过 <code>Observer</code> 来监听自己的 <code>model</code> 数据变化，通过 <code>Compile</code> 来解析编译模板指令，最终利用 Watcher 搭起 <code>Observer</code> 和 <code>Compile</code> 之间的通信桥梁，达到数据变化 -&gt; 视图更新；视图交互变化( input ) -&gt; 数据 <code>model</code> 变更的双向绑定效果。</p>
+<ul>
+<li>一个简单的 MVVM 构造器是这样子：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">function MVVM(options) &#123;</div><div class="line">    this.$options = options;</div><div class="line">    var data = this._data = this.$options.data;</div><div class="line">    observe(data, this);</div><div class="line">    this.$compile = new Compile(options.el || document.body, this)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>但是这里有个问题，从代码中可看出监听的数据对象是 options.data ，每次需要更新视图，则必须通过 <code>var vm = new MVVM({data:{name: &#39;kindeng&#39;}}); vm._data.name = &#39;dmq&#39;;</code> 这样的方式来改变数据。</li>
+<li>显然不符合我们一开始的期望，我们所期望的调用方式应该是这样的：<br><code>var vm = new MVVM({data: {name: &#39;kindeng&#39;}}); vm.name = &#39;dmq&#39;;</code>* 所以这里需要给 <code>MVVM</code> 实例添加一个属性代理的方法，使访问 vm 的属性代理为访问 <code>vm._data</code> 的属性，改造后的代码如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">function MVVM(options) &#123;</div><div class="line">    this.$options = options;</div><div class="line">    var data = this._data = this.$options.data, me = this;</div><div class="line">    // 属性代理，实现 vm.xxx -&gt; vm._data.xxx</div><div class="line">    Object.keys(data).forEach(function(key) &#123;</div><div class="line">        me._proxy(key);</div><div class="line">    &#125;);</div><div class="line">    observe(data, this);</div><div class="line">    this.$compile = new Compile(options.el || document.body, this)</div><div class="line">&#125;</div><div class="line"></div><div class="line">MVVM.prototype = &#123;</div><div class="line">	_proxy: function(key) &#123;</div><div class="line">		var me = this;</div><div class="line">        Object.defineProperty(me, key, &#123;</div><div class="line">            configurable: false,</div><div class="line">            enumerable: true,</div><div class="line">            get: function proxyGetter() &#123;</div><div class="line">                return me._data[key];</div><div class="line">            &#125;,</div><div class="line">            set: function proxySetter(newVal) &#123;</div><div class="line">                me._data[key] = newVal;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>完整代码 <a href="https://github.com/poetries/mvvm/blob/master/mvvm.js" target="_blank" rel="external">https://github.com/poetries/mvvm/blob/master/mvvm.js</a></p>
+<p>这里主要还是利用了 <code>Object.defineProperty()</code> 这个方法来劫持了 vm 实例对象的属性的读写权，使读写 vm 实例的属性转成读写了 <code>vm._data</code> 的属性值，达到鱼目混珠的效果</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/mvvm/">
+    <time datetime="2018-02-28T09:34:59.357Z" class="entry-date">
+        2018-02-28
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-array-operation-advice" class="post-array-operation-advice post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/array-operation-advice/">给初学者：JavaScript 中数组操作注意点</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h4 id="1-不要用-for-in-遍历数组"><a href="#1-不要用-for-in-遍历数组" class="headerlink" title="1.不要用 for_in 遍历数组"></a>1.不要用 for_in 遍历数组</h4><p>这是 JavaScript 初学者常见的误区。for_in 用于遍历对象中包括原型链上的所有可枚举的（enumerable）的 key，本来不是为遍历数组而存在。</p>
+<p>使用 for_in 遍历数组有三点问题：</p>
+<p>遍历顺序不固定</p>
+<p>JavaScript 引擎不保证对象的遍历顺序。当把数组作为普通对象遍历时同样不保证遍历出的索引顺序。</p>
+<p>会遍历出对象原型链上的值。</p>
+<p>如果你改变了数组的原型对象（比如 polyfill）而没有将其设为 enumerable: false，for_in 会把这些东西遍历出来。</p>
+<p>运行效率低下。</p>
+<p>尽管理论上 JavaScript 使用对象的形式储存数组，JavaScript 引擎还是会对数组这一非常常用的内置对象特别优化。 <a href="https://jsperf.com/for-in-vs-…" target="_blank" rel="external">https://jsperf.com/for-in-vs-…</a><br>可以看到使用 for_in 遍历数组要比使用下标遍历数组慢 50 倍以上</p>
+<p>PS：你可能是想找 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of" target="_blank" rel="external">for_of</a></p>
+<h4 id="不要用-JSON-parse-JSON-stringify-深拷贝数组"><a href="#不要用-JSON-parse-JSON-stringify-深拷贝数组" class="headerlink" title="不要用 JSON.parse(JSON.stringify()) 深拷贝数组"></a>不要用 JSON.parse(JSON.stringify()) 深拷贝数组</h4><p>有人使用 JSON 中深拷贝对象或数组。这虽然在多数情况是个简单方便的手段，但也可能引发未知 bug，因为：</p>
+<p>会使某些特定值转换为 null</p>
+<p>NaN, undefined, Infinity 对于 JSON 中不支持的这些值，会在序列化 JSON 时被转换为 null，反序列化回来后自然也就是 null</p>
+<p>会丢失值为 undefined 的键值对</p>
+<p>JSON 序列化时会忽略值为 undefined 的 key，反序列化回来后自然也就丢失了</p>
+<p>会将 Date 对象转换为字符串</p>
+<p>JSON 不支持对象类型，对于 JS 中 Date 对象的处理方式为转换为 ISO8601 格式的字符串。然而反序列化并不会把时间格式的字符串转化为 Date 对象</p>
+<p>运行效率低下。</p>
+<p>作为原生函数，JSON.stringify 和 JSON.parse 自身操作 JSON 字符串的速度是很快的。然而为了深拷贝数组把对象序列化成 JSON 再反序列化回来完全没有必要。</p>
+<p>我花了一些时间写了一个简单的深拷贝数组或对象的函数，测试发现运行速度差不多是使用 JSON 中转的 6 倍左右，顺便还支持了 TypedArray、RegExp 的对象的复制</p>
+<p><a href="https://jsperf.com/deep-clone-array-using-native-json-and-custom-deepclone" target="_blank" rel="external">链接</a></p>
+<h4 id="不要用-arr-find-代替-arr-some"><a href="#不要用-arr-find-代替-arr-some" class="headerlink" title="不要用 arr.find 代替 arr.some"></a>不要用 arr.find 代替 arr.some</h4><p>Array.prototype.find 是 ES2015 中新增的数组查找函数，与 Array.prototype.some 有相似之处，但不能替代后者。</p>
+<p>Array.prototype.find 返回第一个符合条件的值，直接拿这个值做 if 判断是否存在，如果这个符合条件的值恰好是 0 怎么办？</p>
+<p>arr.find 是找到数组中的值后对其进一步处理，一般用于对象数组的情况；arr.some 才是检查存在性；两者不可混用。</p>
+<h4 id="不要用-arr-map-代替-arr-forEach"><a href="#不要用-arr-map-代替-arr-forEach" class="headerlink" title="不要用 arr.map 代替 arr.forEach"></a>不要用 arr.map 代替 arr.forEach</h4><p>也是一个 JavaScript 初学者常常犯的错误，他们往往并没有分清 Array.prototype.map 和 Array.prototype.forEach 的实际含义。</p>
+<p>map 中文叫做 映射，它通过将某个序列依次执行某个函数导出另一个新的序列。这个函数通常是不含副作用的，更不会修改原始的数组（所谓纯函数）。</p>
+<p>forEach 就没有那么多说法，它就是简单的把数组中所有项都用某个函数处理一遍。由于 forEach 没有返回值（返回 undefined），所以它的回调函数通常是包含副作用的，否则这个 forEach 写了毫无意义。</p>
+<p>确实 map 比 forEach 更加强大，但是 map 会创建一个新的数组，占用内存。如果你不用 map 的返回值，那你就应当使用 forEach</p>
+<h4 id="补：forEach-与-break"><a href="#补：forEach-与-break" class="headerlink" title="补：forEach 与 break"></a>补：forEach 与 break</h4><p>ES6 以前，遍历数组主要就是两种方法：手写循环用下标迭代，使用 Array.prototype.forEach。前者万能，效率最高，可就是写起来比较繁琐——它不能直接获取到数组中的值。</p>
+<p>笔者个人是喜欢后者的：可以直接获取到迭代的下标和值，而且函数式风格（注意 FP 注重的是不可变数据结构，forEach 天生为副作用存在，所以只有 FP 的形而没有神）写起来爽快无比。但是！不知各位同学注意过没有：forEach 一旦开始就停不下来了。。。</p>
+<p>forEach 接受一个回调函数，你可以提前 return，相当于手写循环中的 continue。但是你不能 break——因为回调函数中没有循环让你去 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[1, 2, 3, 4, 5].forEach(x =&gt; &#123;</div><div class="line">  console.log(x);</div><div class="line">  if (x === 3) &#123;</div><div class="line">    break;  // SyntaxError: Illegal break statement</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>解决方案还是有的。其他函数式编程语言例如 scala 就遇到了类似问题，它提供了一个函数break，作用是抛出一个异常。</p>
+<p><img src="http://puge-10017157.cossh.myqcloud.com/temp/b2b7ff75cd471e05d9d27a6418218525.png" alt=""></p>
+<p>我们可以仿照这样的做法，来实现 arr.forEach 的 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">try &#123;</div><div class="line">  [1, 2, 3, 4, 5].forEach(x =&gt; &#123;</div><div class="line">    console.log(x);</div><div class="line">    if (x === 3) &#123;</div><div class="line">      throw &apos;break&apos;;</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">&#125; catch (e) &#123;</div><div class="line">  if (e !== &apos;break&apos;) throw e; // 不要勿吞异常。。。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>恶心的一Ｂ对不对。还有其他方法，比如用 Array.prototype.some 代替 Array.prototype.forEach。</p>
+<p>考虑 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/some#Description" target="_blank" rel="external">Array.prototype.some</a> 的特性，当 some 找到一个符合条件的值（回调函数返回 true）时会立即终止循环，利用这样的特性可以模拟 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[1, 2, 3, 4, 5].some(x =&gt; &#123;</div><div class="line">  console.log(x);</div><div class="line">  if (x === 3) &#123;</div><div class="line">    return true; // break</div><div class="line">  &#125;</div><div class="line">  // return undefined; 相当于 false</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>some 的返回值被忽略掉了，它已经脱离了判断数组中是否有元素符合给出的条件这一原始的含义。</p>
+<p>在 ES6 前，笔者主要使用该法（其实因为 Babel 代码膨胀的缘故，现在也偶尔使用），ES6 不一样了，我们有了 for…of。for…of 是真正的循环，可以 break：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">for (const x of [1, 2, 3, 4, 5]) &#123;</div><div class="line">  console.log(x);</div><div class="line">  if (x === 3) &#123;</div><div class="line">    break;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是有个问题，for…of 似乎拿不到循环的下标。其实 JavaScript 语言制定者想到了这个问题，可以如下解决：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for (const [index, value] of [1, 2, 3, 4, 5].entries()) &#123;</div><div class="line">  console.log(`arr[$&#123;index&#125;] = $&#123;value&#125;`);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/entries" target="_blank" rel="external">Array.prototype.entries</a></p>
+<p>for…of 和 forEach 的性能测试：<a href="https://jsperf.com/array-fore…" target="_blank" rel="external">https://jsperf.com/array-fore…</a> Chrome 中 for…of 要快一些哦😯</p>
+
+      
+    </div><!-- .entry-content -->
+
+    <footer class="entry-meta">
+    <a href="/array-operation-advice/">
+    <time datetime="2018-02-28T09:33:27.140Z" class="entry-date">
+        2018-02-28
+    </time>
+</a>
+    
+    
+    </footer>
+</article>
+
+
+
+
+
+
+  
+    <article id="post-generators" class="post-generators post type-post status-publish format-standard hentry">
+    <!---->
+
+      <header class="entry-header">
+        
+        
+  
+    <h1 class="entry-title">
+      <a class="article-title" href="/generators/">ES6 Generators详解</a>
+    </h1>
+  
+
+        
+        <div class="comments-link">
+            
+        </div><!-- .comments-link -->
+      </header><!-- .entry-header -->
+
+    <div class="entry-content">
+      
+        <h3 id="1-什么是generators？"><a href="#1-什么是generators？" class="headerlink" title="1.什么是generators？"></a>1.什么是generators？</h3><p>我们可以把generators理解成一段 <strong>可以暂停并重新开始执行的函数</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">function* genFunc() &#123;</div><div class="line">    // (A)</div><div class="line">    console.log(&apos;First&apos;);</div><div class="line">    yield; //(B)</div><div class="line">    console.log(&apos;Second&apos;); //(C)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><code>function*</code>是定义generator函数的关键字，yield是一个操作符，generator 可以通过yield暂停自己执行，另外，<strong>generator可以通过yield接受输入和对外输入</strong></p>
 <p>当我们调用<code>genFunc()</code>,我们得到一个generator对象genObj,我们可以通过这个genObj控制程序的执行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const genObj = genFunc()</div></pre></td></tr></table></figure>
@@ -755,107 +980,10 @@ process.exit(0);
 
 
   
-    <article id="post-mobile-phone-system" class="post-mobile-phone-system post type-post status-publish format-standard hentry">
-    <!---->
-
-      <header class="entry-header">
-        
-        
-  
-    <h1 class="entry-title">
-      <a class="article-title" href="/mobile-phone-system/">判断iOS或Android手机</a>
-    </h1>
-  
-
-        
-        <div class="comments-link">
-            
-        </div><!-- .comments-link -->
-      </header><!-- .entry-header -->
-
-    <div class="entry-content">
-      
-        <p>通过判断浏览器的userAgent，用正则来判断手机是否是ios和android客户端。<span>代码</span>如下：</p>
-<p><pre>&lt;script type=”text/javascript”&gt;<br>var u = navigator.userAgent;<br>var isAndroid = u.indexOf(‘Android’) &gt; -1 || u.indexOf(‘Adr’) &gt; -1; //android终端<br>var isiOS = !!u.match(/(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端<br>alert(‘是否是Android：’+isAndroid);<br>alert(‘是否是iOS：’+isiOS);<br>&lt;/script&gt;</pre><br>下面一个比较全面的浏览器检查函数，提供更多的检查内容，你可以检查是否是移动端、ipad、iphone、微信、QQ等。</p>
-<p><pre>&lt;script type=”text/javascript”&gt;<br>//判断访问终端<br>var browser={<br>    versions:function(){<br>        var u = navigator.userAgent, app = navigator.appVersion;<br>        return {<br>            trident: u.indexOf(‘Trident’) &gt; -1, //IE内核<br>            presto: u.indexOf(‘Presto’) &gt; -1, //opera内核<br>            webKit: u.indexOf(‘AppleWebKit’) &gt; -1, //苹果、谷歌内核<br>            gecko: u.indexOf(‘Gecko’) &gt; -1 &amp;&amp; u.indexOf(‘KHTML’) == -1,//火狐内核<br>            mobile: !!u.match(/AppleWebKit.<em>Mobile.</em>/), //是否为移动终端<br>            ios: !!u.match(/(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端<br>            android: u.indexOf(‘Android’) &gt; -1 || u.indexOf(‘Adr’) &gt; -1, //android终端<br>            iPhone: u.indexOf(‘iPhone’) &gt; -1 , //是否为iPhone或者QQHD浏览器<br>            iPad: u.indexOf(‘iPad’) &gt; -1, //是否iPad<br>            webApp: u.indexOf(‘Safari’) == -1, //是否web应该程序，没有头部与底部<br>            weixin: u.indexOf(‘MicroMessenger’) &gt; -1, //是否微信 （2015-01-22新增）<br>            qq: u.match(/\sQQ/i) == “ qq” //是否QQ<br>        };<br>    }(),<br>    language:(navigator.browserLanguage || navigator.language).toLowerCase()<br>}<br>&lt;/script&gt;<br></pre><br><strong>使用方法：</strong></p>
-<p><pre class="lang:js decode:true ">//判断是否IE内核<br>if(browser.versions.trident){ alert(“is IE”); }<br>//判断是否webKit内核<br>if(browser.versions.webKit){ alert(“is webKit”); }<br>//判断是否移动端<br>if(browser.versions.mobile||browser.versions.android||browser.versions.ios){ alert(“移动端”); }</pre><br><strong>检测浏览器语言</strong>：</p>
-<p><pre class="lang:js decode:true ">currentLang = navigator.language;   //判断除IE外其他浏览器使用语言<br>if(!currentLang){//判断IE浏览器使用语言<br>    currentLang = navigator.browserLanguage;<br>}<br>alert(currentLang);</pre><br>第二种：</p>
-<p><pre class="lang:default decode:true ">if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {<br>    //alert(navigator.userAgent);<br>    window.location.href =”iPhone.html”;<br>} else if (/(Android)/i.test(navigator.userAgent)) {<br>    //alert(navigator.userAgent);<br>    window.location.href =”Android.html”;<br>} else {<br>    window.location.href =”pc.html”;<br>};</pre><br>&nbsp;</p>
-
-      
-    </div><!-- .entry-content -->
-
-    <footer class="entry-meta">
-    <a href="/mobile-phone-system/">
-    <time datetime="2017-07-21T08:24:27.021Z" class="entry-date">
-        2017-07-21
-    </time>
-</a>
-    
-    
-    </footer>
-</article>
-
-
-
-
-
-
-  
-    <article id="post-text" class="post-text post type-post status-publish format-standard hentry">
-    <!---->
-
-      <header class="entry-header">
-        
-        
-  
-    <h1 class="entry-title">
-      <a class="article-title" href="/text/">vue子组件与父组件通讯</a>
-    </h1>
-  
-
-        
-        <div class="comments-link">
-            
-        </div><!-- .comments-link -->
-      </header><!-- .entry-header -->
-
-    <div class="entry-content">
-      
-        <p>记录</p>
-<p>JSON转字符串 JSON.stringify()</p>
-<p>JSON字符串转换为JSON对象 JSON.parse(str)</p>
-<p>判断数据类型 typeof</p>
-<p>查看进程：ps -ef |grep nodejs</p>
-<p>nohup后台 nohup meteor –production &amp;</p>
-<p>查看运行的后台进程  jobs</p>
-<p>fg %n将后台脚本调到前台执行</p>
-<p>linux重启：shutdown -r now </p>
-
-      
-    </div><!-- .entry-content -->
-
-    <footer class="entry-meta">
-    <a href="/text/">
-    <time datetime="2017-07-21T08:22:49.623Z" class="entry-date">
-        2017-07-21
-    </time>
-</a>
-    
-    
-    </footer>
-</article>
-
-
-
-
-
-
-  
   
     <nav id="pagination">
       <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
       </nav>
     </nav>
   
@@ -874,7 +1002,15 @@ process.exit(0);
       <ul>
         
           <li>
-            <a href="/generators/">(no title)</a>
+            <a href="/mvvm/">实现数据的双向绑定mvvm-剖析Vue的原理</a>
+          </li>
+        
+          <li>
+            <a href="/array-operation-advice/">给初学者：JavaScript 中数组操作注意点</a>
+          </li>
+        
+          <li>
+            <a href="/generators/">ES6 Generators详解</a>
           </li>
         
           <li>
@@ -883,14 +1019,6 @@ process.exit(0);
         
           <li>
             <a href="/string/">JavaScript 字符串实用常操纪要</a>
-          </li>
-        
-          <li>
-            <a href="/nodejs_recursive_copy/">Node.JS循环递归复制文件目录</a>
-          </li>
-        
-          <li>
-            <a href="/es2017/">ES2017异步函数现已正式可用</a>
           </li>
         
       </ul>
@@ -905,7 +1033,7 @@ process.exit(0);
 </div>
       </div>
       <footer id="colophon" role="contentinfo">
-    <p>&copy; 2017 PUGE
+    <p>&copy; 2018 PUGE
     All rights reserved.</p>
     <p>Powered by <a href="https://owo.ink/" target="_blank">PUGE</a></p>
 </footer>
